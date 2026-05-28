@@ -121,40 +121,52 @@ let transitInterval=null;
 
 function buildTransitCards(){
   const t=TRANSIT_DATA;if(!t)return;
+  const card=document.getElementById("transit-cards");if(!card)return;
   const lc=t.metro_color;
-  const card=document.getElementById("transit-cards");
-  if(!card)return;
 
-  // Build line1 (internal terminals)
   function stopsHtml(stations, color, lineId){
-    const n=stations.length;
-    return `<div class="md-track" id="track-${lineId}" style="--lc:${color}">
+    return `<div class="md-track" id="track-${lineId}">
       ${stations.map((s,i)=>`
         <div class="md-stop" style="--lc:${color}">
-          ${i<n-1?`<div class="md-stop" style="position:absolute;left:7px;top:50%;bottom:-50%;width:3px;background:${color};z-index:0"></div>`:''}
-          <div class="md-dot ${s.type}" id="dot-${lineId}-${i}" style="border-color:${color};color:${color}"></div>
-          <span class="md-name ${s.type}" id="name-${lineId}-${i}" style="${s.type==='hub'||s.type==='terminus'?'color:'+color:''}">${s.name}${s.branch?`<span class="branch-label" style="background:${color}22;color:${color}">Ramal ${s.branch}</span>`:''}</span>
+          <div class="md-line-seg" style="background:${color};opacity:${i===stations.length-1?0:1}"></div>
+          <div class="md-dot ${s.type}" id="dot-${lineId}-${i}"
+            style="border-color:${color};color:${color}"></div>
+          <div class="md-stop-info">
+            <span class="md-name ${s.type}"
+              style="${s.type==='hub'||s.type==='terminus'?'color:'+color:''}"
+              id="name-${lineId}-${i}">${s.name}</span>
+            ${s.branch?`<span class="branch-label" style="background:${color}22;color:${color}">Ramal ${s.branch}</span>`:''}
+            ${s.type==='terminal'?`<span class="stop-type-badge" style="color:${color};border-color:${color}40">✈ Terminal</span>`:''}
+            ${s.type==='hub'?`<span class="stop-type-badge" style="color:${color};border-color:${color}40">⬤ Hub</span>`:''}
+          </div>
         </div>`).join('')}
-      <div class="train-vehicle" id="vehicle-${lineId}" style="--lc:${color};top:0">
-        <div class="train-icon" style="background:${color}22;color:${color};border-color:${color}">🚇</div>
+    </div>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:.64rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase">Trem:</span>
+      <div id="trainbar-${lineId}" style="flex:1;height:8px;background:var(--muted);border-radius:4px;overflow:hidden;position:relative">
+        <div id="trainpos-${lineId}" style="position:absolute;top:0;bottom:0;width:24px;background:${color};border-radius:4px;transition:left .9s ease;box-shadow:0 0 8px ${color}"></div>
       </div>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:${color}" id="trainpct-${lineId}">0%</span>
     </div>`;
   }
 
   function busRowsHtml(routes){
     return routes.map((r,i)=>`
-      <div class="bus-route-row" id="busrow-${i}" style="border-left:3px solid ${r.color}">
-        <div class="br-vehicle" id="busveh-${i}" style="color:${r.color};left:0">🚌</div>
-        <div class="br-info">
+      <div class="bus-route-row" style="border-left:3px solid ${r.color}">
+        <div class="br-info-wrap">
           <span class="br-name">${r.name}</span>
           <span class="br-next" style="color:${r.color}" id="busnext-${i}">${formatMin(nextDep(r.freq))}</span>
+        </div>
+        <div class="bus-bar" style="background:var(--muted);height:6px;border-radius:3px;overflow:hidden;margin-top:6px;position:relative">
+          <div id="buspos-${i}" style="position:absolute;top:0;bottom:0;width:20px;border-radius:3px;background:${r.color};box-shadow:0 0 6px ${r.color};transition:left .9s ease;display:flex;align-items:center;justify-content:center;font-size:10px">🚌</div>
         </div>
       </div>`).join('');
   }
 
   card.innerHTML=`
+    <!-- Line 1: Internal terminals -->
     <div class="tc-card">
-      <div class="tc-hdr" style="border-bottom:2px solid ${lc}30">
+      <div class="tc-hdr" style="border-left:4px solid ${lc}">
         <div>
           <div class="tc-title" style="color:${lc}">${t.line1_name}</div>
           <div class="tc-note">${t.metro_note}</div>
@@ -165,16 +177,15 @@ function buildTransitCards(){
           <div class="nb-freq">a cada ${t.metro_interval}min</div>
         </div>
       </div>
-      <div class="tc-body">
-        <div class="diagram-title">Terminal interno</div>
-        ${stopsHtml(t.line1_stations, t.line1_color, 'line1')}
-      </div>
+      <div class="tc-body">${stopsHtml(t.line1_stations, lc, 'line1')}</div>
     </div>
+
+    <!-- Line 2: City extension -->
     <div class="tc-card">
-      <div class="tc-hdr" style="border-bottom:2px solid ${lc}30">
+      <div class="tc-hdr" style="border-left:4px solid ${lc}">
         <div>
           <div class="tc-title" style="color:${lc}">${t.line2_name}</div>
-          <div class="tc-note">Conexão com cidade</div>
+          <div class="tc-note">Conexão com a cidade</div>
         </div>
         <div class="next-box">
           <div class="nb-lbl">Próximo</div>
@@ -182,16 +193,15 @@ function buildTransitCards(){
           <div class="nb-freq">a cada ${t.metro_interval}min</div>
         </div>
       </div>
-      <div class="tc-body">
-        <div class="diagram-title">Estações</div>
-        ${stopsHtml(t.line2_stations, t.line2_color, 'line2')}
-      </div>
+      <div class="tc-body">${stopsHtml(t.line2_stations, lc, 'line2')}</div>
     </div>
+
+    <!-- Bus -->
     <div class="tc-card" style="grid-column:1/-1">
-      <div class="tc-hdr" style="border-bottom:2px solid #ffd54f30">
+      <div class="tc-hdr" style="border-left:4px solid #ffd54f">
         <div>
-          <div class="tc-title" style="color:#ffd54f">Linhas de Ônibus</div>
-          <div class="tc-note">Estimativas em tempo real</div>
+          <div class="tc-title" style="color:#ffd54f">🚌 Linhas de Ônibus</div>
+          <div class="tc-note">Posição estimada em tempo real</div>
         </div>
         <div class="next-box">
           <div class="nb-lbl">Mais próximo</div>
@@ -199,7 +209,7 @@ function buildTransitCards(){
           <div class="nb-freq">a cada ${t.bus_interval}min</div>
         </div>
       </div>
-      <div class="tc-body bus-section">${busRowsHtml(t.bus_routes)}</div>
+      <div class="tc-body">${busRowsHtml(t.bus_routes)}</div>
     </div>`;
 
   animateTransit();
@@ -210,52 +220,49 @@ function buildTransitCards(){
 function animateTransit(){
   const t=TRANSIT_DATA;if(!t)return;
 
-  // Animate line1
-  function animateLine(stations, color, lineId, intervalMin){
+  function animateLine(stations, lineId, intervalMin){
     const prog=trainProgress(intervalMin, stations.length);
-    const idx=Math.min(Math.floor(prog*stations.length), stations.length-1);
-    const frac=(prog*stations.length)%1;
-    // Update dots
+    const idx=Math.min(Math.floor(prog*stations.length),stations.length-1);
+
+    // Update station dots
     stations.forEach((s,i)=>{
       const dot=document.getElementById(`dot-${lineId}-${i}`);
       const nm=document.getElementById(`name-${lineId}-${i}`);
+      const isActive=i===idx;
       if(dot){
-        const active=i===idx;
-        dot.style.background=active?color:getComputedStyle(document.documentElement).getPropertyValue('--bg');
-        dot.style.boxShadow=active?`0 0 10px ${color}`:'none';
-        dot.style.transform=active?'scale(1.4)':'scale(1)';
+        const lc=dot.style.borderColor;
+        dot.style.background=isActive?lc:'transparent';
+        dot.style.boxShadow=isActive?`0 0 10px ${lc}`:'none';
+        dot.style.transform=isActive?'scale(1.35)':'scale(1)';
       }
-      if(nm) nm.style.fontWeight=i===idx?'900':'600';
+      if(nm) nm.style.fontWeight=isActive?'900':'600';
     });
-    // Position vehicle
-    const veh=document.getElementById(`vehicle-${lineId}`);
-    if(veh){
-      const track=document.getElementById(`track-${lineId}`);
-      if(track){
-        const stops=track.querySelectorAll('.md-stop');
-        if(stops.length>0){
-          const trackH=track.offsetHeight;
-          const segH=trackH/Math.max(stations.length-1,1);
-          const yPos=Math.min(idx*segH+frac*segH, trackH-22);
-          veh.style.top=Math.max(0,yPos)+'px';
-        }
-      }
+
+    // Update progress bar train
+    const bar=document.getElementById(`trainbar-${lineId}`);
+    const pos=document.getElementById(`trainpos-${lineId}`);
+    const pct=document.getElementById(`trainpct-${lineId}`);
+    if(bar&&pos){
+      const barW=bar.offsetWidth||200;
+      const leftPx=Math.max(0,Math.min(prog*(barW-24),barW-24));
+      pos.style.left=leftPx+'px';
     }
+    if(pct) pct.textContent=Math.round(prog*100)+'%';
   }
 
-  animateLine(t.line1_stations, t.line1_color, 'line1', t.metro_interval);
-  animateLine(t.line2_stations, t.line2_color, 'line2', t.metro_interval);
+  animateLine(t.line1_stations,'line1',t.metro_interval);
+  animateLine(t.line2_stations,'line2',t.metro_interval);
 
-  // Animate buses
+  // Bus bars
   t.bus_routes.forEach((r,i)=>{
-    const veh=document.getElementById(`busveh-${i}`);
-    const row=document.getElementById(`busrow-${i}`);
+    const prog=busProgress(r.freq);
+    const pos=document.getElementById(`buspos-${i}`);
     const next=document.getElementById(`busnext-${i}`);
-    if(veh&&row){
-      const prog=busProgress(r.freq);
-      const rowW=row.offsetWidth-30;
-      // Bus goes right (departing), then jumps back to start
-      veh.style.left=(prog*rowW)+'px';
+    if(pos){
+      const bar=pos.parentElement;
+      const barW=bar?bar.offsetWidth||300:300;
+      const leftPx=Math.max(0,Math.min(prog*(barW-20),barW-20));
+      pos.style.left=leftPx+'px';
     }
     if(next) next.textContent=formatMin(nextDep(r.freq));
   });
@@ -437,44 +444,32 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
 /* Live plane icon */
 .plane-icon{font-size:16px;line-height:1;transform-origin:center}
 
-/* TRANSIT TAB */
-.transit-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;margin-top:0}
+.transit-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
 .tc-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .tc-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
-.tc-title{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;font-weight:700}
-.tc-note{font-size:.64rem;color:var(--dim);margin-top:2px}
-.next-box{text-align:right}
+.tc-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.tc-note{font-size:.64rem;color:var(--dim);margin-top:3px}
+.next-box{text-align:right;flex-shrink:0}
 .nb-lbl{font-size:.58rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
-.nb-val{font-family:'Share Tech Mono',monospace;font-size:1.4rem;font-weight:700;line-height:1}
+.nb-val{font-family:'Share Tech Mono',monospace;font-size:1.4rem;font-weight:700;line-height:1.1}
 .nb-freq{font-size:.62rem;color:var(--dim)}
 .tc-body{padding:16px 18px}
-/* Live diagram */
-.diagram-title{font-size:.6rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.diagram-title::after{content:'';flex:1;height:1px;background:var(--border)}
-.metro-diagram{position:relative;margin-bottom:16px}
-.md-track{position:relative;padding-left:22px}
-.md-stop{display:flex;align-items:center;gap:10px;padding:5px 0;position:relative;min-height:28px}
-.md-stop::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:3px}
-.md-stop:first-child::before{top:50%}
-.md-stop:last-child::before{bottom:50%}
-.md-dot{width:16px;height:16px;border-radius:50%;border:2.5px solid;background:var(--bg);z-index:2;flex-shrink:0;position:absolute;left:0;transition:all .4s}
-.md-dot.hub{box-shadow:0 0 8px currentColor}
-.md-dot.active{transform:scale(1.4);background:currentColor!important;box-shadow:0 0 12px currentColor}
-.md-name{font-size:.82rem;font-weight:600;transition:color .4s}
-.md-name.terminal{font-weight:800}
-.md-name.hub{font-weight:900}
-.md-badge{font-size:.56rem;padding:1px 5px;border-radius:2px;margin-left:4px;font-family:'Share Tech Mono',monospace;font-weight:700;vertical-align:middle}
-/* Train vehicle marker */
-.train-vehicle{position:absolute;left:0;z-index:10;transition:top .8s cubic-bezier(.4,0,.2,1);pointer-events:none}
-.train-icon{width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;font-family:'Share Tech Mono',monospace;border:2px solid rgba(255,255,255,.3);box-shadow:0 0 10px currentColor}
-/* Bus vehicle */
-.bus-section{margin-top:4px}
-.bus-route-row{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--muted);border-radius:5px;margin-bottom:5px;position:relative;overflow:hidden}
-.br-vehicle{position:absolute;top:50%;transform:translateY(-50%);transition:left .8s ease;font-size:11px;z-index:2}
-.br-info{display:flex;justify-content:space-between;align-items:center;width:100%;position:relative;z-index:1}
-.br-name{font-size:.8rem;font-weight:600}
-.br-next{font-family:'Share Tech Mono',monospace;font-size:.8rem;font-weight:700}
-.branch-label{font-size:.6rem;padding:1px 5px;border-radius:2px;font-weight:700;font-family:'Share Tech Mono',monospace;margin-left:6px}
+/* Station diagram */
+.md-track{display:flex;flex-direction:column;gap:0}
+.md-stop{display:flex;align-items:center;gap:12px;padding:4px 0;position:relative;min-height:32px}
+.md-line-seg{position:absolute;left:8px;top:50%;width:3px;height:calc(100% + 4px);z-index:0;border-radius:1px}
+.md-dot{width:18px;height:18px;border-radius:50%;border:2.5px solid;background:transparent;z-index:2;flex-shrink:0;transition:all .4s;cursor:default}
+.md-stop-info{display:flex;align-items:center;gap:6px;flex-wrap:wrap;z-index:1}
+.md-name{font-size:.84rem;font-weight:600;transition:font-weight .3s}
+.md-name.hub{font-size:.88rem}
+.md-name.terminus{font-size:.86rem}
+.branch-label{font-size:.58rem;padding:1px 5px;border-radius:2px;font-weight:700;font-family:'Share Tech Mono',monospace}
+.stop-type-badge{font-size:.58rem;padding:1px 5px;border-radius:2px;border:1px solid;font-family:'Share Tech Mono',monospace}
+/* Bus rows */
+.bus-route-row{padding:10px 12px;background:var(--muted);border-radius:6px;margin-bottom:8px}
+.br-info-wrap{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.br-name{font-size:.82rem;font-weight:600}
+.br-next{font-family:'Share Tech Mono',monospace;font-size:.84rem;font-weight:700}
 
 @media(max-width:768px){.wrap{padding:12px}.iata{font-size:2rem}#live-map,#map-container{height:350px}}
 </style>
@@ -1011,6 +1006,104 @@ function showNextAnn(){
     setTimeout(()=>{if(last.parentNode===el)el.removeChild(last);},500);
   }
 }
+// ── STATUS TRANSLATIONS + SOUNDS ─────────────────────────────────────────────
+const ST_LANGS={
+  sch: {pt:"PROGRAMADO",     en:"SCHEDULED",      es:"PROGRAMADO"},
+  ont: {pt:"NO HORÁRIO",     en:"ON TIME",         es:"EN HORA"},
+  board:{pt:"EMBARCANDO",    en:"BOARDING",        es:"ABORDANDO"},
+  final:{pt:"EMB. FINAL",    en:"FINAL BOARDING",  es:"ÚLTIMO ABORDAJE"},
+  taxi: {pt:"NA PISTA",      en:"ON RUNWAY",       es:"EN PISTA"},
+  dep:  {pt:"PARTIU",        en:"DEPARTED",        es:"DESPEGADO"},
+  del:  {pt:"ATRASADO",      en:"DELAYED",         es:"DEMORADO"},
+  can:  {pt:"CANCELADO",     en:"CANCELLED",       es:"CANCELADO"},
+  arr:  {pt:"CHEGANDO",      en:"ARRIVING",        es:"LLEGANDO"},
+  lnd:  {pt:"POUSOU",        en:"LANDED",          es:"ATERRIZÓ"},
+};
+const ST_LABEL_KEYS={
+  sch:["pt","en","es"], ont:["pt","en","es"], board:["pt","en","es"],
+  final:["pt","en","es"], taxi:["pt","en","es"], dep:["pt","en","es"],
+  del:["pt","en","es"], can:["pt","en","es"], arr:["pt","en","es"], lnd:["pt","en","es"],
+};
+const ST_COLORS={board:"#00e5ff",final:"#ff6d00",taxi:"#ffee58",dep:"#00e676",del:"#ff1744",can:"#b71c1c",arr:"#00e676",lnd:"#b9f6ca"};
+const LANG_COLORS={pt:"var(--acc)",en:"#7eb8ff",es:"#ff8a65"};
+
+// Status sounds
+function playStatusSound(st){
+  try{
+    const ctx=getAudioCtx();
+    const sounds={
+      ont: ()=>{// Gentle chime — on time
+        [880,1108].forEach((f,i)=>{
+          const o=ctx.createOscillator(),g=ctx.createGain();
+          o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.value=f;
+          const t=ctx.currentTime+i*.18;
+          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.12,t+.04);
+          g.gain.exponentialRampToValueAtTime(.001,t+.9);o.start(t);o.stop(t+1);
+        });
+      },
+      board: ()=>{// Rising arpeggio — boarding
+        [523,659,784,1047].forEach((f,i)=>{
+          const o=ctx.createOscillator(),g=ctx.createGain();
+          o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.value=f;
+          const t=ctx.currentTime+i*.15;
+          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.14,t+.04);
+          g.gain.exponentialRampToValueAtTime(.001,t+.7);o.start(t);o.stop(t+.8);
+        });
+      },
+      final: ()=>{// Urgent double beep — final boarding
+        [1200,0,1200].forEach((f,i)=>{
+          if(!f)return;
+          const o=ctx.createOscillator(),g=ctx.createGain();
+          o.connect(g);g.connect(ctx.destination);o.type='square';o.frequency.value=f;
+          const t=ctx.currentTime+i*.25;
+          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.08,t+.02);
+          g.gain.linearRampToValueAtTime(.08,t+.15);g.gain.linearRampToValueAtTime(0,t+.2);
+          o.start(t);o.stop(t+.25);
+        });
+      },
+      taxi: ()=>{// Low rumble — on runway
+        const buf=ctx.createBuffer(1,ctx.sampleRate*.6,ctx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*.06*(1-i/d.length);
+        const s=ctx.createBufferSource();s.buffer=buf;
+        const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=180;
+        s.connect(f);f.connect(ctx.destination);s.start();
+      },
+      dep: ()=>{// Ascending chord — departed
+        [523,659,784,1047,1319].forEach((f,i)=>{
+          const o=ctx.createOscillator(),g=ctx.createGain();
+          o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.value=f;
+          const t=ctx.currentTime+i*.1;
+          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.1,t+.05);
+          g.gain.exponentialRampToValueAtTime(.001,t+1.5);o.start(t);o.stop(t+1.6);
+        });
+      },
+      del: ()=>{// Low warning tone — delayed
+        [400,350].forEach((f,i)=>{
+          const o=ctx.createOscillator(),g=ctx.createGain();
+          o.connect(g);g.connect(ctx.destination);o.type='sawtooth';o.frequency.value=f;
+          const t=ctx.currentTime+i*.4;
+          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.07,t+.05);
+          g.gain.linearRampToValueAtTime(.07,t+.3);g.gain.linearRampToValueAtTime(0,t+.4);
+          o.start(t);o.stop(t+.45);
+        });
+      },
+      lnd: ()=>{// Soft landing chime
+        [784,659,523].forEach((f,i)=>{
+          const o=ctx.createOscillator(),g=ctx.createGain();
+          o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.value=f;
+          const t=ctx.currentTime+i*.2;
+          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.11,t+.04);
+          g.gain.exponentialRampToValueAtTime(.001,t+1.2);o.start(t);o.stop(t+1.3);
+        });
+      },
+    };
+    if(sounds[st]) sounds[st]();
+  }catch(e){}
+}
+
+let gateLangIdx=0;let gateLangInterval=null;let lastGateSt=null;
+
 function loadGate(){
   const val=document.getElementById("gate-sel").value;
   if(!val)return;
@@ -1022,36 +1115,96 @@ function loadGate(){
     st:getSt("dep",f[1],depT,day),fnum:flightNum(f[6],fi)};
   const w=WEATHER[f[1]]||["--","--"];
   const alD=AL[f[6]]||{name:f[6],color:"#fff"};
-  const stC={board:"#00e5ff",final:"#ff6d00",dep:"#00e676",del:"#ff1744"};
-  const stL={sch:"PROGRAMADO",ont:"NO HORÁRIO",board:"EMBARCANDO",final:"EMB. FINAL",dep:"PARTIU",del:"ATRASADO",can:"CANCELADO"};
+
+  // Play sound for this status
+  if(r.st!==lastGateSt){playStatusSound(r.st);lastGateSt=r.st;}
+
+  const stColor=ST_COLORS[r.st]||"#e8eaf6";
+  const langs=ST_LANGS[r.st]||{pt:r.st.toUpperCase(),en:r.st.toUpperCase(),es:r.st.toUpperCase()};
+
   document.getElementById("gate-screen").innerHTML=`
     <div class="gs-header">
       <div><div class="gs-fn">${r.fnum}</div><div style="font-size:.7rem;opacity:.8;letter-spacing:.1em">${alD.name.toUpperCase()}</div></div>
-      <div class="gs-dest">${r.dest}</div><div class="gs-time">${r.time}</div>
+      <div class="gs-dest">${r.dest}</div>
+      <div class="gs-time">${r.time}</div>
     </div>
     <div class="gs-body">
-      <div class="gs-st-big"><div class="gs-st-lbl">Status</div>
-        <div class="gs-st-val" style="color:${stC[r.st]||"#e8eaf6"}">${stL[r.st]||r.st.toUpperCase()}</div></div>
+      <div class="gs-st-big">
+        <div class="gs-st-lbl" id="gs-lang-lbl">Status</div>
+        <div class="gs-st-val" id="gs-st-live" style="color:${stColor};transition:opacity .5s">${langs.pt}</div>
+        <div style="display:flex;gap:6px;margin-top:8px" id="gs-lang-dots">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--acc);opacity:1" id="ldot-0"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#7eb8ff;opacity:.3" id="ldot-1"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#ff8a65;opacity:.3" id="ldot-2"></div>
+        </div>
+      </div>
       <div class="gs-det">
-        <div class="gs-row"><span class="gs-key">Aeronave</span><span class="gs-val">${r.ac}</span></div>
-        <div class="gs-row"><span class="gs-key">Terminal</span><span class="gs-val">${r.terminal}</span></div>
-        <div class="gs-row"><span class="gs-key">Portão / Gate</span><span class="gs-val">${r.gate}</span></div>
-        <div class="gs-row"><span class="gs-key">Duração</span><span class="gs-val">${durS(r.dur)}</span></div>
-        <div class="gs-row"><span class="gs-key">Distância</span><span class="gs-val">${Number(r.dist).toLocaleString("pt-BR")} km</span></div>
+        <div class="gs-row"><span class="gs-key" id="lbl-ac">Aeronave</span><span class="gs-val">${r.ac}</span></div>
+        <div class="gs-row"><span class="gs-key" id="lbl-trm">Terminal</span><span class="gs-val">${r.terminal}</span></div>
+        <div class="gs-row"><span class="gs-key" id="lbl-gate">Portão / Gate</span><span class="gs-val">${r.gate}</span></div>
+        <div class="gs-row"><span class="gs-key" id="lbl-dur">Duração</span><span class="gs-val">${durS(r.dur)}</span></div>
+        <div class="gs-row"><span class="gs-key" id="lbl-dist">Distância</span><span class="gs-val">${Number(r.dist).toLocaleString("pt-BR")} km</span></div>
+        <div class="gs-row"><span class="gs-key" id="lbl-dest">Destino</span><span class="gs-val">${r.iata}</span></div>
       </div>
     </div>
     <div class="gs-wth">
       <div class="gs-wth-temp">${w[0]}</div>
-      <div><div style="font-size:.62rem;color:#78909c;letter-spacing:.1em;text-transform:uppercase">Clima em ${r.dest.split(" –")[0]}</div>
-      <div class="gs-wth-desc">${w[1]}</div></div>
+      <div>
+        <div style="font-size:.62rem;color:#78909c;letter-spacing:.1em;text-transform:uppercase" id="lbl-wth">Clima em ${r.dest.split(" –")[0]}</div>
+        <div class="gs-wth-desc">${w[1]}</div>
+      </div>
     </div>
     <div class="gs-anns">
-      <div class="gs-ann-lbl">📢 Avisos · Announcements · Avisos de Puerta</div>
+      <div class="gs-ann-lbl" id="lbl-ann">📢 Avisos · Announcements · Avisos de Puerta</div>
       <div id="ann-list"></div>
     </div>`;
+
+  // Start trilingual rotation for gate panel
+  gateLangIdx=0;
+  if(gateLangInterval)clearInterval(gateLangInterval);
+  rotateGateLang(r.st);
+  gateLangInterval=setInterval(()=>rotateGateLang(r.st),4000);
+
   annPool=buildAnnPool(r);annIdx=0;
   if(annInterval)clearInterval(annInterval);
   showNextAnn();annInterval=setInterval(showNextAnn,15000);
+}
+
+const GATE_LABELS={
+  pt:{status:"Status",ac:"Aeronave",trm:"Terminal",gate:"Portão",dur:"Duração",dist:"Distância",dest:"Destino",wth:"Clima em",ann:"📢 Avisos do Portão"},
+  en:{status:"Status",ac:"Aircraft",trm:"Terminal",gate:"Gate",dur:"Duration",dist:"Distance",dest:"Destination",wth:"Weather in",ann:"📢 Gate Announcements"},
+  es:{status:"Estado",ac:"Aeronave",trm:"Terminal",gate:"Puerta",dur:"Duración",dist:"Distancia",dest:"Destino",wth:"Clima en",ann:"📢 Avisos de Puerta"},
+};
+
+function rotateGateLang(st){
+  const langs=["pt","en","es"];
+  const lang=langs[gateLangIdx%3];
+  gateLangIdx++;
+  const stVal=document.getElementById("gs-st-live");
+  const stLbl=document.getElementById("gs-lang-lbl");
+  if(stVal){
+    stVal.style.opacity="0";
+    setTimeout(()=>{
+      stVal.textContent=(ST_LANGS[st]||{})[lang]||st.toUpperCase();
+      stVal.style.color=lang==="pt"?"var(--acc)":lang==="en"?"#7eb8ff":"#ff8a65";
+      stVal.style.opacity="1";
+    },300);
+  }
+  if(stLbl) stLbl.textContent=GATE_LABELS[lang].status;
+  const lblMap={lbl_ac:"ac","lbl-ac":"ac","lbl-trm":"trm","lbl-gate":"gate","lbl-dur":"dur","lbl-dist":"dist","lbl-dest":"dest"};
+  Object.entries(lblMap).forEach(([id,key])=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=GATE_LABELS[lang][key];
+  });
+  const wthEl=document.getElementById("lbl-wth");
+  if(wthEl){const dest=wthEl.textContent.split(" ").slice(-1)[0];wthEl.textContent=GATE_LABELS[lang].wth+" "+dest;}
+  const annEl=document.getElementById("lbl-ann");
+  if(annEl) annEl.textContent=GATE_LABELS[lang].ann;
+  // Update lang dots
+  langs.forEach((l,i)=>{
+    const d=document.getElementById("ldot-"+i);
+    if(d) d.style.opacity=i===(gateLangIdx-1)%3?"1":".3";
+  });
 }
 function populateGate(day){
   const sel=document.getElementById("gate-sel");
@@ -1283,40 +1436,52 @@ let transitInterval=null;
 
 function buildTransitCards(){
   const t=TRANSIT_DATA;if(!t)return;
+  const card=document.getElementById("transit-cards");if(!card)return;
   const lc=t.metro_color;
-  const card=document.getElementById("transit-cards");
-  if(!card)return;
 
-  // Build line1 (internal terminals)
   function stopsHtml(stations, color, lineId){
-    const n=stations.length;
-    return `<div class="md-track" id="track-${lineId}" style="--lc:${color}">
+    return `<div class="md-track" id="track-${lineId}">
       ${stations.map((s,i)=>`
         <div class="md-stop" style="--lc:${color}">
-          ${i<n-1?`<div class="md-stop" style="position:absolute;left:7px;top:50%;bottom:-50%;width:3px;background:${color};z-index:0"></div>`:''}
-          <div class="md-dot ${s.type}" id="dot-${lineId}-${i}" style="border-color:${color};color:${color}"></div>
-          <span class="md-name ${s.type}" id="name-${lineId}-${i}" style="${s.type==='hub'||s.type==='terminus'?'color:'+color:''}">${s.name}${s.branch?`<span class="branch-label" style="background:${color}22;color:${color}">Ramal ${s.branch}</span>`:''}</span>
+          <div class="md-line-seg" style="background:${color};opacity:${i===stations.length-1?0:1}"></div>
+          <div class="md-dot ${s.type}" id="dot-${lineId}-${i}"
+            style="border-color:${color};color:${color}"></div>
+          <div class="md-stop-info">
+            <span class="md-name ${s.type}"
+              style="${s.type==='hub'||s.type==='terminus'?'color:'+color:''}"
+              id="name-${lineId}-${i}">${s.name}</span>
+            ${s.branch?`<span class="branch-label" style="background:${color}22;color:${color}">Ramal ${s.branch}</span>`:''}
+            ${s.type==='terminal'?`<span class="stop-type-badge" style="color:${color};border-color:${color}40">✈ Terminal</span>`:''}
+            ${s.type==='hub'?`<span class="stop-type-badge" style="color:${color};border-color:${color}40">⬤ Hub</span>`:''}
+          </div>
         </div>`).join('')}
-      <div class="train-vehicle" id="vehicle-${lineId}" style="--lc:${color};top:0">
-        <div class="train-icon" style="background:${color}22;color:${color};border-color:${color}">🚇</div>
+    </div>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:.64rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase">Trem:</span>
+      <div id="trainbar-${lineId}" style="flex:1;height:8px;background:var(--muted);border-radius:4px;overflow:hidden;position:relative">
+        <div id="trainpos-${lineId}" style="position:absolute;top:0;bottom:0;width:24px;background:${color};border-radius:4px;transition:left .9s ease;box-shadow:0 0 8px ${color}"></div>
       </div>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:${color}" id="trainpct-${lineId}">0%</span>
     </div>`;
   }
 
   function busRowsHtml(routes){
     return routes.map((r,i)=>`
-      <div class="bus-route-row" id="busrow-${i}" style="border-left:3px solid ${r.color}">
-        <div class="br-vehicle" id="busveh-${i}" style="color:${r.color};left:0">🚌</div>
-        <div class="br-info">
+      <div class="bus-route-row" style="border-left:3px solid ${r.color}">
+        <div class="br-info-wrap">
           <span class="br-name">${r.name}</span>
           <span class="br-next" style="color:${r.color}" id="busnext-${i}">${formatMin(nextDep(r.freq))}</span>
+        </div>
+        <div class="bus-bar" style="background:var(--muted);height:6px;border-radius:3px;overflow:hidden;margin-top:6px;position:relative">
+          <div id="buspos-${i}" style="position:absolute;top:0;bottom:0;width:20px;border-radius:3px;background:${r.color};box-shadow:0 0 6px ${r.color};transition:left .9s ease;display:flex;align-items:center;justify-content:center;font-size:10px">🚌</div>
         </div>
       </div>`).join('');
   }
 
   card.innerHTML=`
+    <!-- Line 1: Internal terminals -->
     <div class="tc-card">
-      <div class="tc-hdr" style="border-bottom:2px solid ${lc}30">
+      <div class="tc-hdr" style="border-left:4px solid ${lc}">
         <div>
           <div class="tc-title" style="color:${lc}">${t.line1_name}</div>
           <div class="tc-note">${t.metro_note}</div>
@@ -1327,16 +1492,15 @@ function buildTransitCards(){
           <div class="nb-freq">a cada ${t.metro_interval}min</div>
         </div>
       </div>
-      <div class="tc-body">
-        <div class="diagram-title">Terminal interno</div>
-        ${stopsHtml(t.line1_stations, t.line1_color, 'line1')}
-      </div>
+      <div class="tc-body">${stopsHtml(t.line1_stations, lc, 'line1')}</div>
     </div>
+
+    <!-- Line 2: City extension -->
     <div class="tc-card">
-      <div class="tc-hdr" style="border-bottom:2px solid ${lc}30">
+      <div class="tc-hdr" style="border-left:4px solid ${lc}">
         <div>
           <div class="tc-title" style="color:${lc}">${t.line2_name}</div>
-          <div class="tc-note">Conexão com cidade</div>
+          <div class="tc-note">Conexão com a cidade</div>
         </div>
         <div class="next-box">
           <div class="nb-lbl">Próximo</div>
@@ -1344,16 +1508,15 @@ function buildTransitCards(){
           <div class="nb-freq">a cada ${t.metro_interval}min</div>
         </div>
       </div>
-      <div class="tc-body">
-        <div class="diagram-title">Estações</div>
-        ${stopsHtml(t.line2_stations, t.line2_color, 'line2')}
-      </div>
+      <div class="tc-body">${stopsHtml(t.line2_stations, lc, 'line2')}</div>
     </div>
+
+    <!-- Bus -->
     <div class="tc-card" style="grid-column:1/-1">
-      <div class="tc-hdr" style="border-bottom:2px solid #ffd54f30">
+      <div class="tc-hdr" style="border-left:4px solid #ffd54f">
         <div>
-          <div class="tc-title" style="color:#ffd54f">Linhas de Ônibus</div>
-          <div class="tc-note">Estimativas em tempo real</div>
+          <div class="tc-title" style="color:#ffd54f">🚌 Linhas de Ônibus</div>
+          <div class="tc-note">Posição estimada em tempo real</div>
         </div>
         <div class="next-box">
           <div class="nb-lbl">Mais próximo</div>
@@ -1361,7 +1524,7 @@ function buildTransitCards(){
           <div class="nb-freq">a cada ${t.bus_interval}min</div>
         </div>
       </div>
-      <div class="tc-body bus-section">${busRowsHtml(t.bus_routes)}</div>
+      <div class="tc-body">${busRowsHtml(t.bus_routes)}</div>
     </div>`;
 
   animateTransit();
@@ -1372,52 +1535,49 @@ function buildTransitCards(){
 function animateTransit(){
   const t=TRANSIT_DATA;if(!t)return;
 
-  // Animate line1
-  function animateLine(stations, color, lineId, intervalMin){
+  function animateLine(stations, lineId, intervalMin){
     const prog=trainProgress(intervalMin, stations.length);
-    const idx=Math.min(Math.floor(prog*stations.length), stations.length-1);
-    const frac=(prog*stations.length)%1;
-    // Update dots
+    const idx=Math.min(Math.floor(prog*stations.length),stations.length-1);
+
+    // Update station dots
     stations.forEach((s,i)=>{
       const dot=document.getElementById(`dot-${lineId}-${i}`);
       const nm=document.getElementById(`name-${lineId}-${i}`);
+      const isActive=i===idx;
       if(dot){
-        const active=i===idx;
-        dot.style.background=active?color:getComputedStyle(document.documentElement).getPropertyValue('--bg');
-        dot.style.boxShadow=active?`0 0 10px ${color}`:'none';
-        dot.style.transform=active?'scale(1.4)':'scale(1)';
+        const lc=dot.style.borderColor;
+        dot.style.background=isActive?lc:'transparent';
+        dot.style.boxShadow=isActive?`0 0 10px ${lc}`:'none';
+        dot.style.transform=isActive?'scale(1.35)':'scale(1)';
       }
-      if(nm) nm.style.fontWeight=i===idx?'900':'600';
+      if(nm) nm.style.fontWeight=isActive?'900':'600';
     });
-    // Position vehicle
-    const veh=document.getElementById(`vehicle-${lineId}`);
-    if(veh){
-      const track=document.getElementById(`track-${lineId}`);
-      if(track){
-        const stops=track.querySelectorAll('.md-stop');
-        if(stops.length>0){
-          const trackH=track.offsetHeight;
-          const segH=trackH/Math.max(stations.length-1,1);
-          const yPos=Math.min(idx*segH+frac*segH, trackH-22);
-          veh.style.top=Math.max(0,yPos)+'px';
-        }
-      }
+
+    // Update progress bar train
+    const bar=document.getElementById(`trainbar-${lineId}`);
+    const pos=document.getElementById(`trainpos-${lineId}`);
+    const pct=document.getElementById(`trainpct-${lineId}`);
+    if(bar&&pos){
+      const barW=bar.offsetWidth||200;
+      const leftPx=Math.max(0,Math.min(prog*(barW-24),barW-24));
+      pos.style.left=leftPx+'px';
     }
+    if(pct) pct.textContent=Math.round(prog*100)+'%';
   }
 
-  animateLine(t.line1_stations, t.line1_color, 'line1', t.metro_interval);
-  animateLine(t.line2_stations, t.line2_color, 'line2', t.metro_interval);
+  animateLine(t.line1_stations,'line1',t.metro_interval);
+  animateLine(t.line2_stations,'line2',t.metro_interval);
 
-  // Animate buses
+  // Bus bars
   t.bus_routes.forEach((r,i)=>{
-    const veh=document.getElementById(`busveh-${i}`);
-    const row=document.getElementById(`busrow-${i}`);
+    const prog=busProgress(r.freq);
+    const pos=document.getElementById(`buspos-${i}`);
     const next=document.getElementById(`busnext-${i}`);
-    if(veh&&row){
-      const prog=busProgress(r.freq);
-      const rowW=row.offsetWidth-30;
-      // Bus goes right (departing), then jumps back to start
-      veh.style.left=(prog*rowW)+'px';
+    if(pos){
+      const bar=pos.parentElement;
+      const barW=bar?bar.offsetWidth||300:300;
+      const leftPx=Math.max(0,Math.min(prog*(barW-20),barW-20));
+      pos.style.left=leftPx+'px';
     }
     if(next) next.textContent=formatMin(nextDep(r.freq));
   });
