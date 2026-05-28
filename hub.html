@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BrasilAero Group – Hub de Operações</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{--bg:#060810;--panel:#0a0e1a;--border:#1a2438;--white:#e8eaf6;--dim:#546e7a;--muted:#1a2535;
+  --gru:#00c853;--cnf:#ffb300;--sjk:#00e5ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--white);font-family:'Barlow Condensed',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.04) 2px,rgba(0,0,0,.04) 4px);pointer-events:none;z-index:999}
+header{background:var(--panel);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;position:sticky;top:0;z-index:300}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-logo{font-family:'Share Tech Mono',monospace;font-size:1.8rem;font-weight:900;letter-spacing:.05em;background:linear-gradient(135deg,var(--gru),var(--cnf),var(--sjk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.brand-info{display:flex;flex-direction:column}
+.brand-name{font-size:1rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.brand-sub{font-size:.68rem;color:var(--dim);letter-spacing:.1em}
+.hdr-airports{display:flex;gap:8px;flex-wrap:wrap}
+.ap-pill{padding:4px 11px;border-radius:20px;font-family:'Share Tech Mono',monospace;font-size:.72rem;font-weight:700;letter-spacing:.08em;border:1px solid;cursor:pointer;transition:opacity .2s;text-decoration:none}
+.ap-pill.gru{color:var(--gru);border-color:var(--gru);background:rgba(0,200,83,.08)}
+.ap-pill.cnf{color:var(--cnf);border-color:var(--cnf);background:rgba(255,179,0,.08)}
+.ap-pill.sjk{color:var(--sjk);border-color:var(--sjk);background:rgba(0,229,255,.08)}
+.ap-pill:hover{opacity:.7}
+.hdr-clock{text-align:right}
+.clk{font-family:'Share Tech Mono',monospace;font-size:1.7rem;color:var(--white);line-height:1}
+.clk-d{font-size:.65rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+/* TICKER */
+.tkr{height:24px;background:linear-gradient(90deg,var(--gru),var(--cnf),var(--sjk));overflow:hidden;display:flex;align-items:center}
+.tkr-in{display:inline-block;white-space:nowrap;animation:tk 80s linear infinite;font-family:'Share Tech Mono',monospace;font-size:.66rem;letter-spacing:.1em;color:#000;padding-left:100%;font-weight:700}
+@keyframes tk{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+/* TABS */
+.tabs{display:flex;background:var(--panel);border-bottom:1px solid var(--border);padding:0 32px;overflow-x:auto}
+.tbtn{padding:12px 18px;background:none;border:none;border-bottom:3px solid transparent;color:var(--dim);font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tbtn:hover{color:var(--white)}.tbtn.active{color:var(--white);border-bottom-color:var(--white)}
+.wrap{padding:20px 32px;max-width:1900px;margin:0 auto}
+/* FILTERS */
+.fbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.fsel{background:var(--panel);border:1px solid var(--border);color:var(--white);font-family:'Barlow Condensed',sans-serif;font-size:.8rem;padding:5px 10px;border-radius:4px;cursor:pointer;outline:none}
+.fsel:focus{border-color:var(--white)}
+.fsrch{background:var(--panel);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:.78rem;padding:5px 10px;border-radius:4px;outline:none;min-width:180px}
+.cnt{background:var(--white);color:#000;font-size:.64rem;font-weight:900;padding:2px 8px;border-radius:12px;font-family:'Share Tech Mono',monospace}
+.now-lbl{font-size:.66rem;color:var(--dim);font-family:'Share Tech Mono',monospace}
+.ap-filter{display:flex;gap:4px}
+.apf{padding:4px 11px;background:var(--panel);border:1px solid var(--border);border-radius:20px;color:var(--dim);font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.apf.gru.on{background:rgba(0,200,83,.15);border-color:var(--gru);color:var(--gru)}
+.apf.cnf.on{background:rgba(255,179,0,.15);border-color:var(--cnf);color:var(--cnf)}
+.apf.sjk.on{background:rgba(0,229,255,.15);border-color:var(--sjk);color:var(--sjk)}
+/* TABLE */
+.bt{width:100%;border-collapse:collapse}
+.bt th{background:#111827;color:var(--dim);font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;text-align:left;border-bottom:1px solid #1e2d4a;white-space:nowrap}
+.bt td{padding:8px 10px;font-size:.9rem;border-bottom:1px solid rgba(30,45,74,.3);vertical-align:middle;white-space:nowrap}
+.bt tr:nth-child(odd) td{background:#090e1b}
+.bt tr:nth-child(even) td{background:#0c1222}
+.bt tr:hover td{background:#15202e}
+.bt tr.row-gru td{background:rgba(0,200,83,.03)!important}
+.bt tr.row-cnf td{background:rgba(255,179,0,.03)!important}
+.bt tr.row-sjk td{background:rgba(0,229,255,.03)!important}
+.bt tr.row-gru:hover td{background:rgba(0,200,83,.07)!important}
+.bt tr.row-cnf:hover td{background:rgba(255,179,0,.07)!important}
+.bt tr.row-sjk:hover td{background:rgba(0,229,255,.07)!important}
+.bt tr.next-flight td{border-left:3px solid #fff}
+.tc{font-family:'Share Tech Mono',monospace;font-size:1.1rem;letter-spacing:.04em}
+.tc.gru{color:var(--gru)}.tc.cnf{color:var(--cnf)}.tc.sjk{color:var(--sjk)}
+.tdst{font-weight:700;font-size:.95rem}
+.tia{font-family:'Share Tech Mono',monospace;font-size:.82rem;color:#40c4ff;font-weight:700}
+.tac{font-size:.78rem;color:#78909c}
+.tgt{font-family:'Share Tech Mono',monospace;font-size:.82rem;font-weight:700}
+.ap-badge{font-family:'Share Tech Mono',monospace;font-size:.72rem;font-weight:900;padding:2px 8px;border-radius:3px;border:1px solid}
+.ap-badge.gru{color:var(--gru);border-color:var(--gru);background:rgba(0,200,83,.1)}
+.ap-badge.cnf{color:var(--cnf);border-color:var(--cnf);background:rgba(255,179,0,.1)}
+.ap-badge.sjk{color:var(--sjk);border-color:var(--sjk);background:rgba(0,229,255,.1)}
+.al{font-size:.62rem;font-weight:700;padding:2px 6px;border-radius:2px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em;border:1px solid;white-space:nowrap}
+.chip{font-size:.6rem;font-weight:700;padding:2px 5px;border-radius:2px;font-family:'Share Tech Mono',monospace;letter-spacing:.06em}
+.c-dom{color:#40c4ff;background:rgba(64,196,255,.1)}.c-lat{color:#69f0ae;background:rgba(105,240,174,.1)}
+.c-eua{color:#ffab40;background:rgba(255,171,64,.1)}.c-can{color:#ef9a9a;background:rgba(239,154,154,.1)}
+.c-eur{color:#ce93d8;background:rgba(206,147,216,.1)}.c-car{color:#f48fb1;background:rgba(244,143,177,.1)}
+.c-afr{color:#a5d6a7;background:rgba(165,214,167,.1)}.c-mid{color:#ffd54f;background:rgba(255,213,79,.1)}
+.c-mex{color:#4caf50;background:rgba(76,175,80,.1)}.c-asia{color:#ff8a65;background:rgba(255,138,101,.1)}
+.c-oce{color:#80deea;background:rgba(128,222,234,.1)}
+.st{font-family:'Share Tech Mono',monospace;font-size:.67rem;letter-spacing:.08em;padding:3px 7px;border-radius:3px;white-space:nowrap;font-weight:700}
+.st-sch{color:#546e7a;background:#0c1420;border:1px solid #1e2d4a}
+.st-ont{color:#40c4ff;background:rgba(64,196,255,.09);border:1px solid rgba(64,196,255,.25)}
+.st-board{color:#00e5ff;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.4);animation:bl 1.2s ease-in-out infinite alternate}
+.st-final{color:#ff6d00;background:rgba(255,109,0,.1);border:1px solid rgba(255,109,0,.45);animation:bl .7s ease-in-out infinite alternate}
+.st-taxi{color:#ffee58;background:rgba(255,238,88,.08);border:1px solid rgba(255,238,88,.28);animation:bl .8s ease-in-out infinite alternate}
+.st-dep{color:#69f0ae;background:rgba(105,240,174,.08);border:1px solid rgba(105,240,174,.28)}
+.st-del{color:#ff1744;background:rgba(255,23,68,.1);border:1px solid rgba(255,23,68,.38);animation:bl 1s ease-in-out infinite alternate}
+.st-can{color:#b71c1c;background:rgba(183,28,28,.1);border:1px solid rgba(183,28,28,.3);text-decoration:line-through}
+.st-arr{color:#00e676;background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.32);animation:bl .9s ease-in-out infinite alternate}
+.st-lnd{color:#b9f6ca;background:rgba(185,246,202,.07);border:1px solid rgba(185,246,202,.22)}
+@keyframes bl{from{opacity:1}to{opacity:.5}}
+/* LIVE MAP */
+#live-map{height:520px;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.live-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.lstat{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px 16px}
+.lstat-val{font-family:'Share Tech Mono',monospace;font-size:1.4rem;color:var(--white);font-weight:700}
+.lstat-lbl{font-size:.62rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.ap-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:20px;border-top:3px solid}
+.ap-card.gru{border-top-color:var(--gru)}.ap-card.cnf{border-top-color:var(--cnf)}.ap-card.sjk{border-top-color:var(--sjk)}
+.apc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.apc-iata{font-family:'Share Tech Mono',monospace;font-size:1.8rem;font-weight:900;line-height:1}
+.apc-iata.gru{color:var(--gru);text-shadow:0 0 20px rgba(0,200,83,.3)}
+.apc-iata.cnf{color:var(--cnf);text-shadow:0 0 20px rgba(255,179,0,.3)}
+.apc-iata.sjk{color:var(--sjk);text-shadow:0 0 20px rgba(0,229,255,.3)}
+.apc-name{font-size:.7rem;color:var(--dim);letter-spacing:.07em;max-width:160px;text-align:right;line-height:1.3}
+.apc-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.apc-stat{background:var(--muted);border-radius:6px;padding:8px 12px}
+.apc-stat-val{font-family:'Share Tech Mono',monospace;font-size:1.1rem;font-weight:700}
+.apc-stat-lbl{font-size:.6rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.apc-link{display:block;margin-top:12px;text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:7px;border-radius:5px;border:1px solid;transition:opacity .2s}
+.apc-link:hover{opacity:.75}
+.apc-link.gru{color:var(--gru);border-color:var(--gru);background:rgba(0,200,83,.07)}
+.apc-link.cnf{color:var(--cnf);border-color:var(--cnf);background:rgba(255,179,0,.07)}
+.apc-link.sjk{color:var(--sjk);border-color:var(--sjk);background:rgba(0,229,255,.07)}
+/* TRANSIT */
+.transit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.tc-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.tc-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.tc-iata{font-family:'Share Tech Mono',monospace;font-size:1.4rem;font-weight:900}
+.tc-line{font-size:.75rem;font-weight:700;letter-spacing:.06em}
+.tc-body{padding:16px 20px}
+/* Next train display */
+.next-train{background:var(--muted);border-radius:8px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.nt-label{font-size:.64rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+.nt-time{font-family:'Share Tech Mono',monospace;font-size:1.6rem;font-weight:700}
+.nt-min{font-family:'Share Tech Mono',monospace;font-size:.9rem;color:var(--dim)}
+.nt-freq{font-size:.68rem;color:var(--dim);letter-spacing:.08em}
+/* Metro line diagram */
+.metro-line{display:flex;flex-direction:column;gap:0;margin-bottom:14px}
+.metro-stop{display:flex;align-items:center;gap:10px;padding:4px 0;position:relative}
+.metro-stop::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:2px;background:var(--line-color)}
+.metro-stop:first-child::before{top:50%}
+.metro-stop:last-child::before{bottom:50%}
+.metro-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--line-color);background:var(--bg);z-index:1;flex-shrink:0}
+.metro-dot.terminal{background:var(--line-color)}
+.metro-dot.hub{background:var(--line-color);box-shadow:0 0 8px var(--line-color)}
+.metro-dot.terminus{background:var(--line-color);border-color:var(--line-color)}
+.metro-name{font-size:.82rem;font-weight:700}
+.metro-name.terminal{color:var(--line-color)}
+.metro-name.hub{color:var(--line-color);font-weight:900}
+.metro-name.terminus{color:var(--white)}
+.metro-also{font-size:.7rem;color:var(--dim);margin-bottom:12px;line-height:1.4;border-left:2px solid var(--border);padding-left:8px}
+/* Bus routes */
+.bus-title{font-size:.64rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.bus-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.bus-route{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--muted);border-radius:5px;margin-bottom:5px}
+.br-name{font-size:.8rem}
+.br-freq{font-family:'Share Tech Mono',monospace;font-size:.76rem;color:var(--dim)}
+/* INFO */
+.ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.ic{background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:18px;border-top:3px solid}
+.ic.gru{border-top-color:var(--gru)}.ic.cnf{border-top-color:var(--cnf)}.ic.sjk{border-top-color:var(--sjk)}
+.ic h3{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px;font-weight:700}
+.ic.gru h3{color:var(--gru)}.ic.cnf h3{color:var(--cnf)}.ic.sjk h3{color:var(--sjk)}
+.ir{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(30,45,74,.4);font-size:.82rem}
+.ir:last-child{border:none}
+.ik{color:var(--dim)}.iv{color:var(--white);font-family:'Share Tech Mono',monospace;font-size:.76rem}
+.sec{display:flex;align-items:center;gap:10px;margin:20px 0 12px;font-size:.68rem;color:var(--dim);letter-spacing:.2em;text-transform:uppercase}
+.sec::after{content:'';flex:1;height:1px;background:var(--border)}
+.empty{text-align:center;padding:44px;color:var(--dim);font-size:.86rem;letter-spacing:.1em}
+.leaflet-container{background:#0a1520!important}
+.leaflet-tile{filter:brightness(.45) saturate(.3) hue-rotate(180deg)}
+.leaflet-popup-content-wrapper{background:#0a0e1a;color:#e8eaf6;border:1px solid #1e2d4a;border-radius:6px}
+.leaflet-popup-tip{background:#0a0e1a}
+@media(max-width:900px){.kpi-grid{grid-template-columns:1fr}.wrap{padding:14px}#live-map{height:350px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">BAG</div>
+    <div class="brand-info">
+      <span class="brand-name">BrasilAero Group</span>
+      <span class="brand-sub">Centro de Operações · GRU · CNF · SJK</span>
+    </div>
+  </div>
+  <div class="hdr-airports">
+    <a class="ap-pill gru" href="gru.html" target="_blank">GRU ↗</a>
+    <a class="ap-pill cnf" href="bh.html" target="_blank">CNF ↗</a>
+    <a class="ap-pill sjk" href="sjk.html" target="_blank">SJK ↗</a>
+  </div>
+  <div class="hdr-clock">
+    <div class="clk" id="clk">--:--:--</div>
+    <div class="clk-d" id="clkd">---</div>
+  </div>
+</header>
+
+<div class="tkr"><div class="tkr-in" id="tkrtxt">...</div></div>
+
+<div class="tabs">
+  <button class="tbtn active" onclick="showTab('overview')">📊 Visão Geral</button>
+  <button class="tbtn" onclick="showTab('dep')">↑ Partidas</button>
+  <button class="tbtn" onclick="showTab('arr')">↓ Chegadas</button>
+  <button class="tbtn" onclick="showTab('live')">✈ Ao Vivo</button>
+  <button class="tbtn" onclick="showTab('transit')">🚇 Transporte</button>
+  <button class="tbtn" onclick="showTab('info')">✦ Aeroportos</button>
+</div>
+
+<!-- VISÃO GERAL -->
+<div class="wrap" id="tab-overview">
+  <div class="kpi-grid">
+    <div class="ap-card gru">
+      <div class="apc-header">
+        <div class="apc-iata gru">GRU</div>
+        <div class="apc-name">Guarulhos<br>São Paulo – SP</div>
+      </div>
+      <div class="apc-stats">
+        <div class="apc-stat"><div class="apc-stat-val" style="color:var(--gru)" id="kpi-gru-dep">–</div><div class="apc-stat-lbl">Partidas hoje</div></div>
+        <div class="apc-stat"><div class="apc-stat-val" style="color:var(--gru)" id="kpi-gru-arr">–</div><div class="apc-stat-lbl">Chegadas hoje</div></div>
+        <div class="apc-stat"><div class="apc-stat-val">197</div><div class="apc-stat-lbl">Entradas totais</div></div>
+        <div class="apc-stat"><div class="apc-stat-val">41</div><div class="apc-stat-lbl">Companhias</div></div>
+      </div>
+      <a class="apc-link gru" href="gru.html" target="_blank">Abrir painel completo →</a>
+    </div>
+    <div class="ap-card cnf">
+      <div class="apc-header">
+        <div class="apc-iata cnf">CNF</div>
+        <div class="apc-name">Tancredo Neves<br>Belo Horizonte – MG</div>
+      </div>
+      <div class="apc-stats">
+        <div class="apc-stat"><div class="apc-stat-val" style="color:var(--cnf)" id="kpi-cnf-dep">–</div><div class="apc-stat-lbl">Partidas hoje</div></div>
+        <div class="apc-stat"><div class="apc-stat-val" style="color:var(--cnf)" id="kpi-cnf-arr">–</div><div class="apc-stat-lbl">Chegadas hoje</div></div>
+        <div class="apc-stat"><div class="apc-stat-val">123</div><div class="apc-stat-lbl">Entradas totais</div></div>
+        <div class="apc-stat"><div class="apc-stat-val">20</div><div class="apc-stat-lbl">Companhias</div></div>
+      </div>
+      <a class="apc-link cnf" href="bh.html" target="_blank">Abrir painel completo →</a>
+    </div>
+    <div class="ap-card sjk">
+      <div class="apc-header">
+        <div class="apc-iata sjk">SJK</div>
+        <div class="apc-name">Urbano Stumpf<br>São José dos Campos – SP</div>
+      </div>
+      <div class="apc-stats">
+        <div class="apc-stat"><div class="apc-stat-val" style="color:var(--sjk)" id="kpi-sjk-dep">–</div><div class="apc-stat-lbl">Partidas hoje</div></div>
+        <div class="apc-stat"><div class="apc-stat-val" style="color:var(--sjk)" id="kpi-sjk-arr">–</div><div class="apc-stat-lbl">Chegadas hoje</div></div>
+        <div class="apc-stat"><div class="apc-stat-val">56</div><div class="apc-stat-lbl">Entradas totais</div></div>
+        <div class="apc-stat"><div class="apc-stat-val">7</div><div class="apc-stat-lbl">Companhias</div></div>
+      </div>
+      <a class="apc-link sjk" href="sjk.html" target="_blank">Abrir painel completo →</a>
+    </div>
+  </div>
+</div>
+
+<!-- PARTIDAS -->
+<div class="wrap" id="tab-dep" style="display:none">
+  <div class="fbar">
+    <div class="ap-filter" id="apf-dep">
+      <button class="apf gru on" onclick="toggleAp('dep','GRU')">GRU</button>
+      <button class="apf cnf on" onclick="toggleAp('dep','CNF')">CNF</button>
+      <button class="apf sjk on" onclick="toggleAp('dep','SJK')">SJK</button>
+    </div>
+    <select class="fsel" id="tf-dep" onchange="rDep()">
+      <option value="ALL">Todos os tipos</option>
+      <option value="DOM">Doméstico</option><option value="LAT">Am. Latina</option>
+      <option value="CAR">Caribe</option><option value="MEX">México</option>
+      <option value="EUA">EUA</option><option value="CAN">Canadá</option>
+      <option value="EUR">Europa</option><option value="MID">Oriente Médio</option>
+      <option value="AFR">África</option><option value="ASIA">Ásia</option><option value="OCE">Oceania</option>
+    </select>
+    <input class="fsrch" id="sr-dep" placeholder="Destino, IATA, cia, aeroporto..." oninput="rDep()"/>
+    <span class="cnt" id="cnt-dep">0</span>
+    <span class="now-lbl" id="now-lbl-dep"></span>
+  </div>
+  <table class="bt"><thead><tr>
+    <th>Aeroporto</th><th>Partida</th><th>Destino</th><th>IATA</th>
+    <th>Cia. Aérea</th><th>Tipo</th><th>Aeronave</th><th>Terminal</th><th>Portão</th><th>Status</th>
+  </tr></thead><tbody id="tb-dep"></tbody></table>
+  <div class="empty" id="em-dep" style="display:none">Nenhum voo encontrado.</div>
+</div>
+
+<!-- CHEGADAS -->
+<div class="wrap" id="tab-arr" style="display:none">
+  <div class="fbar">
+    <div class="ap-filter" id="apf-arr">
+      <button class="apf gru on" onclick="toggleAp('arr','GRU')">GRU</button>
+      <button class="apf cnf on" onclick="toggleAp('arr','CNF')">CNF</button>
+      <button class="apf sjk on" onclick="toggleAp('arr','SJK')">SJK</button>
+    </div>
+    <select class="fsel" id="tf-arr" onchange="rArr()">
+      <option value="ALL">Todos os tipos</option>
+      <option value="DOM">Doméstico</option><option value="LAT">Am. Latina</option>
+      <option value="CAR">Caribe</option><option value="MEX">México</option>
+      <option value="EUA">EUA</option><option value="CAN">Canadá</option>
+      <option value="EUR">Europa</option><option value="MID">Oriente Médio</option>
+      <option value="AFR">África</option><option value="ASIA">Ásia</option><option value="OCE">Oceania</option>
+    </select>
+    <input class="fsrch" id="sr-arr" placeholder="Destino, IATA, cia, aeroporto..." oninput="rArr()"/>
+    <span class="cnt" id="cnt-arr">0</span>
+  </div>
+  <table class="bt"><thead><tr>
+    <th>Aeroporto</th><th>Chegada</th><th>Origem</th><th>IATA</th>
+    <th>Cia. Aérea</th><th>Tipo</th><th>Aeronave</th><th>Terminal</th><th>Esteira</th><th>Status</th>
+  </tr></thead><tbody id="tb-arr"></tbody></table>
+  <div class="empty" id="em-arr" style="display:none">Nenhum voo encontrado.</div>
+</div>
+
+<!-- AO VIVO -->
+<div class="wrap" id="tab-live" style="display:none">
+  <div class="live-stats">
+    <div class="lstat"><div class="lstat-val" id="ls-ab">0</div><div class="lstat-lbl">Em voo agora</div></div>
+    <div class="lstat"><div class="lstat-val" id="ls-bd">0</div><div class="lstat-lbl">Embarcando</div></div>
+    <div class="lstat"><div class="lstat-val" id="ls-ar">0</div><div class="lstat-lbl">Chegando</div></div>
+    <div class="lstat"><div class="lstat-val" id="ls-dl">0</div><div class="lstat-lbl">Atrasados</div></div>
+    <div class="lstat"><div class="lstat-val" id="ls-tx">0</div><div class="lstat-lbl">Na Pista</div></div>
+  </div>
+  <div id="live-map"></div>
+</div>
+
+<!-- TRANSPORTE -->
+<div class="wrap" id="tab-transit" style="display:none">
+  <div class="sec">Metrô / CPTM / VLT — Conexões</div>
+  <div class="transit-grid" id="transit-cards"></div>
+</div>
+
+<!-- INFO -->
+<div class="wrap" id="tab-info" style="display:none">
+  <div class="sec">Dados Operacionais</div>
+  <div class="ig" id="info-cards"></div>
+</div>
+
+<script>
+const FD=[["Rio de Janeiro – Galeão", "GIG", "DOM", 360, 55, "Airbus A320", "G3", ["05:55", "05:55", "05:55", "05:55", "05:55", "07:10", "08:30"], ["08:45", "08:45", "08:45", "08:45", "08:45", "10:00", "11:20"], "GRU"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 360, 55, "Boeing 737-800", "AD", ["08:20", "08:20", "08:20", "08:20", "08:20", "10:35", "12:15"], ["11:10", "11:10", "11:10", "11:10", "11:10", "13:25", "15:05"], "GRU"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 360, 55, "Airbus A320", "LA", ["11:40", "11:40", "11:40", "11:40", "11:40", "14:20", null], ["14:30", "14:30", "14:30", "14:30", "14:30", "17:10", null], "GRU"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 360, 55, "Boeing 737-800", "2Z", ["14:55", "14:55", "14:55", "14:55", "14:55", "17:05", null], ["17:45", "17:45", "17:45", "17:45", "17:45", "19:55", null], "GRU"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 360, 55, "Airbus A321", "G3", ["17:30", "17:30", "17:30", "17:30", "17:30", null, null], ["20:20", "20:20", "20:20", "20:20", "20:20", null, null], "GRU"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 360, 55, "Airbus A320", "AD", ["20:45", "20:45", "20:45", "20:45", "20:45", null, null], ["23:35", "23:35", "23:35", "23:35", "23:35", null, null], "GRU"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 360, 55, "Boeing 737-800", "LA", ["23:20", null, "23:20", null, "23:20", null, null], ["02:10", null, "02:10", null, "02:10", null, null], "GRU"], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 350, 55, "Embraer E195", "2Z", ["06:05", "06:05", "06:05", "06:05", "06:05", "07:30", "09:00"], ["08:55", "08:55", "08:55", "08:55", "08:55", "10:20", "11:50"], "GRU"], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 350, 55, "Boeing 737-800", "G3", ["08:35", "08:35", "08:35", "08:35", "08:35", "10:50", "12:30"], ["11:25", "11:25", "11:25", "11:25", "11:25", "13:40", "15:20"], "GRU"], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 350, 55, "Embraer E195", "AD", ["11:15", "11:15", "11:15", "11:15", "11:15", "14:00", null], ["14:05", "14:05", "14:05", "14:05", "14:05", "16:50", null], "GRU"], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 350, 55, "Boeing 737-800", "LA", ["14:40", "14:40", "14:40", "14:40", "14:40", "16:55", null], ["17:30", "17:30", "17:30", "17:30", "17:30", "19:45", null], "GRU"], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 350, 55, "Embraer E195", "2Z", ["17:55", "17:55", "17:55", "17:55", "17:55", null, null], ["20:45", "20:45", "20:45", "20:45", "20:45", null, null], "GRU"], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 350, 55, "Boeing 737-800", "G3", ["21:10", "21:10", "21:10", "21:10", "21:10", null, null], ["00:00", "00:00", "00:00", "00:00", "00:00", null, null], "GRU"], ["Brasília", "BSB", "DOM", 873, 90, "Airbus A320", "AD", ["05:50", "05:50", "05:50", "05:50", "05:50", "07:00", "08:30"], ["09:50", "09:50", "09:50", "09:50", "09:50", "11:00", "12:30"], "GRU"], ["Brasília", "BSB", "DOM", 873, 90, "Boeing 737-800", "LA", ["07:45", "07:45", "07:45", "07:45", "07:45", "09:30", "11:15"], ["11:45", "11:45", "11:45", "11:45", "11:45", "13:30", "15:15"], "GRU"], ["Brasília", "BSB", "DOM", 873, 90, "Airbus A321", "2Z", ["10:20", "10:20", "10:20", "10:20", "10:20", "12:45", null], ["14:20", "14:20", "14:20", "14:20", "14:20", "16:45", null], "GRU"], ["Brasília", "BSB", "DOM", 873, 90, "Airbus A320", "G3", ["13:05", "13:05", "13:05", "13:05", "13:05", "15:30", null], ["17:05", "17:05", "17:05", "17:05", "17:05", "19:30", null], "GRU"], ["Brasília", "BSB", "DOM", 873, 90, "Boeing 737-800", "AD", ["16:10", "16:10", "16:10", "16:10", "16:10", "18:45", null], ["20:10", "20:10", "20:10", "20:10", "20:10", "22:45", null], "GRU"], ["Brasília", "BSB", "DOM", 873, 90, "Airbus A321", "LA", ["19:35", "19:35", "19:35", "19:35", "19:35", null, null], ["23:35", "23:35", "23:35", "23:35", "23:35", null, null], "GRU"], ["Brasília", "BSB", "DOM", 873, 90, "Airbus A320", "2Z", ["22:50", null, "22:50", null, "22:50", null, null], ["02:50", null, "02:50", null, "02:50", null, null], "GRU"], ["Salvador", "SSA", "DOM", 1963, 165, "Boeing 737-800", "G3", ["06:25", "06:25", "06:25", "06:25", "06:25", "08:30", "10:15"], ["13:25", "13:25", "13:25", "13:25", "13:25", "15:30", "17:15"], "GRU"], ["Salvador", "SSA", "DOM", 1963, 165, "Airbus A320", "AD", ["10:50", "10:50", "10:50", "10:50", "10:50", "13:15", null], ["17:50", "17:50", "17:50", "17:50", "17:50", "20:15", null], "GRU"], ["Salvador", "SSA", "DOM", 1963, 165, "Boeing 737-800", "LA", ["15:35", "15:35", "15:35", "15:35", "15:35", "18:00", null], ["22:35", "22:35", "22:35", "22:35", "22:35", "01:00", null], "GRU"], ["Salvador", "SSA", "DOM", 1963, 165, "Airbus A320", "2Z", ["20:15", "20:15", "20:15", "20:15", "20:15", null, null], ["03:15", "03:15", "03:15", "03:15", "03:15", null, null], "GRU"], ["Recife", "REC", "DOM", 2660, 215, "Boeing 737-800", "G3", ["05:40", "05:40", "05:40", "05:40", "05:40", "08:00", "10:30"], ["14:20", "14:20", "14:20", "14:20", "14:20", "16:40", "19:10"], "GRU"], ["Recife", "REC", "DOM", 2660, 215, "Airbus A320", "AD", ["09:30", "09:30", "09:30", "09:30", "09:30", "12:30", null], ["18:10", "18:10", "18:10", "18:10", "18:10", "21:10", null], "GRU"], ["Recife", "REC", "DOM", 2660, 215, "Boeing 737-800", "LA", ["14:20", "14:20", "14:20", "14:20", "14:20", "17:20", null], ["23:00", "23:00", "23:00", "23:00", "23:00", "02:00", null], "GRU"], ["Recife", "REC", "DOM", 2660, 215, "Airbus A320", "2Z", ["19:45", "19:45", "19:45", "19:45", "19:45", null, null], ["04:25", "04:25", "04:25", "04:25", "04:25", null, null], "GRU"], ["Recife", "REC", "DOM", 2660, 215, "Boeing 737-800", "G3", ["01:30", null, "01:30", null, "01:30", null, null], ["10:10", null, "10:10", null, "10:10", null, null], "GRU"], ["Fortaleza", "FOR", "DOM", 3050, 235, "Boeing 737-800", "AD", ["06:10", "06:10", "06:10", "06:10", "06:10", "09:00", null], ["15:30", "15:30", "15:30", "15:30", "15:30", "18:20", null], "GRU"], ["Fortaleza", "FOR", "DOM", 3050, 235, "Boeing 737-800", "LA", ["13:45", "13:45", "13:45", "13:45", "13:45", "17:00", null], ["23:05", "23:05", "23:05", "23:05", "23:05", "02:20", null], "GRU"], ["Fortaleza", "FOR", "DOM", 3050, 235, "Boeing 737-800", "2Z", ["22:30", null, "22:30", null, "22:30", null, null], ["07:50", null, "07:50", null, "07:50", null, null], "GRU"], ["Natal", "NAT", "DOM", 2760, 215, "Boeing 737-800", "G3", ["06:45", null, "06:45", null, "06:45", "09:15", "11:30"], ["15:25", null, "15:25", null, "15:25", "17:55", "20:10"], "GRU"], ["Maceió", "MCZ", "DOM", 2440, 185, "Airbus A319", "AD", ["07:10", null, "07:10", null, "07:10", null, null], ["14:50", null, "14:50", null, "14:50", null, null], "GRU"], ["João Pessoa", "JPA", "DOM", 2630, 205, "Boeing 737-800", "LA", [null, "08:05", null, "08:05", null, null, null], [null, "16:25", null, "16:25", null, null, null], "GRU"], ["São Luís", "SLZ", "DOM", 2785, 215, "Boeing 737-800", "2Z", [null, null, null, null, null, "07:45", null], [null, null, null, null, null, "16:25", null], "GRU"], ["Teresina", "THE", "DOM", 2540, 195, "Airbus A319", "G3", [null, null, null, "08:30", null, null, null], [null, null, null, "16:30", null, null, null], "GRU"], ["Macapá", "MCP", "DOM", 2960, 235, "Boeing 737-800", "AD", [null, null, null, null, null, null, "08:00"], [null, null, null, null, null, null, "17:20"], "GRU"], ["Porto Alegre", "POA", "DOM", 1109, 90, "Airbus A320", "LA", ["06:00", "06:00", "06:00", "06:00", "06:00", "07:30", "09:00"], ["10:00", "10:00", "10:00", "10:00", "10:00", "11:30", "13:00"], "GRU"], ["Porto Alegre", "POA", "DOM", 1109, 90, "Boeing 737-800", "2Z", ["09:15", "09:15", "09:15", "09:15", "09:15", "11:45", "13:30"], ["13:15", "13:15", "13:15", "13:15", "13:15", "15:45", "17:30"], "GRU"], ["Porto Alegre", "POA", "DOM", 1109, 90, "Airbus A320", "G3", ["13:10", "13:10", "13:10", "13:10", "13:10", "15:55", null], ["17:10", "17:10", "17:10", "17:10", "17:10", "19:55", null], "GRU"], ["Porto Alegre", "POA", "DOM", 1109, 90, "Boeing 737-800", "AD", ["17:25", "17:25", "17:25", "17:25", "17:25", null, null], ["21:25", "21:25", "21:25", "21:25", "21:25", null, null], "GRU"], ["Porto Alegre", "POA", "DOM", 1109, 90, "Airbus A320", "LA", ["21:40", "21:40", "21:40", "21:40", "21:40", null, null], ["01:40", "01:40", "01:40", "01:40", "01:40", null, null], "GRU"], ["Porto Alegre", "POA", "DOM", 1109, 90, "Boeing 737-800", "2Z", ["02:15", null, "02:15", null, null, null, null], ["06:15", null, "06:15", null, null, null, null], "GRU"], ["Curitiba", "CWB", "DOM", 408, 50, "Embraer E195", "G3", ["06:35", "06:35", "06:35", "06:35", "06:35", "07:50", "09:20"], ["09:15", "09:15", "09:15", "09:15", "09:15", "10:30", "12:00"], "GRU"], ["Curitiba", "CWB", "DOM", 408, 50, "Airbus A319", "AD", ["09:00", "09:00", "09:00", "09:00", "09:00", "11:10", "12:50"], ["11:40", "11:40", "11:40", "11:40", "11:40", "13:50", "15:30"], "GRU"], ["Curitiba", "CWB", "DOM", 408, 50, "Embraer E195", "LA", ["12:25", "12:25", "12:25", "12:25", "12:25", "14:40", null], ["15:05", "15:05", "15:05", "15:05", "15:05", "17:20", null], "GRU"], ["Curitiba", "CWB", "DOM", 408, 50, "Airbus A319", "2Z", ["16:05", "16:05", "16:05", "16:05", "16:05", "18:20", null], ["18:45", "18:45", "18:45", "18:45", "18:45", "21:00", null], "GRU"], ["Curitiba", "CWB", "DOM", 408, 50, "Embraer E195", "G3", ["19:50", "19:50", "19:50", "19:50", "19:50", null, null], ["22:30", "22:30", "22:30", "22:30", "22:30", null, null], "GRU"], ["Curitiba", "CWB", "DOM", 408, 50, "Airbus A319", "AD", ["23:05", "23:05", "23:05", "23:05", "23:05", null, null], ["01:45", "01:45", "01:45", "01:45", "01:45", null, null], "GRU"], ["Florianópolis", "FLN", "DOM", 696, 70, "Embraer E195", "LA", ["07:05", "07:05", "07:05", "07:05", "07:05", "09:20", "11:00"], ["10:25", "10:25", "10:25", "10:25", "10:25", "12:40", "14:20"], "GRU"], ["Florianópolis", "FLN", "DOM", 696, 70, "Boeing 737-800", "2Z", ["13:40", "13:40", "13:40", "13:40", "13:40", "16:00", null], ["17:00", "17:00", "17:00", "17:00", "17:00", "19:20", null], "GRU"], ["Florianópolis", "FLN", "DOM", 696, 70, "Embraer E195", "G3", ["19:15", "19:15", "19:15", "19:15", "19:15", null, null], ["22:35", "22:35", "22:35", "22:35", "22:35", null, null], "GRU"], ["Belo Horizonte – Confins", "CNF", "DOM", 586, 75, "Airbus A320", "AD", ["06:05", "06:05", "06:05", "06:05", "06:05", "07:30", "08:55"], ["09:35", "09:35", "09:35", "09:35", "09:35", "11:00", "12:25"], "GRU"], ["Belo Horizonte – Confins", "CNF", "DOM", 586, 75, "Boeing 737-800", "LA", ["09:20", "09:20", "09:20", "09:20", "09:20", "11:40", "13:20"], ["12:50", "12:50", "12:50", "12:50", "12:50", "15:10", "16:50"], "GRU"], ["Belo Horizonte – Confins", "CNF", "DOM", 586, 75, "Airbus A320", "2Z", ["12:45", "12:45", "12:45", "12:45", "12:45", "15:05", null], ["16:15", "16:15", "16:15", "16:15", "16:15", "18:35", null], "GRU"], ["Belo Horizonte – Confins", "CNF", "DOM", 586, 75, "Boeing 737-800", "G3", ["16:30", "16:30", "16:30", "16:30", "16:30", "18:50", null], ["20:00", "20:00", "20:00", "20:00", "20:00", "22:20", null], "GRU"], ["Belo Horizonte – Confins", "CNF", "DOM", 586, 75, "Airbus A320", "AD", ["20:55", "20:55", "20:55", "20:55", "20:55", null, null], ["00:25", "00:25", "00:25", "00:25", "00:25", null, null], "GRU"], ["Goiânia", "GYN", "DOM", 892, 90, "Embraer E195", "LA", ["07:30", null, "07:30", null, "07:30", "09:40", null], ["11:30", null, "11:30", null, "11:30", "13:40", null], "GRU"], ["Goiânia", "GYN", "DOM", 892, 90, "Embraer E195", "2Z", ["15:10", null, "15:10", null, "15:10", null, null], ["19:10", null, "19:10", null, "19:10", null, null], "GRU"], ["Campo Grande", "CGR", "DOM", 1007, 95, "Embraer E195", "G3", ["08:15", "08:15", "08:15", "08:15", "08:15", "10:30", null], ["12:25", "12:25", "12:25", "12:25", "12:25", "14:40", null], "GRU"], ["Campo Grande", "CGR", "DOM", 1007, 95, "Embraer E195", "AD", ["16:45", "16:45", "16:45", "16:45", "16:45", null, null], ["20:55", "20:55", "20:55", "20:55", "20:55", null, null], "GRU"], ["Cuiabá", "CGB", "DOM", 1532, 140, "Airbus A319", "LA", ["08:40", "08:40", "08:40", "08:40", "08:40", "11:00", null], ["14:50", "14:50", "14:50", "14:50", "14:50", "17:10", null], "GRU"], ["Cuiabá", "CGB", "DOM", 1532, 140, "Airbus A319", "2Z", ["17:20", "17:20", "17:20", "17:20", "17:20", null, null], ["23:30", "23:30", "23:30", "23:30", "23:30", null, null], "GRU"], ["Manaus", "MAO", "DOM", 2695, 250, "Boeing 737-800", "G3", ["06:50", null, "06:50", "06:50", "06:50", "08:30", null], ["16:40", null, "16:40", "16:40", "16:40", "18:20", null], "GRU"], ["Manaus", "MAO", "DOM", 2695, 250, "Boeing 737-800", "AD", ["14:35", "14:35", "14:35", "14:35", "14:35", "17:10", null], ["00:25", "00:25", "00:25", "00:25", "00:25", "03:00", null], "GRU"], ["Manaus", "MAO", "DOM", 2695, 250, "Boeing 737-800", "LA", ["22:45", null, "22:45", null, null, null, null], ["08:35", null, "08:35", null, null, null, null], "GRU"], ["Belém", "BEL", "DOM", 2097, 185, "Boeing 737-800", "2Z", ["07:20", "07:20", "07:20", "07:20", "07:20", "09:45", "11:30"], ["15:00", "15:00", "15:00", "15:00", "15:00", "17:25", "19:10"], "GRU"], ["Belém", "BEL", "DOM", 2097, 185, "Boeing 737-800", "G3", ["16:00", "16:00", "16:00", "16:00", "16:00", "18:30", null], ["23:40", "23:40", "23:40", "23:40", "23:40", "02:10", null], "GRU"], ["Belém", "BEL", "DOM", 2097, 185, "Boeing 737-800", "AD", ["23:50", null, "23:50", null, null, null, null], ["07:30", null, "07:30", null, null, null, null], "GRU"], ["Palmas", "PMW", "DOM", 1568, 145, "Embraer E190", "LA", ["08:05", null, "08:05", null, "08:05", null, null], ["14:25", null, "14:25", null, "14:25", null, null], "GRU"], ["Palmas", "PMW", "DOM", 1568, 145, "Embraer E190", "2Z", ["15:30", null, "15:30", null, "15:30", null, null], ["21:50", null, "21:50", null, "21:50", null, null], "GRU"], ["Porto Velho", "PVH", "DOM", 2915, 260, "Boeing 737-800", "G3", ["07:00", null, null, "07:00", null, "09:20", null], ["17:10", null, null, "17:10", null, "19:30", null], "GRU"], ["Uberlândia", "UDI", "DOM", 538, 65, "Embraer E175", "AD", ["08:50", "08:50", "08:50", "08:50", "08:50", null, null], ["12:00", "12:00", "12:00", "12:00", "12:00", null, null], "GRU"], ["Vitória", "VIX", "DOM", 789, 75, "Embraer E175", "LA", ["07:40", "07:40", "07:40", "07:40", "07:40", "09:50", null], ["11:10", "11:10", "11:10", "11:10", "11:10", "13:20", null], "GRU"], ["Ribeirão Preto", "RAO", "DOM", 316, 50, "ATR 72-600", "2Z", ["08:10", "08:10", "08:10", "08:10", "08:10", null, null], ["10:50", "10:50", "10:50", "10:50", "10:50", null, null], "GRU"], ["Londrina", "LDB", "DOM", 541, 60, "Embraer E190", "G3", [null, "09:25", null, "09:25", null, null, null], [null, "12:25", null, "12:25", null, null, null], "GRU"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 360, 55, "Airbus A320", "AD", ["02:40", null, "02:40", null, "02:40", null, null], ["05:30", null, "05:30", null, "05:30", null, null], "GRU"], ["Brasília", "BSB", "DOM", 873, 90, "Boeing 737-800", "LA", ["03:15", null, "03:15", null, "03:15", null, null], ["07:15", null, "07:15", null, "07:15", null, null], "GRU"], ["Belo Horizonte – Confins", "CNF", "DOM", 586, 75, "Embraer E195", "2Z", ["04:10", null, "04:10", null, null, null, null], ["07:40", null, "07:40", null, null, null, null], "GRU"], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2184, 225, "Boeing 777-200ER", "LA", ["08:05", "14:30", "08:05", "14:30", "08:05", "09:30", null], ["17:05", "23:30", "17:05", "23:30", "17:05", "18:30", null], "GRU"], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2184, 225, "Boeing 777-200ER", "LA", ["14:30", null, "14:30", null, "14:30", "16:45", null], ["23:30", null, "23:30", null, "23:30", "01:45", null], "GRU"], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2184, 225, "Boeing 777-200ER", "LA", ["22:10", null, "22:10", "22:10", "22:10", "21:30", "21:30"], ["07:10", null, "07:10", "07:10", "07:10", "06:30", "06:30"], "GRU"], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2184, 225, "Boeing 777-200ER", "LA", ["01:20", null, "09:10", "01:20", "09:10", null, null], ["10:20", null, "18:10", "10:20", "18:10", null, null], "GRU"], ["Santiago", "SCL", "LAT", 2628, 240, "Boeing 767-300ER", "LA", ["09:15", "10:00", "09:15", "10:00", "09:15", null, "09:15"], ["18:45", "19:30", "18:45", "19:30", "18:45", null, "18:45"], "GRU"], ["Santiago", "SCL", "LAT", 2628, 240, "Boeing 767-300ER", "LA", ["21:50", null, "21:50", null, "21:50", null, "21:50"], ["07:20", null, "07:20", null, "07:20", null, "07:20"], "GRU"], ["Lima", "LIM", "LAT", 3687, 340, "Boeing 767-300ER", "LA", ["09:20", "08:30", "09:20", "08:30", "09:20", "10:00", null], ["22:10", "21:20", "22:10", "21:20", "22:10", "22:50", null], "GRU"], ["Lima", "LIM", "LAT", 3687, 340, "Boeing 767-300ER", "LA", ["22:35", "09:20", "22:35", "09:20", "22:35", null, "22:35"], ["11:25", "22:10", "11:25", "22:10", "11:25", null, "11:25"], "GRU"], ["Lima", "LIM", "LAT", 3687, 340, "Boeing 767-300ER", "LA", ["01:05", null, null, "01:05", null, null, null], ["13:55", null, null, "13:55", null, null, null], "GRU"], ["Bogotá", "BOG", "LAT", 4228, 375, "Boeing 767-300ER", "LA", ["10:30", "10:30", "10:20", "10:30", "10:30", "11:40", null], ["00:30", "00:30", "00:20", "00:30", "00:30", "01:40", null], "GRU"], ["Bogotá", "BOG", "LAT", 4228, 375, "Boeing 767-300ER", "LA", ["22:55", null, "22:55", null, "22:55", null, "22:55"], ["12:55", null, "12:55", null, "12:55", null, "12:55"], "GRU"], ["Ciudad de Panamá", "PTY", "LAT", 5714, 495, "Boeing 737 MAX 9", "CM", ["22:20", "22:20", "22:20", "22:20", "22:20", "22:20", null], ["16:20", "16:20", "16:20", "16:20", "16:20", "16:20", null], "GRU"], ["San José – Costa Rica", "SJO", "CAR", 6143, 530, "Boeing 737-800", "AA", [null, null, null, null, null, null, "22:40"], [null, null, null, null, null, null, "17:50"], "GRU"], ["Havana", "HAV", "CAR", 6856, 575, "Boeing 737-800", "LA", [null, "23:10", null, "23:10", null, "23:10", "23:10"], [null, "19:50", null, "19:50", null, "19:50", "19:50"], "GRU"], ["Cancún", "CUN", "CAR", 6875, 570, "Boeing 737 MAX 9", "AA", ["09:00", "23:25", "09:00", "23:25", "09:00", "23:25", "23:25"], ["05:30", "19:55", "05:30", "19:55", "05:30", "19:55", "19:55"], "GRU"], ["Curaçao", "CUR", "CAR", 4869, 430, "Boeing 737-800", "AD", [null, "10:30", null, "10:30", null, "10:30", "22:00"], [null, "02:20", null, "02:20", null, "02:20", "13:50"], "GRU"], ["Montevidéu", "MVD", "LAT", 2076, 205, "Boeing 737-800", "LA", [null, null, null, null, null, "09:45", "21:15"], [null, null, null, null, null, "18:05", "05:35"], "GRU"], ["Assunção", "ASU", "LAT", 1005, 90, "Embraer E195", "AD", [null, "09:00", null, "09:00", null, null, "10:30"], [null, "13:00", null, "13:00", null, null, "14:30"], "GRU"], ["Caracas", "CCS", "LAT", 4348, 390, "Boeing 737-800", "AD", [null, null, null, null, null, "21:40", "23:05"], [null, null, null, null, null, "12:10", "13:35"], "GRU"], ["Ushuaia", "USH", "LAT", 3448, 300, "Boeing 737-800", "LA", [null, null, null, null, null, null, "09:50"], [null, null, null, null, null, null, "21:20"], "GRU"], ["Medellín", "MDE", "LAT", 4012, 360, "Boeing 737-800", "LA", [null, null, null, null, null, "11:25", null], [null, null, null, null, null, "00:55", null], "GRU"], ["Bariloche", "BRC", "LAT", 2846, 260, "Embraer E195", "LA", [null, null, "09:40", null, null, null, "09:40"], [null, null, "19:50", null, null, null, "19:50"], "GRU"], ["La Paz", "LPB", "LAT", 3441, 310, "Boeing 737-800", "LA", [null, null, null, "22:50", null, null, null], [null, null, null, "10:40", null, null, null], "GRU"], ["Guayaquil", "GYE", "LAT", 4537, 405, "Boeing 737-800", "LA", [null, null, null, null, null, "23:35", null], [null, null, null, null, null, "14:35", null], "GRU"], ["Quito", "UIO", "LAT", 4649, 415, "Boeing 737-800", "LA", [null, null, null, null, null, null, "23:20"], [null, null, null, null, null, null, "14:40"], "GRU"], ["Cidade do México", "MEX", "MEX", 7493, 600, "Boeing 787-8", "AM", [null, "22:15", null, "22:15", "23:00", "22:15", null], [null, "19:45", null, "19:45", "20:30", "19:45", null], "GRU"], ["Cidade do México", "MEX", "MEX", 7493, 600, "Boeing 787-8", "AM", [null, null, null, null, null, null, "22:15"], [null, null, null, null, null, null, "19:45"], "GRU"], ["Miami", "MIA", "EUA", 7621, 590, "Airbus A330-300", "AA", ["22:00", "22:00", "10:15", "22:00", "22:00", "22:00", "22:00"], ["19:10", "19:10", "07:25", "19:10", "19:10", "19:10", "19:10"], "GRU"], ["Miami", "MIA", "EUA", 7621, 590, "Airbus A330-300", "AA", ["10:15", "10:15", "00:30", "10:15", "10:15", null, null], ["07:25", "07:25", "21:40", "07:25", "07:25", null, null], "GRU"], ["Fort Lauderdale", "FLL", "EUA", 7632, 595, "Boeing 757-200", "AA", [null, "23:15", null, "23:15", "23:15", null, "23:15"], [null, "20:35", null, "20:35", "20:35", null, "20:35"], "GRU"], ["Orlando", "MCO", "EUA", 7718, 600, "Boeing 757-200", "AD", [null, null, null, null, "10:15", null, "10:15"], [null, null, null, null, "07:45", null, "07:45"], "GRU"], ["Atlanta", "ATL", "EUA", 8105, 640, "Boeing 767-400ER", "AA", [null, "22:30", null, "22:30", null, "22:30", "22:30"], [null, "21:20", null, "21:20", null, "21:20", "21:20"], "GRU"], ["Nova York – JFK", "JFK", "EUA", 8124, 645, "Boeing 777-200ER", "UA", ["22:45", "22:45", null, "22:45", "22:45", "22:45", "22:45"], ["21:45", "21:45", null, "21:45", "21:45", "21:45", "21:45"], "GRU"], ["Nova York – JFK", "JFK", "EUA", 8124, 645, "Boeing 777-200ER", "UA", [null, null, "00:15", null, null, null, null], [null, null, "23:15", null, null, null, null], "GRU"], ["Dallas – Fort Worth", "DFW", "EUA", 8355, 660, "Boeing 767-400ER", "AA", [null, null, null, null, null, null, "22:50"], [null, null, null, null, null, null, "22:20"], "GRU"], ["Los Angeles", "LAX", "EUA", 10040, 785, "Boeing 777-200ER", "AA", ["22:00", "22:00", "22:00", "22:00", null, "22:00", null], ["01:40", "01:40", "01:40", "01:40", null, "01:40", null], "GRU"], ["Chicago – O'Hare", "ORD", "EUA", 8976, 695, "Boeing 767-300ER", "UA", [null, null, null, null, null, null, "23:10"], [null, null, null, null, null, null, "23:50"], "GRU"], ["Boston", "BOS", "EUA", 8344, 645, "Boeing 767-300ER", "UA", [null, null, null, null, null, "23:45", null], [null, null, null, null, null, "22:45", null], "GRU"], ["Washington – Dulles", "IAD", "EUA", 8075, 635, "Boeing 767-300ER", "UA", [null, null, null, null, null, null, "23:50"], [null, null, null, null, null, null, "22:30"], "GRU"], ["Toronto", "YYZ", "CAN", 8661, 685, "Boeing 777-200ER", "AC", [null, "22:05", null, "22:05", null, "22:05", null], [null, "22:25", null, "22:25", null, "22:25", null], "GRU"], ["Toronto", "YYZ", "CAN", 8661, 685, "Boeing 777-200ER", "AC", [null, null, null, null, null, null, "22:20"], [null, null, null, null, null, null, "22:40"], "GRU"], ["Lisboa", "LIS", "EUR", 9445, 560, "Airbus A330-300", "TP", ["09:15", "22:30", "22:30", "22:30", "22:30", "22:30", null], ["05:25", "18:40", "18:40", "18:40", "18:40", "18:40", null], "GRU"], ["Lisboa", "LIS", "EUR", 9445, 560, "Airbus A330-300", "TP", ["00:40", null, "02:30", null, null, null, null], ["20:50", null, "22:40", null, null, null, null], "GRU"], ["Madrid", "MAD", "EUR", 10026, 610, "Airbus A340-600", "IB", ["09:30", "22:20", "02:15", "22:20", "22:20", null, "22:20"], ["07:20", "20:10", "00:05", "20:10", "20:10", null, "20:10"], "GRU"], ["Madrid", "MAD", "EUR", 10026, 610, "Airbus A340-600", "IB", [null, "14:45", "23:00", null, null, "23:00", null], [null, "12:35", "20:50", null, null, "20:50", null], "GRU"], ["Londres – Heathrow", "LHR", "EUR", 9481, 670, "Boeing 777-200ER", "BA", ["10:00", "21:45", "14:30", "21:45", "21:45", null, null], ["09:50", "21:35", "14:20", "21:35", "21:35", null, null], "GRU"], ["Londres – Heathrow", "LHR", "EUR", 9481, 670, "Boeing 777-200ER", "BA", [null, null, null, "02:20", null, "21:45", null], [null, null, null, "02:10", null, "21:35", null], "GRU"], ["Londres – Gatwick", "LGW", "EUR", 9481, 670, "Airbus A330-300", "BA", [null, null, null, null, null, null, "22:10"], [null, null, null, null, null, null, "22:00"], "GRU"], ["Paris – CDG", "CDG", "EUR", 9374, 690, "Boeing 777-200ER", "AF", ["09:45", "21:30", null, "21:30", "21:30", null, "21:30"], ["10:15", "22:00", null, "22:00", "22:00", null, "22:00"], "GRU"], ["Paris – CDG", "CDG", "EUR", 9374, 690, "Boeing 777-200ER", "AF", [null, "14:50", "22:15", "02:10", null, "22:15", null], [null, "15:20", "22:45", "02:40", null, "22:45", null], "GRU"], ["Amsterdam", "AMS", "EUR", 9518, 695, "Airbus A330-300", "KL", ["10:20", "22:40", "15:00", "22:40", null, "22:40", null], ["11:00", "23:20", "15:40", "23:20", null, "23:20", null], "GRU"], ["Amsterdam", "AMS", "EUR", 9518, 695, "Airbus A330-300", "KL", [null, null, null, null, null, null, "23:00"], [null, null, null, null, null, null, "23:40"], "GRU"], ["Frankfurt", "FRA", "EUR", 9762, 705, "Boeing 747-8", "LH", ["09:50", "21:50", "02:40", "22:50", "21:50", null, null], ["10:50", "22:50", "03:40", "23:50", "22:50", null, null], "GRU"], ["Frankfurt", "FRA", "EUR", 9762, 705, "Boeing 747-8", "LH", [null, "15:10", null, null, null, "22:50", null], [null, "16:10", null, null, null, "23:50", null], "GRU"], ["Zurique", "ZRH", "EUR", 9706, 700, "Airbus A340-300", "LX", ["22:05", "22:05", null, null, null, null, "22:05"], ["22:55", "22:55", null, null, null, null, "22:55"], "GRU"], ["Milão – Malpensa", "MXP", "EUR", 9529, 695, "Airbus A330-200", "AZ", ["23:10", "23:10", null, null, null, "23:10", null], ["23:50", "23:50", null, null, null, "23:50", null], "GRU"], ["Roma – Fiumicino", "FCO", "EUR", 9288, 685, "Boeing 767-400ER", "AZ", ["22:45", "22:45", null, null, null, null, "22:45"], ["23:05", "23:05", null, null, null, null, "23:05"], "GRU"], ["Barcelona", "BCN", "EUR", 9955, 705, "Airbus A330-200", "IB", ["23:30", "23:30", "14:55", "23:30", "23:30", null, null], ["00:30", "00:30", "15:55", "00:30", "00:30", null, null], "GRU"], ["Dublin", "DUB", "EUR", 9167, 665, "Boeing 767-300ER", "EI", [null, null, null, null, null, "23:20", null], [null, null, null, null, null, "23:00", null], "GRU"], ["Viena", "VIE", "EUR", 10102, 715, "Boeing 767-400ER", "OS", [null, null, null, null, null, null, "23:35"], [null, null, null, null, null, null, "00:55"], "GRU"], ["Estocolmo", "ARN", "EUR", 10262, 725, "Boeing 767-300ER", "SK", [null, null, null, null, null, null, "22:00"], [null, null, null, null, null, null, "23:40"], "GRU"], ["Oslo", "OSL", "EUR", 10143, 720, "Boeing 767-300ER", "SK", [null, null, null, null, null, "22:20", null], [null, null, null, null, null, "23:50", null], "GRU"], ["Reiquiavique", "KEF", "EUR", 8952, 650, "Boeing 767-300ER", "FI", [null, null, null, null, null, null, "21:45"], [null, null, null, null, null, null, "20:55"], "GRU"], ["Madeira – Funchal", "FNC", "EUR", 7343, 545, "Boeing 757-200", "TP", [null, null, null, null, null, null, "22:00"], [null, null, null, null, null, null, "17:40"], "GRU"], ["Ilhas Canárias – Las Palmas", "LPA", "EUR", 7136, 530, "Boeing 757-200", "IB", [null, null, null, null, null, null, "21:15"], [null, null, null, null, null, null, "16:25"], "GRU"], ["Istambul", "IST", "EUR", 9885, 715, "Boeing 777-200ER", "TK", ["21:40", "21:40", "21:40", "21:40", "21:40", null, "21:40"], ["23:00", "23:00", "23:00", "23:00", "23:00", null, "23:00"], "GRU"], ["Dubai", "DXB", "MID", 11321, 830, "Airbus A380", "EK", ["22:10", "22:10", "23:00", "22:10", "22:10", "22:10", null], ["03:20", "03:20", "04:10", "03:20", "03:20", "03:20", null], "GRU"], ["Dubai", "DXB", "MID", 11321, 830, "Airbus A380", "EK", [null, null, null, null, null, null, "22:10"], [null, null, null, null, null, null, "03:20"], "GRU"], ["Doha", "DOH", "MID", 11446, 840, "Airbus A380", "QR", ["23:00", "23:00", "23:00", "23:00", "23:00", "23:00", "23:00"], ["04:30", "04:30", "04:30", "04:30", "04:30", "04:30", "04:30"], "GRU"], ["Cairo", "CAI", "MID", 9803, 720, "Boeing 767-300ER", "MS", ["22:55", "22:55", "22:55", "22:55", null, "22:55", null], ["00:25", "00:25", "00:25", "00:25", null, "00:25", null], "GRU"], ["Joanesburgo", "JNB", "AFR", 10003, 760, "Boeing 787-9", "SA", [null, "21:30", null, "21:30", null, "21:30", "21:30"], [null, "00:20", null, "00:20", null, "00:20", "00:20"], "GRU"], ["Cabo Verde – Sal", "SID", "AFR", 5175, 420, "Boeing 757-200", "TP", [null, "21:20", null, "21:20", null, "21:20", null], [null, "12:50", null, "12:50", null, "12:50", null], "GRU"], ["Luanda", "LAD", "AFR", 7306, 570, "Airbus A330-200", "TP", ["22:35", null, "22:35", null, "22:35", "22:35", null], ["19:05", null, "19:05", null, "19:05", "19:05", null], "GRU"], ["Abidjan", "ABJ", "AFR", 5965, 470, "Boeing 767-300ER", "LA", [null, null, "21:50", null, "21:50", null, "21:50"], [null, null, "15:00", null, "15:00", null, "15:00"], "GRU"], ["Freetown", "FNA", "AFR", 6423, 505, "Airbus A330-200", "TP", [null, null, null, null, null, "21:10", null], [null, null, null, null, null, "15:30", null], "GRU"], ["Nova Delhi", "DEL", "ASIA", 14053, 945, "Boeing 777-300ER", "AI", ["21:00", null, "21:00", null, "21:00", "21:00", null], ["06:00", null, "06:00", null, "06:00", "06:00", null], "GRU"], ["Mumbai", "BOM", "ASIA", 14248, 955, "Boeing 777-300ER", "AI", ["20:45", null, "20:45", null, "20:45", null, "20:45"], ["06:05", null, "06:05", null, "06:05", null, "06:05"], "GRU"], ["Tóquio – Narita", "NRT", "ASIA", 18540, 1180, "Boeing 777-300ER", "JL", [null, "21:30", null, "21:30", null, "21:30", "21:30"], [null, "14:20", null, "14:20", null, "14:20", "14:20"], "GRU"], ["Seul – Incheon", "ICN", "ASIA", 18440, 1175, "Boeing 777-300ER", "KE", [null, "21:15", null, "21:15", null, "21:15", "21:15"], [null, "13:55", null, "13:55", null, "13:55", "13:55"], "GRU"], ["Bangkok", "BKK", "ASIA", 17030, 1095, "Boeing 777-300ER", "TG", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "GRU"], ["Tashkent", "TAS", "ASIA", 13852, 940, "Boeing 787-8", "UZ", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "GRU"], ["Sydney", "SYD", "OCE", 17244, 1165, "Airbus A380", "QF", [null, "20:45", null, "20:45", null, "20:45", "20:45"], [null, "13:05", null, "13:05", null, "13:05", "13:05"], "GRU"], ["Auckland", "AKL", "OCE", 18647, 1245, "Boeing 777-300ER", "NZ", [null, null, "20:30", null, "20:30", "20:30", "20:30"], [null, null, "15:30", null, "15:30", "15:30", "15:30"], "GRU"], ["Vancouver", "YVR", "CAN", 10340, 730, "Airbus A330-300", "AC", ["22:30", "22:30", null, "22:30", "22:30", "22:30", null], ["00:20", "00:20", null, "00:20", "00:20", "00:20", null], "GRU"], ["Guatemala City", "GUA", "CAR", 6880, 580, "Boeing 737-800", "AA", [null, null, null, null, null, "23:30", null], [null, null, null, null, null, "20:20", null], "GRU"], ["San Juan – Porto Rico", "SJU", "CAR", 5890, 510, "Boeing 767-300ER", "AA", [null, "22:00", null, "22:00", null, "22:00", null], [null, "16:30", null, "16:30", null, "16:30", null], "GRU"], ["Santo Domingo", "SDQ", "CAR", 5683, 490, "Boeing 737-800", "AA", [null, null, "22:30", null, null, "22:30", "22:30"], [null, null, "16:20", null, null, "16:20", "16:20"], "GRU"], ["Kingston – Jamaica", "KIN", "CAR", 5960, 510, "Boeing 737-800", "AA", [null, null, null, "23:00", null, null, "23:00"], [null, null, null, "17:30", null, null, "17:30"], "GRU"], ["Havana – José Martí", "HAV", "CAR", 6856, 575, "Boeing 737-800", "LA", [null, null, "23:10", null, null, null, null], [null, null, "19:50", null, null, null, null], "GRU"], ["Praga", "PRG", "EUR", 9920, 715, "Boeing 767-300ER", "CS", [null, null, null, null, null, "22:45", null], [null, null, null, null, null, "00:05", null], "GRU"], ["Varsóvia", "WAW", "EUR", 10100, 720, "Airbus A330-200", "LO", [null, null, null, null, null, null, "22:30"], [null, null, null, null, null, null, "00:00"], "GRU"], ["Tbilisi – Geórgia", "TBS", "EUR", 10800, 775, "Boeing 767-300ER", "A9", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "GRU"], ["Tirana – Albânia", "TIA", "EUR", 9700, 710, "Airbus A321", "TP", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "GRU"], ["Pequim – PEK", "PEK", "ASIA", 17600, 1165, "Boeing 777-300ER", "CA", [null, null, null, null, null, "20:30", null], [null, null, null, null, null, "12:50", null], "GRU"], ["Xangai – PVG", "PVG", "ASIA", 18100, 1195, "Boeing 777-300ER", "CA", [null, null, null, null, null, null, "20:20"], [null, null, null, null, null, null, "13:40"], "GRU"], ["Luanda", "LAD", "AFR", 7306, 570, "Airbus A330-200", "DT", [null, "22:35", null, null, null, null, null], [null, "19:05", null, null, null, null, null], "GRU"], ["Porto – Francisco Sá Carneiro", "OPO", "EUR", 9380, 560, "Boeing 767-300ER", "TP", [null, "22:15", null, null, "22:15", null, "22:15"], [null, "18:25", null, null, "18:25", null, "18:25"], "GRU"], ["Barcelona", "BCN", "EUR", 9955, 705, "Airbus A330-200", "IB", [null, null, null, null, null, "09:30", null], [null, null, null, null, null, "10:30", null], "GRU"], ["Copenhague", "CPH", "EUR", 10090, 720, "Airbus A330-200", "SK", [null, null, null, null, null, "22:10", "22:10"], [null, null, null, null, null, "23:40", "23:40"], "GRU"], ["Bruxelas", "BRU", "EUR", 9740, 710, "Airbus A330-200", "SN", [null, null, null, null, null, "22:30", "22:30"], [null, null, null, null, null, "23:40", "23:40"], "GRU"], ["Berlim – Brandenburg", "BER", "EUR", 9870, 715, "Boeing 767-300ER", "LH", [null, "22:00", null, "22:00", null, "22:00", null], [null, "23:20", null, "23:20", null, "23:20", null], "GRU"], ["Atenas", "ATH", "EUR", 10240, 730, "Boeing 767-300ER", "A3", [null, null, null, null, null, "22:55", "22:55"], [null, null, null, null, null, "00:45", "00:45"], "GRU"], ["Túnis", "TUN", "AFR", 9020, 660, "Airbus A320neo", "TU", [null, null, null, null, null, "21:05", null], [null, null, null, null, null, "20:35", null], "GRU"], ["Guadalajara", "GDL", "MEX", 8280, 640, "Boeing 767-300ER", "AM", [null, null, null, null, null, null, "22:40"], [null, null, null, null, null, null, "21:30"], "GRU"], ["Caracas", "CCS", "LAT", 4348, 390, "Boeing 737-800", "LA", [null, "10:15", null, "10:15", "22:00", "10:15", "22:00"], [null, "00:45", null, "00:45", "12:30", "00:45", "12:30"], "GRU"], ["Georgetown – Guiana", "GEO", "LAT", 2940, 270, "Boeing 737-800", "LA", [null, null, "10:30", null, null, "10:30", null], [null, null, "21:00", null, null, "21:00", null], "GRU"], ["Caiena – Guiana Francesa", "CAY", "LAT", 2490, 235, "Airbus A319", "AD", ["09:30", null, "09:30", null, "09:30", "09:30", null], ["18:50", null, "18:50", null, "18:50", "18:50", null], "GRU"], ["Paramaribo – Suriname", "PBM", "LAT", 2860, 265, "Boeing 737-800", "GY", [null, "10:00", null, "10:00", null, "10:00", "14:30"], [null, "20:20", null, "20:20", null, "20:20", "00:50"], "GRU"], ["Marseille – Provence", "MRS", "EUR", 9500, 690, "Airbus A330-200", "AF", [null, null, null, null, null, "21:55", "21:55"], [null, null, null, null, null, "22:25", "22:25"], "GRU"], ["Lisboa", "LIS", "EUR", 9445, 560, "Airbus A330-300", "LA", [null, "09:30", null, "09:30", null, null, null], [null, "05:40", null, "05:40", null, null, null], "GRU"], ["Madrid", "MAD", "EUR", 10026, 610, "Boeing 767-300ER", "LA", [null, null, "09:45", null, "09:45", null, null], [null, null, "07:35", null, "07:35", null, null], "GRU"], ["Paris – CDG", "CDG", "EUR", 9374, 690, "Boeing 767-300ER", "LA", [null, null, null, "09:20", null, null, "09:20"], [null, null, null, "09:50", null, null, "09:50"], "GRU"], ["San Salvador", "SAL", "CAR", 6700, 560, "Airbus A320", "TA", [null, null, null, null, null, "22:40", null], [null, null, null, null, null, "18:50", null], "GRU"], ["Tegucigalpa", "TGU", "CAR", 6940, 575, "Boeing 737-800", "TA", [null, null, null, null, null, null, "23:15"], [null, null, null, null, null, null, "19:55"], "GRU"], ["Managua", "MGA", "CAR", 6610, 550, "Boeing 737-800", "TA", [null, null, null, null, null, "23:50", null], [null, null, null, null, null, "19:40", null], "GRU"], ["Boa Vista", "BVB", "DOM", 3330, 290, "Boeing 737-800", "AD", [null, "08:15", null, "08:15", null, "09:30", null], [null, "19:25", null, "19:25", null, "20:40", null], "GRU"], ["Rio Branco", "RBR", "DOM", 3340, 295, "Boeing 737-800", "G3", [null, null, "08:40", null, "08:40", null, "09:45"], [null, null, "20:00", null, "20:00", null, "21:05"], "GRU"], ["São Paulo – Guarulhos", "GRU", "DOM", 586, 75, "Airbus A320", "G3", ["06:05", "06:05", "06:05", "06:05", "06:05", "07:20", "08:15"], ["09:35", "09:35", "09:35", "09:35", "09:35", "10:50", "11:45"], "CNF"], ["São Paulo – Guarulhos", "GRU", "DOM", 586, 75, "Airbus A321", "AD", ["08:40", "08:40", "08:40", "08:40", "08:40", "10:05", "11:50"], ["12:10", "12:10", "12:10", "12:10", "12:10", "13:35", "15:20"], "CNF"], ["São Paulo – Guarulhos", "GRU", "DOM", 586, 75, "Airbus A320", "LA", ["12:15", "12:15", "12:15", "12:15", "12:15", "14:30", null], ["15:45", "15:45", "15:45", "15:45", "15:45", "18:00", null], "CNF"], ["São Paulo – Guarulhos", "GRU", "DOM", 586, 75, "Boeing 737-800", "2Z", ["16:45", "16:45", "16:45", "16:45", "16:45", null, null], ["20:15", "20:15", "20:15", "20:15", "20:15", null, null], "CNF"], ["São Paulo – Guarulhos", "GRU", "DOM", 586, 75, "Airbus A320", "G3", ["20:10", "20:10", "20:10", "20:10", "20:10", null, null], ["23:40", "23:40", "23:40", "23:40", "23:40", null, null], "CNF"], ["São Paulo – Congonhas", "CGH", "DOM", 512, 70, "Airbus A319", "AD", ["07:05", "07:05", "07:05", "07:05", "07:05", "08:25", "09:40"], ["10:25", "10:25", "10:25", "10:25", "10:25", "11:45", "13:00"], "CNF"], ["São Paulo – Congonhas", "CGH", "DOM", 512, 70, "Embraer E195", "LA", ["10:50", "10:50", "10:50", "10:50", "10:50", "12:35", null], ["14:10", "14:10", "14:10", "14:10", "14:10", "15:55", null], "CNF"], ["São Paulo – Congonhas", "CGH", "DOM", 512, 70, "Airbus A319", "2Z", ["14:25", "14:25", "14:25", "14:25", "14:25", "16:10", null], ["17:45", "17:45", "17:45", "17:45", "17:45", "19:30", null], "CNF"], ["São Paulo – Congonhas", "CGH", "DOM", 512, 70, "Embraer E195", "G3", ["19:15", "19:15", "19:15", "19:15", "19:15", null, null], ["22:35", "22:35", "22:35", "22:35", "22:35", null, null], "CNF"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 440, 60, "Airbus A320", "AD", ["06:35", "06:35", "06:35", "06:35", "06:35", "08:10", "09:05"], ["09:35", "09:35", "09:35", "09:35", "09:35", "11:10", "12:05"], "CNF"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 440, 60, "Boeing 737-800", "LA", ["10:20", "10:20", "10:20", "10:20", "10:20", "13:40", null], ["13:20", "13:20", "13:20", "13:20", "13:20", "16:40", null], "CNF"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 440, 60, "Airbus A320", "2Z", ["15:05", "15:05", "15:05", "15:05", "15:05", null, null], ["18:05", "18:05", "18:05", "18:05", "18:05", null, null], "CNF"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 440, 60, "Boeing 737-800", "G3", ["19:50", "19:50", "19:50", "19:50", "19:50", null, null], ["22:50", "22:50", "22:50", "22:50", "22:50", null, null], "CNF"], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 430, 60, "Embraer E195", "AD", ["07:40", "07:40", "07:40", "07:40", "07:40", "09:25", "10:15"], ["10:40", "10:40", "10:40", "10:40", "10:40", "12:25", "13:15"], "CNF"], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 430, 60, "Embraer E190", "LA", ["12:55", "12:55", "12:55", "12:55", "12:55", "15:10", null], ["15:55", "15:55", "15:55", "15:55", "15:55", "18:10", null], "CNF"], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 430, 60, "Embraer E195", "2Z", ["18:20", "18:20", "18:20", "18:20", "18:20", null, null], ["21:20", "21:20", "21:20", "21:20", "21:20", null, null], "CNF"], ["Brasília", "BSB", "DOM", 716, 85, "Airbus A320", "G3", ["06:10", "06:10", "06:10", "06:10", "06:10", "07:45", "09:20"], ["10:00", "10:00", "10:00", "10:00", "10:00", "11:35", "13:10"], "CNF"], ["Brasília", "BSB", "DOM", 716, 85, "Boeing 737-800", "AD", ["09:55", "09:55", "09:55", "09:55", "09:55", "12:30", null], ["13:45", "13:45", "13:45", "13:45", "13:45", "16:20", null], "CNF"], ["Brasília", "BSB", "DOM", 716, 85, "Airbus A320", "LA", ["14:40", "14:40", "14:40", "14:40", "14:40", "16:55", null], ["18:30", "18:30", "18:30", "18:30", "18:30", "20:45", null], "CNF"], ["Brasília", "BSB", "DOM", 716, 85, "Airbus A321", "2Z", ["19:25", "19:25", "19:25", "19:25", "19:25", null, null], ["23:15", "23:15", "23:15", "23:15", "23:15", null, null], "CNF"], ["Salvador", "SSA", "DOM", 1196, 115, "Boeing 737-800", "G3", ["07:15", "07:15", "07:15", "07:15", "07:15", "09:30", "10:50"], ["12:05", "12:05", "12:05", "12:05", "12:05", "14:20", "15:40"], "CNF"], ["Salvador", "SSA", "DOM", 1196, 115, "Airbus A320", "AD", ["13:05", "13:05", "13:05", "13:05", "13:05", "15:20", null], ["17:55", "17:55", "17:55", "17:55", "17:55", "20:10", null], "CNF"], ["Salvador", "SSA", "DOM", 1196, 115, "Boeing 737-800", "LA", ["18:45", "18:45", "18:45", "18:45", "18:45", "03:05", null], ["23:35", "23:35", "23:35", "23:35", "23:35", "07:55", null], "CNF"], ["Recife", "REC", "DOM", 1985, 155, "Boeing 737-800", "2Z", ["06:20", "06:20", "06:20", "06:20", "06:20", "08:35", "10:10"], ["13:00", "13:00", "13:00", "13:00", "13:00", "15:15", "16:50"], "CNF"], ["Recife", "REC", "DOM", 1985, 155, "Airbus A320", "G3", ["12:40", "12:40", "12:40", "12:40", "12:40", "15:50", null], ["19:20", "19:20", "19:20", "19:20", "19:20", "22:30", null], "CNF"], ["Recife", "REC", "DOM", 1985, 155, "Boeing 737-800", "AD", ["18:55", "18:55", "18:55", "18:55", "18:55", null, null], ["01:35", "01:35", "01:35", "01:35", "01:35", null, null], "CNF"], ["Fortaleza", "FOR", "DOM", 2390, 215, "Boeing 737-800", "LA", ["06:50", "06:50", "06:50", "06:50", "06:50", "08:40", null], ["15:30", "15:30", "15:30", "15:30", "15:30", "17:20", null], "CNF"], ["Fortaleza", "FOR", "DOM", 2390, 215, "Boeing 737-800", "2Z", ["15:35", "15:35", "15:35", "15:35", "15:35", null, null], ["00:15", "00:15", "00:15", "00:15", "00:15", null, null], "CNF"], ["Porto Alegre", "POA", "DOM", 1553, 140, "Airbus A320", "G3", ["07:25", "07:25", "07:25", "07:25", "07:25", "09:50", "11:15"], ["13:35", "13:35", "13:35", "13:35", "13:35", "16:00", "17:25"], "CNF"], ["Porto Alegre", "POA", "DOM", 1553, 140, "Boeing 737-800", "AD", ["13:50", "13:50", "13:50", "13:50", "13:50", "16:05", null], ["20:00", "20:00", "20:00", "20:00", "20:00", "22:15", null], "CNF"], ["Porto Alegre", "POA", "DOM", 1553, 140, "Airbus A320", "LA", ["19:35", "19:35", "19:35", "19:35", "19:35", "02:50", null], ["01:45", "01:45", "01:45", "01:45", "01:45", "09:00", null], "CNF"], ["Curitiba", "CWB", "DOM", 1009, 100, "Embraer E195", "2Z", ["07:50", "07:50", "07:50", "07:50", "07:50", "09:55", "11:30"], ["12:10", "12:10", "12:10", "12:10", "12:10", "14:15", "15:50"], "CNF"], ["Curitiba", "CWB", "DOM", 1009, 100, "Airbus A319", "G3", ["13:35", "13:35", "13:35", "13:35", "13:35", "15:45", null], ["17:55", "17:55", "17:55", "17:55", "17:55", "20:05", null], "CNF"], ["Curitiba", "CWB", "DOM", 1009, 100, "Embraer E195", "AD", ["19:40", "19:40", "19:40", "19:40", "19:40", null, null], ["00:00", "00:00", "00:00", "00:00", "00:00", null, null], "CNF"], ["Florianópolis", "FLN", "DOM", 1140, 110, "Embraer E195", "LA", ["08:25", "08:25", "08:25", "08:25", "08:25", "10:40", "12:20"], ["13:05", "13:05", "13:05", "13:05", "13:05", "15:20", "17:00"], "CNF"], ["Florianópolis", "FLN", "DOM", 1140, 110, "Boeing 737-800", "2Z", ["16:50", "16:50", "16:50", "16:50", "16:50", null, null], ["21:30", "21:30", "21:30", "21:30", "21:30", null, null], "CNF"], ["Goiânia", "GYN", "DOM", 893, 95, "Embraer E190", "G3", ["08:55", "08:55", "08:55", "08:55", "08:55", null, null], ["13:05", "13:05", "13:05", "13:05", "13:05", null, null], "CNF"], ["Goiânia", "GYN", "DOM", 893, 95, "Embraer E195", "AD", ["15:25", "15:25", "15:25", "15:25", "15:25", null, null], ["19:35", "19:35", "19:35", "19:35", "19:35", null, null], "CNF"], ["Manaus", "MAO", "DOM", 2715, 255, "Boeing 737-800", "LA", ["07:10", "07:10", "07:10", "07:10", "07:10", "09:15", null], ["17:10", "17:10", "17:10", "17:10", "17:10", "19:15", null], "CNF"], ["Manaus", "MAO", "DOM", 2715, 255, "Boeing 737-800", "2Z", ["17:45", "17:45", "17:45", "17:45", "17:45", null, null], ["03:45", "03:45", "03:45", "03:45", "03:45", null, null], "CNF"], ["Belém", "BEL", "DOM", 2098, 195, "Boeing 737-800", "G3", ["07:35", "07:35", "07:35", "07:35", "07:35", "09:50", null], ["15:35", "15:35", "15:35", "15:35", "15:35", "17:50", null], "CNF"], ["Belém", "BEL", "DOM", 2098, 195, "Airbus A320", "AD", ["16:20", "16:20", "16:20", "16:20", "16:20", null, null], ["00:20", "00:20", "00:20", "00:20", "00:20", null, null], "CNF"], ["Palmas", "PMW", "DOM", 1248, 115, "Embraer E190", "LA", ["08:05", null, "08:05", null, "08:05", null, null], ["12:55", null, "12:55", null, "12:55", null, null], "CNF"], ["Campo Grande", "CGR", "DOM", 1270, 120, "Embraer E195", "2Z", ["09:30", "09:30", "09:30", "09:30", "09:30", "11:20", null], ["14:30", "14:30", "14:30", "14:30", "14:30", "16:20", null], "CNF"], ["Cuiabá", "CGB", "DOM", 1550, 140, "Airbus A319", "G3", ["09:45", "09:45", "09:45", "09:45", "09:45", "12:05", null], ["15:55", "15:55", "15:55", "15:55", "15:55", "18:15", null], "CNF"], ["Natal", "NAT", "DOM", 2100, 195, "Boeing 737-800", "AD", ["07:20", null, "07:20", null, "07:20", "09:40", null], ["15:20", null, "15:20", null, "15:20", "17:40", null], "CNF"], ["Maceió", "MCZ", "DOM", 1920, 180, "Airbus A320", "LA", ["08:15", null, "08:15", null, "08:15", null, null], ["15:45", null, "15:45", null, "15:45", null, null], "CNF"], ["João Pessoa", "JPA", "DOM", 2020, 190, "Boeing 737-800", "2Z", [null, "09:25", null, "09:25", null, null, null], [null, "17:15", null, "17:15", null, null, null], "CNF"], ["São Luís", "SLZ", "DOM", 2120, 200, "Boeing 737-800", "G3", [null, null, null, null, null, "10:35", null], [null, null, null, null, null, "18:45", null], "CNF"], ["Vitória", "VIX", "DOM", 524, 65, "Embraer E175", "AD", ["08:45", null, "08:45", null, "08:45", null, null], ["11:55", null, "11:55", null, "11:55", null, null], "CNF"], ["Uberlândia", "UDI", "DOM", 476, 60, "Embraer E175", "LA", ["09:10", "09:10", "09:10", "09:10", "09:10", null, null], ["12:10", "12:10", "12:10", "12:10", "12:10", null, null], "CNF"], ["Porto Velho", "PVH", "DOM", 2460, 225, "Boeing 737-800", "2Z", ["07:05", null, null, "07:05", null, "09:20", null], ["16:05", null, null, "16:05", null, "18:20", null], "CNF"], ["Teresina", "THE", "DOM", 1900, 175, "Airbus A319", "G3", [null, null, "09:15", null, null, "10:40", null], [null, null, "16:35", null, null, "18:00", null], "CNF"], ["Londrina", "LDB", "DOM", 862, 90, "Embraer E190", "AD", [null, "10:25", null, "10:25", null, null, null], [null, "14:25", null, "14:25", null, null, null], "CNF"], ["Montes Claros", "MOC", "DOM", 420, 55, "ATR 72-600", "LA", ["09:55", null, "09:55", null, null, null, null], ["12:45", null, "12:45", null, null, null, null], "CNF"], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2792, 260, "Boeing 777-200ER", "LA", [null, "23:40", "09:20", null, "09:20", "10:35", null], [null, "09:50", "19:30", null, "19:30", "20:45", null], "CNF"], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2792, 260, "Boeing 777-200ER", "LA", [null, null, "22:15", null, "22:15", "21:40", "21:05"], [null, null, "08:25", null, "08:25", "07:50", "07:15"], "CNF"], ["Santiago", "SCL", "LAT", 2630, 250, "Boeing 767-300ER", "LA", [null, null, "10:50", null, "10:50", null, "10:50"], [null, null, "20:40", null, "20:40", null, "20:40"], "CNF"], ["Santiago", "SCL", "LAT", 2630, 250, "Boeing 767-300ER", "LA", [null, null, "22:40", null, "22:40", null, null], [null, null, "08:30", null, "08:30", null, null], "CNF"], ["Lima", "LIM", "LAT", 3720, 350, "Boeing 767-300ER", "LA", [null, null, "00:20", "10:15", null, "11:25", null], [null, null, "13:30", "23:25", null, "00:35", null], "CNF"], ["Lima", "LIM", "LAT", 3720, 350, "Boeing 767-300ER", "LA", [null, null, null, "23:10", null, null, "23:05"], [null, null, null, "12:20", null, null, "12:15"], "CNF"], ["Bogotá", "BOG", "LAT", 4230, 390, "Boeing 767-300ER", "LA", [null, null, "11:35", null, null, "11:50", null], [null, null, "02:05", null, null, "02:20", null], "CNF"], ["Bogotá", "BOG", "LAT", 4230, 390, "Boeing 767-300ER", "LA", [null, null, null, null, "23:20", null, "23:25"], [null, null, null, null, "13:50", null, "13:55"], "CNF"], ["Ciudad de Panamá", "PTY", "LAT", 5760, 510, "Boeing 737 MAX 9", "AA", [null, null, "23:15", null, null, "23:45", null], [null, null, "17:45", null, null, "18:15", null], "CNF"], ["San José – Costa Rica", "SJO", "CAR", 6180, 545, "Boeing 737-800", "AA", [null, null, null, null, null, null, "23:30"], [null, null, null, null, null, null, "19:10"], "CNF"], ["Havana", "HAV", "CAR", 6900, 590, "Boeing 737-800", "LA", [null, "23:10", null, "23:10", null, "22:50", "23:10"], [null, "20:20", null, "20:20", null, "20:00", "20:20"], "CNF"], ["Montevidéu", "MVD", "LAT", 2630, 245, "Boeing 737-800", "LA", [null, null, null, null, null, "11:10", "21:25"], [null, null, null, null, null, "20:50", "07:05"], "CNF"], ["Assunção", "ASU", "LAT", 2080, 195, "Embraer E195", "AD", [null, null, null, "09:45", null, null, "10:20"], [null, null, null, "17:45", null, null, "18:20"], "CNF"], ["Bariloche", "BRC", "LAT", 2890, 265, "Embraer E195", "LA", [null, null, "10:05", null, null, null, "10:05"], [null, null, "20:25", null, null, null, "20:25"], "CNF"], ["Ushuaia", "USH", "LAT", 3500, 315, "Boeing 737-800", "LA", [null, null, null, null, null, null, "09:40"], [null, null, null, null, null, null, "21:40"], "CNF"], ["Caracas", "CCS", "LAT", 4390, 405, "Boeing 737-800", "AD", [null, null, null, null, null, "21:55", "23:10"], [null, null, null, null, null, "12:55", "14:10"], "CNF"], ["Medellín", "MDE", "LAT", 4050, 375, "Boeing 737-800", "LA", [null, null, null, null, null, "12:25", null], [null, null, null, null, null, "02:25", null], "CNF"], ["Cancún", "CUN", "CAR", 6920, 590, "Boeing 737 MAX 9", "AA", [null, "23:25", null, "23:25", null, "23:10", "23:25"], [null, "20:35", null, "20:35", null, "20:20", "20:35"], "CNF"], ["Curaçao", "CUR", "CAR", 4910, 450, "Boeing 737-800", "AD", [null, "11:00", null, "11:00", null, "11:30", "22:15"], [null, "03:30", null, "03:30", null, "04:00", "14:45"], "CNF"], ["Cidade do México", "MEX", "MEX", 7540, 620, "Boeing 787-8", "AM", [null, null, null, null, null, "22:35", null], [null, null, null, null, null, "20:45", null], "CNF"], ["Fort Lauderdale", "FLL", "EUA", 7640, 600, "Boeing 757-200", "AA", [null, "23:00", null, "23:00", "23:05", null, "22:25"], [null, "20:30", null, "20:30", "20:35", null, "19:55"], "CNF"], ["Orlando", "MCO", "EUA", 7760, 615, "Boeing 757-200", "AD", [null, null, null, null, "10:35", null, "10:35"], [null, null, null, null, "08:35", null, "08:35"], "CNF"], ["Miami", "MIA", "EUA", 7660, 605, "Airbus A330-300", "AA", [null, "22:00", "00:45", null, null, "23:50", "23:50"], [null, "19:40", "22:25", null, null, "21:30", "21:30"], "CNF"], ["Atlanta", "ATL", "EUA", 8150, 655, "Boeing 767-400ER", "AA", [null, null, null, null, null, "22:20", null], [null, null, null, null, null, "21:40", null], "CNF"], ["Nova York – JFK", "JFK", "EUA", 8170, 660, "Boeing 777-200ER", "UA", [null, "00:30", null, "23:00", "23:15", "23:15", null], [null, "00:00", null, "22:30", "22:45", "22:45", null], "CNF"], ["Dallas – Fort Worth", "DFW", "EUA", 8400, 675, "Boeing 767-400ER", "AA", [null, null, null, null, null, null, "22:40"], [null, null, null, null, null, null, "22:40"], "CNF"], ["Toronto", "YYZ", "CAN", 8700, 710, "Boeing 777-200ER", "AC", [null, "22:05", null, "22:05", null, "22:05", null], [null, "23:15", null, "23:15", null, "23:15", null], "CNF"], ["Lisboa", "LIS", "EUR", 7706, 600, "Airbus A330-300", "TP", ["23:55", null, "23:10", null, "23:10", "23:10", null], ["21:25", null, "20:40", null, "20:40", "20:40", null], "CNF"], ["Madrid", "MAD", "EUR", 8310, 640, "Airbus A340-600", "IB", [null, null, "23:40", null, "22:45", null, "22:45"], [null, null, "22:30", null, "21:35", null, "21:35"], "CNF"], ["Londres – Heathrow", "LHR", "EUR", 9270, 700, "Boeing 777-200ER", "BA", [null, null, null, null, null, "22:30", null], [null, null, null, null, null, "23:20", null], "CNF"], ["Londres – Gatwick", "LGW", "EUR", 9270, 700, "Airbus A330-300", "BA", [null, null, null, null, null, null, "23:15"], [null, null, null, null, null, null, "00:05"], "CNF"], ["Paris – CDG", "CDG", "EUR", 9380, 715, "Boeing 777-200ER", "AF", [null, null, null, null, "22:05", null, "22:05"], [null, null, null, null, "23:25", null, "23:25"], "CNF"], ["Amsterdam", "AMS", "EUR", 9490, 720, "Airbus A330-300", "KL", [null, null, null, null, null, "22:50", null], [null, null, null, null, null, "00:20", null], "CNF"], ["Frankfurt", "FRA", "EUR", 9710, 730, "Boeing 747-8", "LH", [null, null, null, null, "22:20", null, null], [null, null, null, null, "00:10", null, null], "CNF"], ["Zurique", "ZRH", "EUR", 9650, 725, "Airbus A340-300", "LX", [null, null, null, null, null, null, "22:10"], [null, null, null, null, null, null, "23:50"], "CNF"], ["Milão – Malpensa", "MXP", "EUR", 9480, 720, "Airbus A330-200", "AZ", [null, null, null, null, null, "23:35", null], [null, null, null, null, null, "01:05", null], "CNF"], ["Madeira – Funchal", "FNC", "EUR", 7290, 575, "Boeing 757-200", "TP", [null, null, null, null, null, null, "22:00"], [null, null, null, null, null, null, "18:40"], "CNF"], ["Dublin", "DUB", "EUR", 9120, 695, "Boeing 767-300ER", "EI", [null, null, null, null, null, "23:25", null], [null, null, null, null, null, "00:05", null], "CNF"], ["Estocolmo", "ARN", "EUR", 10200, 750, "Boeing 767-300ER", "SK", [null, null, null, null, null, null, "21:55"], [null, null, null, null, null, null, "00:25"], "CNF"], ["Oslo", "OSL", "EUR", 10100, 745, "Boeing 767-300ER", "SK", [null, null, null, null, null, "21:50", null], [null, null, null, null, null, "00:10", null], "CNF"], ["Reiquiavique", "KEF", "EUR", 8900, 680, "Boeing 767-300ER", "FI", [null, null, null, null, null, null, "21:40"], [null, null, null, null, null, null, "21:50"], "CNF"], ["Ilhas Canárias – Las Palmas", "LPA", "EUR", 7090, 565, "Boeing 757-200", "IB", [null, null, null, null, null, null, "21:15"], [null, null, null, null, null, null, "17:35"], "CNF"], ["Joanesburgo", "JNB", "AFR", 9970, 790, "Boeing 787-9", "SA", [null, "21:30", null, "21:30", null, "21:30", "21:30"], [null, "01:20", null, "01:20", null, "01:20", "01:20"], "CNF"], ["Abidjan", "ABJ", "AFR", 5920, 490, "Boeing 767-300ER", "LA", [null, null, "21:50", null, "21:50", "21:00", null], [null, null, "15:40", null, "15:40", "14:50", null], "CNF"], ["Cabo Verde – Sal", "SID", "AFR", 5130, 440, "Boeing 757-200", "TP", [null, "21:20", null, "21:20", null, "21:25", null], [null, "13:30", null, "13:30", null, "13:35", null], "CNF"], ["Freetown – Serra Leoa", "FNA", "AFR", 6380, 530, "Airbus A330-200", "TP", [null, null, null, null, null, "20:15", null], [null, null, null, null, null, "15:25", null], "CNF"], ["São Paulo – Guarulhos", "GRU", "DOM", 586, 75, "Airbus A320", "2Z", ["01:45", null, "01:45", null, "01:45", null, null], ["05:15", null, "05:15", null, "05:15", null, null], "CNF"], ["São Paulo – Congonhas", "CGH", "DOM", 512, 70, "Airbus A319", "G3", [null, "02:10", null, "02:10", null, null, null], [null, "05:30", null, "05:30", null, null, null], "CNF"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 440, 60, "Boeing 737-800", "2Z", ["03:20", null, null, "03:20", null, "03:20", null], ["06:20", null, null, "06:20", null, "06:20", null], "CNF"], ["Brasília", "BSB", "DOM", 716, 85, "Airbus A320", "G3", [null, "02:35", null, "02:35", null, null, null], [null, "06:25", null, "06:25", null, null, null], "CNF"], ["Salvador", "SSA", "DOM", 1196, 115, "Boeing 737-800", "G3", [null, null, "03:05", null, null, null, null], [null, null, "07:55", null, null, null, null], "CNF"], ["Recife", "REC", "DOM", 1985, 155, "Boeing 737-800", "LA", ["03:40", null, null, null, "03:40", null, null], ["10:20", null, null, null, "10:20", null, null], "CNF"], ["Fortaleza", "FOR", "DOM", 2390, 215, "Boeing 737-800", "AD", [null, null, null, "04:10", null, null, null], [null, null, null, "12:50", null, null, null], "CNF"], ["Manaus", "MAO", "DOM", 2715, 255, "Boeing 737-800", "G3", [null, "04:25", null, null, null, null, null], [null, "14:25", null, null, null, null, null], "CNF"], ["Porto Alegre", "POA", "DOM", 1553, 140, "Airbus A320", "LA", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "CNF"], ["Curitiba", "CWB", "DOM", 1009, 100, "Embraer E195", "LA", [null, null, "04:05", null, null, null, null], [null, null, "08:25", null, null, null, null], "CNF"], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2792, 260, "Boeing 777-200ER", "LA", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "CNF"], ["Lima", "LIM", "LAT", 3720, 350, "Boeing 767-300ER", "LA", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "CNF"], ["Bogotá", "BOG", "LAT", 4230, 390, "Boeing 767-300ER", "LA", [null, null, null, "00:05", null, null, null], [null, null, null, "14:35", null, null, null], "CNF"], ["Miami", "MIA", "EUA", 7660, 605, "Airbus A330-300", "AA", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "CNF"], ["Nova York – JFK", "JFK", "EUA", 8170, 660, "Boeing 777-200ER", "UA", [null, "23:00", null, null, null, null, null], [null, "22:30", null, null, null, null, null], "CNF"], ["Lisboa", "LIS", "EUR", 7706, 600, "Airbus A330-300", "TP", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "CNF"], ["Madrid", "MAD", "EUR", 8310, 640, "Airbus A340-600", "IB", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "CNF"], ["Paris – CDG", "CDG", "EUR", 9380, 715, "Boeing 777-200ER", "AF", [null, null, null, "23:55", null, null, null], [null, null, null, "01:15", null, null, null], "CNF"], ["Frankfurt", "FRA", "EUR", 9710, 730, "Boeing 747-8", "LH", [null, null, null, null, null, "23:45", null], [null, null, null, null, null, "01:35", null], "CNF"], ["Amsterdam", "AMS", "EUR", 9490, 720, "Airbus A330-300", "KL", [null, null, null, null, null, null, "23:40"], [null, null, null, null, null, null, "01:10"], "CNF"], ["Boa Vista", "BVB", "DOM", 2590, 235, "Boeing 737-800", "AD", [null, null, null, "08:20", null, "09:15", null], [null, null, null, "17:40", null, "18:35", null], "CNF"], ["Rio Branco", "RBR", "DOM", 2680, 240, "Boeing 737-800", "G3", [null, null, null, null, "08:35", null, "09:30"], [null, null, null, null, "18:05", null, "19:00"], "CNF"], ["Brasília", "BSB", "DOM", 1015, 105, "Airbus A320", "AD", ["06:25", "06:25", "06:25", "06:25", "06:25", "08:10", "09:30"], ["10:55", "10:55", "10:55", "10:55", "10:55", "12:40", "14:00"], "SJK"], ["Brasília", "BSB", "DOM", 1015, 105, "Boeing 737-800", "LA", ["10:15", "10:15", "10:15", "10:15", "10:15", "12:40", "14:20"], ["14:45", "14:45", "14:45", "14:45", "14:45", "17:10", "18:50"], "SJK"], ["Brasília", "BSB", "DOM", 1015, 105, "Airbus A320", "2Z", ["14:50", "14:50", "14:50", "14:50", "14:50", "17:25", null], ["19:20", "19:20", "19:20", "19:20", "19:20", "21:55", null], "SJK"], ["Brasília", "BSB", "DOM", 1015, 105, "Boeing 737-800", "G3", ["19:35", "19:35", "19:35", "19:35", "19:35", null, null], ["00:05", "00:05", "00:05", "00:05", "00:05", null, null], "SJK"], ["Belo Horizonte", "CNF", "DOM", 580, 75, "Embraer E195", "AD", ["07:15", "07:15", "07:15", "07:15", "07:15", "09:05", "10:30"], ["10:45", "10:45", "10:45", "10:45", "10:45", "12:35", "14:00"], "SJK"], ["Belo Horizonte", "CNF", "DOM", 580, 75, "Airbus A319", "LA", ["12:20", "12:20", "12:20", "12:20", "12:20", "14:35", null], ["15:50", "15:50", "15:50", "15:50", "15:50", "18:05", null], "SJK"], ["Belo Horizonte", "CNF", "DOM", 580, 75, "Embraer E195", "2Z", ["18:10", "18:10", "18:10", "18:10", "18:10", null, null], ["21:40", "21:40", "21:40", "21:40", "21:40", null, null], "SJK"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 350, 55, "Airbus A319", "G3", ["07:40", "07:40", "07:40", "07:40", "07:40", "09:45", "11:10"], ["10:30", "10:30", "10:30", "10:30", "10:30", "12:35", "14:00"], "SJK"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 350, 55, "Airbus A320", "AD", ["13:25", "13:25", "13:25", "13:25", "13:25", "15:30", null], ["16:15", "16:15", "16:15", "16:15", "16:15", "18:20", null], "SJK"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 350, 55, "Airbus A319", "LA", ["18:50", "18:50", "18:50", "18:50", "18:50", null, null], ["21:40", "21:40", "21:40", "21:40", "21:40", null, null], "SJK"], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 310, 50, "Embraer E190", "2Z", ["08:35", "08:35", "08:35", "08:35", "08:35", "10:55", null], ["11:15", "11:15", "11:15", "11:15", "11:15", "13:35", null], "SJK"], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 310, 50, "Embraer E190", "G3", ["16:45", "16:45", "16:45", "16:45", "16:45", null, null], ["19:25", "19:25", "19:25", "19:25", "19:25", null, null], "SJK"], ["Ribeirão Preto", "RAO", "DOM", 225, 55, "ATR 72-600", "AD", ["08:20", "08:20", "08:20", "08:20", "08:20", null, null], ["11:10", "11:10", "11:10", "11:10", "11:10", null, null], "SJK"], ["Ribeirão Preto", "RAO", "DOM", 225, 55, "ATR 72-600", "LA", ["15:10", "15:10", "15:10", "15:10", "15:10", null, null], ["18:00", "18:00", "18:00", "18:00", "18:00", null, null], "SJK"], ["Bauru", "JTC", "DOM", 280, 65, "ATR 72-600", "2Z", ["09:05", null, "09:05", null, "09:05", null, null], ["12:15", null, "12:15", null, "12:15", null, null], "SJK"], ["Presidente Prudente", "PPB", "DOM", 500, 90, "Embraer E175", "G3", [null, "10:10", null, "10:10", null, null, null], [null, "14:10", null, "14:10", null, null, null], "SJK"], ["Marília", "MII", "DOM", 350, 75, "ATR 72-600", "AD", [null, null, "10:25", null, null, null, null], [null, null, "13:55", null, null, null, null], "SJK"], ["Uberlândia", "UDI", "DOM", 700, 85, "Embraer E175", "LA", [null, "09:50", null, "09:50", null, null, null], [null, "13:40", null, "13:40", null, null, null], "SJK"], ["Londrina", "LDB", "DOM", 660, 80, "Embraer E190", "2Z", [null, null, null, "11:05", null, null, null], [null, null, null, "14:45", null, null, null], "SJK"], ["Goiânia", "GYN", "DOM", 910, 100, "Embraer E195", "G3", [null, null, "10:15", null, "10:15", null, null], [null, null, "14:35", null, "14:35", null, null], "SJK"], ["Palmas", "PMW", "DOM", 1620, 155, "Airbus A319", "AD", [null, "09:20", null, "09:20", null, null, null], [null, "16:00", null, "16:00", null, null, null], "SJK"], ["Campo Grande", "CGR", "DOM", 1070, 115, "Embraer E195", "LA", [null, null, null, "10:45", null, "11:50", null], [null, null, null, "15:35", null, "16:40", null], "SJK"], ["Cuiabá", "CGB", "DOM", 1600, 165, "Airbus A319", "2Z", [null, null, null, null, null, "10:20", "12:15"], [null, null, null, null, null, "17:20", "19:15"], "SJK"], ["Manaus", "MAO", "DOM", 2695, 265, "Boeing 737-800", "G3", [null, null, null, null, "10:05", null, "10:05"], [null, null, null, null, "20:25", null, "20:25"], "SJK"], ["Belém", "BEL", "DOM", 2700, 265, "Boeing 737-800", "AD", [null, null, null, "14:15", null, null, "12:10"], [null, null, null, "00:35", null, null, "22:30"], "SJK"], ["Curitiba", "CWB", "DOM", 540, 70, "Embraer E190", "LA", ["08:10", "09:05", "08:10", "09:05", "08:10", "10:25", "11:45"], ["11:30", "12:25", "11:30", "12:25", "11:30", "13:45", "15:05"], "SJK"], ["Curitiba", "CWB", "DOM", 540, 70, "Embraer E190", "2Z", ["14:30", "15:25", "14:30", "15:25", "14:30", "17:10", null], ["17:50", "18:45", "17:50", "18:45", "17:50", "20:30", null], "SJK"], ["Florianópolis", "FLN", "DOM", 680, 85, "Embraer E195", "G3", [null, "09:40", null, "10:15", null, "11:20", "13:05"], [null, "13:30", null, "14:05", null, "15:10", "16:55"], "SJK"], ["Porto Alegre", "POA", "DOM", 1100, 120, "Boeing 737-800", "AD", ["07:25", null, "08:05", "09:15", null, "10:35", "12:20"], ["12:25", null, "13:05", "14:15", null, "15:35", "17:20"], "SJK"], ["Porto Alegre", "POA", "DOM", 1100, 120, "Boeing 737-800", "LA", ["16:10", null, "16:10", "17:05", null, null, null], ["21:10", null, "21:10", "22:05", null, null, null], "SJK"], ["Salvador", "SSA", "DOM", 1500, 155, "Airbus A320", "2Z", ["08:05", null, "08:35", null, "08:05", null, "10:15"], ["14:45", null, "15:15", null, "14:45", null, "16:55"], "SJK"], ["Recife", "REC", "DOM", 2200, 220, "Boeing 737-800", "G3", [null, null, "07:45", null, null, "07:20", null], [null, null, "16:35", null, null, "16:10", null], "SJK"], ["Fortaleza", "FOR", "DOM", 2800, 275, "Boeing 737-800", "AD", [null, null, null, "08:10", null, null, null], [null, null, null, "18:50", null, null, null], "SJK"], ["São Luís", "SLZ", "DOM", 2600, 255, "Boeing 737-800", "LA", [null, null, null, null, null, null, "09:25"], [null, null, null, null, null, null, "19:25"], "SJK"], ["João Pessoa", "JPA", "DOM", 2450, 240, "Boeing 737-800", "2Z", [null, null, null, null, null, "08:45", null], [null, null, null, null, null, "18:15", null], "SJK"], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2200, 220, "Airbus A320", "LA", ["10:10", "00:15", "10:10", "00:15", null, "10:10", null], ["19:00", "09:05", "19:00", "09:05", null, "19:00", null], "SJK"], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2200, 220, "Boeing 737-800", "LA", [null, null, "22:40", null, "22:40", "22:15", "22:15"], [null, null, "07:30", null, "07:30", "07:05", "07:05"], "SJK"], ["Santiago", "SCL", "LAT", 2630, 260, "Airbus A320", "LA", [null, null, null, null, null, "11:05", "22:20"], [null, null, null, null, null, "21:15", "08:30"], "SJK"], ["Lima", "LIM", "LAT", 3700, 360, "Boeing 737-800", "LA", [null, "10:25", null, null, null, null, "23:10"], [null, "23:55", null, null, null, null, "12:40"], "SJK"], ["Montevidéu", "MVD", "LAT", 2100, 210, "Airbus A319", "LA", [null, null, "10:50", null, null, null, "21:35"], [null, null, "19:20", null, null, null, "06:05"], "SJK"], ["Assunção", "ASU", "LAT", 2000, 185, "Embraer E195", "AD", [null, null, null, null, null, null, "15:20"], [null, null, null, null, null, null, "23:00"], "SJK"], ["Bogotá", "BOG", "LAT", 4050, 390, "Boeing 737-800", "LA", [null, null, null, null, "23:10", null, null], [null, null, null, null, "13:40", null, null], "SJK"], ["San José – Costa Rica", "SJO", "CAR", 5700, 510, "Boeing 737-800", "AA", [null, null, null, null, "23:40", null, null], [null, null, null, null, "18:10", null, null], "SJK"], ["Havana", "HAV", "CAR", 7100, 600, "Boeing 737-800", "LA", [null, null, null, null, null, "23:05", null], [null, null, null, null, null, "20:35", null], "SJK"], ["Ciudad de Panamá", "PTY", "LAT", 5700, 510, "Boeing 737-800", "AA", [null, null, null, null, "23:25", null, null], [null, null, null, null, "17:55", null, null], "SJK"], ["Miami", "MIA", "EUA", 7200, 615, "Boeing 757-200", "AA", [null, null, "01:20", null, null, "10:20", "23:15"], [null, null, "23:20", null, null, "08:20", "21:15"], "SJK"], ["Fort Lauderdale", "FLL", "EUA", 7250, 620, "Boeing 757-200", "AA", [null, null, null, null, null, null, "23:05"], [null, null, null, null, null, null, "21:15"], "SJK"], ["Lisboa", "LIS", "EUR", 9200, 755, "Boeing 757-200", "TP", [null, null, "00:40", null, null, "23:10", "23:10"], [null, null, "03:20", null, null, "01:50", "01:50"], "SJK"], ["Madrid", "MAD", "EUR", 9300, 760, "Boeing 757-200", "IB", [null, null, null, null, null, null, "23:45"], [null, null, null, null, null, null, "02:35"], "SJK"], ["Brasília", "BSB", "DOM", 1015, 105, "Airbus A320", "G3", ["03:15", null, "03:15", null, null, null, null], ["07:45", null, "07:45", null, null, null, null], "SJK"], ["Rio de Janeiro – Galeão", "GIG", "DOM", 350, 55, "Airbus A319", "2Z", [null, "03:40", null, "03:40", null, null, null], [null, "06:30", null, "06:30", null, null, null], "SJK"], ["Belo Horizonte", "CNF", "DOM", 580, 75, "Embraer E195", "G3", ["04:10", null, null, null, null, null, null], ["07:40", null, null, null, null, null, null], "SJK"], ["Curitiba", "CWB", "DOM", 540, 70, "Embraer E190", "LA", [null, "03:00", null, "03:00", null, null, null], [null, "06:20", null, "06:20", null, null, null], "SJK"], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2200, 220, "Airbus A320", "LA", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "SJK"], ["Miami", "MIA", "EUA", 7200, 615, "Boeing 757-200", "AA", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "SJK"], ["Lisboa", "LIS", "EUR", 9200, 755, "Boeing 757-200", "TP", [null, null, null, null, null, null, null], [null, null, null, null, null, null, null], "SJK"]];
+const AL={"G3": {"name": "GOL", "color": "#ff6600"}, "AD": {"name": "Azul", "color": "#003087"}, "LA": {"name": "LATAM", "color": "#d91b5b"}, "2Z": {"name": "Voepass", "color": "#4488cc"}, "TP": {"name": "TAP Air Portugal", "color": "#00a854"}, "AA": {"name": "American Airlines", "color": "#0078d2"}, "UA": {"name": "United Airlines", "color": "#003580"}, "AC": {"name": "Air Canada", "color": "#d62b1f"}, "IB": {"name": "Iberia", "color": "#cc0000"}, "BA": {"name": "British Airways", "color": "#2e5796"}, "AF": {"name": "Air France", "color": "#002395"}, "KL": {"name": "KLM", "color": "#00a1de"}, "LH": {"name": "Lufthansa", "color": "#05164d"}, "AZ": {"name": "ITA Airways", "color": "#007cb5"}, "SA": {"name": "South African", "color": "#0a2d6e"}, "EK": {"name": "Emirates", "color": "#d71921"}, "MS": {"name": "EgyptAir", "color": "#007749"}, "QR": {"name": "Qatar Airways", "color": "#5c0632"}, "TK": {"name": "Turkish Airlines", "color": "#c60c30"}, "AM": {"name": "Aeroméxico", "color": "#003366"}, "AI": {"name": "Air India", "color": "#e74c3c"}, "QF": {"name": "Qantas", "color": "#e02020"}, "NZ": {"name": "Air New Zealand", "color": "#00235b"}, "EI": {"name": "Aer Lingus", "color": "#006636"}, "FI": {"name": "Icelandair", "color": "#003366"}, "SK": {"name": "SAS", "color": "#003d8f"}, "OS": {"name": "Austrian Airlines", "color": "#cc0000"}, "JL": {"name": "Japan Airlines", "color": "#bc002d"}, "KE": {"name": "Korean Air", "color": "#00256c"}, "TG": {"name": "Thai Airways", "color": "#6d0080"}, "CM": {"name": "Copa Airlines", "color": "#003da5"}, "WS": {"name": "WestJet", "color": "#003da5"}, "CS": {"name": "Czech Airlines", "color": "#d7141a"}, "CA": {"name": "Air China", "color": "#cc0000"}, "A9": {"name": "Georgian Airways", "color": "#0057a8"}, "LO": {"name": "LOT Polish", "color": "#0057a8"}, "DT": {"name": "TAAG Angola", "color": "#cc0000"}, "SN": {"name": "Brussels Airlines", "color": "#0033a0"}, "A3": {"name": "Aegean Airlines", "color": "#003d8f"}, "TU": {"name": "Tunisair", "color": "#e70013"}, "GY": {"name": "Surinam Airways", "color": "#003580"}, "BG": {"name": "Biman Bangladesh", "color": "#006a4e"}, "LX": {"name": "Swiss International", "color": "#cc0000"}, "UZ": {"name": "Uzbekistan Airways", "color": "#1eb53a"}, "TA": {"name": "TACA Airlines", "color": "#003087"}, "AV": {"name": "Avianca", "color": "#cc0000"}, "RB": {"name": "BQB Líneas Aéreas", "color": "#003366"}, "WN": {"name": "Western Air", "color": "#003366"}};
+const COORDS={"GRU": [-23.4356, -46.4731], "CGH": [-23.6261, -46.6553], "SJK": [-23.2292, -45.8711], "VCP": [-23.0074, -47.1345], "BSB": [-15.8711, -47.9186], "CNF": [-19.6244, -43.9719], "GIG": [-22.8099, -43.2505], "SDU": [-22.9105, -43.1631], "SSA": [-12.9086, -38.3225], "REC": [-8.1264, -34.923], "FOR": [-3.7762, -38.5326], "NAT": [-5.7682, -35.376], "MCZ": [-9.51, -35.79], "JPA": [-7.145, -34.95], "SLZ": [-2.584, -44.234], "THE": [-5.06, -42.82], "MCP": [-0.048, -51.072], "POA": [-29.994, -51.171], "CWB": [-25.528, -49.175], "FLN": [-27.67, -48.552], "GYN": [-16.632, -49.22], "CGR": [-20.469, -54.672], "CGB": [-15.653, -56.117], "MAO": [-3.038, -60.05], "BEL": [-1.379, -48.476], "PMW": [-10.291, -48.353], "PVH": [-8.709, -63.902], "UDI": [-18.883, -48.225], "VIX": [-20.258, -40.286], "RAO": [-21.134, -47.777], "LDB": [-23.333, -51.132], "MOC": [-16.706, -43.818], "PPB": [-22.185, -51.203], "JTC": [-22.159, -49.069], "MII": [-22.196, -49.926], "EZE": [-34.822, -58.535], "SCL": [-33.393, -70.785], "LIM": [-12.022, -77.114], "BOG": [4.701, -74.146], "PTY": [9.071, -79.383], "MVD": [-34.838, -56.03], "SJO": [9.993, -84.208], "HAV": [23.163, -82.359], "CCS": [10.603, -66.991], "USH": [-54.843, -68.295], "BRC": [-41.152, -71.157], "ASU": [-25.239, -57.519], "MDE": [6.167, -75.423], "GYE": [-2.157, -79.883], "UIO": [-0.129, -78.357], "LPB": [-16.513, -68.192], "SDQ": [18.429, -69.668], "MIA": [25.795, -80.287], "JFK": [40.641, -73.778], "MCO": [28.431, -81.308], "ATL": [33.636, -84.428], "FLL": [26.072, -80.152], "YYZ": [43.677, -79.624], "DFW": [32.899, -97.04], "IAD": [38.944, -77.455], "LAX": [33.942, -118.408], "ORD": [41.978, -87.904], "BOS": [42.366, -71.01], "LIS": [38.775, -9.135], "MAD": [40.471, -3.562], "LHR": [51.477, -0.461], "LGW": [51.148, -0.19], "CDG": [49.009, 2.547], "AMS": [52.31, 4.768], "FRA": [50.037, 8.562], "ZRH": [47.464, 8.549], "MXP": [45.63, 8.723], "FCO": [41.8, 12.238], "BCN": [41.297, 2.083], "VIE": [48.11, 16.569], "DUB": [53.421, -6.27], "ARN": [59.651, 17.918], "OSL": [60.197, 11.1], "KEF": [63.985, -22.605], "FNC": [32.694, -16.778], "LPA": [27.931, -15.386], "IST": [40.976, 28.814], "DXB": [25.253, 55.365], "DOH": [25.26, 51.613], "CAI": [30.121, 31.405], "MEX": [19.436, -99.072], "JNB": [-26.136, 28.241], "SID": [16.741, -22.949], "LAD": [-8.858, 13.231], "ABJ": [5.261, -3.926], "FNA": [8.616, -13.195], "DEL": [28.556, 77.1], "BOM": [19.089, 72.865], "NRT": [35.764, 140.386], "ICN": [37.469, 126.45], "BKK": [13.681, 100.747], "TAS": [41.257, 69.281], "SYD": [-33.939, 151.175], "AKL": [-37.008, 174.791], "CUN": [21.036, -86.877], "CUR": [12.188, -68.959], "YVR": [49.194, -123.184], "GUA": [14.583, -90.527], "SJU": [18.439, -66.002], "KIN": [17.935, -76.787], "PRG": [50.1, 14.26], "WAW": [52.165, 20.967], "TBS": [41.669, 44.954], "TIA": [41.414, 19.72], "PEK": [40.08, 116.584], "PVG": [31.143, 121.805], "OPO": [41.235, -8.678], "CPH": [55.617, 12.655], "BRU": [50.902, 4.484], "BER": [52.366, 13.503], "ATH": [37.936, 23.944], "TUN": [36.851, 10.228], "GDL": [20.521, -103.311], "GEO": [6.499, -58.254], "CAY": [4.82, -52.37], "PBM": [5.453, -55.187], "MRS": [43.436, 5.215], "SAL": [13.441, -89.055], "TGU": [14.061, -87.217], "MGA": [12.142, -86.168], "BVB": [2.841, -60.693], "RBR": [-9.869, -67.898]};
+const WEATHER={"GRU": ["24°C", "Parcialmente nublado"], "CGH": ["25°C", "Ensolarado"], "SJK": ["22°C", "Ameno"], "CNF": ["24°C", "Parcialmente nublado"], "GIG": ["28°C", "Ensolarado"], "SDU": ["28°C", "Ensolarado"], "BSB": ["26°C", "Seco"], "SSA": ["30°C", "Tropical"], "REC": ["29°C", "Ensolarado"], "FOR": ["32°C", "Muito ensolarado"], "NAT": ["30°C", "Ensolarado"], "MCZ": ["29°C", "Parcialmente nublado"], "JPA": ["30°C", "Ensolarado"], "THE": ["31°C", "Ensolarado"], "SLZ": ["30°C", "Nublado"], "POA": ["18°C", "Frio e nublado"], "CWB": ["17°C", "Frio"], "FLN": ["22°C", "Ensolarado"], "LDB": ["24°C", "Ensolarado"], "GYN": ["28°C", "Seco"], "CGR": ["29°C", "Ensolarado"], "CGB": ["31°C", "Muito quente"], "PMW": ["29°C", "Seco"], "MAO": ["31°C", "Úmido"], "BEL": ["30°C", "Tropical"], "MCP": ["30°C", "Tropical"], "PVH": ["30°C", "Tropical"], "VIX": ["26°C", "Ameno"], "UDI": ["26°C", "Ensolarado"], "MOC": ["28°C", "Ensolarado"], "RAO": ["25°C", "Ameno"], "JTC": ["25°C", "Ensolarado"], "EZE": ["16°C", "Frio e nublado"], "SCL": ["14°C", "Nublado"], "LIM": ["19°C", "Garoa"], "BOG": ["15°C", "Chuvoso"], "MVD": ["17°C", "Ventoso"], "ASU": ["28°C", "Ensolarado"], "BRC": ["10°C", "Frio e ventoso"], "USH": ["5°C", "Neve leve"], "CCS": ["27°C", "Tropical"], "MDE": ["22°C", "Primavera eterna"], "MIA": ["28°C", "Ensolarado"], "FLL": ["27°C", "Ensolarado"], "MCO": ["27°C", "Parcialmente nublado"], "ATL": ["22°C", "Ensolarado"], "JFK": ["15°C", "Nublado"], "IAD": ["14°C", "Frio"], "DFW": ["25°C", "Ensolarado"], "CUN": ["30°C", "Tropical"], "HAV": ["28°C", "Ensolarado"], "CUR": ["30°C", "Tropical"], "SJO": ["24°C", "Chuvoso"], "PTY": ["28°C", "Tropical úmido"], "MEX": ["18°C", "Ameno"], "YYZ": ["10°C", "Nublado e frio"], "LIS": ["18°C", "Ameno"], "MAD": ["20°C", "Ensolarado"], "LHR": ["12°C", "Nublado"], "LGW": ["12°C", "Garoa"], "CDG": ["14°C", "Nublado"], "AMS": ["11°C", "Garoa"], "FRA": ["13°C", "Nublado"], "ZRH": ["12°C", "Nublado"], "MXP": ["14°C", "Parcialmente nublado"], "FCO": ["18°C", "Ensolarado"], "DUB": ["10°C", "Chuvoso"], "ARN": ["5°C", "Frio"], "OSL": ["4°C", "Neve possível"], "KEF": ["2°C", "Muito frio"], "FNC": ["20°C", "Ameno"], "LPA": ["22°C", "Ensolarado"], "DXB": ["35°C", "Muito quente"], "DOH": ["34°C", "Muito quente"], "CAI": ["28°C", "Seco"], "IST": ["15°C", "Nublado"], "JNB": ["20°C", "Ensolarado"], "SID": ["26°C", "Tropical"], "ABJ": ["30°C", "Tropical úmido"], "FNA": ["29°C", "Tropical"], "DEL": ["32°C", "Quente e seco"], "BOM": ["30°C", "Úmido"], "TAS": ["20°C", "Ameno"], "SYD": ["22°C", "Ensolarado"], "AKL": ["16°C", "Ameno"], "MII": ["25°C", "Ameno"], "PPB": ["26°C", "Ameno"], "VIE": ["12°C", "Nublado"], "BCN": ["20°C", "Ensolarado"], "LAD": ["28°C", "Tropical"], "NRT": ["16°C", "Parcialmente nublado"], "ICN": ["14°C", "Ameno"], "BKK": ["33°C", "Quente e úmido"], "LAX": ["22°C", "Ensolarado"], "ORD": ["12°C", "Ventoso"], "BOS": ["10°C", "Nublado"], "SDQ": ["28°C", "Tropical"], "GYE": ["26°C", "Tropical"], "UIO": ["16°C", "Fresco"], "LPB": ["12°C", "Frio e seco"], "YVR": ["12°C", "Chuvoso"], "GUA": ["20°C", "Tropical"], "SJU": ["28°C", "Tropical"], "KIN": ["30°C", "Tropical e úmido"], "PRG": ["12°C", "Nublado"], "WAW": ["10°C", "Frio"], "TBS": ["18°C", "Ameno"], "TIA": ["18°C", "Mediterrâneo"], "PEK": ["18°C", "Seco"], "PVG": ["20°C", "Úmido"], "OPO": ["17°C", "Nublado e fresco"], "CPH": ["9°C", "Frio e nublado"], "BRU": ["11°C", "Garoa"], "BER": ["12°C", "Nublado"], "ATH": ["22°C", "Ensolarado"], "TUN": ["20°C", "Ameno"], "GDL": ["22°C", "Ameno"], "GEO": ["28°C", "Tropical"], "CAY": ["29°C", "Tropical úmido"], "PBM": ["28°C", "Tropical"], "MRS": ["18°C", "Mediterrâneo"], "SAL": ["28°C", "Tropical"], "TGU": ["26°C", "Tropical"], "MGA": ["29°C", "Tropical"], "BVB": ["32°C", "Muito quente"], "RBR": ["30°C", "Tropical úmido"]};
+const TRANSIT_DATA={"GRU": {"metro_interval": 2, "bus_interval": 7, "metro_color": "#e30613", "metro_line": "Linha 13 – Jade (CPTM)", "metro_stations": [{"name": "Terminal T2", "type": "terminal"}, {"name": "Terminal T3", "type": "terminal"}, {"name": "Terminal T3 Int'l", "type": "terminal"}, {"name": "Aeroporto GRU", "type": "hub"}, {"name": "Guarulhos – Centro", "type": "city"}, {"name": "Engenheiro Goulart", "type": "city"}, {"name": "Tatuapé", "type": "city"}, {"name": "Corinthians – Itaquera", "type": "city", "terminus": true}], "metro_also": "Conexão Linha 3 – Vermelha em Corinthians–Itaquera → Brás → Sé → Barra Funda → Palmeiras → Luz", "bus_routes": [{"name": "GRU → Guarulhos Centro", "freq": 7}, {"name": "GRU → Tietê (Terminal)", "freq": 15}, {"name": "GRU → Congonhas (CGH)", "freq": 30}]}, "CNF": {"metro_interval": 5, "bus_interval": 11, "metro_color": "#007dc5", "metro_line": "Linha BH–Airport (CBTU/Metrô BH)", "metro_stations": [{"name": "Terminal T1 Dom.", "type": "terminal"}, {"name": "Terminal T2 Int'l", "type": "terminal"}, {"name": "Aeroporto CNF", "type": "hub"}, {"name": "Confins", "type": "city"}, {"name": "Pedro Leopoldo", "type": "city"}, {"name": "Venda Nova", "type": "city"}, {"name": "Pampulha", "type": "city"}, {"name": "Santa Inês", "type": "city"}, {"name": "BH – Praça Sete", "type": "city", "terminus": true}], "metro_also": "Conexão Linha 1 em Praça Sete → Lagoinha → Eldorado → Barreiro", "bus_routes": [{"name": "CNF → BH Centro", "freq": 11}, {"name": "CNF → Pampulha / UFMG", "freq": 20}, {"name": "CNF → Nova Lima", "freq": 40}]}, "SJK": {"metro_interval": 5, "bus_interval": 15, "metro_color": "#00a859", "metro_line": "VLT Vale do Paraíba (SJK–Centro)", "metro_stations": [{"name": "Terminal SJK", "type": "terminal"}, {"name": "Aeroporto SJK", "type": "hub"}, {"name": "CTA – Parque Tecnológico", "type": "city"}, {"name": "Jardim Aquarius", "type": "city"}, {"name": "SJK – Centro", "type": "city", "terminus": true}], "metro_also": "Conexão Rodoviária Centro → SP (Dutra) a cada 20min", "bus_routes": [{"name": "SJK → Centro SJK", "freq": 15}, {"name": "SJK → Taubaté", "freq": 30}, {"name": "SJK → São Paulo (Anhangabaú)", "freq": 40}]}};
+const DAYS=["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
+const BELTS=["1","2","3","4","5","6","7","8","9","10"];
+const AP_COLORS={GRU:"#00c853",CNF:"#ffb300",SJK:"#00e5ff"};
+const AP_HOMES={GRU:[-23.4356, -46.4731],CNF:[-19.6244, -43.9719],SJK:[-23.2292, -45.8711]};
+const AP_GATES={
+  GRU:{dom:["A1","A2","A3","A4","A5","A6","A7","A8","B1","B2","B3","B4","B5","B6","B7","B8"],int:["C1","C2","C3","C4","C5","D1","D2","D3","D4","E1","E2","E3","F1","F2","F3","G1","G2","H1","H2"]},
+  CNF:{dom:["A1","A2","A3","A4","A5","A6","A7","B1","B2","B3","B4","B5","B6"],int:["C1","C2","C3","C4","D1","D2","D3","D4","E1","E2"]},
+  SJK:{dom:["1","2","3","4","5","6","7","8","9","10","11","12"],int:["1","2","3","4","5","6","7","8","9","10","11","12"]}
+};
+const AP_TRM={GRU:{dom:"T2",int:"T3"},CNF:{dom:"T1",int:"T2"},SJK:{dom:"TU",int:"TU"}};
+const CM={DOM:"dom",LAT:"lat",EUA:"eua",CAN:"can",CAR:"car",EUR:"eur",AFR:"afr",MID:"mid",MEX:"mex",ASIA:"asia",OCE:"oce"};
+const CL={DOM:"DOM",LAT:"LATAM",EUA:"EUA",CAN:"CAN",CAR:"CARIBE",EUR:"EUR",AFR:"AFR",MID:"ORIENTE",MEX:"MÉXICO",ASIA:"ÁSIA",OCE:"OCEANIA"};
+
+function jsDayToIdx(d){return d===0?6:d-1;}
+const todayIdx=jsDayToIdx(new Date().getDay());
+const apFilter={dep:{GRU:true,CNF:true,SJK:true},arr:{GRU:true,CNF:true,SJK:true}};
+let liveMap=null,liveMarkers=[];
+
+function nowMins(){const n=new Date();return n.getHours()*60+n.getMinutes();}
+function toMins(t){const[h,m]=t.split(":").map(Number);return h*60+m;}
+function isNight(h){return h>=22||h<5;}
+function addM(t,m){const[h,mm]=t.split(":").map(Number);const tot=h*60+mm+m;return String(Math.floor(tot/60)%24).padStart(2,"0")+":"+String(tot%60).padStart(2,"0");}
+function lerp(a,b,t){return a+(b-a)*t;}
+function flightNum(al,fi){return(al||"XX")+(1000+(fi*37+fi*fi*13)%8999);}
+function shouldShow(t){return toMins(t)>=nowMins()-30;}
+function gate(ap,tipo,fi){const pool=tipo==="DOM"?AP_GATES[ap].dom:AP_GATES[ap].int;return pool[fi%pool.length];}
+function belt(fi){return BELTS[fi%BELTS.length];}
+function trm(ap,tipo){return AP_TRM[ap]?.[tipo==="DOM"?"dom":"int"]||"TU";}
+function apCls(ap){return ap==="GRU"?"gru":ap==="CNF"?"cnf":"sjk";}
+function trmCls(t){return"ttrm ttrm-"+t;}
+function chipH(t){return`<span class="chip c-${CM[t]||"dom"}">${CL[t]||t}</span>`;}
+function alH(c){const a=AL[c];if(!a)return`<span class="al" style="color:#546e7a;border-color:#263238">${c}</span>`;return`<span class="al" style="color:${a.color};border-color:${a.color}55;background:${a.color}14">${a.name}</span>`;}
+function stH(v){const l={sch:"Programado",ont:"No Horário",board:"Embarcando",final:"Emb. Final",taxi:"Na Pista",dep:"Partiu",del:"Atrasado",can:"Cancelado",arr:"Chegando",lnd:"Pousou"};return`<span class="st st-${v}">${l[v]||v}</span>`;}
+function autoSt(t,mode){
+  const d=toMins(t)-nowMins();
+  if(mode==="dep"){if(d>120)return"sch";if(d>60)return"ont";if(d>30)return"board";if(d>5)return"final";if(d>-8)return"taxi";return"dep";}
+  else{if(d>60)return"sch";if(d>20)return"arr";if(d>-10)return"taxi";return"lnd";}
+}
+function badgeH(ap){const c=apCls(ap);return`<span class="ap-badge ${c}">${ap}</span>`;}
+
+function depRows(filt,tf,sr){
+  const day=todayIdx;
+  return FD.map((f,fi)=>({f,fi}))
+    .filter(({f})=>filt[f[9]]&&f[7][day]!=null&&shouldShow(f[7][day]))
+    .filter(({f})=>tf==="ALL"||f[2]===tf)
+    .filter(({f})=>!sr||f[0].toLowerCase().includes(sr)||f[1].toLowerCase().includes(sr)||f[9].toLowerCase().includes(sr)||(AL[f[6]]?.name||"").toLowerCase().includes(sr))
+    .map(({f,fi})=>({time:f[7][day],dest:f[0],iata:f[1],tipo:f[2],ac:f[5],al:f[6],fi,ap:f[9],
+      gate:gate(f[9],f[2],fi),trm:trm(f[9],f[2]),st:autoSt(f[7][day],"dep")}))
+    .sort((a,b)=>a.time.localeCompare(b.time));
+}
+function arrRows(filt,tf,sr){
+  const day=todayIdx;
+  return FD.map((f,fi)=>({f,fi}))
+    .filter(({f})=>filt[f[9]]&&f[8]&&f[8][day]!=null&&shouldShow(f[8][day]))
+    .filter(({f})=>tf==="ALL"||f[2]===tf)
+    .filter(({f})=>!sr||f[0].toLowerCase().includes(sr)||f[1].toLowerCase().includes(sr)||f[9].toLowerCase().includes(sr)||(AL[f[6]]?.name||"").toLowerCase().includes(sr))
+    .map(({f,fi})=>({time:f[8][day],dest:f[0],iata:f[1],tipo:f[2],ac:f[5],al:f[6],fi,ap:f[9],
+      belt:belt(fi),trm:trm(f[9],f[2]),st:autoSt(f[8][day],"arr")}))
+    .sort((a,b)=>a.time.localeCompare(b.time));
+}
+
+function rDep(){
+  const tf=document.getElementById("tf-dep").value;
+  const sr=document.getElementById("sr-dep").value.toLowerCase();
+  const rows=depRows(apFilter.dep,tf,sr);
+  const nm=nowMins();let ni=-1;for(let i=0;i<rows.length;i++){if(toMins(rows[i].time)>=nm){ni=i;break;}}
+  document.getElementById("tb-dep").innerHTML=rows.map((r,i)=>{
+    const c=apCls(r.ap);const nt=isNight(parseInt(r.time));
+    return`<tr class="row-${c}${i===ni?" next-flight":""}">
+      <td>${badgeH(r.ap)}</td>
+      <td class="tc ${c}${nt?" night":""}">${r.time}</td>
+      <td class="tdst">${r.dest}</td><td class="tia">${r.iata}</td>
+      <td>${alH(r.al)}</td><td>${chipH(r.tipo)}</td><td class="tac">${r.ac}</td>
+      <td><span class="ttrm ttrm-${r.trm}">${r.trm}</span></td>
+      <td class="tgt">${r.gate}</td><td>${stH(r.st)}</td></tr>`;
+  }).join("");
+  document.getElementById("cnt-dep").textContent=rows.length;
+  document.getElementById("em-dep").style.display=rows.length===0?"block":"none";
+  const n=new Date();
+  document.getElementById("now-lbl-dep").textContent="A partir de "+String(n.getHours()).padStart(2,"0")+":"+String(Math.max(0,n.getMinutes()-30)).padStart(2,"0");
+}
+function rArr(){
+  const tf=document.getElementById("tf-arr").value;
+  const sr=document.getElementById("sr-arr").value.toLowerCase();
+  const rows=arrRows(apFilter.arr,tf,sr);
+  const nm=nowMins();let ni=-1;for(let i=0;i<rows.length;i++){if(toMins(rows[i].time)>=nm){ni=i;break;}}
+  document.getElementById("tb-arr").innerHTML=rows.map((r,i)=>{
+    const c=apCls(r.ap);const nt=isNight(parseInt(r.time));
+    return`<tr class="row-${c}${i===ni?" next-flight":""}">
+      <td>${badgeH(r.ap)}</td>
+      <td class="tc ${c} arr${nt?" night":""}">${r.time}</td>
+      <td class="tdst">${r.dest}</td><td class="tia">${r.iata}</td>
+      <td>${alH(r.al)}</td><td>${chipH(r.tipo)}</td><td class="tac">${r.ac}</td>
+      <td><span class="ttrm ttrm-${r.trm}">${r.trm}</span></td>
+      <td class="tgt">${r.belt}</td><td>${stH(r.st)}</td></tr>`;
+  }).join("");
+  document.getElementById("cnt-arr").textContent=rows.length;
+  document.getElementById("em-arr").style.display=rows.length===0?"block":"none";
+}
+
+function toggleAp(mode,ap){
+  apFilter[mode][ap]=!apFilter[mode][ap];
+  const c=apCls(ap);
+  const btns=document.querySelectorAll(`#apf-${mode} .apf.${c}`);
+  btns.forEach(b=>b.classList.toggle("on",apFilter[mode][ap]));
+  if(mode==="dep")rDep();else rArr();
+}
+
+// ── KPI ──────────────────────────────────────────────────────────────────────
+function updateKPIs(){
+  const day=todayIdx;
+  const apMap={GRU:"gru",CNF:"cnf",SJK:"sjk"};
+  ["GRU","CNF","SJK"].forEach(ap=>{
+    const c=apMap[ap];
+    const dep=FD.filter(f=>f[9]===ap&&f[7][day]!=null&&shouldShow(f[7][day])).length;
+    const arr=FD.filter(f=>f[9]===ap&&f[8]&&f[8][day]!=null&&shouldShow(f[8][day])).length;
+    const ed=document.getElementById(`kpi-${c}-dep`);
+    const ea=document.getElementById(`kpi-${c}-arr`);
+    if(ed)ed.textContent=dep;if(ea)ea.textContent=arr;
+  });
+}
+
+// ── LIVE MAP ─────────────────────────────────────────────────────────────────
+function initLive(){
+  if(liveMap)return;
+  liveMap=L.map("live-map",{center:[-18,-47],zoom:4});
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap",maxZoom:18}).addTo(liveMap);
+  Object.entries(AP_HOMES).forEach(([ap,coords])=>{
+    const c=AP_COLORS[ap];
+    L.circleMarker(coords,{radius:9,fillColor:c,fillOpacity:1,color:"#fff",weight:2})
+      .addTo(liveMap).bindPopup(`<b style="color:${c}">${ap}</b>`);
+  });
+  renderLive();
+}
+function getPos(f,fi,day){
+  const dep=f[7][day];if(!dep)return null;
+  const dest=COORDS[f[1]];const home=AP_HOMES[f[9]];
+  if(!dest||!home)return null;
+  const depM=toMins(dep);const dur=f[4];const arrM=depM+dur;const nm=nowMins();
+  const nmAdj=(depM>1200&&nm<600)?nm+1440:nm;
+  if(nmAdj<depM||nmAdj>arrM)return null;
+  const prog=Math.max(0,Math.min(1,(nmAdj-depM)/dur));
+  const lat=lerp(home[0],dest[0],prog);const lon=lerp(home[1],dest[1],prog);
+  const angle=Math.atan2(dest[1]-home[1],dest[0]-home[0])*180/Math.PI;
+  return{lat,lon,angle,prog,dep,arr:addM(dep,dur)};
+}
+function renderLive(){
+  if(!liveMap)return;
+  liveMarkers.forEach(m=>liveMap.removeLayer(m));liveMarkers=[];
+  const day=todayIdx;let ab=0,bd=0,ar=0,dl=0,tx=0;
+  FD.forEach((f,fi)=>{
+    const pos=getPos(f,fi,day);if(!pos)return;ab++;
+    const a=AL[f[6]];const color=a?a.color:"#fff";
+    const home=AP_HOMES[f[9]];const dest=COORDS[f[1]];
+    const apC=AP_COLORS[f[9]]||color;
+    const trail=L.polyline([home,[pos.lat,pos.lon]],{color,weight:2,opacity:.6,dashArray:"5,4"}).addTo(liveMap);
+    if(dest){const rem=L.polyline([[pos.lat,pos.lon],dest],{color,weight:1.5,opacity:.18,dashArray:"3,7"}).addTo(liveMap);liveMarkers.push(rem);}
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="transform:rotate(${pos.angle-45}deg);filter:drop-shadow(0 0 3px ${color})"><path fill="${color}" d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
+    const icon=L.divIcon({html:svg,className:"",iconSize:[20,20],iconAnchor:[10,10]});
+    const m=L.marker([pos.lat,pos.lon],{icon,zIndexOffset:1000}).addTo(liveMap);
+    const pct=Math.round(pos.prog*100);const rm=Math.round(f[4]*(1-pos.prog));
+    const rh=Math.floor(rm/60),rmm=rm%60;const remStr=rh>0?`${rh}h${rmm}m`:`${rmm}m`;
+    m.bindPopup(`<div style="min-width:180px;font-family:'Barlow Condensed',sans-serif"><div style="font-size:.7rem;color:${apC};font-weight:700;letter-spacing:.1em;margin-bottom:2px">${f[9]}</div><div style="font-size:1rem;font-weight:700;color:${color};margin-bottom:3px">${flightNum(f[6],fi)} ↑</div><div style="font-size:.86rem;font-weight:700;margin-bottom:3px">${f[0]}</div><div style="font-size:.74rem;color:#90a0b0;margin-bottom:6px">${a?.name||f[6]} · ${f[5]}</div><div style="display:grid;grid-template-columns:auto 1fr;gap:2px 8px;font-size:.72rem"><span style="color:#546e7a">Partiu</span><span style="font-family:monospace">${pos.dep}</span><span style="color:#546e7a">Chega</span><span style="font-family:monospace">${pos.arr}</span><span style="color:#546e7a">Restante</span><span style="font-family:monospace;color:${color}">${remStr}</span></div><div style="margin-top:6px;background:#1a2535;border-radius:2px;height:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${color}"></div></div></div>`);
+    liveMarkers.push(trail,m);
+    const st=autoSt(f[7][day],"dep");
+    if(st==="board"||st==="final")bd++;if(st==="del")dl++;if(st==="taxi")tx++;
+  });
+  // Chegadas
+  FD.forEach((f,fi)=>{
+    const arrT=f[8]&&f[8][day];if(!arrT)return;
+    const orig=COORDS[f[1]];const home=AP_HOMES[f[9]];if(!orig||!home)return;
+    const inbDepM=toMins(arrT)-f[4];const nm=nowMins();
+    const nmAdj=(inbDepM>1200&&nm<600)?nm+1440:nm;
+    const inbArrM=inbDepM+f[4];
+    if(nmAdj<inbDepM||nmAdj>inbArrM)return;
+    const prog=Math.max(0,Math.min(1,(nmAdj-inbDepM)/f[4]));
+    const lat=lerp(orig[0],home[0],prog);const lon=lerp(orig[1],home[1],prog);
+    const angle=Math.atan2(home[1]-orig[1],home[0]-orig[0])*180/Math.PI;
+    const a=AL[f[6]];const color=a?a.color:"#88ffaa";
+    const apC=AP_COLORS[f[9]]||color;
+    const trail=L.polyline([orig,[lat,lon]],{color,weight:2,opacity:.5,dashArray:"5,4"}).addTo(liveMap);
+    const rem=L.polyline([[lat,lon],home],{color,weight:1.5,opacity:.15,dashArray:"3,7"}).addTo(liveMap);
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="transform:rotate(${angle-45}deg);filter:drop-shadow(0 0 3px ${color})"><path fill="${color}" opacity="0.85" d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
+    const icon=L.divIcon({html:svg,className:"",iconSize:[20,20],iconAnchor:[10,10]});
+    const mArr=L.marker([lat,lon],{icon,zIndexOffset:900}).addTo(liveMap);
+    const rmArr=Math.round(f[4]*(1-prog));const rhA=Math.floor(rmArr/60),rmA=rmArr%60;
+    const remA=rhA>0?`${rhA}h${rmA}m`:`${rmA}m`;const pctA=Math.round(prog*100);
+    mArr.bindPopup(`<div style="min-width:180px;font-family:'Barlow Condensed',sans-serif"><div style="font-size:.7rem;color:${apC};font-weight:700;letter-spacing:.1em;margin-bottom:2px">${f[9]}</div><div style="font-size:1rem;font-weight:700;color:${color};margin-bottom:3px">${flightNum(f[6],fi)} ↓</div><div style="font-size:.86rem;font-weight:700;margin-bottom:3px">${f[0]} → ${f[9]}</div><div style="font-size:.74rem;color:#90a0b0;margin-bottom:6px">${a?.name||f[6]} · ${f[5]}</div><div style="display:grid;grid-template-columns:auto 1fr;gap:2px 8px;font-size:.72rem"><span style="color:#546e7a">Origem</span><span style="font-family:monospace">${f[1]}</span><span style="color:#546e7a">Chegada</span><span style="font-family:monospace">${arrT}</span><span style="color:#546e7a">Restante</span><span style="font-family:monospace;color:${color}">${remA}</span></div><div style="margin-top:6px;background:#1a2535;border-radius:2px;height:3px;overflow:hidden"><div style="height:100%;width:${pctA}%;background:${color}"></div></div></div>`);
+    liveMarkers.push(trail,rem,mArr);ar++;
+  });
+  document.getElementById("ls-ab").textContent=ab;document.getElementById("ls-bd").textContent=bd;
+  document.getElementById("ls-ar").textContent=ar;document.getElementById("ls-dl").textContent=dl;
+  document.getElementById("ls-tx").textContent=tx;
+}
+
+// ── TRANSIT ───────────────────────────────────────────────────────────────────
+function nextDeparture(intervalMin){
+  const nm=nowMins();const rem=intervalMin-(nm%intervalMin);
+  return rem===intervalMin?0:rem;
+}
+function buildTransit(){
+  const el=document.getElementById("transit-cards");
+  el.innerHTML=Object.entries(TRANSIT_DATA).map(([ap,t])=>{
+    const c=apCls(ap);const lc=t.metro_color;
+    const nmMin=nextDeparture(t.metro_interval);
+    const nbMin=nextDeparture(t.bus_interval);
+    const nmStr=nmMin===0?"Agora":nmMin+"min";
+    const nbStr=nbMin===0?"Agora":nbMin+"min";
+    const stopsHtml=t.metro_stations.map(s=>`
+      <div class="metro-stop">
+        <div class="metro-dot ${s.type}" style="--line-color:${lc};border-color:${lc};${s.hub||s.terminus?"background:"+lc:"background:var(--bg)"}"></div>
+        <span class="metro-name ${s.type}" style="${s.type==="terminal"||s.type==="hub"?"color:"+lc:""}">${s.name}${s.terminus?" ◀":""}${s.type==="terminal"?" ✈":""}</span>
+      </div>`).join("");
+    const busHtml=t.bus_routes.map(b=>`
+      <div class="bus-route">
+        <span class="br-name">🚌 ${b.name}</span>
+        <span class="br-freq">a cada ${b.freq}min</span>
+      </div>`).join("");
+    return`<div class="tc-card">
+      <div class="tc-header" style="border-bottom:2px solid ${lc}20">
+        <div>
+          <div class="apc-iata ${c}" style="font-size:1.3rem">${ap}</div>
+          <div class="tc-line" style="color:${lc};margin-top:3px">${t.metro_line}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:.6rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase">Próximo trem</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:1.5rem;color:${lc};font-weight:700" id="nt-${ap}">${nmStr}</div>
+          <div style="font-size:.65rem;color:var(--dim)">A cada ${t.metro_interval}min</div>
+        </div>
+      </div>
+      <div class="tc-body">
+        <div class="metro-line" style="--line-color:${lc}">${stopsHtml}</div>
+        <div class="metro-also">${t.metro_also}</div>
+        <div class="bus-title" style="--border:var(--border)">Linhas de Ônibus</div>
+        <div style="margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <span style="font-size:.72rem;color:var(--dim)">Próximo ônibus</span>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:1rem;color:#ffd54f;font-weight:700" id="nb-${ap}">${nbStr}</span>
+          </div>
+        </div>
+        ${busHtml}
+      </div>
+    </div>`;
+  }).join("");
+}
+function updateTransitTimes(){
+  Object.entries(TRANSIT_DATA).forEach(([ap,t])=>{
+    const nm=nextDeparture(t.metro_interval);
+    const nb=nextDeparture(t.bus_interval);
+    const em=document.getElementById("nt-"+ap);
+    const eb=document.getElementById("nb-"+ap);
+    if(em)em.textContent=nm===0?"Agora":nm+"min";
+    if(eb)eb.textContent=nb===0?"Agora":nb+"min";
+  });
+}
+
+// ── INFO ──────────────────────────────────────────────────────────────────────
+function rInfo(){
+  const aps=[
+    {key:"GRU",info:{"name": "Aeroporto Internacional de Guarulhos – Cumbica", "city": "Guarulhos / São Paulo", "iata": "GRU", "icao": "SBGR", "runway": "3.000 m / 3.700 m (2 pistas)", "elevation": "750 m / 2.459 ft", "operator": "GRU Airport", "terminals": "T2 (doméstico) · T3 (internacional)"},dom:27,intl:86,al:41,pista:"3.000 m / 3.700 m"},
+    {key:"CNF",info:{"name": "Aeroporto Internacional Tancredo Neves", "city": "Belo Horizonte / Confins", "iata": "CNF", "icao": "SBCF", "runway": "3.000 m × 45 m", "elevation": "827 m / 2.713 ft", "operator": "BH Airport", "terminals": "T1 (doméstico) · T2 (internacional)"},dom:27,intl:42,al:20,pista:"3.000 m"},
+    {key:"SJK",info:{"name": "Aeroporto Prof. Urbano Ernesto Stumpf", "city": "São José dos Campos – SP", "iata": "SJK", "icao": "SBSJ", "runway": "2.676 m × 45 m", "elevation": "647 m / 2.123 ft", "operator": "SJK Airport", "terminals": "Terminal único"},dom:24,intl:13,al:7,pista:"2.676 m"},
+  ];
+  document.getElementById("info-cards").innerHTML=aps.map(ap=>{
+    const c=apCls(ap.key);
+    return`<div class="ic ${c}"><h3>${ap.key} — ${ap.info.city}</h3>
+      <div class="ir"><span class="ik">Nome</span><span class="iv">${ap.info.name}</span></div>
+      <div class="ir"><span class="ik">ICAO</span><span class="iv">${ap.info.icao}</span></div>
+      <div class="ir"><span class="ik">Pistas</span><span class="iv">${ap.pista}</span></div>
+      <div class="ir"><span class="ik">Elevação</span><span class="iv">${ap.info.elevation}</span></div>
+      <div class="ir"><span class="ik">Terminais</span><span class="iv">${ap.info.terminals}</span></div>
+      <div class="ir"><span class="ik">Operador</span><span class="iv">${ap.info.operator}</span></div>
+      <div class="ir"><span class="ik">Rotas domésticas</span><span class="iv">${ap.dom}</span></div>
+      <div class="ir"><span class="ik">Rotas internacionais</span><span class="iv">${ap.intl}</span></div>
+      <div class="ir"><span class="ik">Companhias aéreas</span><span class="iv">${ap.al}</span></div>
+    </div>`;
+  }).join("");
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function showTab(name){
+  ["overview","dep","arr","live","transit","info"].forEach(t=>
+    document.getElementById("tab-"+t).style.display=t===name?"block":"none");
+  document.querySelectorAll(".tbtn").forEach((b,i)=>
+    b.classList.toggle("active",["overview","dep","arr","live","transit","info"][i]===name));
+  if(name==="live"){setTimeout(()=>{initLive();liveMap&&liveMap.invalidateSize();renderLive();},100);}
+  if(name==="transit")buildTransit();
+  if(name==="info")rInfo();
+  if(name==="dep")rDep();
+  if(name==="arr")rArr();
+}
+
+// ── CLOCK + TICKER ────────────────────────────────────────────────────────────
+function tick(){
+  const n=new Date();
+  document.getElementById("clk").textContent=n.toLocaleTimeString("pt-BR",{timeZone:"America/Sao_Paulo"});
+  document.getElementById("clkd").textContent=n.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"short",year:"numeric",timeZone:"America/Sao_Paulo"});
+  updateTransitTimes();
+}
+function buildTicker(){
+  const day=todayIdx;
+  const totDep=FD.filter(f=>f[7][day]!=null&&shouldShow(f[7][day])).length;
+  const totArr=FD.filter(f=>f[8]&&f[8][day]!=null&&shouldShow(f[8][day])).length;
+  const cias=new Set(FD.map(f=>f[6]));
+  document.getElementById("tkrtxt").textContent=
+    `✈ BRASILAERO GROUP — CENTRO DE OPERAÇÕES     ✈ GRU · CNF · SJK     ✈ ${totDep} PARTIDAS HOJE     ✈ ${totArr} CHEGADAS PREVISTAS     ✈ ${cias.size} COMPANHIAS OPERANDO     ✈ OPERAÇÃO 24H · METRÔ · ÔNIBUS     `;
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+updateKPIs();buildTicker();tick();
+setInterval(tick,30000);
+setInterval(()=>{if(liveMap)renderLive();},120000);
+</script>
+</body>
+</html>

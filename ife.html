@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>VerdeBrasil – In-Flight Entertainment</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Barlow+Condensed:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+/* ── ROOT ─────────────────────────────────────── */
+:root{
+  --bg:#060a10;--panel:#0a1018;--card:#0e1520;
+  --border:#1a2a3a;--border2:#243040;
+  --gold:#c8972a;--gold2:#e8b84b;--gold-dim:#7a5a15;
+  --white:#f0f2f5;--dim:#5a7080;--muted:#1a2530;
+  --green:#2ecc71;--red:#e74c3c;--blue:#3498db;
+  --map-bg:#0a1520;--map-land:#1a2e20;--map-water:#060f18;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#000}
+body{display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif}
+
+/* ── SCREEN FRAME ─────────────────────────────── */
+.frame{
+  width:min(900px,100vw);
+  height:min(600px,100vh);
+  background:var(--bg);
+  border-radius:12px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 0 80px rgba(0,0,0,.9),0 0 0 1px #111;
+  position:relative;
+}
+/* subtle screen glow */
+.frame::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(200,151,42,.04),transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+/* ── TOP BAR ─────────────────────────────────── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 18px;
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;z-index:10;position:relative;
+}
+.tb-airline{display:flex;align-items:center;gap:8px}
+.tb-logo{font-family:'Playfair Display',serif;font-size:.9rem;color:var(--gold);letter-spacing:.05em}
+.tb-flight{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);letter-spacing:.1em}
+.tb-route{display:flex;align-items:center;gap:10px;font-family:'Share Tech Mono',monospace;font-size:.72rem}
+.tb-apt{display:flex;flex-direction:column;align-items:center}
+.tb-iata{font-size:1rem;font-weight:700;color:var(--white);letter-spacing:.05em}
+.tb-city{font-size:.58rem;color:var(--dim);letter-spacing:.06em}
+.tb-line{display:flex;align-items:center;gap:4px;color:var(--gold-dim)}
+.tb-dot{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.tb-dash{width:50px;height:1px;background:var(--border2)}
+.tb-plane-icon{font-size:.9rem;color:var(--gold)}
+.tb-right{display:flex;gap:16px;align-items:center}
+.tb-stat{display:flex;flex-direction:column;align-items:center}
+.tb-stat-val{font-family:'Share Tech Mono',monospace;font-size:.88rem;color:var(--white);font-weight:700}
+.tb-stat-lbl{font-size:.55rem;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.tb-time{font-family:'Share Tech Mono',monospace;font-size:.8rem;color:var(--gold);letter-spacing:.05em}
+
+/* ── MAIN CONTENT ────────────────────────────── */
+.main{flex:1;display:flex;overflow:hidden;position:relative;z-index:1}
+
+/* ── SIDEBAR NAV ─────────────────────────────── */
+.sidenav{
+  width:52px;flex-shrink:0;
+  background:var(--panel);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;
+  padding:12px 0;gap:6px;
+}
+.snbtn{
+  width:38px;height:38px;border-radius:8px;
+  background:none;border:1px solid transparent;
+  color:var(--dim);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;transition:all .2s;
+}
+.snbtn:hover{background:var(--muted);color:var(--white)}
+.snbtn.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+.snbtn[title]{position:relative}
+
+/* ── VIEWS ───────────────────────────────────── */
+.view{display:none;flex:1;overflow:hidden;flex-direction:column}
+.view.active{display:flex}
+
+/* ── ROUTE SETUP VIEW ────────────────────────── */
+.setup-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:24px;
+}
+.setup-card{
+  background:var(--card);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  padding:32px 36px;
+  width:100%;max-width:500px;
+}
+.setup-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.4rem;color:var(--gold2);
+  margin-bottom:4px;letter-spacing:.02em;
+}
+.setup-sub{font-size:.76rem;color:var(--dim);margin-bottom:28px;letter-spacing:.06em}
+
+.route-inputs{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.ri-group{flex:1;display:flex;flex-direction:column;gap:5px}
+.ri-label{font-size:.65rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;font-weight:600}
+.ri-select{
+  background:var(--muted);border:1px solid var(--border2);
+  color:var(--white);font-family:'Barlow Condensed',sans-serif;
+  font-size:.88rem;padding:10px 12px;border-radius:6px;
+  cursor:pointer;outline:none;width:100%;
+  -webkit-appearance:none;
+}
+.ri-select:focus{border-color:var(--gold)}
+.ri-swap{
+  width:34px;height:34px;border-radius:50%;background:var(--muted);
+  border:1px solid var(--border2);color:var(--gold);
+  cursor:pointer;font-size:1rem;flex-shrink:0;margin-top:18px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.ri-swap:hover{background:var(--gold-dim);border-color:var(--gold)}
+
+.dep-row{display:flex;gap:12px;margin-bottom:20px}
+.dep-group{flex:1;display:flex;flex-direction:column;gap:5px}
+.dep-input{
+  background:var(--muted);border:1px solid var(--border2);
+  color:var(--white);font-family:'Share Tech Mono',monospace;
+  font-size:.9rem;padding:10px 12px;border-radius:6px;outline:none;width:100%;
+}
+.dep-input:focus{border-color:var(--gold)}
+
+.fly-btn{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,var(--gold-dim),var(--gold));
+  border:none;border-radius:8px;
+  color:#000;font-family:'Barlow Condensed',sans-serif;
+  font-size:1rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  cursor:pointer;transition:opacity .2s;
+}
+.fly-btn:hover{opacity:.88}
+
+/* ── MAP VIEW ────────────────────────────────── */
+.map-area{flex:1;position:relative;background:var(--map-bg);overflow:hidden}
+.map-info-panel{
+  width:200px;flex-shrink:0;
+  background:var(--panel);border-left:1px solid var(--border);
+  padding:16px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;
+}
+.map-stat{display:flex;flex-direction:column;gap:3px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.map-stat:last-child{border:none}
+.ms-label{font-size:.6rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase}
+.ms-val{font-family:'Share Tech Mono',monospace;font-size:1.05rem;color:var(--white);font-weight:700}
+.ms-sub{font-size:.7rem;color:var(--gold);font-family:'Share Tech Mono',monospace}
+.prog-bar{height:3px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold2));border-radius:2px;transition:width .5s ease}
+
+/* SVG map */
+#map-svg{width:100%;height:100%;display:block}
+.map-route-line{fill:none;stroke:var(--gold);stroke-width:1.5;stroke-dasharray:6 3;opacity:.7;animation:dash 20s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-200}}
+.map-route-arc{fill:none;stroke:var(--gold2);stroke-width:2;opacity:.5}
+.plane-dot{fill:var(--gold2);filter:drop-shadow(0 0 4px var(--gold))}
+.apt-dot{fill:var(--gold);r:4}
+.apt-label{fill:var(--white);font-family:'Share Tech Mono',monospace;font-size:9px}
+.apt-label-city{fill:var(--dim);font-family:'Barlow Condensed',sans-serif;font-size:8px}
+
+/* ── WELCOME / DESTINATION VIEW ──────────────── */
+.dest-view{
+  flex:1;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#060e14 0%,#0a1a10 60%,#060e14 100%);
+}
+.dest-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 40%,rgba(30,60,20,.4),transparent 60%),
+             radial-gradient(ellipse at 70% 60%,rgba(20,40,60,.3),transparent 60%);
+}
+.dest-content{
+  position:relative;z-index:1;
+  padding:28px 32px;height:100%;display:flex;flex-direction:column;
+}
+.dest-welcome{font-size:.72rem;color:var(--gold);letter-spacing:.3em;text-transform:uppercase;margin-bottom:6px}
+.dest-name{
+  font-family:'Playfair Display',serif;
+  font-size:2.2rem;color:var(--white);
+  line-height:1.05;margin-bottom:4px;
+  text-shadow:0 2px 20px rgba(0,0,0,.8);
+}
+.dest-country{font-size:.8rem;color:var(--gold2);letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px}
+.dest-divider{width:40px;height:1px;background:var(--gold-dim);margin-bottom:16px}
+.dest-desc{font-size:.88rem;color:#a0b8c0;line-height:1.6;max-width:380px;margin-bottom:20px}
+.dest-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:auto}
+.dest-tag{
+  font-size:.65rem;padding:3px 10px;border-radius:12px;
+  background:rgba(200,151,42,.1);border:1px solid var(--gold-dim);
+  color:var(--gold2);letter-spacing:.06em;
+}
+.dest-footer{display:flex;justify-content:space-between;align-items:flex-end;margin-top:16px}
+.dest-local-time{display:flex;flex-direction:column;gap:2px}
+.dlt-label{font-size:.6rem;color:var(--dim);letter-spacing:.15em;text-transform:uppercase}
+.dlt-time{font-family:'Share Tech Mono',monospace;font-size:1.8rem;color:var(--white)}
+.dlt-tz{font-size:.7rem;color:var(--gold);font-family:'Share Tech Mono',monospace}
+.weather-mock{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.wm-temp{font-family:'Playfair Display',serif;font-size:2rem;color:var(--white)}
+.wm-label{font-size:.65rem;color:var(--dim);letter-spacing:.1em}
+
+/* ── BOTTOM NAV BAR ──────────────────────────── */
+.bottombar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 16px;
+  background:var(--panel);
+  border-top:1px solid var(--border);
+  flex-shrink:0;z-index:10;position:relative;
+}
+.bb-btn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:6px 14px;border-radius:6px;background:none;border:none;
+  color:var(--dim);cursor:pointer;font-family:'Barlow Condensed',sans-serif;
+  font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  transition:all .2s;
+}
+.bb-btn:hover{color:var(--white)}
+.bb-btn.active{color:var(--gold);background:var(--gold-dim)20}
+.bb-btn span{font-size:1rem}
+.bb-center{
+  font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--dim);
+  letter-spacing:.08em;text-align:center;
+}
+.bb-center b{color:var(--gold)}
+
+/* ── ALTITUDE / SPEED BAR ────────────────────── */
+.flight-stats-bar{
+  display:flex;gap:0;
+  background:var(--muted);
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.fsb-item{
+  flex:1;padding:7px 12px;display:flex;flex-direction:column;gap:1px;
+  border-right:1px solid var(--border);
+}
+.fsb-item:last-child{border:none}
+.fsb-label{font-size:.55rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase}
+.fsb-val{font-family:'Share Tech Mono',monospace;font-size:.88rem;color:var(--white);font-weight:700}
+
+/* ── ANIMATIONS ──────────────────────────────── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .4s ease forwards}
+@keyframes planeFly{
+  0%{opacity:0}2%{opacity:1}98%{opacity:1}100%{opacity:0}
+}
+.plane-anim{animation:planeFly 8s ease-in-out infinite}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--muted)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="tb-airline">
+      <div class="tb-logo">✈ VerdeBrasil</div>
+      <div class="tb-flight" id="tb-flight-num">VB 1234</div>
+    </div>
+    <div class="tb-route" id="tb-route">
+      <div class="tb-apt"><div class="tb-iata" id="tb-orig-iata">---</div><div class="tb-city" id="tb-orig-city">Origem</div></div>
+      <div class="tb-line">
+        <div class="tb-dot"></div>
+        <div class="tb-dash"></div>
+        <div class="tb-plane-icon">✈</div>
+        <div class="tb-dash"></div>
+        <div class="tb-dot"></div>
+      </div>
+      <div class="tb-apt"><div class="tb-iata" id="tb-dest-iata">---</div><div class="tb-city" id="tb-dest-city">Destino</div></div>
+    </div>
+    <div class="tb-right">
+      <div class="tb-stat"><div class="tb-stat-val" id="tb-remain">--:--</div><div class="tb-stat-lbl">Restante</div></div>
+      <div class="tb-stat"><div class="tb-stat-val" id="tb-arr-time">--:--</div><div class="tb-stat-lbl">Chegada</div></div>
+      <div class="tb-time" id="tb-clock">--:--</div>
+    </div>
+  </div>
+
+  <!-- FLIGHT STATS BAR -->
+  <div class="flight-stats-bar" id="flight-stats-bar" style="display:none">
+    <div class="fsb-item"><div class="fsb-label">Altitude</div><div class="fsb-val" id="fsb-alt">-- ft</div></div>
+    <div class="fsb-item"><div class="fsb-label">Velocidade</div><div class="fsb-val" id="fsb-spd">-- km/h</div></div>
+    <div class="fsb-item"><div class="fsb-label">Distância percorrida</div><div class="fsb-val" id="fsb-done">-- km</div></div>
+    <div class="fsb-item"><div class="fsb-label">Distância restante</div><div class="fsb-val" id="fsb-left">-- km</div></div>
+    <div class="fsb-item"><div class="fsb-label">Temperatura ext.</div><div class="fsb-val" id="fsb-temp">--°C</div></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="sidenav">
+      <button class="snbtn active" onclick="showView('setup')" title="Rota" id="snbtn-setup">🗺️</button>
+      <button class="snbtn" onclick="showView('map')" title="Mapa" id="snbtn-map">✈</button>
+      <button class="snbtn" onclick="showView('dest')" title="Destino" id="snbtn-dest">🌍</button>
+    </div>
+
+    <!-- SETUP VIEW -->
+    <div class="view active" id="view-setup">
+      <div class="setup-wrap">
+        <div class="setup-card fade-in">
+          <div class="setup-title">Planejamento de Voo</div>
+          <div class="setup-sub">SISTEMA DE ENTRETENIMENTO A BORDO · VERDEBRASIL</div>
+          <div class="route-inputs">
+            <div class="ri-group">
+              <div class="ri-label">Origem</div>
+              <select class="ri-select" id="sel-orig">
+                <option value="">Selecionar aeroporto...</option>
+              </select>
+            </div>
+            <button class="ri-swap" onclick="swapAirports()" title="Trocar">⇄</button>
+            <div class="ri-group">
+              <div class="ri-label">Destino</div>
+              <select class="ri-select" id="sel-dest">
+                <option value="">Selecionar aeroporto...</option>
+              </select>
+            </div>
+          </div>
+          <div class="dep-row">
+            <div class="dep-group">
+              <div class="ri-label">Horário de partida</div>
+              <input class="dep-input" type="time" id="dep-time" value="08:00"/>
+            </div>
+            <div class="dep-group">
+              <div class="ri-label">Número do voo</div>
+              <input class="dep-input" type="text" id="flight-num" value="VB 1234" maxlength="8" style="text-transform:uppercase"/>
+            </div>
+          </div>
+          <button class="fly-btn" onclick="startFlight()">INICIAR VOO ✈</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAP VIEW -->
+    <div class="view" id="view-map" style="flex-direction:row">
+      <div class="map-area">
+        <svg id="map-svg" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice">
+          <!-- Ocean -->
+          <rect width="640" height="400" fill="#060f18"/>
+          <!-- Continents (simplified polygons) -->
+          <!-- South America -->
+          <polygon points="220,155 240,145 255,148 265,160 270,180 275,200 268,230 260,255 245,275 230,285 215,280 205,265 200,245 195,220 198,195 208,175" fill="#1a2e1a" stroke="#243028" stroke-width="0.5"/>
+          <!-- North America -->
+          <polygon points="60,60 130,50 160,65 175,80 170,110 155,130 140,140 110,145 85,135 65,115 50,90" fill="#1a2e1a" stroke="#243028" stroke-width="0.5"/>
+          <!-- Caribbean / Central America -->
+          <polygon points="155,130 175,125 185,130 180,145 165,148 155,140" fill="#1a2e1a" stroke="#243028" stroke-width="0.5"/>
+          <!-- Europe -->
+          <polygon points="360,60 400,55 420,65 415,80 400,90 375,95 355,85 350,70" fill="#1a2e1a" stroke="#243028" stroke-width="0.5"/>
+          <!-- Africa -->
+          <polygon points="355,100 385,95 400,110 405,140 395,175 380,200 360,215 340,210 330,190 328,160 335,130 345,110" fill="#1a2e1a" stroke="#243028" stroke-width="0.5"/>
+          <!-- Route and plane will be drawn by JS -->
+          <g id="map-overlay"></g>
+        </svg>
+      </div>
+      <div class="map-info-panel">
+        <div class="map-stat">
+          <div class="ms-label">Progresso</div>
+          <div class="ms-val" id="mp-pct">0%</div>
+          <div class="prog-bar"><div class="prog-fill" id="mp-bar" style="width:0%"></div></div>
+        </div>
+        <div class="map-stat">
+          <div class="ms-label">Tempo restante</div>
+          <div class="ms-val" id="mp-remain">--:--</div>
+          <div class="ms-sub" id="mp-arr">Chegada --:--</div>
+        </div>
+        <div class="map-stat">
+          <div class="ms-label">Distância total</div>
+          <div class="ms-val" id="mp-dist">-- km</div>
+        </div>
+        <div class="map-stat">
+          <div class="ms-label">Origem</div>
+          <div class="ms-val" id="mp-orig-iata">---</div>
+          <div class="ms-sub" id="mp-orig-city">---</div>
+        </div>
+        <div class="map-stat">
+          <div class="ms-label">Destino</div>
+          <div class="ms-val" id="mp-dest-iata">---</div>
+          <div class="ms-sub" id="mp-dest-city">---</div>
+        </div>
+        <div class="map-stat">
+          <div class="ms-label">Hora local (destino)</div>
+          <div class="ms-val" id="mp-local-time">--:--</div>
+          <div class="ms-sub" id="mp-local-tz">UTC --</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESTINATION VIEW -->
+    <div class="view" id="view-dest">
+      <div class="dest-view">
+        <div class="dest-bg"></div>
+        <div class="dest-content">
+          <div class="dest-welcome">Bem-vindo a</div>
+          <div class="dest-name" id="dv-name">---</div>
+          <div class="dest-country" id="dv-country">---</div>
+          <div class="dest-divider"></div>
+          <div class="dest-desc" id="dv-desc">Selecione uma rota para ver informações sobre o destino.</div>
+          <div class="dest-tags" id="dv-tags"></div>
+          <div class="dest-footer">
+            <div class="dest-local-time">
+              <div class="dlt-label">Hora local no destino</div>
+              <div class="dlt-time" id="dv-time">--:--</div>
+              <div class="dlt-tz" id="dv-tz">UTC --</div>
+            </div>
+            <div class="weather-mock">
+              <div class="wm-temp" id="dv-temp">--°</div>
+              <div class="wm-label" id="dv-weather">---</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottombar">
+    <button class="bb-btn" onclick="showView('setup')">
+      <span>◀</span>Nova Rota
+    </button>
+    <div class="bb-center" id="bb-info">✈ Selecione origem e destino para começar</div>
+    <button class="bb-btn active" onclick="showView('map')">
+      <span>🗺</span>Mapa
+    </button>
+  </div>
+
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const AIRPORTS = [{"iata": "GRU", "name": "São Paulo – Guarulhos", "city": "São Paulo", "country": "Brasil", "lat": -23.4356, "lon": -46.4731, "tz": -3}, {"iata": "CGH", "name": "São Paulo – Congonhas", "city": "São Paulo", "country": "Brasil", "lat": -23.6261, "lon": -46.6553, "tz": -3}, {"iata": "SJK", "name": "São José dos Campos", "city": "São José dos Campos", "country": "Brasil", "lat": -23.2292, "lon": -45.8711, "tz": -3}, {"iata": "CNF", "name": "Belo Horizonte – Confins", "city": "Belo Horizonte", "country": "Brasil", "lat": -19.6244, "lon": -43.9719, "tz": -3}, {"iata": "GIG", "name": "Rio de Janeiro – Galeão", "city": "Rio de Janeiro", "country": "Brasil", "lat": -22.8099, "lon": -43.2505, "tz": -3}, {"iata": "SDU", "name": "Rio de Janeiro – Santos Dumont", "city": "São Paulo", "country": "Brasil", "lat": -22.9105, "lon": -43.1631, "tz": -3}, {"iata": "BSB", "name": "Brasília", "city": "Brasília", "country": "Brasil", "lat": -15.8711, "lon": -47.9186, "tz": -3}, {"iata": "SSA", "name": "Salvador", "city": "Salvador", "country": "Brasil", "lat": -12.9086, "lon": -38.3225, "tz": -3}, {"iata": "REC", "name": "Recife", "city": "Recife", "country": "Brasil", "lat": -8.1264, "lon": -34.923, "tz": -3}, {"iata": "FOR", "name": "Fortaleza", "city": "Fortaleza", "country": "Brasil", "lat": -3.7762, "lon": -38.5326, "tz": -3}, {"iata": "POA", "name": "Porto Alegre", "city": "Porto Alegre", "country": "Brasil", "lat": -29.9939, "lon": -51.1713, "tz": -3}, {"iata": "CWB", "name": "Curitiba", "city": "Curitiba", "country": "Brasil", "lat": -25.5285, "lon": -49.1758, "tz": -3}, {"iata": "FLN", "name": "Florianópolis", "city": "Florianópolis", "country": "Brasil", "lat": -27.67, "lon": -48.5525, "tz": -3}, {"iata": "MAO", "name": "Manaus", "city": "Manaus", "country": "Brasil", "lat": -3.0386, "lon": -60.0497, "tz": -4}, {"iata": "BEL", "name": "Belém", "city": "Belém", "country": "Brasil", "lat": -1.3792, "lon": -48.4761, "tz": -3}, {"iata": "NAT", "name": "Natal", "city": "Natal", "country": "Brasil", "lat": -5.7682, "lon": -35.3761, "tz": -3}, {"iata": "PMW", "name": "Palmas", "city": "Palmas", "country": "Brasil", "lat": -10.2914, "lon": -48.353, "tz": -3}, {"iata": "CGR", "name": "Campo Grande", "city": "Campo Grande", "country": "Brasil", "lat": -20.4687, "lon": -54.6725, "tz": -4}, {"iata": "CGB", "name": "Cuiabá", "city": "Cuiabá", "country": "Brasil", "lat": -15.653, "lon": -56.1169, "tz": -4}, {"iata": "VCP", "name": "Campinas – Viracopos", "city": "Campinas", "country": "Brasil", "lat": -23.0074, "lon": -47.1345, "tz": -3}, {"iata": "EZE", "name": "Buenos Aires – Ezeiza", "city": "Buenos Aires", "country": "Argentina", "lat": -34.8222, "lon": -58.5358, "tz": -3}, {"iata": "SCL", "name": "Santiago", "city": "Santiago", "country": "Chile", "lat": -33.393, "lon": -70.7858, "tz": -4}, {"iata": "LIM", "name": "Lima", "city": "Lima", "country": "Peru", "lat": -12.0219, "lon": -77.1143, "tz": -5}, {"iata": "BOG", "name": "Bogotá", "city": "Bogotá", "country": "Colômbia", "lat": 4.7016, "lon": -74.1469, "tz": -5}, {"iata": "PTY", "name": "Cidade do Panamá", "city": "Panamá", "country": "Panamá", "lat": 9.0714, "lon": -79.3835, "tz": -5}, {"iata": "MVD", "name": "Montevidéu", "city": "Montevidéu", "country": "Uruguai", "lat": -34.8381, "lon": -56.0308, "tz": -3}, {"iata": "SJO", "name": "San José", "city": "San José", "country": "Costa Rica", "lat": 9.9939, "lon": -84.2089, "tz": -6}, {"iata": "CCS", "name": "Caracas", "city": "Caracas", "country": "Venezuela", "lat": 10.6031, "lon": -66.991, "tz": -4}, {"iata": "ASU", "name": "Assunção", "city": "Assunção", "country": "Paraguai", "lat": -25.2397, "lon": -57.5198, "tz": -4}, {"iata": "BRC", "name": "Bariloche", "city": "Bariloche", "country": "Argentina", "lat": -41.1519, "lon": -71.1578, "tz": -3}, {"iata": "MIA", "name": "Miami", "city": "Miami", "country": "EUA", "lat": 25.7959, "lon": -80.287, "tz": -5}, {"iata": "JFK", "name": "Nova York – JFK", "city": "Nova York", "country": "EUA", "lat": 40.6413, "lon": -73.7781, "tz": -5}, {"iata": "MCO", "name": "Orlando", "city": "Orlando", "country": "EUA", "lat": 28.4312, "lon": -81.3081, "tz": -5}, {"iata": "ATL", "name": "Atlanta", "city": "Atlanta", "country": "EUA", "lat": 33.6367, "lon": -84.4281, "tz": -5}, {"iata": "FLL", "name": "Fort Lauderdale", "city": "Fort Lauderdale", "country": "EUA", "lat": 26.0726, "lon": -80.1527, "tz": -5}, {"iata": "YYZ", "name": "Toronto", "city": "Toronto", "country": "Canadá", "lat": 43.6777, "lon": -79.6248, "tz": -5}, {"iata": "LIS", "name": "Lisboa", "city": "Lisboa", "country": "Portugal", "lat": 38.7756, "lon": -9.1354, "tz": 0}, {"iata": "MAD", "name": "Madrid", "city": "Madrid", "country": "Espanha", "lat": 40.4719, "lon": -3.5626, "tz": 1}, {"iata": "LHR", "name": "Londres – Heathrow", "city": "Londres", "country": "Reino Unido", "lat": 51.4775, "lon": -0.4614, "tz": 0}, {"iata": "CDG", "name": "Paris – CDG", "city": "Paris", "country": "França", "lat": 49.0097, "lon": 2.5479, "tz": 1}, {"iata": "AMS", "name": "Amsterdam", "city": "Amsterdam", "country": "Holanda", "lat": 52.3105, "lon": 4.7683, "tz": 1}, {"iata": "FRA", "name": "Frankfurt", "city": "Frankfurt", "country": "Alemanha", "lat": 50.0379, "lon": 8.5622, "tz": 1}, {"iata": "ZRH", "name": "Zurique", "city": "Zurique", "country": "Suíça", "lat": 47.4647, "lon": 8.5492, "tz": 1}, {"iata": "MXP", "name": "Milão – Malpensa", "city": "Milão", "country": "Itália", "lat": 45.6301, "lon": 8.7231, "tz": 1}, {"iata": "FCO", "name": "Roma – Fiumicino", "city": "Roma", "country": "Itália", "lat": 41.8003, "lon": 12.2389, "tz": 1}, {"iata": "JNB", "name": "Joanesburgo", "city": "Joanesburgo", "country": "África do Sul", "lat": -26.1367, "lon": 28.2411, "tz": 2}, {"iata": "SID", "name": "Cabo Verde – Sal", "city": "Sal", "country": "Cabo Verde", "lat": 16.7414, "lon": -22.9494, "tz": -1}, {"iata": "FNC", "name": "Madeira – Funchal", "city": "Funchal", "country": "Portugal", "lat": 32.6941, "lon": -16.7781, "tz": 0}, {"iata": "LPA", "name": "Las Palmas – Canárias", "city": "Ilhas Canárias", "country": "Espanha", "lat": 27.9319, "lon": -15.3866, "tz": 0}];
+const DEST_INFO = {"SJK": {"desc": "Capital tecnológica do Brasil, berço da Embraer e porta de entrada para a Serra da Mantiqueira e o Vale do Paraíba.", "tags": ["Tecnologia", "Montanhas", "Natureza", "Embraer"]}, "GRU": {"desc": "O maior hub aéreo da América do Sul, porta de entrada para a vibrante metrópole paulistana.", "tags": ["Negócios", "Cultura", "Gastronomia", "Shopping"]}, "GIG": {"desc": "Cidade Maravilhosa: Cristo Redentor, Pão de Açúcar, praias icônicas e samba no coração do Brasil.", "tags": ["Praias", "Cultura", "Carnaval", "Natureza"]}, "CNF": {"desc": "Capital das gerais com arquitetura barroca, cachaças premiadas e a hospitalidade mineira.", "tags": ["História", "Gastronomia", "Cultura", "Natureza"]}, "SSA": {"desc": "Capital da alegria: Pelourinho, axé, capoeira e as praias mais bonitas do Nordeste.", "tags": ["Praias", "Cultura", "Música", "História"]}, "REC": {"desc": "Veneza brasileira com canais históricos, frevo e algumas das melhores praias do mundo.", "tags": ["Praias", "Frevo", "Cultura", "História"]}, "FOR": {"desc": "Terra da luz do sol: dunas, lagoas de água doce e o famoso pôr do sol da Beira-Mar.", "tags": ["Praias", "Dunas", "Sol", "Natureza"]}, "BSB": {"desc": "Capital futurista projetada por Oscar Niemeyer, patrimônio da humanidade pela UNESCO.", "tags": ["Arquitetura", "Política", "Design", "UNESCO"]}, "POA": {"desc": "Capital gaúcha com churrasco, chimarrão, vinhos da Serra Gaúcha e a Rota Romântica.", "tags": ["Gastronomia", "Vinhos", "Cultura", "Natureza"]}, "EZE": {"desc": "Tango, bife de chorizo, Borges e a Paris da América do Sul às margens do Rio da Prata.", "tags": ["Tango", "Gastronomia", "Cultura", "Arquitetura"]}, "SCL": {"desc": "Entre a Cordilheira dos Andes e o Oceano Pacífico, Santiago é sofisticação andina.", "tags": ["Montanhas", "Vinhos", "Arquitetura", "Natureza"]}, "LIM": {"desc": "Capital gastronômica da América Latina, com Machu Picchu a poucos minutos de distância.", "tags": ["Gastronomia", "História", "Incas", "Cultura"]}, "MIA": {"desc": "South Beach, Art Deco, cubanos e noites eternas no coração do Caribe americano.", "tags": ["Praias", "Vida Noturna", "Arte", "Diversidade"]}, "JFK": {"desc": "A cidade que nunca dorme: Broadway, Central Park, Estátua da Liberdade e o skyline mais famoso do mundo.", "tags": ["Cultura", "Arte", "Negócios", "Arquitetura"]}, "LIS": {"desc": "Fado, pastéis de nata, elétrico 28 e o Tejo a banhar sete colinas de história.", "tags": ["Fado", "Gastronomia", "História", "Cultura"]}, "MAD": {"desc": "Arte no Prado, tapas, flamenco e o calor da Espanha no coração da Península Ibérica.", "tags": ["Arte", "Gastronomia", "Flamenco", "Cultura"]}, "LHR": {"desc": "Londres: Big Ben, Buckingham, pubs históricos e uma das cenas culturais mais ricas do mundo.", "tags": ["História", "Cultura", "Arte", "Arquitetura"]}, "CDG": {"desc": "Paris: Torre Eiffel, Louvre, haute cuisine e o romance eterno às margens do Seine.", "tags": ["Arte", "Gastronomia", "Romance", "Moda"]}, "AMS": {"desc": "Canais, tulipas, Van Gogh e bicicletas — Amsterdam é a cidade mais charmosa da Europa.", "tags": ["Canais", "Arte", "Cultura", "Bicicletas"]}, "FRA": {"desc": "Frankfurt combina o moderno skyline financeiro europeu com vilas medievais e vinhos do Reno.", "tags": ["Negócios", "História", "Vinhos", "Cultura"]}, "ZRH": {"name_override": "Zurique", "desc": "Relógios suíços, chocolate, os Alpes e o Lago Zurique numa das cidades com melhor qualidade de vida.", "tags": ["Alpes", "Luxo", "Natureza", "Gastronomia"]}, "JNB": {"desc": "Joanesburgo: coração econômico da África, safáris, Soweto e a história viva do apartheid.", "tags": ["Safári", "História", "Cultura", "Natureza"]}};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let flight = null; // {orig, dest, depTime, durMin, dist, flightNum}
+let simProgress = 0; // 0–1, simulated in-flight progress
+let simInterval = null;
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function toRad(d){return d*Math.PI/180}
+function haversine(a, b){
+  const R=6371;
+  const dLat=toRad(b.lat-a.lat), dLon=toRad(b.lon-a.lon);
+  const x=Math.sin(dLat/2)**2+Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(x));
+}
+function speedKmh(dist){
+  // Realistic cruise: 850 km/h for long haul, 750 for short
+  return dist > 3000 ? 850 : dist > 1000 ? 800 : 750;
+}
+function calcDur(dist){
+  const spd = speedKmh(dist);
+  // Add 20min for taxi/climb/descent
+  return Math.round(dist/spd*60 + 20);
+}
+function addMin(hhmm, m){
+  const [h,mm]=hhmm.split(":").map(Number);
+  const t=h*60+mm+m;
+  const nh=Math.floor(t/60)%24, nm=t%60;
+  return `${String(nh).padStart(2,"0")}:${String(nm).padStart(2,"0")}`;
+}
+function localTime(tz){
+  const now=new Date();
+  const utc=now.getTime()+now.getTimezoneOffset()*60000;
+  const d=new Date(utc+tz*3600000);
+  return d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",hour12:false});
+}
+function durStr(m){
+  const h=Math.floor(m/60),r=m%60;
+  return `${h}h${String(r).padStart(2,"0")}m`;
+}
+function remainStr(depTime, durMin, prog){
+  const remaining = Math.round(durMin*(1-prog));
+  return durStr(Math.max(0,remaining));
+}
+
+// Airport lookup
+function getApt(iata){return AIRPORTS.find(a=>a.iata===iata)}
+
+// ── INIT SELECTS ──────────────────────────────────────────────────────────────
+function initSelects(){
+  const groups = {
+    "Brasil": AIRPORTS.filter(a=>a.country==="Brasil"),
+    "América do Sul": AIRPORTS.filter(a=>["Argentina","Chile","Peru","Colômbia","Uruguai","Paraguai","Venezuela","Costa Rica","Panamá"].includes(a.country)),
+    "América do Norte": AIRPORTS.filter(a=>["EUA","Canadá"].includes(a.country)),
+    "Europa": AIRPORTS.filter(a=>["Portugal","Espanha","Reino Unido","França","Holanda","Alemanha","Suíça","Itália"].includes(a.country)),
+    "África / Ilhas": AIRPORTS.filter(a=>["África do Sul","Cabo Verde"].includes(a.country)),
+  };
+  ["sel-orig","sel-dest"].forEach(id=>{
+    const sel=document.getElementById(id);
+    sel.innerHTML='<option value="">Selecionar aeroporto...</option>';
+    Object.entries(groups).forEach(([grp,apts])=>{
+      if(!apts.length)return;
+      const og=document.createElement("optgroup");
+      og.label=grp;
+      apts.forEach(a=>{
+        const o=document.createElement("option");
+        o.value=a.iata;
+        o.textContent=`${a.iata} – ${a.city}`;
+        og.appendChild(o);
+      });
+      sel.appendChild(og);
+    });
+  });
+  // Default
+  document.getElementById("sel-orig").value="SJK";
+  document.getElementById("sel-dest").value="GIG";
+}
+
+// ── SWAP ──────────────────────────────────────────────────────────────────────
+function swapAirports(){
+  const o=document.getElementById("sel-orig").value;
+  const d=document.getElementById("sel-dest").value;
+  document.getElementById("sel-orig").value=d;
+  document.getElementById("sel-dest").value=o;
+}
+
+// ── START FLIGHT ──────────────────────────────────────────────────────────────
+function startFlight(){
+  const origIata=document.getElementById("sel-orig").value;
+  const destIata=document.getElementById("sel-dest").value;
+  const depTime=document.getElementById("dep-time").value||"08:00";
+  const flightNum=document.getElementById("flight-num").value||"VB 1234";
+  if(!origIata||!destIata){alert("Selecione origem e destino!");return;}
+  if(origIata===destIata){alert("Origem e destino devem ser diferentes!");return;}
+  const orig=getApt(origIata), dest=getApt(destIata);
+  const dist=Math.round(haversine(orig,dest));
+  const durMin=calcDur(dist);
+  const arrTime=addMin(depTime,durMin);
+  flight={orig,dest,depTime,arrTime,durMin,dist,flightNum};
+  simProgress=0.15; // simulate mid-flight
+  updateTopBar();
+  updateFlightStats();
+  updateMap();
+  updateDestView();
+  document.getElementById("flight-stats-bar").style.display="flex";
+  document.getElementById("tb-flight-num").textContent=flightNum.toUpperCase();
+  document.getElementById("bb-info").innerHTML=`✈ <b>${origIata}</b> → <b>${destIata}</b> · ${durStr(durMin)} · ${dist.toLocaleString("pt-BR")} km`;
+  showView("map");
+  // Slowly advance simulation
+  if(simInterval)clearInterval(simInterval);
+  simInterval=setInterval(()=>{
+    if(simProgress<0.99){simProgress+=0.001;updateFlightStats();updateMap();}
+    else clearInterval(simInterval);
+  },300);
+}
+
+// ── UPDATE TOP BAR ────────────────────────────────────────────────────────────
+function updateTopBar(){
+  if(!flight)return;
+  document.getElementById("tb-orig-iata").textContent=flight.orig.iata;
+  document.getElementById("tb-orig-city").textContent=flight.orig.city;
+  document.getElementById("tb-dest-iata").textContent=flight.dest.iata;
+  document.getElementById("tb-dest-city").textContent=flight.dest.city;
+  const remain=Math.round(flight.durMin*(1-simProgress));
+  document.getElementById("tb-remain").textContent=durStr(remain);
+  document.getElementById("tb-arr-time").textContent=flight.arrTime;
+}
+
+// ── FLIGHT STATS ──────────────────────────────────────────────────────────────
+function updateFlightStats(){
+  if(!flight)return;
+  updateTopBar();
+  const spd=speedKmh(flight.dist);
+  const done=Math.round(flight.dist*simProgress);
+  const left=flight.dist-done;
+  const altFt = simProgress<0.1 ? Math.round(simProgress*10*35000) :
+                simProgress>0.9 ? Math.round((1-simProgress)*10*35000) : 35000;
+  const extTemp = -56 + Math.round((1-simProgress)*5);
+  document.getElementById("fsb-alt").textContent=altFt.toLocaleString("pt-BR")+" ft";
+  document.getElementById("fsb-spd").textContent=spd.toLocaleString("pt-BR")+" km/h";
+  document.getElementById("fsb-done").textContent=done.toLocaleString("pt-BR")+" km";
+  document.getElementById("fsb-left").textContent=left.toLocaleString("pt-BR")+" km";
+  document.getElementById("fsb-temp").textContent=extTemp+"°C";
+  // Map panel
+  const pct=Math.round(simProgress*100);
+  document.getElementById("mp-pct").textContent=pct+"%";
+  document.getElementById("mp-bar").style.width=pct+"%";
+  const remain=Math.round(flight.durMin*(1-simProgress));
+  document.getElementById("mp-remain").textContent=durStr(remain);
+  document.getElementById("mp-arr").textContent="Chegada "+flight.arrTime;
+  document.getElementById("mp-dist").textContent=flight.dist.toLocaleString("pt-BR")+" km";
+  document.getElementById("mp-orig-iata").textContent=flight.orig.iata;
+  document.getElementById("mp-orig-city").textContent=flight.orig.city+", "+flight.orig.country;
+  document.getElementById("mp-dest-iata").textContent=flight.dest.iata;
+  document.getElementById("mp-dest-city").textContent=flight.dest.city+", "+flight.dest.country;
+  document.getElementById("mp-local-time").textContent=localTime(flight.dest.tz);
+  document.getElementById("mp-local-tz").textContent=`UTC ${flight.dest.tz>=0?"+":""}${flight.dest.tz}`;
+}
+
+// ── MAP ───────────────────────────────────────────────────────────────────────
+// Project lat/lon to SVG coords (simple equirectangular)
+function project(lat, lon){
+  // Map bounds: lon -100..50, lat -55..60
+  const x = (lon - (-100)) / 150 * 640;
+  const y = (60 - lat) / 115 * 400;
+  return {x:Math.max(5,Math.min(635,x)), y:Math.max(5,Math.min(395,y))};
+}
+function updateMap(){
+  if(!flight)return;
+  const svg=document.getElementById("map-overlay");
+  const o=project(flight.orig.lat, flight.orig.lon);
+  const d=project(flight.dest.lat, flight.dest.lon);
+  // Plane position (linear interp)
+  const px=o.x+(d.x-o.x)*simProgress;
+  const py=o.y+(d.y-o.y)*simProgress;
+  // Slight arc: midpoint lifted
+  const mx=(o.x+d.x)/2, my=(o.y+d.y)/2 - Math.abs(d.x-o.x)*0.08;
+  svg.innerHTML=`
+    <!-- Route dashed line -->
+    <line x1="${o.x}" y1="${o.y}" x2="${d.x}" y2="${d.y}" stroke="#c8972a" stroke-width="1" stroke-dasharray="5,3" opacity="0.4"/>
+    <!-- Arc -->
+    <path d="M${o.x},${o.y} Q${mx},${my} ${d.x},${d.y}" fill="none" stroke="#e8b84b" stroke-width="1.5" opacity="0.6" stroke-dasharray="6,3">
+      <animate attributeName="stroke-dashoffset" from="0" to="-200" dur="15s" repeatCount="indefinite"/>
+    </path>
+    <!-- Traveled path -->
+    <line x1="${o.x}" y1="${o.y}" x2="${px}" y2="${py}" stroke="#e8b84b" stroke-width="2" opacity="0.9"/>
+    <!-- Origin dot -->
+    <circle cx="${o.x}" cy="${o.y}" r="5" fill="#c8972a"/>
+    <circle cx="${o.x}" cy="${o.y}" r="9" fill="none" stroke="#c8972a" stroke-width="1" opacity="0.4"/>
+    <text x="${o.x}" y="${o.y-12}" fill="#f0f2f5" font-family="Share Tech Mono,monospace" font-size="9" text-anchor="middle">${flight.orig.iata}</text>
+    <text x="${o.x}" y="${o.y+18}" fill="#5a7080" font-family="Barlow Condensed,sans-serif" font-size="8" text-anchor="middle">${flight.orig.city}</text>
+    <!-- Destination dot -->
+    <circle cx="${d.x}" cy="${d.y}" r="5" fill="#e8b84b"/>
+    <circle cx="${d.x}" cy="${d.y}" r="9" fill="none" stroke="#e8b84b" stroke-width="1" opacity="0.4">
+      <animate attributeName="r" values="9;13;9" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;0.1;0.4" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="${d.x}" y="${d.y-12}" fill="#f0f2f5" font-family="Share Tech Mono,monospace" font-size="9" text-anchor="middle">${flight.dest.iata}</text>
+    <text x="${d.x}" y="${d.y+18}" fill="#5a7080" font-family="Barlow Condensed,sans-serif" font-size="8" text-anchor="middle">${flight.dest.city}</text>
+    <!-- Plane -->
+    <g transform="translate(${px},${py})">
+      <circle r="6" fill="#e8b84b" opacity="0.2"/>
+      <circle r="3" fill="#e8b84b"/>
+      <circle r="8" fill="none" stroke="#e8b84b" stroke-width="0.5" opacity="0.5">
+        <animate attributeName="r" values="8;14;8" dur="1.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.5;0;0.5" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <text y="-10" fill="#e8b84b" font-size="10" text-anchor="middle">✈</text>
+    </g>
+  `;
+}
+
+// ── DESTINATION VIEW ──────────────────────────────────────────────────────────
+const WEATHER_MOCK = ["Ensolarado ☀️","Parcialmente nublado ⛅","Nublado 🌤","Tropical 🌴","Frio ❄️","Ameno 🌿"];
+function updateDestView(){
+  if(!flight)return;
+  const d=flight.dest;
+  const info=DEST_INFO[d.iata]||{desc:`${d.city} é um destino incrível em ${d.country}.`,tags:[d.country,"Turismo"]};
+  document.getElementById("dv-name").textContent=d.city;
+  document.getElementById("dv-country").textContent=`${d.country} · ${d.iata}`;
+  document.getElementById("dv-desc").textContent=info.desc;
+  const tagsEl=document.getElementById("dv-tags");
+  tagsEl.innerHTML=(info.tags||[]).map(t=>`<span class="dest-tag">${t}</span>`).join("");
+  document.getElementById("dv-tz").textContent=`UTC ${d.tz>=0?"+":""}${d.tz}`;
+  // Mock weather
+  const temps={Brasil:"28°",Argentina:"18°",Chile:"15°",Portugal:"22°",Espanha:"24°",França:"18°","Reino Unido":"14°",EUA:"26°",Canadá:"12°"};
+  document.getElementById("dv-temp").textContent=temps[d.country]||"22°";
+  document.getElementById("dv-weather").textContent=WEATHER_MOCK[d.iata.charCodeAt(0)%WEATHER_MOCK.length];
+}
+
+// ── VIEWS ─────────────────────────────────────────────────────────────────────
+function showView(name){
+  ["setup","map","dest"].forEach(v=>{
+    document.getElementById(`view-${v}`).classList.toggle("active",v===name);
+    const btn=document.getElementById(`snbtn-${v}`);
+    if(btn)btn.classList.toggle("active",v===name);
+  });
+  if(name==="dest"&&flight)updateDestView();
+  if(name==="map"&&flight)updateMap();
+}
+
+// ── CLOCK ─────────────────────────────────────────────────────────────────────
+function tick(){
+  const n=new Date();
+  document.getElementById("tb-clock").textContent=n.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",timeZone:"America/Sao_Paulo"});
+  if(flight){
+    document.getElementById("dv-time").textContent=localTime(flight.dest.tz);
+  }
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+initSelects();
+tick();
+setInterval(tick,1000);
+</script>
+</body>
+</html>
