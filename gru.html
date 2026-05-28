@@ -92,7 +92,7 @@ function maybePlayTrain(){
 }
 
 // ── TRANSIT DATA ─────────────────────────────────────────────────────────────
-const TRANSIT_DATA={"metro_interval": 2, "bus_interval": 7, "metro_color": "#e30613", "metro_line": "Linha 13 – Jade (CPTM)", "metro_note": "Operação 05h–00h · Intervalo de 2 min", "line1_name": "Linha Interna – Terminais", "line1_color": "#e30613", "line1_stations": [{"id": "t2", "name": "Terminal T2", "type": "terminal"}, {"id": "t3d", "name": "Terminal T3 Dom.", "type": "terminal"}, {"id": "t3i", "name": "Terminal T3 Int'l", "type": "terminal"}, {"id": "gru", "name": "Aeroporto GRU", "type": "hub"}], "line2_name": "Extensão Cidade", "line2_color": "#e30613", "line2_stations": [{"id": "gru", "name": "Aeroporto GRU", "type": "hub"}, {"id": "eng", "name": "Engenheiro Goulart", "type": "city"}, {"id": "tatuape", "name": "Tatuapé", "type": "city"}, {"id": "cors", "name": "Corinthians–Itaquera", "type": "terminus", "branch": "A"}, {"id": "bras", "name": "Brás", "type": "city", "branch": "B"}, {"id": "luz", "name": "Luz", "type": "city", "branch": "B"}, {"id": "rep", "name": "República", "type": "city", "branch": "B"}, {"id": "pln", "name": "Palmeiras–Barra Funda", "type": "terminus", "branch": "B"}], "bus_routes": [{"name": "Airport Express → Tietê", "freq": 7, "color": "#0057a8"}, {"name": "GRU → Guarulhos Centro", "freq": 12, "color": "#0057a8"}, {"name": "GRU → Congonhas (CGH)", "freq": 30, "color": "#009846"}]};
+const TRANSIT_DATA={"metro_interval": 2, "bus_interval": 7, "metro_color": "#e30613", "metro_line": "Linha 13 Jade (CPTM)", "metro_note": "Operação 05h-00h · Intervalo de 2 min", "line1_name": "Linha Interna - Terminais", "line1_color": "#e30613", "line1_stations": [{"id": "t2", "name": "Terminal T2", "type": "terminal"}, {"id": "t3d", "name": "Terminal T3 Dom.", "type": "terminal"}, {"id": "t3i", "name": "Terminal T3 Intl", "type": "terminal"}, {"id": "gru", "name": "Aeroporto GRU", "type": "hub"}], "line2_name": "Extensao Cidade", "line2_color": "#e30613", "line2_stations": [{"id": "gru", "name": "Aeroporto GRU", "type": "hub"}, {"id": "eng", "name": "Engenheiro Goulart", "type": "city"}, {"id": "tatuape", "name": "Tatuape", "type": "city"}, {"id": "cors", "name": "Corinthians-Itaquera", "type": "terminus", "branch": "A"}, {"id": "bras", "name": "Bras", "type": "city", "branch": "B"}, {"id": "luz", "name": "Luz", "type": "city", "branch": "B"}, {"id": "rep", "name": "Republica", "type": "city", "branch": "B"}, {"id": "pln", "name": "Palmeiras-Barra Funda", "type": "terminus", "branch": "B"}], "bus_routes": [{"name": "Airport Express ao Tiete", "freq": 7, "color": "#0057a8"}, {"name": "GRU ao Guarulhos Centro", "freq": 12, "color": "#009846"}, {"name": "GRU ao Congonhas (CGH)", "freq": 30, "color": "#cc0000"}]};
 const TRANSIT_AP="GRU";
 
 function nowMinsTransit(){const n=new Date();return n.getHours()*60+n.getMinutes();}
@@ -1013,21 +1013,206 @@ const ANN=[
     es:(fn,d)=>`Pasajeros del vuelo ${fn} con destino a ${d}: documentación internacional obligatoria. Pasaporte con validez mínima de 6 meses.`,u:false},
 ];
 let annPool=[],annIdx=0;
+
+const COUNTRY_INFO={
+  "EZE":{"country":"Argentina","visa":"Não requer visto","vaccine":"Nenhuma obrigatória","customs":"US$ 300 franquia","currency":"Peso Argentino","tip":"Declare valores acima de US$ 10.000"},
+  "SCL":{"country":"Chile","visa":"Não requer visto","vaccine":"Nenhuma obrigatória","customs":"US$ 500 franquia","currency":"Peso Chileno","tip":"Proibido levar frutas e vegetais frescos"},
+  "LIM":{"country":"Peru","visa":"Não requer visto","vaccine":"Febre amarela recomendada","customs":"US$ 500 franquia","currency":"Sol Peruano","tip":"Reserva antecipada obrigatória p/ Machu Picchu"},
+  "BOG":{"country":"Colômbia","visa":"Não requer visto","vaccine":"Febre amarela recomendada","customs":"US$ 200 franquia","currency":"Peso Colombiano","tip":"Atenção à altitude em cidades andinas"},
+  "MVD":{"country":"Uruguai","visa":"Não requer visto","vaccine":"Nenhuma obrigatória","customs":"US$ 300 franquia","currency":"Peso Uruguaio","tip":"País mais liberal da América do Sul"},
+  "ASU":{"country":"Paraguai","visa":"Não requer visto","vaccine":"Febre amarela obrigatória","customs":"US$ 300 franquia","currency":"Guaraní","tip":"Ciudad del Este: compras limitadas a US$ 300"},
+  "CCS":{"country":"Venezuela","visa":"Consulte o consulado","vaccine":"Febre amarela obrigatória","customs":"Declaração obrigatória na chegada","currency":"Bolívar","tip":"Câmbio somente em casas autorizadas"},
+  "MIA":{"country":"Estados Unidos","visa":"ESTA necessário (pre-viagem)","vaccine":"Nenhuma obrigatória","customs":"US$ 800 franquia","currency":"Dólar (USD)","tip":"ESTA em esta.cbp.dhs.gov — solicite antes de embarcar"},
+  "JFK":{"country":"Estados Unidos","visa":"ESTA necessário (pre-viagem)","vaccine":"Nenhuma obrigatória","customs":"US$ 800 franquia","currency":"Dólar (USD)","tip":"Gorjeta padrão 18-20% em restaurantes"},
+  "LAX":{"country":"Estados Unidos","visa":"ESTA necessário (pre-viagem)","vaccine":"Nenhuma obrigatória","customs":"US$ 800 franquia","currency":"Dólar (USD)","tip":"Trânsito intenso — reserve tempo extra"},
+  "ATL":{"country":"Estados Unidos","visa":"ESTA necessário (pre-viagem)","vaccine":"Nenhuma obrigatória","customs":"US$ 800 franquia","currency":"Dólar (USD)","tip":"Maior aeroporto do mundo em movimento"},
+  "ORD":{"country":"Estados Unidos","visa":"ESTA necessário (pre-viagem)","vaccine":"Nenhuma obrigatória","customs":"US$ 800 franquia","currency":"Dólar (USD)","tip":"Fuso horário Central (UTC-6/-5 no verão)"},
+  "YYZ":{"country":"Canadá","visa":"AVE necessária (pre-viagem)","vaccine":"Nenhuma obrigatória","customs":"CAD 800 franquia","currency":"Dólar Canadense","tip":"AVE em canada.ca — obrigatória antes do embarque"},
+  "YVR":{"country":"Canadá","visa":"AVE necessária (pre-viagem)","vaccine":"Nenhuma obrigatória","customs":"CAD 800 franquia","currency":"Dólar Canadense","tip":"Vancouver: clima ameno e natureza exuberante"},
+  "MEX":{"country":"México","visa":"Não requer visto","vaccine":"Nenhuma obrigatória","customs":"US$ 500 franquia","currency":"Peso Mexicano","tip":"FMM: formulário de entrada disponível online"},
+  "CUN":{"country":"México","visa":"Não requer visto","vaccine":"Nenhuma obrigatória","customs":"US$ 500 franquia","currency":"Peso Mexicano","tip":"Cancún: praias paradisíacas e zona hoteleira"},
+  "GDL":{"country":"México","visa":"Não requer visto","vaccine":"Nenhuma obrigatória","customs":"US$ 500 franquia","currency":"Peso Mexicano","tip":"Guadalajara: berço do tequila e mariachi"},
+  "HAV":{"country":"Cuba","visa":"Cartão de turista obrigatório","vaccine":"Nenhuma obrigatória","customs":"Limite rigoroso de moeda","currency":"Peso Cubano (CUP/MLC)","tip":"Cartão de turista adquirido no check-in"},
+  "PTY":{"country":"Panamá","visa":"Não requer visto","vaccine":"Febre amarela (recomendada)","customs":"US$ 500 franquia","currency":"Balboa / USD","tip":"Canal do Panamá: visita obrigatória"},
+  "GUA":{"country":"Guatemala","visa":"Não requer visto","vaccine":"Febre amarela recomendada","customs":"US$ 500 franquia","currency":"Quetzal","tip":"Tikal: sítio arqueológico maia impressionante"},
+  "SJU":{"country":"Porto Rico (EUA)","visa":"ESTA para não-americanos","vaccine":"Nenhuma obrigatória","customs":"Regras EUA — US$ 800 franquia","currency":"Dólar (USD)","tip":"Território americano: inglês e espanhol"},
+  "SDQ":{"country":"República Dominicana","visa":"Cartão de turismo incluído","vaccine":"Nenhuma obrigatória","customs":"US$ 500 franquia","currency":"Peso Dominicano","tip":"Cartão de turismo (~US$ 10) incluso no bilhete"},
+  "KIN":{"country":"Jamaica","visa":"Não requer visto","vaccine":"Febre amarela (se via país endêmico)","customs":"JMD 50.000 franquia","currency":"Dólar Jamaicano","tip":"Cannabis legal — proibida exportação"},
+  "LIS":{"country":"Portugal","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Cidadãos BR: podem trabalhar com visto especial"},
+  "MAD":{"country":"Espanha","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Horário de verão: UTC+2 em junho"},
+  "LHR":{"country":"Reino Unido","visa":"UK ETA obrigatória","vaccine":"Nenhuma obrigatória","customs":"£ 390 franquia","currency":"Libra Esterlina (GBP)","tip":"ETA UK obrigatória desde jan/2024 — gov.uk/eta"},
+  "CDG":{"country":"França","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Metrô de Paris: zoneamento por distância"},
+  "FRA":{"country":"Alemanha","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Pontualidade é muito valorizada culturalmente"},
+  "AMS":{"country":"Países Baixos","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Bicicleta tem absoluta prioridade no trânsito"},
+  "ZRH":{"country":"Suíça","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"CHF 300 franquia","currency":"Franco Suíço (CHF)","tip":"Não é EU mas aceita visto Schengen"},
+  "FCO":{"country":"Itália","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Taxa turística obrigatória em Roma e Florença"},
+  "BCN":{"country":"Espanha","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Catalão e castelhano são línguas oficiais"},
+  "MRS":{"country":"França","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Marselha: bouillabaisse e o Vieux-Port"},
+  "OPO":{"country":"Portugal","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Porto: vinho do Porto e Ribeira são imperdíveis"},
+  "CPH":{"country":"Dinamarca","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Coroa Dinamarquesa (DKK)","tip":"Não usa euro — câmbio necessário"},
+  "BRU":{"country":"Bélgica","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Sede da União Europeia e OTAN"},
+  "BER":{"country":"Alemanha","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Berlim: história, arte e vida noturna vibrante"},
+  "ATH":{"country":"Grécia","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Acrópole e Santorini: must-see da Grécia"},
+  "PRG":{"country":"República Tcheca","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Coroa Tcheca (CZK)","tip":"Praga: uma das mais belas cidades da Europa"},
+  "WAW":{"country":"Polônia","visa":"Sem visto (Schengen — 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Zloty (PLN)","tip":"Varsóvia: totalmente reconstruída após a WWII"},
+  "TBS":{"country":"Geórgia","visa":"Não requer visto (1 ano)","vaccine":"Nenhuma obrigatória","customs":"GEL 3000 franquia","currency":"Lari (GEL)","tip":"Tbilisi: arquitetura única e vinho milenar"},
+  "TIA":{"country":"Albânia","visa":"Não requer visto","vaccine":"Nenhuma obrigatória","customs":"€ 1000 franquia","currency":"Lek (ALL)","tip":"País mais barato dos Balcãs — custo de vida baixo"},
+  "IST":{"country":"Turquia","visa":"E-visto obrigatório","vaccine":"Nenhuma obrigatória","customs":"€ 1500 franquia","currency":"Lira Turca (TRY)","tip":"E-visto em evisa.gov.tr — antes de embarcar"},
+  "SVO":{"country":"Rússia","visa":"Visto obrigatório","vaccine":"Nenhuma obrigatória","customs":"€ 10.000 franquia","currency":"Rublo (RUB)","tip":"Solicitar visto com antecedência — processo demorado"},
+  "TUN":{"country":"Tunísia","visa":"Não requer visto (90 dias)","vaccine":"Febre amarela (se via país endêmico)","customs":"TND 1000 franquia","currency":"Dinar Tunisiano (TND)","tip":"Cartago e o deserto do Saara são imperdíveis"},
+  "DXB":{"country":"Emirados Árabes","visa":"Visto na chegada (30 dias)","vaccine":"Nenhuma obrigatória","customs":"Álcool proibido em público","currency":"Dirham (AED)","tip":"Código de vestimenta obrigatório em locais públicos"},
+  "DOH":{"country":"Qatar","visa":"Visto na chegada (30 dias)","vaccine":"Nenhuma obrigatória","customs":"Álcool: somente hotéis licenciados","currency":"Riyal Qatariano (QAR)","tip":"Respeitar horários de oração (5x ao dia)"},
+  "CAI":{"country":"Egito","visa":"E-visto necessário","vaccine":"Febre amarela (se via país endêmico)","customs":"USD 1000 declarar","currency":"Libra Egípcia (EGP)","tip":"Baksheesh: gorjeta é culturalmente esperada"},
+  "JNB":{"country":"África do Sul","visa":"Não requer visto","vaccine":"Febre amarela (se via país endêmico)","customs":"ZAR 5000 franquia","currency":"Rand (ZAR)","tip":"Não exiba objetos de valor em público"},
+  "LAD":{"country":"Angola","visa":"Visto obrigatório","vaccine":"Febre amarela obrigatória","customs":"USD 300 declarar","currency":"Kwanza (AOA)","tip":"Solicitar visto com pelo menos 2 semanas de antecedência"},
+  "SID":{"country":"Cabo Verde","visa":"Pré-registro EASE obrigatório","vaccine":"Febre amarela recomendada","customs":"€ 300 franquia","currency":"Escudo Cabo-Verdiano (CVE)","tip":"EASE em ease.gov.cv — gratuito, antes do embarque"},
+  "ABJ":{"country":"Costa do Marfim","visa":"Visto obrigatório","vaccine":"Febre amarela obrigatória","customs":"Declaração obrigatória","currency":"Franco CFA (XOF)","tip":"Vacina de febre amarela com prazo mínimo 10 dias antes"},
+  "NRT":{"country":"Japão","visa":"Não requer visto (90 dias)","vaccine":"Nenhuma obrigatória","customs":"¥ 200.000 franquia","currency":"Iene (JPY)","tip":"Gorjeta é considerada rude — não pratique"},
+  "ICN":{"country":"Coreia do Sul","visa":"Não requer visto (90 dias)","vaccine":"Nenhuma obrigatória","customs":"USD 600 franquia","currency":"Won (KRW)","tip":"K-pop, K-food e tecnologia de ponta"},
+  "DEL":{"country":"Índia","visa":"E-visto obrigatório","vaccine":"Febre amarela obrigatória","customs":"INR 50.000 franquia","currency":"Rúpia Indiana (INR)","tip":"e-Visa em indianvisaonline.gov.in"},
+  "BOM":{"country":"Índia","visa":"E-visto obrigatório","vaccine":"Febre amarela obrigatória","customs":"INR 50.000 franquia","currency":"Rúpia Indiana (INR)","tip":"Mumbai: capital financeira e de Bollywood"},
+  "PEK":{"country":"China","visa":"Visto obrigatório","vaccine":"Nenhuma obrigatória","customs":"CNY 5000 franquia","currency":"Yuan (CNY)","tip":"VPN necessária para Google, WhatsApp e redes sociais"},
+  "PVG":{"country":"China","visa":"Visto obrigatório","vaccine":"Nenhuma obrigatória","customs":"CNY 5000 franquia","currency":"Yuan (CNY)","tip":"WeChat Pay e Alipay dominam pagamentos"},
+  "SYD":{"country":"Austrália","visa":"ETA obrigatória","vaccine":"Febre amarela (se em trânsito por país endêmico)","customs":"AUD 900 franquia","currency":"Dólar Australiano (AUD)","tip":"ETA em immi.homeaffairs.gov.au — antes do embarque"},
+  "AKL":{"country":"Nova Zelândia","visa":"NZeTA obrigatória","vaccine":"Nenhuma obrigatória","customs":"NZD 700 franquia","currency":"Dólar Neo-Zelandês (NZD)","tip":"NZeTA + taxa de conservação — nzeta.immigration.govt.nz"},
+};
+
+// Build expanded announcement pool
 function buildAnnPool(r){
+  const dest=r.dest.split(' –')[0].split(' –')[0];
+  const iata=r.iata;
+  const ci=COUNTRY_INFO[iata]||{};
+  const isDom=r.tipo==='DOM';
   const pool=[];
-  for(let i=0;i<3;i++){
-    const[fn,ln]=randomName(r.tipo,r.fi*100+i);
-    const name=fn+" "+ln;
-    pool.push({pt:ANN[0].pt(name,r.dest,r.terminal,r.gate),en:ANN[0].en(name,r.dest,r.terminal,r.gate),es:ANN[0].es(name,r.dest,r.terminal,r.gate),u:true});
+
+  // ── 1. BOARDING CALLS ───────────────────────────────────────────────
+  pool.push({
+    pt:`Passageiros do voo ${r.fnum} com destino a ${dest} — embarque imediato no portão ${r.gate}`,
+    en:`Passengers on flight ${r.fnum} to ${dest} — immediate boarding at gate ${r.gate}`,
+    es:`Pasajeros del vuelo ${r.fnum} con destino a ${dest} — embarque inmediato en puerta ${r.gate}`,
+    u:true
+  });
+  pool.push({
+    pt:`Último chamado para embarque do voo ${r.fnum} para ${dest}. Portão ${r.gate}, terminal ${r.terminal}`,
+    en:`Final boarding call for flight ${r.fnum} to ${dest}. Gate ${r.gate}, terminal ${r.terminal}`,
+    es:`Último llamado para el vuelo ${r.fnum} a ${dest}. Puerta ${r.gate}, terminal ${r.terminal}`,
+    u:true
+  });
+
+  // ── 2. SECURITY ──────────────────────────────────────────────────────
+  pool.push({
+    pt:`Segurança: líquidos acima de 100ml não são permitidos na cabine. Remova eletrônicos e cintos na triagem`,
+    en:`Security: liquids over 100ml not allowed in cabin. Remove electronics and belts at screening`,
+    es:`Seguridad: líquidos superiores a 100ml no permitidos en cabina. Retire electrónicos y cinturones`,
+    u:false
+  });
+  pool.push({
+    pt:`Por segurança, não aceite volumes de desconhecidos e não deixe sua bagagem sem vigilância`,
+    en:`For security, do not accept items from strangers and do not leave baggage unattended`,
+    es:`Por seguridad, no acepte bultos de desconocidos y no deje su equipaje sin vigilancia`,
+    u:false
+  });
+
+  // ── 3. BAGGAGE ───────────────────────────────────────────────────────
+  pool.push({
+    pt:`Bagagem de mão: máximo 10kg e dimensões 55x35x25cm. Itens proibidos serão retidos`,
+    en:`Carry-on baggage: max 10kg and dimensions 55x35x25cm. Prohibited items will be retained`,
+    es:`Equipaje de mano: máximo 10kg y dimensiones 55x35x25cm. Artículos prohibidos serán retenidos`,
+    u:false
+  });
+  pool.push({
+    pt:`Baterias de lítio e power banks devem ser transportados na bagagem de mão, não no despacho`,
+    en:`Lithium batteries and power banks must be carried in hand luggage, not checked baggage`,
+    es:`Baterías de litio y power banks deben transportarse en equipaje de mano, no en bodega`,
+    u:false
+  });
+
+  // ── 4. INTERNATIONAL ONLY ─────────────────────────────────────────
+  if(!isDom){
+    // VISA
+    if(ci.visa){
+      pool.push({
+        pt:`${dest}: ${ci.visa}. Tenha seus documentos acessíveis durante o voo`,
+        en:`${dest}: ${ci.visa}. Keep your documents accessible during the flight`,
+        es:`${dest}: ${ci.visa}. Tenga sus documentos accesibles durante el vuelo`,
+        u:false
+      });
+    }
+    // VACCINE
+    if(ci.vaccine&&ci.vaccine!=="Nenhuma obrigatória"){
+      pool.push({
+        pt:`Vacinação para ${dest}: ${ci.vaccine}. Carteira de vacinação pode ser solicitada na chegada`,
+        en:`Vaccination for ${dest}: ${ci.vaccine}. Vaccination card may be requested upon arrival`,
+        es:`Vacunación para ${dest}: ${ci.vaccine}. Carnet de vacunación puede ser solicitado al llegar`,
+        u:false
+      });
+    }
+    // CUSTOMS
+    if(ci.customs){
+      pool.push({
+        pt:`Alfândega em ${dest}: ${ci.customs}. Declare itens acima do limite ao chegar`,
+        en:`Customs at ${dest}: ${ci.customs}. Declare items above the limit upon arrival`,
+        es:`Aduana en ${dest}: ${ci.customs}. Declare artículos que superen el límite al llegar`,
+        u:false
+      });
+    }
+    // CURRENCY
+    if(ci.currency){
+      pool.push({
+        pt:`Moeda em ${dest}: ${ci.currency}. Câmbio disponível no aeroporto e bancos locais`,
+        en:`Currency in ${dest}: ${ci.currency}. Exchange available at airport and local banks`,
+        es:`Moneda en ${dest}: ${ci.currency}. Cambio disponible en aeropuerto y bancos locales`,
+        u:false
+      });
+    }
+    // TIP
+    if(ci.tip){
+      pool.push({
+        pt:`Dica para ${dest}: ${ci.tip}`,
+        en:`Tip for ${dest}: ${ci.tip}`,
+        es:`Consejo para ${dest}: ${ci.tip}`,
+        u:false
+      });
+    }
+    // Generic intl
+    pool.push({
+      pt:`Passageiros internacionais: verifique validade do passaporte — mínimo 6 meses além da data de retorno`,
+      en:`International passengers: check passport validity — minimum 6 months beyond return date`,
+      es:`Pasajeros internacionales: verifiquen validez del pasaporte — mínimo 6 meses más allá del retorno`,
+      u:false
+    });
+    pool.push({
+      pt:`Para ${dest}: preencha o formulário de imigração durante o voo para agilizar o desembarque`,
+      en:`For ${dest}: complete the immigration form during the flight to speed up arrival`,
+      es:`Para ${dest}: complete el formulario de inmigración durante el vuelo para agilizar el desembarque`,
+      u:false
+    });
   }
-  pool.push({pt:ANN[1].pt(r.fnum,r.dest),en:ANN[1].en(r.fnum,r.dest),es:ANN[1].es(r.fnum,r.dest),u:false});
-  pool.push({pt:ANN[2].pt(r.fnum,r.dest,r.time),en:ANN[2].en(r.fnum,r.dest,r.time),es:ANN[2].es(r.fnum,r.dest,r.time),u:false});
-  pool.push({pt:ANN[3].pt(),en:ANN[3].en(),es:ANN[3].es(),u:false});
-  pool.push({pt:ANN[4].pt(),en:ANN[4].en(),es:ANN[4].es(),u:false});
-  pool.push({pt:ANN[5].pt(r.fnum,r.dest,r.gate),en:ANN[5].en(r.fnum,r.dest,r.gate),es:ANN[5].es(r.fnum,r.dest,r.gate),u:true});
-  if(r.tipo!=="DOM")pool.push({pt:ANN[6].pt(r.fnum,r.dest),en:ANN[6].en(r.fnum,r.dest),es:ANN[6].es(r.fnum,r.dest),u:false});
+
+  // ── 5. COMFORT & SERVICE ─────────────────────────────────────────────
+  pool.push({
+    pt:`Agradecemos a preferência pela companhia aérea. Duração estimada do voo: ${durS(r.dur)}`,
+    en:`Thank you for flying with us. Estimated flight duration: ${durS(r.dur)}`,
+    es:`Gracias por elegir nuestra aerolínea. Duración estimada del vuelo: ${durS(r.dur)}`,
+    u:false
+  });
+  pool.push({
+    pt:`Em caso de itens perdidos no aeroporto, dirija-se ao balcão de achados e perdidos no terminal ${r.terminal}`,
+    en:`For lost items at the airport, please go to the lost & found counter in terminal ${r.terminal}`,
+    es:`Para objetos perdidos en el aeropuerto, diríjase al mostrador de objetos perdidos en terminal ${r.terminal}`,
+    u:false
+  });
+  pool.push({
+    pt:`Wi-Fi disponível gratuitamente no terminal ${r.terminal}. Rede: AirportFree — sem senha`,
+    en:`Free Wi-Fi available in terminal ${r.terminal}. Network: AirportFree — no password needed`,
+    es:`Wi-Fi gratuito disponible en terminal ${r.terminal}. Red: AirportFree — sin contraseña`,
+    u:false
+  });
+
   return pool;
 }
+
+function buildAnnPool(r){const dest=r.dest.split(' –')[0];const iata=r.iata;const ci=COUNTRY_INFO[iata]||{};const isDom=r.tipo==='DOM';const pool=[];pool.push({pt:`Passageiros do voo ${r.fnum} com destino a ${dest} — embarque imediato no portão ${r.gate}`,en:`Passengers on flight ${r.fnum} to ${dest} — immediate boarding at gate ${r.gate}`,es:`Pasajeros vuelo ${r.fnum} destino ${dest} — embarque inmediato puerta ${r.gate}`,u:true});pool.push({pt:`Último chamado para o voo ${r.fnum} para ${dest}. Portão ${r.gate}`,en:`Final boarding call for flight ${r.fnum} to ${dest}. Gate ${r.gate}`,es:`Último llamado vuelo ${r.fnum} a ${dest}. Puerta ${r.gate}`,u:true});if(!isDom){if(ci.visa)pool.push({pt:`${dest} — Visto: ${ci.visa}`,en:`${dest} — Visa: ${ci.visa}`,es:`${dest} — Visa: ${ci.visa}`,u:false});if(ci.vaccine&&ci.vaccine!=='Nenhuma obrigatória')pool.push({pt:`${dest} — Vacinação: ${ci.vaccine}`,en:`${dest} — Vaccination: ${ci.vaccine}`,es:`${dest} — Vacunación: ${ci.vaccine}`,u:false});if(ci.customs)pool.push({pt:`Alfândega em ${dest}: ${ci.customs}`,en:`Customs at ${dest}: ${ci.customs}`,es:`Aduana en ${dest}: ${ci.customs}`,u:false});if(ci.currency)pool.push({pt:`Moeda em ${dest}: ${ci.currency}`,en:`Currency: ${ci.currency}`,es:`Moneda en ${dest}: ${ci.currency}`,u:false});if(ci.tip)pool.push({pt:`Dica para ${dest}: ${ci.tip}`,en:`Tip for ${dest}: ${ci.tip}`,es:`Consejo para ${dest}: ${ci.tip}`,u:false});pool.push({pt:`Passaporte: validade mínima de 6 meses além do retorno`,en:`Passport: min 6 months validity beyond return`,es:`Pasaporte: validez mínima 6 meses más allá del retorno`,u:false});}pool.push({pt:`Duração estimada: ${durS(r.dur)}. Agradecemos a preferência`,en:`Estimated duration: ${durS(r.dur)}. Thank you for flying with us`,es:`Duración estimada: ${durS(r.dur)}. Gracias por elegirnos`,u:false});pool.push({pt:`Wi-Fi gratuito no terminal ${r.terminal}. Rede: AirportFree`,en:`Free Wi-Fi in terminal ${r.terminal}. Network: AirportFree`,es:`Wi-Fi gratuito en terminal ${r.terminal}. Red: AirportFree`,u:false});return pool;}
 function showNextAnn(){
   if(!annPool.length)return;
   maybePlayDing();
@@ -1291,7 +1476,7 @@ function maybePlayTrain(){
 }
 
 // ── TRANSIT DATA ─────────────────────────────────────────────────────────────
-const TRANSIT_DATA={"metro_interval": 2, "bus_interval": 7, "metro_color": "#e30613", "metro_line": "Linha 13 – Jade (CPTM)", "metro_note": "Operação 05h–00h · Intervalo de 2 min", "line1_name": "Linha Interna – Terminais", "line1_color": "#e30613", "line1_stations": [{"id": "t2", "name": "Terminal T2", "type": "terminal"}, {"id": "t3d", "name": "Terminal T3 Dom.", "type": "terminal"}, {"id": "t3i", "name": "Terminal T3 Int'l", "type": "terminal"}, {"id": "gru", "name": "Aeroporto GRU", "type": "hub"}], "line2_name": "Extensão Cidade", "line2_color": "#e30613", "line2_stations": [{"id": "gru", "name": "Aeroporto GRU", "type": "hub"}, {"id": "eng", "name": "Engenheiro Goulart", "type": "city"}, {"id": "tatuape", "name": "Tatuapé", "type": "city"}, {"id": "cors", "name": "Corinthians–Itaquera", "type": "terminus", "branch": "A"}, {"id": "bras", "name": "Brás", "type": "city", "branch": "B"}, {"id": "luz", "name": "Luz", "type": "city", "branch": "B"}, {"id": "rep", "name": "República", "type": "city", "branch": "B"}, {"id": "pln", "name": "Palmeiras–Barra Funda", "type": "terminus", "branch": "B"}], "bus_routes": [{"name": "Airport Express → Tietê", "freq": 7, "color": "#0057a8"}, {"name": "GRU → Guarulhos Centro", "freq": 12, "color": "#0057a8"}, {"name": "GRU → Congonhas (CGH)", "freq": 30, "color": "#009846"}]};
+const TRANSIT_DATA={"metro_interval": 2, "bus_interval": 7, "metro_color": "#e30613", "metro_line": "Linha 13 Jade (CPTM)", "metro_note": "Operação 05h-00h · Intervalo de 2 min", "line1_name": "Linha Interna - Terminais", "line1_color": "#e30613", "line1_stations": [{"id": "t2", "name": "Terminal T2", "type": "terminal"}, {"id": "t3d", "name": "Terminal T3 Dom.", "type": "terminal"}, {"id": "t3i", "name": "Terminal T3 Intl", "type": "terminal"}, {"id": "gru", "name": "Aeroporto GRU", "type": "hub"}], "line2_name": "Extensao Cidade", "line2_color": "#e30613", "line2_stations": [{"id": "gru", "name": "Aeroporto GRU", "type": "hub"}, {"id": "eng", "name": "Engenheiro Goulart", "type": "city"}, {"id": "tatuape", "name": "Tatuape", "type": "city"}, {"id": "cors", "name": "Corinthians-Itaquera", "type": "terminus", "branch": "A"}, {"id": "bras", "name": "Bras", "type": "city", "branch": "B"}, {"id": "luz", "name": "Luz", "type": "city", "branch": "B"}, {"id": "rep", "name": "Republica", "type": "city", "branch": "B"}, {"id": "pln", "name": "Palmeiras-Barra Funda", "type": "terminus", "branch": "B"}], "bus_routes": [{"name": "Airport Express ao Tiete", "freq": 7, "color": "#0057a8"}, {"name": "GRU ao Guarulhos Centro", "freq": 12, "color": "#009846"}, {"name": "GRU ao Congonhas (CGH)", "freq": 30, "color": "#cc0000"}]};
 const TRANSIT_AP="GRU";
 
 function nowMinsTransit(){const n=new Date();return n.getHours()*60+n.getMinutes();}
