@@ -100,212 +100,180 @@ function nextDep(interval){const nm=nowMinsTransit();const rem=interval-(nm%inte
 function formatMin(m){return m===0?"Agora":m+"min";}
 
 // Train position: 0..1 along the full line, cycling every interval minutes
-function trainProgress(intervalMin, stationCount){
-  // Full cycle = intervalMin real minutes (realistic speed)
-  const nm=nowMinsTransit();
-  const sec=new Date().getSeconds();
-  const totalSec=intervalMin*60;
-  const elapsed=(nm%intervalMin)*60+sec;
-  return elapsed/totalSec;
-}
 
-function busProgress(intervalMin){
-  // Bus takes intervalMin to cross the route
-  const nm=nowMinsTransit();
-  const sec=new Date().getSeconds();
-  const totalSec=intervalMin*60;
-  const elapsed=(nm%intervalMin)*60+sec;
-  return elapsed/totalSec;
-}
+
+// Bus progress 0..1 along route
+
 
 let transitInterval=null;
 
-function buildTransitCards(){
-  const t=TRANSIT_DATA;if(!t)return;
-  const el=document.getElementById("transit-cards");if(!el)return;
-  const lc=t.metro_color;
 
-  function stopsHtml(stations,color,pfx){
-    return stations.map((s,i)=>`
-      <div class="st-item">
-        <div class="st-dot ${s.type}" id="${pfx}-dot-${i}" style="--lc:${color};--bg:var(--bg)"></div>
-        <div>
-          <div class="st-name ${s.type}" id="${pfx}-nm-${i}">${s.name}</div>
-          ${s.type==='terminal'?'<div class="st-tag">✈ Terminal</div>':''}
-          ${s.type==='hub'?'<div class="st-tag">⬤ Estação hub</div>':''}
-          ${s.type==='terminus'?'<div class="st-tag">⬤ Terminus</div>':''}
-        </div>
-      </div>`).join('');
-  }
-
-  function trainBar(id,color){
-    return `<div class="train-bar-row">
-      <span class="train-bar-lbl" style="color:${color}">Trem</span>
-      <div class="train-bar" id="tbar-${id}" style="--lc:${color}">
-        <div class="train-dot" id="tpos-${id}" style="--lc:${color};left:0">M</div>
-      </div>
-      <span class="train-pct" style="color:${color}" id="tpct-${id}">0%</span>
-    </div>`;
-  }
-
-  // Build line2: detect fork (stations with branch property)
-  const l2=t.line2_stations;
-  const forkIdx=l2.findIndex(s=>s.branch);
-  const trunk=forkIdx>0?l2.slice(0,forkIdx):l2;
-  const brA=l2.filter(s=>s.branch==='A');
-  const brB=l2.filter(s=>s.branch==='B');
-  const hasFork=brA.length>0&&brB.length>0;
-
-  let line2Body;
-  if(hasFork){
-    line2Body=`
-      <div class="st-list" style="--lc:${lc}">${stopsHtml(trunk,lc,'l2t')}</div>
-      <div style="display:flex;align-items:flex-start;padding-left:4px;margin-top:0">
-        <div class="fork-connector" style="--lc:${lc}"></div>
-        <div style="flex:1;border-top:3px solid ${lc};margin-top:0;border-radius:2px 0 0 0;opacity:.6"></div>
-      </div>
-      <div class="fork-container">
-        <div class="fork-branch" style="--lc:${lc}">
-          <div class="fork-label" style="background:${lc}18;color:${lc}">Ramal A</div>
-          ${stopsHtml(brA,lc,'brA')}
-        </div>
-        <div class="fork-branch" style="--lc:${lc}">
-          <div class="fork-label" style="background:${lc}18;color:${lc}">Ramal B</div>
-          ${stopsHtml(brB,lc,'brB')}
-        </div>
-      </div>`;
-  }else{
-    line2Body=`<div class="st-list" style="--lc:${lc}">${stopsHtml(l2,lc,'l2t')}</div>`;
-  }
-
-  // Bus
-  const busHtml=t.bus_routes.map((r,i)=>`
-    <div class="bus-row" style="--bc:${r.color}">
-      <div class="bus-row-top">
-        <span class="bus-rname">${r.name}</span>
-        <span class="bus-badge" id="busnext-${i}" style="--bc:${r.color}">${formatMin(nextDep(r.freq))}</span>
-      </div>
-      <div class="bus-track" id="bustrack-${i}">
-        <div class="bus-track-line"></div>
-        <div class="bus-icon" id="busveh-${i}" style="--bc:${r.color};left:2px">&#128653;</div>
-      </div>
-      <div class="bus-freq" style="color:${r.color}">A cada ${r.freq} min</div>
-    </div>`).join('');
-
-  el.innerHTML=`
-    <div class="tc-card">
-      <div class="tc-hdr" style="border-left:4px solid ${lc}">
-        <div><div class="tc-title" style="color:${lc}">${t.line1_name}</div>
-          <div class="tc-note">${t.metro_note}</div></div>
-        <div class="next-box">
-          <div class="nb-lbl">Próximo trem</div>
-          <div class="nb-val" style="color:${lc}" id="nt-metro">${formatMin(nextDep(t.metro_interval))}</div>
-          <div class="nb-freq">a cada ${t.metro_interval} min</div>
-        </div>
-      </div>
-      <div class="tc-body">
-        <div class="st-list" style="--lc:${lc}">${stopsHtml(t.line1_stations,lc,'l1')}</div>
-        ${trainBar('line1',lc)}
-      </div>
-    </div>
-    <div class="tc-card">
-      <div class="tc-hdr" style="border-left:4px solid ${lc}">
-        <div><div class="tc-title" style="color:${lc}">${t.line2_name}</div>
-          <div class="tc-note">${hasFork?'Conexão · 2 Ramais':'Conexão com a cidade'}</div></div>
-        <div class="next-box">
-          <div class="nb-lbl">Próximo trem</div>
-          <div class="nb-val" style="color:${lc}" id="nt-line2">${formatMin(nextDep(t.metro_interval))}</div>
-          <div class="nb-freq">a cada ${t.metro_interval} min</div>
-        </div>
-      </div>
-      <div class="tc-body">${line2Body}${trainBar('line2',lc)}</div>
-    </div>
-    <div class="tc-card" style="grid-column:1/-1">
-      <div class="tc-hdr" style="border-left:4px solid #ffd54f">
-        <div><div class="tc-title" style="color:#ffd54f">Linhas de Onibus</div>
-          <div class="tc-note">Posição estimada em tempo real</div></div>
-        <div class="next-box">
-          <div class="nb-lbl">Mais próximo</div>
-          <div class="nb-val" style="color:#ffd54f" id="nt-bus">${formatMin(nextDep(t.bus_interval))}</div>
-          <div class="nb-freq">a cada ${t.bus_interval} min</div>
-        </div>
-      </div>
-      <div class="tc-body"><div class="bus-list">${busHtml}</div></div>
-    </div>`;
-
-  animateTransit();
-  if(transitInterval)clearInterval(transitInterval);
-  transitInterval=setInterval(updateTransitAnim,1000);
-}
 
 function animateTransit(){
-  const t=TRANSIT_DATA;if(!t)return;
-  const lc=t.metro_color;
+  const t=TRANSIT_DATA[TRANSIT_AP];if(!t)return;
 
-  function animLine(stations,pfx,intervalMin){
-    const prog=trainProgress(intervalMin,stations.length);
-    const idx=Math.min(Math.floor(prog*stations.length),stations.length-1);
+  // Animate line1
+  function animateLine(stations, color, lineId, intervalMin){
+    const prog=trainProgress(intervalMin, stations.length);
+    const idx=Math.min(Math.floor(prog*stations.length), stations.length-1);
+    const frac=(prog*stations.length)%1;
+    // Update dots
     stations.forEach((s,i)=>{
-      const dot=document.getElementById(`${pfx}-dot-${i}`);
-      const nm=document.getElementById(`${pfx}-nm-${i}`);
-      const active=i===idx;
+      const dot=document.getElementById(`dot-${lineId}-${i}`);
+      const nm=document.getElementById(`name-${lineId}-${i}`);
       if(dot){
-        dot.style.background=active?lc:'transparent';
-        dot.style.boxShadow=active?`0 0 10px ${lc}`:'none';
-        dot.style.transform=active?'scale(1.3)':'scale(1)';
+        const active=i===idx;
+        dot.style.background=active?color:getComputedStyle(document.documentElement).getPropertyValue('--bg');
+        dot.style.boxShadow=active?`0 0 10px ${color}`:'none';
+        dot.style.transform=active?'scale(1.4)':'scale(1)';
       }
-      if(nm)nm.style.fontWeight=active?'900':'600';
+      if(nm) nm.style.fontWeight=i===idx?'900':'600';
     });
+    // Position vehicle
+    const veh=document.getElementById(`vehicle-${lineId}`);
+    if(veh){
+      const track=document.getElementById(`track-${lineId}`);
+      if(track){
+        const stops=track.querySelectorAll('.md-stop');
+        if(stops.length>0){
+          const trackH=track.offsetHeight;
+          const segH=trackH/Math.max(stations.length-1,1);
+          const yPos=Math.min(idx*segH+frac*segH, trackH-22);
+          veh.style.top=Math.max(0,yPos)+'px';
+        }
+      }
+    }
   }
 
-  function animBar(id,prog){
-    const bar=document.getElementById('tbar-'+id);
-    const pos=document.getElementById('tpos-'+id);
-    const pct=document.getElementById('tpct-'+id);
-    if(bar&&pos){const w=bar.offsetWidth||280;pos.style.left=Math.max(0,Math.min(prog*(w-22),w-22))+'px';}
-    if(pct)pct.textContent=Math.round(prog*100)+'%';
-  }
+  animateLine(t.line1_stations, t.line1_color, 'line1', t.metro_interval);
+  animateLine(t.line2_stations, t.line2_color, 'line2', t.metro_interval);
 
-  const p1=trainProgress(t.metro_interval,t.line1_stations.length);
-  animLine(t.line1_stations,'l1',t.metro_interval); animBar('line1',p1);
-
-  const p2=trainProgress(t.metro_interval,t.line2_stations.length);
-  // Animate trunk + branches together
-  const l2=t.line2_stations;
-  const forkIdx=l2.findIndex(s=>s.branch);
-  const trunk=forkIdx>0?l2.slice(0,forkIdx):l2;
-  const brA=l2.filter(s=>s.branch==='A');
-  const brB=l2.filter(s=>s.branch==='B');
-  if(brA.length&&brB.length){
-    animLine(trunk,'l2t',t.metro_interval);
-    animLine(brA,'brA',t.metro_interval);
-    animLine(brB,'brB',t.metro_interval);
-  }else{
-    animLine(l2,'l2t',t.metro_interval);
-  }
-  animBar('line2',p2);
-
-  // Bus
+  // Animate buses
   t.bus_routes.forEach((r,i)=>{
-    const prog=busProgress(r.freq);
-    const track=document.getElementById('bustrack-'+i);
-    const veh=document.getElementById('busveh-'+i);
-    const next=document.getElementById('busnext-'+i);
-    if(track&&veh){const w=track.offsetWidth||280;veh.style.left=Math.max(2,Math.min(prog*(w-18),w-18))+'px';}
-    if(next)next.textContent=formatMin(nextDep(r.freq));
+    const veh=document.getElementById(`busveh-${i}`);
+    const row=document.getElementById(`busrow-${i}`);
+    const next=document.getElementById(`busnext-${i}`);
+    if(veh&&row){
+      const prog=busProgress(r.freq);
+      const rowW=row.offsetWidth-30;
+      // Bus goes right (departing), then jumps back to start
+      veh.style.left=(prog*rowW)+'px';
+    }
+    if(next) next.textContent=formatMin(nextDep(r.freq));
   });
 }
 
 function updateTransitAnim(){
-  const t=TRANSIT_DATA;if(!t)return;
+  const t=TRANSIT_DATA[TRANSIT_AP];if(!t)return;
   animateTransit();
-  const a=document.getElementById('nt-metro');
-  const b=document.getElementById('nt-line2');
-  const c=document.getElementById('nt-bus');
-  if(a)a.textContent=formatMin(nextDep(t.metro_interval));
-  if(b)b.textContent=formatMin(nextDep(t.metro_interval));
-  if(c)c.textContent=formatMin(nextDep(t.bus_interval));
+  const nt=document.getElementById('nt-metro');
+  const nl=document.getElementById('nt-line2');
+  const nb=document.getElementById('nt-bus');
+  if(nt)nt.textContent=formatMin(nextDep(t.metro_interval));
+  if(nl)nl.textContent=formatMin(nextDep(t.metro_interval));
+  if(nb)nb.textContent=formatMin(nextDep(t.bus_interval));
 }
+
+
+// ── TRANSIT BLOCK ─────────────────────────────────────────────────────────────
+const BUS_ROUTES_DATA=[{"name": "CNF → BH Centro", "color": "#007dc5", "freq": 11, "coords": [[-19.6244, -43.9719], [-19.78, -43.94], [-19.8278, -43.9678]]}, {"name": "CNF → Pampulha", "color": "#009846", "freq": 20, "coords": [[-19.6244, -43.9719], [-19.868, -43.9688]]}, {"name": "CNF → Nova Lima", "color": "#cc6600", "freq": 40, "coords": [[-19.6244, -43.9719], [-19.9826, -43.8451]]}];
+let _busMap=null,_busVehs=[],_transitTimer=null,_lastSt={l1:-1,l2:-1};
+function _tProg(iv){const nm=nowMinsTransit(),s=new Date().getSeconds();return((nm%iv)*60+s)/(iv*60);}
+function _bProg(iv){const nm=nowMinsTransit(),s=new Date().getSeconds();return((nm%iv)*60+s)/(iv*60);}
+function _stops(arr,pfx,lc){
+  return arr.map((s,i)=>`<div class="mstop"><div class="mdot ${s.type}" id="${pfx}d${i}" style="--lc:${lc};--bg:var(--bg)"></div><div class="mstop-label"><span class="mstop-name ${s.type}" id="${pfx}n${i}">${s.name}</span>${s.type==='terminal'?'<span class="mstop-tag">✈ Terminal</span>':''}${s.type==='hub'?'<span class="mstop-tag">⬤ Hub</span>':''}${s.type==='terminus'?'<span class="mstop-tag">⬤ Terminus</span>':''}</div></div>`).join('');
+}
+function buildTransitCards(){
+  const t=TRANSIT_DATA;if(!t)return;
+  const el=document.getElementById('transit-cards');if(!el)return;
+  const lc=t.metro_color;
+  const tbar=(id)=>`<div class="tbar-row"><span class="tbar-label" style="color:${lc}">Trem</span><div class="tbar-track" id="tb${id}" style="--lc:${lc}"><div class="tbar-train" id="tc${id}" style="--lc:${lc};left:0">M</div></div><span class="tbar-pct" style="color:${lc}" id="tp${id}">0%</span></div>`;
+  const l2=t.line2_stations,fi=l2.findIndex(s=>s.branch);
+  const trunk=fi>0?l2.slice(0,fi):l2;
+  const bA=l2.filter(s=>s.branch==='A'),bB=l2.filter(s=>s.branch==='B');
+  const hasFork=bA.length&&bB.length;
+  const line2=hasFork?`<div class="mline" style="--lc:${lc}">${_stops(trunk,'l2t',lc)}</div><div class="fork-stem" style="background:${lc}"></div><div class="fork-cols"><div class="fork-col" style="--lc:${lc}"><div class="fork-tag" style="background:${lc}18;color:${lc}">Ramal A</div>${_stops(bA,'brA',lc)}</div><div class="fork-col" style="--lc:${lc}"><div class="fork-tag" style="background:${lc}18;color:${lc}">Ramal B</div>${_stops(bB,'brB',lc)}</div></div>`:`<div class="mline" style="--lc:${lc}">${_stops(l2,'l2t',lc)}</div>`;
+  const busLeg=BUS_ROUTES_DATA.map(r=>`<div class="bus-leg-item"><div class="bus-leg-dot" style="background:${r.color}"></div><span style="color:${r.color}">${r.name}</span></div>`).join('');
+  const busNxt=BUS_ROUTES_DATA.map((r,i)=>`<div class="bus-next-item" style="border-color:${r.color}"><span class="bni-name" style="color:${r.color}">${r.name.split('→')[1]?.trim()||r.name}</span><span class="bni-val" style="color:${r.color}" id="bnxt${i}">${formatMin(nextDep(r.freq))}</span></div>`).join('');
+  el.innerHTML=`<div class="tc-card"><div class="tc-hdr" style="border-left:4px solid ${lc}"><div><div class="tc-title" style="color:${lc}">${t.line1_name}</div><div class="tc-note">${t.metro_note}</div></div><div class="next-box"><div class="nb-lbl">Próximo trem</div><div class="nb-val" style="color:${lc}" id="ntm">${formatMin(nextDep(t.metro_interval))}</div><div class="nb-freq">a cada ${t.metro_interval} min</div></div></div><div class="tc-body"><div class="mline" style="--lc:${lc}">${_stops(t.line1_stations,'l1',lc)}</div>${tbar('l1')}</div></div><div class="tc-card"><div class="tc-hdr" style="border-left:4px solid ${lc}"><div><div class="tc-title" style="color:${lc}">${t.line2_name}</div><div class="tc-note">${hasFork?'Conexão · 2 Ramais':'Conexão com a cidade'}</div></div><div class="next-box"><div class="nb-lbl">Próximo trem</div><div class="nb-val" style="color:${lc}" id="ntl2">${formatMin(nextDep(t.metro_interval))}</div><div class="nb-freq">a cada ${t.metro_interval} min</div></div></div><div class="tc-body">${line2}${tbar('l2')}</div></div><div class="tc-card"><div class="tc-hdr" style="border-left:4px solid #ffd54f"><div><div class="tc-title" style="color:#ffd54f">Linhas de Ônibus</div><div class="tc-note">Posição em tempo real na cidade</div></div><div class="next-box"><div class="nb-lbl">Mais próximo</div><div class="nb-val" style="color:#ffd54f" id="ntb">${formatMin(nextDep(t.bus_interval))}</div><div class="nb-freq">a cada ${t.bus_interval} min</div></div></div><div class="tc-body"><div class="bus-legend">${busLeg}</div><div class="bus-map" id="busmap"></div><div class="bus-next-list">${busNxt}</div></div></div>`;
+  setTimeout(_initBM,150);
+  _animT();
+  if(_transitTimer)clearInterval(_transitTimer);
+  _transitTimer=setInterval(_tickT,1000);
+}
+function _lp(a,b,t){return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];}
+function _ptL(coords,p){const n=coords.length-1;if(n<=0)return coords[0];const sp=p*n,si=Math.min(Math.floor(sp),n-1);return _lp(coords[si],coords[si+1],sp-si);}
+function _bsvg(c,flip){return `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="16" viewBox="0 0 26 16" style="${flip?'transform:scaleX(-1)':''}"><rect x="0" y="0" width="26" height="14" rx="3" fill="${c}" opacity=".92"/><rect x="2" y="2" width="5" height="5" rx="1" fill="white" opacity=".65"/><rect x="9" y="2" width="5" height="5" rx="1" fill="white" opacity=".65"/><rect x="17" y="2" width="5" height="5" rx="1" fill="white" opacity=".65"/><rect x="2" y="10" width="4" height="4" rx="2" fill="white" opacity=".8"/><rect x="20" y="10" width="4" height="4" rx="2" fill="white" opacity=".8"/></svg>`;}
+function _initBM(){
+  const el=document.getElementById('busmap');if(!el)return;
+  if(_busMap){_busMap.invalidateSize();_updB();return;}
+  _busMap=L.map('busmap',{center:HOME||[-15,-47],zoom:11});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18}).addTo(_busMap);
+  BUS_ROUTES_DATA.forEach(r=>{
+    L.polyline(r.coords,{color:r.color,weight:3,opacity:.45,dashArray:'6,5'}).addTo(_busMap).bindPopup(`<b style="color:${r.color}">${r.name}</b><br>A cada ${r.freq} min`);
+    [r.coords[0],r.coords[r.coords.length-1]].forEach(pt=>L.circleMarker(pt,{radius:5,fillColor:r.color,fillOpacity:.9,color:'#fff',weight:1.5}).addTo(_busMap));
+  });
+  _updB();
+}
+function _updB(){
+  if(!_busMap)return;
+  _busVehs.forEach(m=>_busMap.removeLayer(m));_busVehs=[];
+  BUS_ROUTES_DATA.forEach((r)=>{
+    const p=_bProg(r.freq);
+    [[p,false],[1-p,true]].forEach(([pr,fl])=>{
+      const pt=_ptL(r.coords,pr);
+      const mk=L.marker(pt,{icon:L.divIcon({html:_bsvg(r.color,fl),className:'',iconSize:[26,16],iconAnchor:[13,8]}),zIndexOffset:fl?400:500}).addTo(_busMap);
+      mk.bindPopup(`<b style="color:${r.color}">${r.name}</b><br>${fl?'Volta':'Ida'} · ${Math.round(pr*100)}%`);
+      _busVehs.push(mk);
+    });
+  });
+}
+function _animSt(arr,pfx,prog,lc){
+  const n=arr.length,raw=prog*n,idx=Math.min(Math.floor(raw),n-1),frac=raw-idx;
+  arr.forEach((s,i)=>{
+    const d=document.getElementById(`${pfx}d${i}`),nm=document.getElementById(`${pfx}n${i}`);
+    if(!d)return;
+    const isA=i===idx,isN=!isA&&i===idx+1&&frac>0.65;
+    d.className='mdot '+s.type+(isA?' active':isN?' next':'');
+    d.style.setProperty('--lc',lc);d.style.setProperty('--bg','var(--bg)');
+    if(nm)nm.className='mstop-name '+s.type+(isA?' active':'');
+  });
+  return idx;
+}
+function _animBar(id,prog){
+  const tr=document.getElementById('tb'+id),cu=document.getElementById('tc'+id),pt=document.getElementById('tp'+id);
+  if(tr&&cu){const w=tr.offsetWidth||280;cu.style.left=Math.max(0,Math.min(prog*(w-28),w-28))+'px';}
+  if(pt)pt.textContent=Math.round(prog*100)+'%';
+}
+function _animT(){
+  const t=TRANSIT_DATA;if(!t)return;const lc=t.metro_color;
+  const p1=_tProg(t.metro_interval);
+  const ni1=_animSt(t.line1_stations,'l1',p1,lc);
+  if(ni1!==_lastSt.l1&&_lastSt.l1>=0)maybePlayTrain();
+  _lastSt.l1=ni1;_animBar('l1',p1);
+  const p2=_tProg(t.metro_interval);
+  const l2=t.line2_stations,fi=l2.findIndex(s=>s.branch);
+  const trunk=fi>0?l2.slice(0,fi):l2,bA=l2.filter(s=>s.branch==='A'),bB=l2.filter(s=>s.branch==='B');
+  if(bA.length&&bB.length){
+    const ni2=_animSt(trunk,'l2t',p2,lc);
+    if(ni2!==_lastSt.l2&&_lastSt.l2>=0)maybePlayTrain();
+    _lastSt.l2=ni2;_animSt(bA,'brA',p2,lc);_animSt(bB,'brB',p2,lc);
+  }else{
+    const ni2=_animSt(l2,'l2t',p2,lc);
+    if(ni2!==_lastSt.l2&&_lastSt.l2>=0)maybePlayTrain();
+    _lastSt.l2=ni2;
+  }
+  _animBar('l2',p2);_updB();
+}
+function _tickT(){
+  const t=TRANSIT_DATA;if(!t)return;
+  _animT();
+  [['ntm',t.metro_interval],['ntl2',t.metro_interval],['ntb',t.bus_interval]].forEach(([id,iv])=>{const e=document.getElementById(id);if(e)e.textContent=formatMin(nextDep(iv));});
+  BUS_ROUTES_DATA.forEach((r,i)=>{const e=document.getElementById('bnxt'+i);if(e)e.textContent=formatMin(nextDep(r.freq));});
+}
+// Override old progress fns
+function trainProgress(iv){return _tProg(iv);}
+function busProgress(iv){return _bProg(iv);}
 
 </script>
 <style>
@@ -390,7 +358,6 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
 .st-can{color:#b71c1c;background:rgba(183,28,28,.1);border:1px solid rgba(183,28,28,.3);text-decoration:line-through}
 .st-arr{color:#00e676;background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.32);animation:bl .9s ease-in-out infinite alternate}
 .st-lnd{color:#b9f6ca;background:rgba(185,246,202,.07);border:1px solid rgba(185,246,202,.22)}
-.st-taxi{color:#ffee58;background:rgba(255,238,88,.08);border:1px solid rgba(255,238,88,.28);animation:bl .8s ease-in-out infinite alternate}
 @keyframes bl{from{opacity:1}to{opacity:.5}}
 .stsel{background:#0f1925;border:1px solid var(--border);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:3px 7px;border-radius:3px;cursor:pointer;outline:none;width:150px}
 #tab-pax .bt .tc{font-size:1.4rem}
@@ -472,35 +439,46 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
 /* Live plane icon */
 .plane-icon{font-size:16px;line-height:1;transform-origin:center}
 
-.transit-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+/* TRANSIT TAB */
+.transit-wrap{display:flex;flex-direction:column;gap:20px}
 .tc-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .tc-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
 .tc-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
-.tc-note{font-size:.64rem;color:var(--dim);margin-top:3px}
+.tc-note{font-size:.63rem;color:var(--dim);margin-top:3px}
 .next-box{text-align:right;flex-shrink:0}
 .nb-lbl{font-size:.58rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
-.nb-val{font-family:'Share Tech Mono',monospace;font-size:1.4rem;font-weight:700;line-height:1.1}
+.nb-val{font-family:'Share Tech Mono',monospace;font-size:1.5rem;font-weight:700;line-height:1.1}
 .nb-freq{font-size:.62rem;color:var(--dim)}
 .tc-body{padding:16px 18px}
-/* Station diagram */
-.md-track{display:flex;flex-direction:column;gap:0}
-.md-stop{display:flex;align-items:center;gap:12px;padding:4px 0;position:relative;min-height:32px}
-.md-line-seg{position:absolute;left:8px;top:50%;width:3px;height:calc(100% + 4px);z-index:0;border-radius:1px}
-.md-dot{width:18px;height:18px;border-radius:50%;border:2.5px solid;background:transparent;z-index:2;flex-shrink:0;transition:all .4s;cursor:default}
-.md-stop-info{display:flex;align-items:center;gap:6px;flex-wrap:wrap;z-index:1}
-.md-name{font-size:.84rem;font-weight:600;transition:font-weight .3s}
-.md-name.hub{font-size:.88rem}
-.md-name.terminus{font-size:.86rem}
-.branch-label{font-size:.58rem;padding:1px 5px;border-radius:2px;font-weight:700;font-family:'Share Tech Mono',monospace}
-.stop-type-badge{font-size:.58rem;padding:1px 5px;border-radius:2px;border:1px solid;font-family:'Share Tech Mono',monospace}
-/* Bus rows */
-.bus-route-row{padding:10px 12px;background:var(--muted);border-radius:6px;margin-bottom:8px}
-.br-info-wrap{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
-.br-name{font-size:.82rem;font-weight:600}
-.br-next{font-family:'Share Tech Mono',monospace;font-size:.84rem;font-weight:700}
-
-@media(max-width:768px){.wrap{padding:12px}.iata{font-size:2rem}#live-map,#map-container{height:350px}}
-</style>
+.mline{position:relative;padding-left:30px}
+.mline::before{content:'';position:absolute;left:10px;top:18px;bottom:18px;width:4px;border-radius:2px;background:var(--lc)}
+.mstop{display:flex;align-items:center;gap:12px;padding:7px 0;position:relative}
+.mdot{width:22px;height:22px;border-radius:50%;border:3px solid var(--lc);background:var(--bg);position:absolute;left:-30px;z-index:2;transition:background .35s,box-shadow .35s,transform .35s}
+.mdot.active{background:var(--lc);box-shadow:0 0 0 4px color-mix(in srgb,var(--lc) 25%,transparent),0 0 14px var(--lc)}
+.mdot.next{animation:nextpulse .65s ease-in-out infinite alternate}
+@keyframes nextpulse{from{box-shadow:0 0 4px var(--lc)}to{box-shadow:0 0 0 6px color-mix(in srgb,var(--lc) 28%,transparent),0 0 18px var(--lc);transform:scale(1.22)}}
+.mstop-label{display:flex;flex-direction:column;gap:1px}
+.mstop-name{font-size:.85rem;font-weight:600;transition:all .3s}
+.mstop-name.active{font-weight:900;color:var(--lc)}
+.mstop-tag{font-size:.59rem;color:var(--dim);font-family:'Share Tech Mono',monospace}
+.fork-stem{width:4px;height:14px;background:var(--lc);border-radius:2px;margin-left:10px}
+.fork-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fork-col{padding-left:22px;position:relative}
+.fork-col::before{content:'';position:absolute;left:8px;top:2px;bottom:12px;width:3px;border-radius:2px;background:var(--lc)}
+.fork-col:first-child::before{opacity:.65}
+.fork-tag{font-size:.6rem;font-weight:900;letter-spacing:.12em;padding:2px 7px;border-radius:3px;margin-bottom:5px;display:inline-block;font-family:'Share Tech Mono',monospace}
+.tbar-row{display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)}
+.tbar-label{font-size:.68rem;font-weight:700;font-family:'Share Tech Mono',monospace;white-space:nowrap}
+.tbar-track{flex:1;height:10px;background:var(--muted);border-radius:5px;position:relative}
+.tbar-train{position:absolute;top:50%;width:28px;height:18px;transform:translateY(-50%);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;font-family:'Share Tech Mono',monospace;transition:left 1.3s cubic-bezier(.4,0,.2,1);border:1.5px solid var(--lc);background:color-mix(in srgb,var(--lc) 18%,transparent);box-shadow:0 0 8px var(--lc);z-index:2}
+.tbar-pct{font-family:'Share Tech Mono',monospace;font-size:.72rem;font-weight:700;min-width:34px;text-align:right}
+.bus-map{height:260px;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:12px}
+.bus-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.bus-leg-item{display:flex;align-items:center;gap:6px;font-size:.74rem}
+.bus-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.bus-next-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.bus-next-item{display:flex;align-items:center;gap:8px;background:var(--muted);border-radius:5px;padding:5px 10px;border-left:3px solid}
+.bni-name{font-size:.74rem;font-weight:600}.bni-val{font-family:'Share Tech Mono',monospace;font-size:.9rem;font-weight:700}</style>
 </head>
 <body>
 <header>
@@ -745,8 +723,8 @@ const BELTS=["1","2","3","4","5","6","7","8","9","10"];
 const DAYS=["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
 const CM={DOM:"dom",LAT:"lat",EUA:"eua",CAN:"can",CAR:"car",EUR:"eur",AFR:"afr",MID:"mid",MEX:"mex",ASIA:"asia",OCE:"oce"};
 const CL={DOM:"DOM",LAT:"LATAM",EUA:"EUA",CAN:"CAN",CAR:"CARIBE",EUR:"EUR",AFR:"AFR",MID:"ORIENTE",MEX:"MÉXICO",ASIA:"ÁSIA",OCE:"OCEANIA"};
-const ST_DEP=[{v:"sch",l:"Programado"},{v:"ont",l:"No Horário"},{v:"board",l:"Embarcando"},{v:"final",l:"Embarque Final"},{v:"taxi",l:"Na Pista"},{v:"dep",l:"Partiu"},{v:"del",l:"Atrasado"},{v:"can",l:"Cancelado"}];
-const ST_ARR=[{v:"sch",l:"Programado"},{v:"del",l:"Atrasado"},{v:"arr",l:"Chegando"},{v:"lnd",l:"Pousou"},{v:"taxi",l:"Na Pista"},{v:"can",l:"Cancelado"}];
+const ST_DEP=[{v:"sch",l:"Programado"},{v:"ont",l:"No Horário"},{v:"board",l:"Embarcando"},{v:"final",l:"Embarque Final"},{v:"dep",l:"Partiu"},{v:"del",l:"Atrasado"},{v:"can",l:"Cancelado"}];
+const ST_ARR=[{v:"sch",l:"Programado"},{v:"del",l:"Atrasado"},{v:"arr",l:"Chegando"},{v:"lnd",l:"Pousou"},{v:"can",l:"Cancelado"}];
 
 function jsDayToIdx(d){return d===0?6:d-1;}
 const todayIdx=jsDayToIdx(new Date().getDay());
@@ -770,7 +748,7 @@ function terminal(tipo){return tipo==="DOM"?TRM_DOM:TRM_INT;}
 function trmCls(t){return"ttrm ttrm-"+t;}
 function chipH(t){return`<span class="chip c-${CM[t]||"dom"}">${CL[t]||t}</span>`;}
 function alH(c){const a=AL[c];if(!a)return`<span class="al" style="color:#546e7a;border-color:#263238">${c}</span>`;return`<span class="al" style="color:${a.color};border-color:${a.color}55;background:${a.color}14">${a.name}</span>`;}
-function stH(v){const l={sch:"Programado",ont:"No Horário",board:"Embarcando",final:"Emb. Final",taxi:"Na Pista",dep:"Partiu",del:"Atrasado",can:"Cancelado",arr:"Chegando",lnd:"Pousou"};return`<span class="st st-${v}">${l[v]||v}</span>`;}
+function stH(v){const l={sch:"Programado",ont:"No Horário",board:"Embarcando",final:"Emb. Final",dep:"Partiu",del:"Atrasado",can:"Cancelado",arr:"Chegando",lnd:"Pousou"};return`<span class="st st-${v}">${l[v]||v}</span>`;}
 function wthH(iata){const w=WEATHER[iata];return w?`<span class="twth">${w[0]} ${w[1]}</span>`:"";}
 function randomName(tipo,seed){
   const pool=NAMES[tipo]||NAMES.DOM;
@@ -849,10 +827,7 @@ function rArr(){
 }
 function rPax(){
   const day=AD.pax,mode=document.getElementById("paxmode").value,sr=document.getElementById("sr-pax").value.toLowerCase();
-  const isA=mode==="arr";
-  const allRows=isA?arrRows(day,"ALL",sr):depRows(day,"ALL",sr);
-  const rows=allRows.slice(0,10);
-  const ni=getNext(rows,day);
+  const isA=mode==="arr";const rows=isA?arrRows(day,"ALL",sr):depRows(day,"ALL",sr);const ni=getNext(rows,day);
   document.getElementById("tb-pax").innerHTML=rows.map((r,i)=>`
     <tr class="${rowCls(r,i===ni)}">
       <td class="tc${isA?" arr":""}">${r.time}</td><td class="tdst">${r.dest}</td>
@@ -918,44 +893,27 @@ function renderLive(){
   const day=todayIdx;
   let airborne=0,boarding=0,arriving=0,delayed=0;
   FD.forEach((f,fi)=>{
-    const pos=getPlanePos(f,fi,day);if(!pos)return;
+    const pos=getPlanePos(f,fi,day);
+    if(!pos)return;
     airborne++;
     const a=AL[f[6]];const color=a?a.color:"#ffffff";
-    const home=HOME;const dest=COORDS[f[1]];
-    const trail=L.polyline([home,[pos.lat,pos.lon]],{color,weight:2,opacity:.6,dashArray:"5,4"}).addTo(liveMapInst);
-    if(dest){const rem=L.polyline([[pos.lat,pos.lon],dest],{color,weight:1.5,opacity:.18,dashArray:"3,7"}).addTo(liveMapInst);livePlaneMarkers.push(rem);}
-    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" style="transform:rotate(${pos.angle-45}deg);filter:drop-shadow(0 0 3px ${color})"><path fill="${color}" d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
-    const icon=L.divIcon({html:svg,className:"",iconSize:[22,22],iconAnchor:[11,11]});
-    const m=L.marker([pos.lat,pos.lon],{icon,zIndexOffset:1000}).addTo(liveMapInst);
-    const pct=Math.round(pos.prog*100);const rm=Math.round(f[4]*(1-pos.prog));
-    const rh=Math.floor(rm/60),rmm=rm%60;const remStr=rh>0?`${rh}h${rmm}m`:`${rmm}m`;
-    m.bindPopup(`<div style="font-family:'Barlow Condensed',sans-serif;min-width:190px"><div style="font-size:1.1rem;font-weight:700;color:${color};margin-bottom:4px">${pos.fnum} ↑</div><div style="font-size:.9rem;font-weight:700;margin-bottom:4px">${f[0]}</div><div style="font-size:.76rem;color:#90a0b0;margin-bottom:8px">${a?.name||f[6]} · ${pos.ac}</div><div style="display:grid;grid-template-columns:auto 1fr;gap:3px 8px;font-size:.74rem"><span style="color:#546e7a">Partiu</span><span style="font-family:monospace">${pos.dep}</span><span style="color:#546e7a">Chega</span><span style="font-family:monospace">${pos.arr}</span><span style="color:#546e7a">Restante</span><span style="font-family:monospace;color:${color}">${remStr}</span></div><div style="margin-top:8px;background:#1a2535;border-radius:3px;height:4px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${color};border-radius:3px"></div></div><div style="font-size:.66rem;color:#546e7a;margin-top:3px;text-align:right">${pct}% do trajeto · saída</div></div>`);
-    livePlaneMarkers.push(trail,m);
-    const st=autoSt(f[7][day],"dep");
-    if(st==="board"||st==="final")boarding++;if(st==="del")delayed++;
+    // Plane icon rotated
+    const icon=L.divIcon({
+      html:`<div style="color:${color};font-size:18px;transform:rotate(${pos.angle}deg);text-shadow:0 0 4px rgba(0,0,0,.8);filter:drop-shadow(0 0 3px ${color})">✈</div>`,
+      className:"",iconSize:[22,22],iconAnchor:[11,11]
+    });
+    const m=L.marker([pos.lat,pos.lon],{icon}).addTo(liveMapInst);
+    m.bindPopup(`<b>${pos.fnum}</b> — ${pos.dest}<br>${a?.name||f[6]} · ${pos.ac}<br>Dep: ${pos.dep} · Arr: ${pos.arr}<br>Progresso: ${Math.round(pos.prog*100)}%`);
+    livePlaneMarkers.push(m);
+    // Count status
+    const st=getSt("dep",f[1],f[7][day],day);
+    if(st==="board"||st==="final")boarding++;
+    if(st==="arr")arriving++;
+    if(st==="del")delayed++;
   });
-  FD.forEach((f,fi)=>{
-    const arrT=f[8]&&f[8][day];if(!arrT)return;
-    const orig=COORDS[f[1]];if(!orig)return;
-    const home=HOME;
-    const inbDepM=toMins(arrT)-f[4];const nm=nowMins();
-    const nmAdj=(inbDepM>1200&&nm<600)?nm+1440:nm;
-    const inbArrM=inbDepM+f[4];
-    if(nmAdj<inbDepM||nmAdj>inbArrM)return;
-    const prog=Math.max(0,Math.min(1,(nmAdj-inbDepM)/f[4]));
-    const lat=lerp(orig[0],home[0],prog);const lon=lerp(orig[1],home[1],prog);
-    const angle=Math.atan2(home[1]-orig[1],home[0]-orig[0])*180/Math.PI;
-    const a=AL[f[6]];const color=a?a.color:"#88ffaa";
-    const arrTrail=L.polyline([orig,[lat,lon]],{color,weight:2,opacity:.5,dashArray:"5,4"}).addTo(liveMapInst);
-    const arrRem=L.polyline([[lat,lon],home],{color,weight:1.5,opacity:.15,dashArray:"3,7"}).addTo(liveMapInst);
-    const svgArr=`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" style="transform:rotate(${angle-45}deg);filter:drop-shadow(0 0 4px ${color})"><path fill="${color}" opacity="0.9" d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
-    const arrIcon=L.divIcon({html:svgArr,className:"",iconSize:[22,22],iconAnchor:[11,11]});
-    const mArr=L.marker([lat,lon],{icon:arrIcon,zIndexOffset:900}).addTo(liveMapInst);
-    const rmArr=Math.round(f[4]*(1-prog));const rhA=Math.floor(rmArr/60),rmA=rmArr%60;
-    const remA=rhA>0?`${rhA}h${rmA}m`:`${rmA}m`;const pctA=Math.round(prog*100);const fnum=flightNum(f[6],fi);
-    mArr.bindPopup(`<div style="font-family:'Barlow Condensed',sans-serif;min-width:190px"><div style="font-size:1.1rem;font-weight:700;color:${color};margin-bottom:4px">${fnum} ↓</div><div style="font-size:.9rem;font-weight:700;margin-bottom:4px">${f[0]} → ${AI.iata}</div><div style="font-size:.76rem;color:#90a0b0;margin-bottom:8px">${a?.name||f[6]} · ${f[5]}</div><div style="display:grid;grid-template-columns:auto 1fr;gap:3px 8px;font-size:.74rem"><span style="color:#546e7a">Origem</span><span style="font-family:monospace">${f[1]}</span><span style="color:#546e7a">Chegada prev.</span><span style="font-family:monospace">${arrT}</span><span style="color:#546e7a">Restante</span><span style="font-family:monospace;color:${color}">${remA}</span></div><div style="margin-top:8px;background:#1a2535;border-radius:3px;height:4px;overflow:hidden"><div style="height:100%;width:${pctA}%;background:${color};border-radius:3px"></div></div><div style="font-size:.66rem;color:#546e7a;margin-top:3px;text-align:right">${pctA}% do percurso · chegada</div></div>`);
-    livePlaneMarkers.push(arrTrail,arrRem,mArr);arriving++;
-  });
+  // Also count today's arrivals coming in
+  const arrToday=arrRows(day,"ALL","").filter(r=>r.st==="arr");
+  arriving+=arrToday.length;
   document.getElementById("ls-airborne").textContent=airborne;
   document.getElementById("ls-board").textContent=boarding;
   document.getElementById("ls-arr").textContent=arriving;
@@ -1090,104 +1048,6 @@ function showNextAnn(){
     setTimeout(()=>{if(last.parentNode===el)el.removeChild(last);},500);
   }
 }
-// ── STATUS TRANSLATIONS + SOUNDS ─────────────────────────────────────────────
-const ST_LANGS={
-  sch: {pt:"PROGRAMADO",     en:"SCHEDULED",      es:"PROGRAMADO"},
-  ont: {pt:"NO HORÁRIO",     en:"ON TIME",         es:"EN HORA"},
-  board:{pt:"EMBARCANDO",    en:"BOARDING",        es:"ABORDANDO"},
-  final:{pt:"EMB. FINAL",    en:"FINAL BOARDING",  es:"ÚLTIMO ABORDAJE"},
-  taxi: {pt:"NA PISTA",      en:"ON RUNWAY",       es:"EN PISTA"},
-  dep:  {pt:"PARTIU",        en:"DEPARTED",        es:"DESPEGADO"},
-  del:  {pt:"ATRASADO",      en:"DELAYED",         es:"DEMORADO"},
-  can:  {pt:"CANCELADO",     en:"CANCELLED",       es:"CANCELADO"},
-  arr:  {pt:"CHEGANDO",      en:"ARRIVING",        es:"LLEGANDO"},
-  lnd:  {pt:"POUSOU",        en:"LANDED",          es:"ATERRIZÓ"},
-};
-const ST_LABEL_KEYS={
-  sch:["pt","en","es"], ont:["pt","en","es"], board:["pt","en","es"],
-  final:["pt","en","es"], taxi:["pt","en","es"], dep:["pt","en","es"],
-  del:["pt","en","es"], can:["pt","en","es"], arr:["pt","en","es"], lnd:["pt","en","es"],
-};
-const ST_COLORS={board:"#00e5ff",final:"#ff6d00",taxi:"#ffee58",dep:"#00e676",del:"#ff1744",can:"#b71c1c",arr:"#00e676",lnd:"#b9f6ca"};
-const LANG_COLORS={pt:"var(--acc)",en:"#7eb8ff",es:"#ff8a65"};
-
-// Status sounds
-function playStatusSound(st){
-  try{
-    const ctx=getAudioCtx();
-    const sounds={
-      ont: ()=>{// Gentle chime — on time
-        [880,1108].forEach((f,i)=>{
-          const o=ctx.createOscillator(),g=ctx.createGain();
-          o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.value=f;
-          const t=ctx.currentTime+i*.18;
-          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.12,t+.04);
-          g.gain.exponentialRampToValueAtTime(.001,t+.9);o.start(t);o.stop(t+1);
-        });
-      },
-      board: ()=>{// Rising arpeggio — boarding
-        [523,659,784,1047].forEach((f,i)=>{
-          const o=ctx.createOscillator(),g=ctx.createGain();
-          o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.value=f;
-          const t=ctx.currentTime+i*.15;
-          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.14,t+.04);
-          g.gain.exponentialRampToValueAtTime(.001,t+.7);o.start(t);o.stop(t+.8);
-        });
-      },
-      final: ()=>{// Urgent double beep — final boarding
-        [1200,0,1200].forEach((f,i)=>{
-          if(!f)return;
-          const o=ctx.createOscillator(),g=ctx.createGain();
-          o.connect(g);g.connect(ctx.destination);o.type='square';o.frequency.value=f;
-          const t=ctx.currentTime+i*.25;
-          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.08,t+.02);
-          g.gain.linearRampToValueAtTime(.08,t+.15);g.gain.linearRampToValueAtTime(0,t+.2);
-          o.start(t);o.stop(t+.25);
-        });
-      },
-      taxi: ()=>{// Low rumble — on runway
-        const buf=ctx.createBuffer(1,ctx.sampleRate*.6,ctx.sampleRate);
-        const d=buf.getChannelData(0);
-        for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*.06*(1-i/d.length);
-        const s=ctx.createBufferSource();s.buffer=buf;
-        const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=180;
-        s.connect(f);f.connect(ctx.destination);s.start();
-      },
-      dep: ()=>{// Ascending chord — departed
-        [523,659,784,1047,1319].forEach((f,i)=>{
-          const o=ctx.createOscillator(),g=ctx.createGain();
-          o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.value=f;
-          const t=ctx.currentTime+i*.1;
-          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.1,t+.05);
-          g.gain.exponentialRampToValueAtTime(.001,t+1.5);o.start(t);o.stop(t+1.6);
-        });
-      },
-      del: ()=>{// Low warning tone — delayed
-        [400,350].forEach((f,i)=>{
-          const o=ctx.createOscillator(),g=ctx.createGain();
-          o.connect(g);g.connect(ctx.destination);o.type='sawtooth';o.frequency.value=f;
-          const t=ctx.currentTime+i*.4;
-          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.07,t+.05);
-          g.gain.linearRampToValueAtTime(.07,t+.3);g.gain.linearRampToValueAtTime(0,t+.4);
-          o.start(t);o.stop(t+.45);
-        });
-      },
-      lnd: ()=>{// Soft landing chime
-        [784,659,523].forEach((f,i)=>{
-          const o=ctx.createOscillator(),g=ctx.createGain();
-          o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.value=f;
-          const t=ctx.currentTime+i*.2;
-          g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.11,t+.04);
-          g.gain.exponentialRampToValueAtTime(.001,t+1.2);o.start(t);o.stop(t+1.3);
-        });
-      },
-    };
-    if(sounds[st]) sounds[st]();
-  }catch(e){}
-}
-
-let gateLangIdx=0;let gateLangInterval=null;let lastGateSt=null;
-
 function loadGate(){
   const val=document.getElementById("gate-sel").value;
   if(!val)return;
@@ -1199,101 +1059,41 @@ function loadGate(){
     st:getSt("dep",f[1],depT,day),fnum:flightNum(f[6],fi)};
   const w=WEATHER[f[1]]||["--","--"];
   const alD=AL[f[6]]||{name:f[6],color:"#fff"};
-
-  // Play sound for this status
-  if(r.st!==lastGateSt){playStatusSound(r.st);lastGateSt=r.st;}
-
-  const stColor=ST_COLORS[r.st]||"#e8eaf6";
-  const langs=ST_LANGS[r.st]||{pt:r.st.toUpperCase(),en:r.st.toUpperCase(),es:r.st.toUpperCase()};
-
+  const stC={board:"#00e5ff",final:"#ff6d00",dep:"#00e676",del:"#ff1744"};
+  const stL={sch:"PROGRAMADO",ont:"NO HORÁRIO",board:"EMBARCANDO",final:"EMB. FINAL",dep:"PARTIU",del:"ATRASADO",can:"CANCELADO"};
   document.getElementById("gate-screen").innerHTML=`
     <div class="gs-header">
       <div><div class="gs-fn">${r.fnum}</div><div style="font-size:.7rem;opacity:.8;letter-spacing:.1em">${alD.name.toUpperCase()}</div></div>
-      <div class="gs-dest">${r.dest}</div>
-      <div class="gs-time">${r.time}</div>
+      <div class="gs-dest">${r.dest}</div><div class="gs-time">${r.time}</div>
     </div>
     <div class="gs-body">
-      <div class="gs-st-big">
-        <div class="gs-st-lbl" id="gs-lang-lbl">Status</div>
-        <div class="gs-st-val" id="gs-st-live" style="color:${stColor};transition:opacity .5s">${langs.pt}</div>
-        <div style="display:flex;gap:6px;margin-top:8px" id="gs-lang-dots">
-          <div style="width:8px;height:8px;border-radius:50%;background:var(--acc);opacity:1" id="ldot-0"></div>
-          <div style="width:8px;height:8px;border-radius:50%;background:#7eb8ff;opacity:.3" id="ldot-1"></div>
-          <div style="width:8px;height:8px;border-radius:50%;background:#ff8a65;opacity:.3" id="ldot-2"></div>
-        </div>
-      </div>
+      <div class="gs-st-big"><div class="gs-st-lbl">Status</div>
+        <div class="gs-st-val" style="color:${stC[r.st]||"#e8eaf6"}">${stL[r.st]||r.st.toUpperCase()}</div></div>
       <div class="gs-det">
-        <div class="gs-row"><span class="gs-key" id="lbl-ac">Aeronave</span><span class="gs-val">${r.ac}</span></div>
-        <div class="gs-row"><span class="gs-key" id="lbl-trm">Terminal</span><span class="gs-val">${r.terminal}</span></div>
-        <div class="gs-row"><span class="gs-key" id="lbl-gate">Portão / Gate</span><span class="gs-val">${r.gate}</span></div>
-        <div class="gs-row"><span class="gs-key" id="lbl-dur">Duração</span><span class="gs-val">${durS(r.dur)}</span></div>
-        <div class="gs-row"><span class="gs-key" id="lbl-dist">Distância</span><span class="gs-val">${Number(r.dist).toLocaleString("pt-BR")} km</span></div>
-        <div class="gs-row"><span class="gs-key" id="lbl-dest">Destino</span><span class="gs-val">${r.iata}</span></div>
+        <div class="gs-row"><span class="gs-key">Aeronave</span><span class="gs-val">${r.ac}</span></div>
+        <div class="gs-row"><span class="gs-key">Terminal</span><span class="gs-val">${r.terminal}</span></div>
+        <div class="gs-row"><span class="gs-key">Portão / Gate</span><span class="gs-val">${r.gate}</span></div>
+        <div class="gs-row"><span class="gs-key">Duração</span><span class="gs-val">${durS(r.dur)}</span></div>
+        <div class="gs-row"><span class="gs-key">Distância</span><span class="gs-val">${Number(r.dist).toLocaleString("pt-BR")} km</span></div>
       </div>
     </div>
     <div class="gs-wth">
       <div class="gs-wth-temp">${w[0]}</div>
-      <div>
-        <div style="font-size:.62rem;color:#78909c;letter-spacing:.1em;text-transform:uppercase" id="lbl-wth">Clima em ${r.dest.split(" –")[0]}</div>
-        <div class="gs-wth-desc">${w[1]}</div>
-      </div>
+      <div><div style="font-size:.62rem;color:#78909c;letter-spacing:.1em;text-transform:uppercase">Clima em ${r.dest.split(" –")[0]}</div>
+      <div class="gs-wth-desc">${w[1]}</div></div>
     </div>
     <div class="gs-anns">
-      <div class="gs-ann-lbl" id="lbl-ann">📢 Avisos · Announcements · Avisos de Puerta</div>
+      <div class="gs-ann-lbl">📢 Avisos · Announcements · Avisos de Puerta</div>
       <div id="ann-list"></div>
     </div>`;
-
-  // Start trilingual rotation for gate panel
-  gateLangIdx=0;
-  if(gateLangInterval)clearInterval(gateLangInterval);
-  rotateGateLang(r.st);
-  gateLangInterval=setInterval(()=>rotateGateLang(r.st),4000);
-
   annPool=buildAnnPool(r);annIdx=0;
   if(annInterval)clearInterval(annInterval);
   showNextAnn();annInterval=setInterval(showNextAnn,15000);
 }
-
-const GATE_LABELS={
-  pt:{status:"Status",ac:"Aeronave",trm:"Terminal",gate:"Portão",dur:"Duração",dist:"Distância",dest:"Destino",wth:"Clima em",ann:"📢 Avisos do Portão"},
-  en:{status:"Status",ac:"Aircraft",trm:"Terminal",gate:"Gate",dur:"Duration",dist:"Distance",dest:"Destination",wth:"Weather in",ann:"📢 Gate Announcements"},
-  es:{status:"Estado",ac:"Aeronave",trm:"Terminal",gate:"Puerta",dur:"Duración",dist:"Distancia",dest:"Destino",wth:"Clima en",ann:"📢 Avisos de Puerta"},
-};
-
-function rotateGateLang(st){
-  const langs=["pt","en","es"];
-  const lang=langs[gateLangIdx%3];
-  gateLangIdx++;
-  const stVal=document.getElementById("gs-st-live");
-  const stLbl=document.getElementById("gs-lang-lbl");
-  if(stVal){
-    stVal.style.opacity="0";
-    setTimeout(()=>{
-      stVal.textContent=(ST_LANGS[st]||{})[lang]||st.toUpperCase();
-      stVal.style.color=lang==="pt"?"var(--acc)":lang==="en"?"#7eb8ff":"#ff8a65";
-      stVal.style.opacity="1";
-    },300);
-  }
-  if(stLbl) stLbl.textContent=GATE_LABELS[lang].status;
-  const lblMap={lbl_ac:"ac","lbl-ac":"ac","lbl-trm":"trm","lbl-gate":"gate","lbl-dur":"dur","lbl-dist":"dist","lbl-dest":"dest"};
-  Object.entries(lblMap).forEach(([id,key])=>{
-    const el=document.getElementById(id);
-    if(el) el.textContent=GATE_LABELS[lang][key];
-  });
-  const wthEl=document.getElementById("lbl-wth");
-  if(wthEl){const dest=wthEl.textContent.split(" ").slice(-1)[0];wthEl.textContent=GATE_LABELS[lang].wth+" "+dest;}
-  const annEl=document.getElementById("lbl-ann");
-  if(annEl) annEl.textContent=GATE_LABELS[lang].ann;
-  // Update lang dots
-  langs.forEach((l,i)=>{
-    const d=document.getElementById("ldot-"+i);
-    if(d) d.style.opacity=i===(gateLangIdx-1)%3?"1":".3";
-  });
-}
 function populateGate(day){
   const sel=document.getElementById("gate-sel");
   sel.innerHTML=`<option value="">Escolha um voo...</option>`;
-  depRows(todayIdx,"ALL","").forEach(r=>{const o=document.createElement("option");o.value=`${r.fi}__${todayIdx}`;o.textContent=`${r.time} ${r.iata} – ${r.dest} (${r.gate})`;sel.appendChild(o);});
+  depRows(day,"ALL","").forEach(r=>{const o=document.createElement("option");o.value=`${r.fi}__${day}`;o.textContent=`${r.time} ${r.iata} – ${r.dest} (${r.gate})`;sel.appendChild(o);});
 }
 
 // ── MANAGER ───────────────────────────────────────────────────────────────────
@@ -1499,211 +1299,78 @@ function nextDep(interval){const nm=nowMinsTransit();const rem=interval-(nm%inte
 function formatMin(m){return m===0?"Agora":m+"min";}
 
 // Train position: 0..1 along the full line, cycling every interval minutes
-function trainProgress(intervalMin, stationCount){
-  // Full cycle = intervalMin real minutes (realistic speed)
-  const nm=nowMinsTransit();
-  const sec=new Date().getSeconds();
-  const totalSec=intervalMin*60;
-  const elapsed=(nm%intervalMin)*60+sec;
-  return elapsed/totalSec;
-}
 
-function busProgress(intervalMin){
-  // Bus takes intervalMin to cross the route
-  const nm=nowMinsTransit();
-  const sec=new Date().getSeconds();
-  const totalSec=intervalMin*60;
-  const elapsed=(nm%intervalMin)*60+sec;
-  return elapsed/totalSec;
-}
+
+// Bus progress 0..1 along route
+
 
 let transitInterval=null;
 
-function buildTransitCards(){
-  const t=TRANSIT_DATA;if(!t)return;
-  const el=document.getElementById("transit-cards");if(!el)return;
-  const lc=t.metro_color;
 
-  function stopsHtml(stations,color,pfx){
-    return stations.map((s,i)=>`
-      <div class="st-item">
-        <div class="st-dot ${s.type}" id="${pfx}-dot-${i}" style="--lc:${color};--bg:var(--bg)"></div>
-        <div>
-          <div class="st-name ${s.type}" id="${pfx}-nm-${i}">${s.name}</div>
-          ${s.type==='terminal'?'<div class="st-tag">✈ Terminal</div>':''}
-          ${s.type==='hub'?'<div class="st-tag">⬤ Estação hub</div>':''}
-          ${s.type==='terminus'?'<div class="st-tag">⬤ Terminus</div>':''}
-        </div>
-      </div>`).join('');
-  }
-
-  function trainBar(id,color){
-    return `<div class="train-bar-row">
-      <span class="train-bar-lbl" style="color:${color}">Trem</span>
-      <div class="train-bar" id="tbar-${id}" style="--lc:${color}">
-        <div class="train-dot" id="tpos-${id}" style="--lc:${color};left:0">M</div>
-      </div>
-      <span class="train-pct" style="color:${color}" id="tpct-${id}">0%</span>
-    </div>`;
-  }
-
-  // Build line2: detect fork (stations with branch property)
-  const l2=t.line2_stations;
-  const forkIdx=l2.findIndex(s=>s.branch);
-  const trunk=forkIdx>0?l2.slice(0,forkIdx):l2;
-  const brA=l2.filter(s=>s.branch==='A');
-  const brB=l2.filter(s=>s.branch==='B');
-  const hasFork=brA.length>0&&brB.length>0;
-
-  let line2Body;
-  if(hasFork){
-    line2Body=`
-      <div class="st-list" style="--lc:${lc}">${stopsHtml(trunk,lc,'l2t')}</div>
-      <div style="display:flex;align-items:flex-start;padding-left:4px;margin-top:0">
-        <div class="fork-connector" style="--lc:${lc}"></div>
-        <div style="flex:1;border-top:3px solid ${lc};margin-top:0;border-radius:2px 0 0 0;opacity:.6"></div>
-      </div>
-      <div class="fork-container">
-        <div class="fork-branch" style="--lc:${lc}">
-          <div class="fork-label" style="background:${lc}18;color:${lc}">Ramal A</div>
-          ${stopsHtml(brA,lc,'brA')}
-        </div>
-        <div class="fork-branch" style="--lc:${lc}">
-          <div class="fork-label" style="background:${lc}18;color:${lc}">Ramal B</div>
-          ${stopsHtml(brB,lc,'brB')}
-        </div>
-      </div>`;
-  }else{
-    line2Body=`<div class="st-list" style="--lc:${lc}">${stopsHtml(l2,lc,'l2t')}</div>`;
-  }
-
-  // Bus
-  const busHtml=t.bus_routes.map((r,i)=>`
-    <div class="bus-row" style="--bc:${r.color}">
-      <div class="bus-row-top">
-        <span class="bus-rname">${r.name}</span>
-        <span class="bus-badge" id="busnext-${i}" style="--bc:${r.color}">${formatMin(nextDep(r.freq))}</span>
-      </div>
-      <div class="bus-track" id="bustrack-${i}">
-        <div class="bus-track-line"></div>
-        <div class="bus-icon" id="busveh-${i}" style="--bc:${r.color};left:2px">&#128653;</div>
-      </div>
-      <div class="bus-freq" style="color:${r.color}">A cada ${r.freq} min</div>
-    </div>`).join('');
-
-  el.innerHTML=`
-    <div class="tc-card">
-      <div class="tc-hdr" style="border-left:4px solid ${lc}">
-        <div><div class="tc-title" style="color:${lc}">${t.line1_name}</div>
-          <div class="tc-note">${t.metro_note}</div></div>
-        <div class="next-box">
-          <div class="nb-lbl">Próximo trem</div>
-          <div class="nb-val" style="color:${lc}" id="nt-metro">${formatMin(nextDep(t.metro_interval))}</div>
-          <div class="nb-freq">a cada ${t.metro_interval} min</div>
-        </div>
-      </div>
-      <div class="tc-body">
-        <div class="st-list" style="--lc:${lc}">${stopsHtml(t.line1_stations,lc,'l1')}</div>
-        ${trainBar('line1',lc)}
-      </div>
-    </div>
-    <div class="tc-card">
-      <div class="tc-hdr" style="border-left:4px solid ${lc}">
-        <div><div class="tc-title" style="color:${lc}">${t.line2_name}</div>
-          <div class="tc-note">${hasFork?'Conexão · 2 Ramais':'Conexão com a cidade'}</div></div>
-        <div class="next-box">
-          <div class="nb-lbl">Próximo trem</div>
-          <div class="nb-val" style="color:${lc}" id="nt-line2">${formatMin(nextDep(t.metro_interval))}</div>
-          <div class="nb-freq">a cada ${t.metro_interval} min</div>
-        </div>
-      </div>
-      <div class="tc-body">${line2Body}${trainBar('line2',lc)}</div>
-    </div>
-    <div class="tc-card" style="grid-column:1/-1">
-      <div class="tc-hdr" style="border-left:4px solid #ffd54f">
-        <div><div class="tc-title" style="color:#ffd54f">Linhas de Onibus</div>
-          <div class="tc-note">Posição estimada em tempo real</div></div>
-        <div class="next-box">
-          <div class="nb-lbl">Mais próximo</div>
-          <div class="nb-val" style="color:#ffd54f" id="nt-bus">${formatMin(nextDep(t.bus_interval))}</div>
-          <div class="nb-freq">a cada ${t.bus_interval} min</div>
-        </div>
-      </div>
-      <div class="tc-body"><div class="bus-list">${busHtml}</div></div>
-    </div>`;
-
-  animateTransit();
-  if(transitInterval)clearInterval(transitInterval);
-  transitInterval=setInterval(updateTransitAnim,1000);
-}
 
 function animateTransit(){
-  const t=TRANSIT_DATA;if(!t)return;
-  const lc=t.metro_color;
+  const t=TRANSIT_DATA[TRANSIT_AP];if(!t)return;
 
-  function animLine(stations,pfx,intervalMin){
-    const prog=trainProgress(intervalMin,stations.length);
-    const idx=Math.min(Math.floor(prog*stations.length),stations.length-1);
+  // Animate line1
+  function animateLine(stations, color, lineId, intervalMin){
+    const prog=trainProgress(intervalMin, stations.length);
+    const idx=Math.min(Math.floor(prog*stations.length), stations.length-1);
+    const frac=(prog*stations.length)%1;
+    // Update dots
     stations.forEach((s,i)=>{
-      const dot=document.getElementById(`${pfx}-dot-${i}`);
-      const nm=document.getElementById(`${pfx}-nm-${i}`);
-      const active=i===idx;
+      const dot=document.getElementById(`dot-${lineId}-${i}`);
+      const nm=document.getElementById(`name-${lineId}-${i}`);
       if(dot){
-        dot.style.background=active?lc:'transparent';
-        dot.style.boxShadow=active?`0 0 10px ${lc}`:'none';
-        dot.style.transform=active?'scale(1.3)':'scale(1)';
+        const active=i===idx;
+        dot.style.background=active?color:getComputedStyle(document.documentElement).getPropertyValue('--bg');
+        dot.style.boxShadow=active?`0 0 10px ${color}`:'none';
+        dot.style.transform=active?'scale(1.4)':'scale(1)';
       }
-      if(nm)nm.style.fontWeight=active?'900':'600';
+      if(nm) nm.style.fontWeight=i===idx?'900':'600';
     });
+    // Position vehicle
+    const veh=document.getElementById(`vehicle-${lineId}`);
+    if(veh){
+      const track=document.getElementById(`track-${lineId}`);
+      if(track){
+        const stops=track.querySelectorAll('.md-stop');
+        if(stops.length>0){
+          const trackH=track.offsetHeight;
+          const segH=trackH/Math.max(stations.length-1,1);
+          const yPos=Math.min(idx*segH+frac*segH, trackH-22);
+          veh.style.top=Math.max(0,yPos)+'px';
+        }
+      }
+    }
   }
 
-  function animBar(id,prog){
-    const bar=document.getElementById('tbar-'+id);
-    const pos=document.getElementById('tpos-'+id);
-    const pct=document.getElementById('tpct-'+id);
-    if(bar&&pos){const w=bar.offsetWidth||280;pos.style.left=Math.max(0,Math.min(prog*(w-22),w-22))+'px';}
-    if(pct)pct.textContent=Math.round(prog*100)+'%';
-  }
+  animateLine(t.line1_stations, t.line1_color, 'line1', t.metro_interval);
+  animateLine(t.line2_stations, t.line2_color, 'line2', t.metro_interval);
 
-  const p1=trainProgress(t.metro_interval,t.line1_stations.length);
-  animLine(t.line1_stations,'l1',t.metro_interval); animBar('line1',p1);
-
-  const p2=trainProgress(t.metro_interval,t.line2_stations.length);
-  // Animate trunk + branches together
-  const l2=t.line2_stations;
-  const forkIdx=l2.findIndex(s=>s.branch);
-  const trunk=forkIdx>0?l2.slice(0,forkIdx):l2;
-  const brA=l2.filter(s=>s.branch==='A');
-  const brB=l2.filter(s=>s.branch==='B');
-  if(brA.length&&brB.length){
-    animLine(trunk,'l2t',t.metro_interval);
-    animLine(brA,'brA',t.metro_interval);
-    animLine(brB,'brB',t.metro_interval);
-  }else{
-    animLine(l2,'l2t',t.metro_interval);
-  }
-  animBar('line2',p2);
-
-  // Bus
+  // Animate buses
   t.bus_routes.forEach((r,i)=>{
-    const prog=busProgress(r.freq);
-    const track=document.getElementById('bustrack-'+i);
-    const veh=document.getElementById('busveh-'+i);
-    const next=document.getElementById('busnext-'+i);
-    if(track&&veh){const w=track.offsetWidth||280;veh.style.left=Math.max(2,Math.min(prog*(w-18),w-18))+'px';}
-    if(next)next.textContent=formatMin(nextDep(r.freq));
+    const veh=document.getElementById(`busveh-${i}`);
+    const row=document.getElementById(`busrow-${i}`);
+    const next=document.getElementById(`busnext-${i}`);
+    if(veh&&row){
+      const prog=busProgress(r.freq);
+      const rowW=row.offsetWidth-30;
+      // Bus goes right (departing), then jumps back to start
+      veh.style.left=(prog*rowW)+'px';
+    }
+    if(next) next.textContent=formatMin(nextDep(r.freq));
   });
 }
 
 function updateTransitAnim(){
-  const t=TRANSIT_DATA;if(!t)return;
+  const t=TRANSIT_DATA[TRANSIT_AP];if(!t)return;
   animateTransit();
-  const a=document.getElementById('nt-metro');
-  const b=document.getElementById('nt-line2');
-  const c=document.getElementById('nt-bus');
-  if(a)a.textContent=formatMin(nextDep(t.metro_interval));
-  if(b)b.textContent=formatMin(nextDep(t.metro_interval));
-  if(c)c.textContent=formatMin(nextDep(t.bus_interval));
+  const nt=document.getElementById('nt-metro');
+  const nl=document.getElementById('nt-line2');
+  const nb=document.getElementById('nt-bus');
+  if(nt)nt.textContent=formatMin(nextDep(t.metro_interval));
+  if(nl)nl.textContent=formatMin(nextDep(t.metro_interval));
+  if(nb)nb.textContent=formatMin(nextDep(t.bus_interval));
 }
 
 </script>
