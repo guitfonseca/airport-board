@@ -101,115 +101,136 @@ function formatMin(m){return m===0?"Agora":m+"min";}
 
 // Train position: 0..1 along the full line, cycling every interval minutes
 function trainProgress(intervalMin, stationCount){
-  const nm=nowMinsTransit();
-  const secInCycle=(new Date().getSeconds());
-  const totalSec=intervalMin*60;
-  const elapsed=(nm%intervalMin)*60+secInCycle;
-  return(elapsed/totalSec)%(1);
-}
-
-// Bus progress 0..1 along route
-function busProgress(intervalMin){
+  // Full cycle = intervalMin real minutes (realistic speed)
   const nm=nowMinsTransit();
   const sec=new Date().getSeconds();
-  const total=intervalMin*60;
-  const el=(nm%intervalMin)*60+sec;
-  return el/total;
+  const totalSec=intervalMin*60;
+  const elapsed=(nm%intervalMin)*60+sec;
+  return elapsed/totalSec;
+}
+
+function busProgress(intervalMin){
+  // Bus takes intervalMin to cross the route
+  const nm=nowMinsTransit();
+  const sec=new Date().getSeconds();
+  const totalSec=intervalMin*60;
+  const elapsed=(nm%intervalMin)*60+sec;
+  return elapsed/totalSec;
 }
 
 let transitInterval=null;
 
 function buildTransitCards(){
   const t=TRANSIT_DATA;if(!t)return;
-  const card=document.getElementById("transit-cards");if(!card)return;
+  const el=document.getElementById("transit-cards");if(!el)return;
   const lc=t.metro_color;
 
-  function stopsHtml(stations, color, lineId){
-    return `<div class="md-track" id="track-${lineId}">
-      ${stations.map((s,i)=>`
-        <div class="md-stop" style="--lc:${color}">
-          <div class="md-line-seg" style="background:${color};opacity:${i===stations.length-1?0:1}"></div>
-          <div class="md-dot ${s.type}" id="dot-${lineId}-${i}"
-            style="border-color:${color};color:${color}"></div>
-          <div class="md-stop-info">
-            <span class="md-name ${s.type}"
-              style="${s.type==='hub'||s.type==='terminus'?'color:'+color:''}"
-              id="name-${lineId}-${i}">${s.name}</span>
-            ${s.branch?`<span class="branch-label" style="background:${color}22;color:${color}">Ramal ${s.branch}</span>`:''}
-            ${s.type==='terminal'?`<span class="stop-type-badge" style="color:${color};border-color:${color}40">✈ Terminal</span>`:''}
-            ${s.type==='hub'?`<span class="stop-type-badge" style="color:${color};border-color:${color}40">⬤ Hub</span>`:''}
-          </div>
-        </div>`).join('')}
-    </div>
-    <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
-      <span style="font-size:.64rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase">Trem:</span>
-      <div id="trainbar-${lineId}" style="flex:1;height:8px;background:var(--muted);border-radius:4px;overflow:hidden;position:relative">
-        <div id="trainpos-${lineId}" style="position:absolute;top:0;bottom:0;width:24px;background:${color};border-radius:4px;transition:left .9s ease;box-shadow:0 0 8px ${color}"></div>
-      </div>
-      <span style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:${color}" id="trainpct-${lineId}">0%</span>
-    </div>`;
-  }
-
-  function busRowsHtml(routes){
-    return routes.map((r,i)=>`
-      <div class="bus-route-row" style="border-left:3px solid ${r.color}">
-        <div class="br-info-wrap">
-          <span class="br-name">${r.name}</span>
-          <span class="br-next" style="color:${r.color}" id="busnext-${i}">${formatMin(nextDep(r.freq))}</span>
-        </div>
-        <div class="bus-bar" style="background:var(--muted);height:6px;border-radius:3px;overflow:hidden;margin-top:6px;position:relative">
-          <div id="buspos-${i}" style="position:absolute;top:0;bottom:0;width:20px;border-radius:3px;background:${r.color};box-shadow:0 0 6px ${r.color};transition:left .9s ease;display:flex;align-items:center;justify-content:center;font-size:10px">🚌</div>
+  function stopsHtml(stations,color,pfx){
+    return stations.map((s,i)=>`
+      <div class="st-item">
+        <div class="st-dot ${s.type}" id="${pfx}-dot-${i}" style="--lc:${color};--bg:var(--bg)"></div>
+        <div>
+          <div class="st-name ${s.type}" id="${pfx}-nm-${i}">${s.name}</div>
+          ${s.type==='terminal'?'<div class="st-tag">✈ Terminal</div>':''}
+          ${s.type==='hub'?'<div class="st-tag">⬤ Estação hub</div>':''}
+          ${s.type==='terminus'?'<div class="st-tag">⬤ Terminus</div>':''}
         </div>
       </div>`).join('');
   }
 
-  card.innerHTML=`
-    <!-- Line 1: Internal terminals -->
+  function trainBar(id,color){
+    return `<div class="train-bar-row">
+      <span class="train-bar-lbl" style="color:${color}">Trem</span>
+      <div class="train-bar" id="tbar-${id}" style="--lc:${color}">
+        <div class="train-dot" id="tpos-${id}" style="--lc:${color};left:0">M</div>
+      </div>
+      <span class="train-pct" style="color:${color}" id="tpct-${id}">0%</span>
+    </div>`;
+  }
+
+  // Build line2: detect fork (stations with branch property)
+  const l2=t.line2_stations;
+  const forkIdx=l2.findIndex(s=>s.branch);
+  const trunk=forkIdx>0?l2.slice(0,forkIdx):l2;
+  const brA=l2.filter(s=>s.branch==='A');
+  const brB=l2.filter(s=>s.branch==='B');
+  const hasFork=brA.length>0&&brB.length>0;
+
+  let line2Body;
+  if(hasFork){
+    line2Body=`
+      <div class="st-list" style="--lc:${lc}">${stopsHtml(trunk,lc,'l2t')}</div>
+      <div style="display:flex;align-items:flex-start;padding-left:4px;margin-top:0">
+        <div class="fork-connector" style="--lc:${lc}"></div>
+        <div style="flex:1;border-top:3px solid ${lc};margin-top:0;border-radius:2px 0 0 0;opacity:.6"></div>
+      </div>
+      <div class="fork-container">
+        <div class="fork-branch" style="--lc:${lc}">
+          <div class="fork-label" style="background:${lc}18;color:${lc}">Ramal A</div>
+          ${stopsHtml(brA,lc,'brA')}
+        </div>
+        <div class="fork-branch" style="--lc:${lc}">
+          <div class="fork-label" style="background:${lc}18;color:${lc}">Ramal B</div>
+          ${stopsHtml(brB,lc,'brB')}
+        </div>
+      </div>`;
+  }else{
+    line2Body=`<div class="st-list" style="--lc:${lc}">${stopsHtml(l2,lc,'l2t')}</div>`;
+  }
+
+  // Bus
+  const busHtml=t.bus_routes.map((r,i)=>`
+    <div class="bus-row" style="--bc:${r.color}">
+      <div class="bus-row-top">
+        <span class="bus-rname">${r.name}</span>
+        <span class="bus-badge" id="busnext-${i}" style="--bc:${r.color}">${formatMin(nextDep(r.freq))}</span>
+      </div>
+      <div class="bus-track" id="bustrack-${i}">
+        <div class="bus-track-line"></div>
+        <div class="bus-icon" id="busveh-${i}" style="--bc:${r.color};left:2px">&#128653;</div>
+      </div>
+      <div class="bus-freq" style="color:${r.color}">A cada ${r.freq} min</div>
+    </div>`).join('');
+
+  el.innerHTML=`
     <div class="tc-card">
       <div class="tc-hdr" style="border-left:4px solid ${lc}">
-        <div>
-          <div class="tc-title" style="color:${lc}">${t.line1_name}</div>
-          <div class="tc-note">${t.metro_note}</div>
-        </div>
+        <div><div class="tc-title" style="color:${lc}">${t.line1_name}</div>
+          <div class="tc-note">${t.metro_note}</div></div>
         <div class="next-box">
           <div class="nb-lbl">Próximo trem</div>
           <div class="nb-val" style="color:${lc}" id="nt-metro">${formatMin(nextDep(t.metro_interval))}</div>
-          <div class="nb-freq">a cada ${t.metro_interval}min</div>
+          <div class="nb-freq">a cada ${t.metro_interval} min</div>
         </div>
       </div>
-      <div class="tc-body">${stopsHtml(t.line1_stations, lc, 'line1')}</div>
+      <div class="tc-body">
+        <div class="st-list" style="--lc:${lc}">${stopsHtml(t.line1_stations,lc,'l1')}</div>
+        ${trainBar('line1',lc)}
+      </div>
     </div>
-
-    <!-- Line 2: City extension -->
     <div class="tc-card">
       <div class="tc-hdr" style="border-left:4px solid ${lc}">
-        <div>
-          <div class="tc-title" style="color:${lc}">${t.line2_name}</div>
-          <div class="tc-note">Conexão com a cidade</div>
-        </div>
+        <div><div class="tc-title" style="color:${lc}">${t.line2_name}</div>
+          <div class="tc-note">${hasFork?'Conexão · 2 Ramais':'Conexão com a cidade'}</div></div>
         <div class="next-box">
-          <div class="nb-lbl">Próximo</div>
+          <div class="nb-lbl">Próximo trem</div>
           <div class="nb-val" style="color:${lc}" id="nt-line2">${formatMin(nextDep(t.metro_interval))}</div>
-          <div class="nb-freq">a cada ${t.metro_interval}min</div>
+          <div class="nb-freq">a cada ${t.metro_interval} min</div>
         </div>
       </div>
-      <div class="tc-body">${stopsHtml(t.line2_stations, lc, 'line2')}</div>
+      <div class="tc-body">${line2Body}${trainBar('line2',lc)}</div>
     </div>
-
-    <!-- Bus -->
     <div class="tc-card" style="grid-column:1/-1">
       <div class="tc-hdr" style="border-left:4px solid #ffd54f">
-        <div>
-          <div class="tc-title" style="color:#ffd54f">🚌 Linhas de Ônibus</div>
-          <div class="tc-note">Posição estimada em tempo real</div>
-        </div>
+        <div><div class="tc-title" style="color:#ffd54f">Linhas de Onibus</div>
+          <div class="tc-note">Posição estimada em tempo real</div></div>
         <div class="next-box">
           <div class="nb-lbl">Mais próximo</div>
           <div class="nb-val" style="color:#ffd54f" id="nt-bus">${formatMin(nextDep(t.bus_interval))}</div>
-          <div class="nb-freq">a cada ${t.bus_interval}min</div>
+          <div class="nb-freq">a cada ${t.bus_interval} min</div>
         </div>
       </div>
-      <div class="tc-body">${busRowsHtml(t.bus_routes)}</div>
+      <div class="tc-body"><div class="bus-list">${busHtml}</div></div>
     </div>`;
 
   animateTransit();
@@ -219,64 +240,71 @@ function buildTransitCards(){
 
 function animateTransit(){
   const t=TRANSIT_DATA;if(!t)return;
+  const lc=t.metro_color;
 
-  function animateLine(stations, lineId, intervalMin){
-    const prog=trainProgress(intervalMin, stations.length);
+  function animLine(stations,pfx,intervalMin){
+    const prog=trainProgress(intervalMin,stations.length);
     const idx=Math.min(Math.floor(prog*stations.length),stations.length-1);
-
-    // Update station dots
     stations.forEach((s,i)=>{
-      const dot=document.getElementById(`dot-${lineId}-${i}`);
-      const nm=document.getElementById(`name-${lineId}-${i}`);
-      const isActive=i===idx;
+      const dot=document.getElementById(`${pfx}-dot-${i}`);
+      const nm=document.getElementById(`${pfx}-nm-${i}`);
+      const active=i===idx;
       if(dot){
-        const lc=dot.style.borderColor;
-        dot.style.background=isActive?lc:'transparent';
-        dot.style.boxShadow=isActive?`0 0 10px ${lc}`:'none';
-        dot.style.transform=isActive?'scale(1.35)':'scale(1)';
+        dot.style.background=active?lc:'transparent';
+        dot.style.boxShadow=active?`0 0 10px ${lc}`:'none';
+        dot.style.transform=active?'scale(1.3)':'scale(1)';
       }
-      if(nm) nm.style.fontWeight=isActive?'900':'600';
+      if(nm)nm.style.fontWeight=active?'900':'600';
     });
-
-    // Update progress bar train
-    const bar=document.getElementById(`trainbar-${lineId}`);
-    const pos=document.getElementById(`trainpos-${lineId}`);
-    const pct=document.getElementById(`trainpct-${lineId}`);
-    if(bar&&pos){
-      const barW=bar.offsetWidth||200;
-      const leftPx=Math.max(0,Math.min(prog*(barW-24),barW-24));
-      pos.style.left=leftPx+'px';
-    }
-    if(pct) pct.textContent=Math.round(prog*100)+'%';
   }
 
-  animateLine(t.line1_stations,'line1',t.metro_interval);
-  animateLine(t.line2_stations,'line2',t.metro_interval);
+  function animBar(id,prog){
+    const bar=document.getElementById('tbar-'+id);
+    const pos=document.getElementById('tpos-'+id);
+    const pct=document.getElementById('tpct-'+id);
+    if(bar&&pos){const w=bar.offsetWidth||280;pos.style.left=Math.max(0,Math.min(prog*(w-22),w-22))+'px';}
+    if(pct)pct.textContent=Math.round(prog*100)+'%';
+  }
 
-  // Bus bars
+  const p1=trainProgress(t.metro_interval,t.line1_stations.length);
+  animLine(t.line1_stations,'l1',t.metro_interval); animBar('line1',p1);
+
+  const p2=trainProgress(t.metro_interval,t.line2_stations.length);
+  // Animate trunk + branches together
+  const l2=t.line2_stations;
+  const forkIdx=l2.findIndex(s=>s.branch);
+  const trunk=forkIdx>0?l2.slice(0,forkIdx):l2;
+  const brA=l2.filter(s=>s.branch==='A');
+  const brB=l2.filter(s=>s.branch==='B');
+  if(brA.length&&brB.length){
+    animLine(trunk,'l2t',t.metro_interval);
+    animLine(brA,'brA',t.metro_interval);
+    animLine(brB,'brB',t.metro_interval);
+  }else{
+    animLine(l2,'l2t',t.metro_interval);
+  }
+  animBar('line2',p2);
+
+  // Bus
   t.bus_routes.forEach((r,i)=>{
     const prog=busProgress(r.freq);
-    const pos=document.getElementById(`buspos-${i}`);
-    const next=document.getElementById(`busnext-${i}`);
-    if(pos){
-      const bar=pos.parentElement;
-      const barW=bar?bar.offsetWidth||300:300;
-      const leftPx=Math.max(0,Math.min(prog*(barW-20),barW-20));
-      pos.style.left=leftPx+'px';
-    }
-    if(next) next.textContent=formatMin(nextDep(r.freq));
+    const track=document.getElementById('bustrack-'+i);
+    const veh=document.getElementById('busveh-'+i);
+    const next=document.getElementById('busnext-'+i);
+    if(track&&veh){const w=track.offsetWidth||280;veh.style.left=Math.max(2,Math.min(prog*(w-18),w-18))+'px';}
+    if(next)next.textContent=formatMin(nextDep(r.freq));
   });
 }
 
 function updateTransitAnim(){
   const t=TRANSIT_DATA;if(!t)return;
   animateTransit();
-  const nt=document.getElementById('nt-metro');
-  const nl=document.getElementById('nt-line2');
-  const nb=document.getElementById('nt-bus');
-  if(nt)nt.textContent=formatMin(nextDep(t.metro_interval));
-  if(nl)nl.textContent=formatMin(nextDep(t.metro_interval));
-  if(nb)nb.textContent=formatMin(nextDep(t.bus_interval));
+  const a=document.getElementById('nt-metro');
+  const b=document.getElementById('nt-line2');
+  const c=document.getElementById('nt-bus');
+  if(a)a.textContent=formatMin(nextDep(t.metro_interval));
+  if(b)b.textContent=formatMin(nextDep(t.metro_interval));
+  if(c)c.textContent=formatMin(nextDep(t.bus_interval));
 }
 
 </script>
@@ -497,11 +525,11 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
 <div class="views">
   <button class="vbtn active" onclick="showV('dep')">↑ Partidas</button>
   <button class="vbtn" onclick="showV('arr')">↓ Chegadas</button>
-  <button class="vbtn" onclick="showV('pax')">👤 Passageiro</button>
-  <button class="vbtn" onclick="showV('hist')">📋 Histórico</button>
+  <button class="vbtn" onclick="showV('pax')"> Passageiro</button>
+  <button class="vbtn" onclick="showV('hist')"> Histórico</button>
   <button class="vbtn" onclick="showV('live')">✈ Voos ao Vivo</button>
-  <button class="vbtn" onclick="showV('map')">🗺 Rotas</button>
-  <button class="vbtn" onclick="showV('conn')">🔀 Conexões</button>
+  <button class="vbtn" onclick="showV('map')"> Rotas</button>
+  <button class="vbtn" onclick="showV('conn')"> Conexões</button>
   <button class="vbtn" onclick="showV('gate')">🚪 Portão</button>
   <button class="vbtn" onclick="showV('mgr')">⚙ Status</button>
   <button class="vbtn" onclick="showV('transit')">🚇 Transporte</button>
@@ -629,13 +657,69 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
     <select class="fsel" id="mgrmode" onchange="rMgr()"><option value="dep">Partidas</option><option value="arr">Chegadas</option></select>
     <input class="fsrch" id="sr-mgr" placeholder="Buscar..." oninput="rMgr()"/>
     <span class="cnt" id="cnt-mgr">0</span>
-    <button class="savebtn" onclick="saveAll()">💾 Salvar tudo</button>
+    <button class="savebtn" onclick="saveAll()">Salvar alteracoes</button>
     <span class="savenote" id="svnote"></span>
   </div>
   <table class="bt"><thead><tr>
     <th>Horário</th><th>Destino</th><th>IATA</th><th>Cia.</th><th>Aeronave</th><th>Terminal</th><th>Portão</th><th>Alterar Status</th><th>Status Atual</th>
   </tr></thead><tbody id="tb-mgr"></tbody></table>
   <div class="empty" id="em-mgr" style="display:none">Nenhum voo encontrado.</div>
+
+  <!-- ADICIONAR VOO MANUAL -->
+  <div style="margin-top:28px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:20px">
+    <div class="sec" style="margin-top:0">Adicionar voo manual</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:14px">
+      <div>
+        <div style="font-size:.62rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Horário</div>
+        <input class="fsrch" id="add-time" placeholder="09:45" style="width:100%" maxlength="5"/>
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Destino</div>
+        <input class="fsrch" id="add-dest" placeholder="Buenos Aires" style="width:100%"/>
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">IATA</div>
+        <input class="fsrch" id="add-iata" placeholder="EZE" style="width:100%;text-transform:uppercase" maxlength="4"/>
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Cia. Aérea</div>
+        <input class="fsrch" id="add-al" placeholder="LATAM" style="width:100%"/>
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Aeronave</div>
+        <input class="fsrch" id="add-ac" placeholder="Boeing 737-800" style="width:100%"/>
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Portão</div>
+        <input class="fsrch" id="add-gate" placeholder="C3" style="width:100%;text-transform:uppercase" maxlength="5"/>
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Tipo</div>
+        <select class="fsel" id="add-tipo" style="width:100%">
+          <option value="DOM">Doméstico</option><option value="LAT">Am. Latina</option>
+          <option value="EUA">EUA</option><option value="EUR">Europa</option>
+          <option value="CAR">Caribe</option><option value="MID">Oriente Médio</option>
+          <option value="AFR">África</option><option value="ASIA">Ásia</option>
+          <option value="OCE">Oceania</option><option value="MEX">México</option><option value="CAN">Canadá</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Status</div>
+        <select class="fsel" id="add-status" style="width:100%">
+          <option value="sch">Programado</option><option value="ont">No Horário</option>
+          <option value="board">Embarcando</option><option value="final">Emb. Final</option>
+          <option value="taxi">Na Pista</option><option value="dep">Partiu</option>
+          <option value="del">Atrasado</option><option value="can">Cancelado</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="savebtn" onclick="addManualFlight()" style="background:var(--acc)">Adicionar voo</button>
+      <button class="savebtn" onclick="clearManualFlights()" style="background:var(--muted);color:var(--dim);border:1px solid var(--border)">Limpar manuais</button>
+      <span style="font-size:.7rem;color:var(--dim)" id="add-note"></span>
+    </div>
+    <div id="manual-list" style="margin-top:14px"></div>
+  </div>
 </div>
 <!-- INFO -->
 <div class="wrap" id="tab-info" style="display:none">
@@ -1209,7 +1293,7 @@ function rotateGateLang(st){
 function populateGate(day){
   const sel=document.getElementById("gate-sel");
   sel.innerHTML=`<option value="">Escolha um voo...</option>`;
-  depRows(day,"ALL","").forEach(r=>{const o=document.createElement("option");o.value=`${r.fi}__${day}`;o.textContent=`${r.time} ${r.iata} – ${r.dest} (${r.gate})`;sel.appendChild(o);});
+  depRows(todayIdx,"ALL","").forEach(r=>{const o=document.createElement("option");o.value=`${r.fi}__${todayIdx}`;o.textContent=`${r.time} ${r.iata} – ${r.dest} (${r.gate})`;sel.appendChild(o);});
 }
 
 // ── MANAGER ───────────────────────────────────────────────────────────────────
@@ -1416,115 +1500,136 @@ function formatMin(m){return m===0?"Agora":m+"min";}
 
 // Train position: 0..1 along the full line, cycling every interval minutes
 function trainProgress(intervalMin, stationCount){
-  const nm=nowMinsTransit();
-  const secInCycle=(new Date().getSeconds());
-  const totalSec=intervalMin*60;
-  const elapsed=(nm%intervalMin)*60+secInCycle;
-  return(elapsed/totalSec)%(1);
-}
-
-// Bus progress 0..1 along route
-function busProgress(intervalMin){
+  // Full cycle = intervalMin real minutes (realistic speed)
   const nm=nowMinsTransit();
   const sec=new Date().getSeconds();
-  const total=intervalMin*60;
-  const el=(nm%intervalMin)*60+sec;
-  return el/total;
+  const totalSec=intervalMin*60;
+  const elapsed=(nm%intervalMin)*60+sec;
+  return elapsed/totalSec;
+}
+
+function busProgress(intervalMin){
+  // Bus takes intervalMin to cross the route
+  const nm=nowMinsTransit();
+  const sec=new Date().getSeconds();
+  const totalSec=intervalMin*60;
+  const elapsed=(nm%intervalMin)*60+sec;
+  return elapsed/totalSec;
 }
 
 let transitInterval=null;
 
 function buildTransitCards(){
   const t=TRANSIT_DATA;if(!t)return;
-  const card=document.getElementById("transit-cards");if(!card)return;
+  const el=document.getElementById("transit-cards");if(!el)return;
   const lc=t.metro_color;
 
-  function stopsHtml(stations, color, lineId){
-    return `<div class="md-track" id="track-${lineId}">
-      ${stations.map((s,i)=>`
-        <div class="md-stop" style="--lc:${color}">
-          <div class="md-line-seg" style="background:${color};opacity:${i===stations.length-1?0:1}"></div>
-          <div class="md-dot ${s.type}" id="dot-${lineId}-${i}"
-            style="border-color:${color};color:${color}"></div>
-          <div class="md-stop-info">
-            <span class="md-name ${s.type}"
-              style="${s.type==='hub'||s.type==='terminus'?'color:'+color:''}"
-              id="name-${lineId}-${i}">${s.name}</span>
-            ${s.branch?`<span class="branch-label" style="background:${color}22;color:${color}">Ramal ${s.branch}</span>`:''}
-            ${s.type==='terminal'?`<span class="stop-type-badge" style="color:${color};border-color:${color}40">✈ Terminal</span>`:''}
-            ${s.type==='hub'?`<span class="stop-type-badge" style="color:${color};border-color:${color}40">⬤ Hub</span>`:''}
-          </div>
-        </div>`).join('')}
-    </div>
-    <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
-      <span style="font-size:.64rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase">Trem:</span>
-      <div id="trainbar-${lineId}" style="flex:1;height:8px;background:var(--muted);border-radius:4px;overflow:hidden;position:relative">
-        <div id="trainpos-${lineId}" style="position:absolute;top:0;bottom:0;width:24px;background:${color};border-radius:4px;transition:left .9s ease;box-shadow:0 0 8px ${color}"></div>
-      </div>
-      <span style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:${color}" id="trainpct-${lineId}">0%</span>
-    </div>`;
-  }
-
-  function busRowsHtml(routes){
-    return routes.map((r,i)=>`
-      <div class="bus-route-row" style="border-left:3px solid ${r.color}">
-        <div class="br-info-wrap">
-          <span class="br-name">${r.name}</span>
-          <span class="br-next" style="color:${r.color}" id="busnext-${i}">${formatMin(nextDep(r.freq))}</span>
-        </div>
-        <div class="bus-bar" style="background:var(--muted);height:6px;border-radius:3px;overflow:hidden;margin-top:6px;position:relative">
-          <div id="buspos-${i}" style="position:absolute;top:0;bottom:0;width:20px;border-radius:3px;background:${r.color};box-shadow:0 0 6px ${r.color};transition:left .9s ease;display:flex;align-items:center;justify-content:center;font-size:10px">🚌</div>
+  function stopsHtml(stations,color,pfx){
+    return stations.map((s,i)=>`
+      <div class="st-item">
+        <div class="st-dot ${s.type}" id="${pfx}-dot-${i}" style="--lc:${color};--bg:var(--bg)"></div>
+        <div>
+          <div class="st-name ${s.type}" id="${pfx}-nm-${i}">${s.name}</div>
+          ${s.type==='terminal'?'<div class="st-tag">✈ Terminal</div>':''}
+          ${s.type==='hub'?'<div class="st-tag">⬤ Estação hub</div>':''}
+          ${s.type==='terminus'?'<div class="st-tag">⬤ Terminus</div>':''}
         </div>
       </div>`).join('');
   }
 
-  card.innerHTML=`
-    <!-- Line 1: Internal terminals -->
+  function trainBar(id,color){
+    return `<div class="train-bar-row">
+      <span class="train-bar-lbl" style="color:${color}">Trem</span>
+      <div class="train-bar" id="tbar-${id}" style="--lc:${color}">
+        <div class="train-dot" id="tpos-${id}" style="--lc:${color};left:0">M</div>
+      </div>
+      <span class="train-pct" style="color:${color}" id="tpct-${id}">0%</span>
+    </div>`;
+  }
+
+  // Build line2: detect fork (stations with branch property)
+  const l2=t.line2_stations;
+  const forkIdx=l2.findIndex(s=>s.branch);
+  const trunk=forkIdx>0?l2.slice(0,forkIdx):l2;
+  const brA=l2.filter(s=>s.branch==='A');
+  const brB=l2.filter(s=>s.branch==='B');
+  const hasFork=brA.length>0&&brB.length>0;
+
+  let line2Body;
+  if(hasFork){
+    line2Body=`
+      <div class="st-list" style="--lc:${lc}">${stopsHtml(trunk,lc,'l2t')}</div>
+      <div style="display:flex;align-items:flex-start;padding-left:4px;margin-top:0">
+        <div class="fork-connector" style="--lc:${lc}"></div>
+        <div style="flex:1;border-top:3px solid ${lc};margin-top:0;border-radius:2px 0 0 0;opacity:.6"></div>
+      </div>
+      <div class="fork-container">
+        <div class="fork-branch" style="--lc:${lc}">
+          <div class="fork-label" style="background:${lc}18;color:${lc}">Ramal A</div>
+          ${stopsHtml(brA,lc,'brA')}
+        </div>
+        <div class="fork-branch" style="--lc:${lc}">
+          <div class="fork-label" style="background:${lc}18;color:${lc}">Ramal B</div>
+          ${stopsHtml(brB,lc,'brB')}
+        </div>
+      </div>`;
+  }else{
+    line2Body=`<div class="st-list" style="--lc:${lc}">${stopsHtml(l2,lc,'l2t')}</div>`;
+  }
+
+  // Bus
+  const busHtml=t.bus_routes.map((r,i)=>`
+    <div class="bus-row" style="--bc:${r.color}">
+      <div class="bus-row-top">
+        <span class="bus-rname">${r.name}</span>
+        <span class="bus-badge" id="busnext-${i}" style="--bc:${r.color}">${formatMin(nextDep(r.freq))}</span>
+      </div>
+      <div class="bus-track" id="bustrack-${i}">
+        <div class="bus-track-line"></div>
+        <div class="bus-icon" id="busveh-${i}" style="--bc:${r.color};left:2px">&#128653;</div>
+      </div>
+      <div class="bus-freq" style="color:${r.color}">A cada ${r.freq} min</div>
+    </div>`).join('');
+
+  el.innerHTML=`
     <div class="tc-card">
       <div class="tc-hdr" style="border-left:4px solid ${lc}">
-        <div>
-          <div class="tc-title" style="color:${lc}">${t.line1_name}</div>
-          <div class="tc-note">${t.metro_note}</div>
-        </div>
+        <div><div class="tc-title" style="color:${lc}">${t.line1_name}</div>
+          <div class="tc-note">${t.metro_note}</div></div>
         <div class="next-box">
           <div class="nb-lbl">Próximo trem</div>
           <div class="nb-val" style="color:${lc}" id="nt-metro">${formatMin(nextDep(t.metro_interval))}</div>
-          <div class="nb-freq">a cada ${t.metro_interval}min</div>
+          <div class="nb-freq">a cada ${t.metro_interval} min</div>
         </div>
       </div>
-      <div class="tc-body">${stopsHtml(t.line1_stations, lc, 'line1')}</div>
+      <div class="tc-body">
+        <div class="st-list" style="--lc:${lc}">${stopsHtml(t.line1_stations,lc,'l1')}</div>
+        ${trainBar('line1',lc)}
+      </div>
     </div>
-
-    <!-- Line 2: City extension -->
     <div class="tc-card">
       <div class="tc-hdr" style="border-left:4px solid ${lc}">
-        <div>
-          <div class="tc-title" style="color:${lc}">${t.line2_name}</div>
-          <div class="tc-note">Conexão com a cidade</div>
-        </div>
+        <div><div class="tc-title" style="color:${lc}">${t.line2_name}</div>
+          <div class="tc-note">${hasFork?'Conexão · 2 Ramais':'Conexão com a cidade'}</div></div>
         <div class="next-box">
-          <div class="nb-lbl">Próximo</div>
+          <div class="nb-lbl">Próximo trem</div>
           <div class="nb-val" style="color:${lc}" id="nt-line2">${formatMin(nextDep(t.metro_interval))}</div>
-          <div class="nb-freq">a cada ${t.metro_interval}min</div>
+          <div class="nb-freq">a cada ${t.metro_interval} min</div>
         </div>
       </div>
-      <div class="tc-body">${stopsHtml(t.line2_stations, lc, 'line2')}</div>
+      <div class="tc-body">${line2Body}${trainBar('line2',lc)}</div>
     </div>
-
-    <!-- Bus -->
     <div class="tc-card" style="grid-column:1/-1">
       <div class="tc-hdr" style="border-left:4px solid #ffd54f">
-        <div>
-          <div class="tc-title" style="color:#ffd54f">🚌 Linhas de Ônibus</div>
-          <div class="tc-note">Posição estimada em tempo real</div>
-        </div>
+        <div><div class="tc-title" style="color:#ffd54f">Linhas de Onibus</div>
+          <div class="tc-note">Posição estimada em tempo real</div></div>
         <div class="next-box">
           <div class="nb-lbl">Mais próximo</div>
           <div class="nb-val" style="color:#ffd54f" id="nt-bus">${formatMin(nextDep(t.bus_interval))}</div>
-          <div class="nb-freq">a cada ${t.bus_interval}min</div>
+          <div class="nb-freq">a cada ${t.bus_interval} min</div>
         </div>
       </div>
-      <div class="tc-body">${busRowsHtml(t.bus_routes)}</div>
+      <div class="tc-body"><div class="bus-list">${busHtml}</div></div>
     </div>`;
 
   animateTransit();
@@ -1534,64 +1639,71 @@ function buildTransitCards(){
 
 function animateTransit(){
   const t=TRANSIT_DATA;if(!t)return;
+  const lc=t.metro_color;
 
-  function animateLine(stations, lineId, intervalMin){
-    const prog=trainProgress(intervalMin, stations.length);
+  function animLine(stations,pfx,intervalMin){
+    const prog=trainProgress(intervalMin,stations.length);
     const idx=Math.min(Math.floor(prog*stations.length),stations.length-1);
-
-    // Update station dots
     stations.forEach((s,i)=>{
-      const dot=document.getElementById(`dot-${lineId}-${i}`);
-      const nm=document.getElementById(`name-${lineId}-${i}`);
-      const isActive=i===idx;
+      const dot=document.getElementById(`${pfx}-dot-${i}`);
+      const nm=document.getElementById(`${pfx}-nm-${i}`);
+      const active=i===idx;
       if(dot){
-        const lc=dot.style.borderColor;
-        dot.style.background=isActive?lc:'transparent';
-        dot.style.boxShadow=isActive?`0 0 10px ${lc}`:'none';
-        dot.style.transform=isActive?'scale(1.35)':'scale(1)';
+        dot.style.background=active?lc:'transparent';
+        dot.style.boxShadow=active?`0 0 10px ${lc}`:'none';
+        dot.style.transform=active?'scale(1.3)':'scale(1)';
       }
-      if(nm) nm.style.fontWeight=isActive?'900':'600';
+      if(nm)nm.style.fontWeight=active?'900':'600';
     });
-
-    // Update progress bar train
-    const bar=document.getElementById(`trainbar-${lineId}`);
-    const pos=document.getElementById(`trainpos-${lineId}`);
-    const pct=document.getElementById(`trainpct-${lineId}`);
-    if(bar&&pos){
-      const barW=bar.offsetWidth||200;
-      const leftPx=Math.max(0,Math.min(prog*(barW-24),barW-24));
-      pos.style.left=leftPx+'px';
-    }
-    if(pct) pct.textContent=Math.round(prog*100)+'%';
   }
 
-  animateLine(t.line1_stations,'line1',t.metro_interval);
-  animateLine(t.line2_stations,'line2',t.metro_interval);
+  function animBar(id,prog){
+    const bar=document.getElementById('tbar-'+id);
+    const pos=document.getElementById('tpos-'+id);
+    const pct=document.getElementById('tpct-'+id);
+    if(bar&&pos){const w=bar.offsetWidth||280;pos.style.left=Math.max(0,Math.min(prog*(w-22),w-22))+'px';}
+    if(pct)pct.textContent=Math.round(prog*100)+'%';
+  }
 
-  // Bus bars
+  const p1=trainProgress(t.metro_interval,t.line1_stations.length);
+  animLine(t.line1_stations,'l1',t.metro_interval); animBar('line1',p1);
+
+  const p2=trainProgress(t.metro_interval,t.line2_stations.length);
+  // Animate trunk + branches together
+  const l2=t.line2_stations;
+  const forkIdx=l2.findIndex(s=>s.branch);
+  const trunk=forkIdx>0?l2.slice(0,forkIdx):l2;
+  const brA=l2.filter(s=>s.branch==='A');
+  const brB=l2.filter(s=>s.branch==='B');
+  if(brA.length&&brB.length){
+    animLine(trunk,'l2t',t.metro_interval);
+    animLine(brA,'brA',t.metro_interval);
+    animLine(brB,'brB',t.metro_interval);
+  }else{
+    animLine(l2,'l2t',t.metro_interval);
+  }
+  animBar('line2',p2);
+
+  // Bus
   t.bus_routes.forEach((r,i)=>{
     const prog=busProgress(r.freq);
-    const pos=document.getElementById(`buspos-${i}`);
-    const next=document.getElementById(`busnext-${i}`);
-    if(pos){
-      const bar=pos.parentElement;
-      const barW=bar?bar.offsetWidth||300:300;
-      const leftPx=Math.max(0,Math.min(prog*(barW-20),barW-20));
-      pos.style.left=leftPx+'px';
-    }
-    if(next) next.textContent=formatMin(nextDep(r.freq));
+    const track=document.getElementById('bustrack-'+i);
+    const veh=document.getElementById('busveh-'+i);
+    const next=document.getElementById('busnext-'+i);
+    if(track&&veh){const w=track.offsetWidth||280;veh.style.left=Math.max(2,Math.min(prog*(w-18),w-18))+'px';}
+    if(next)next.textContent=formatMin(nextDep(r.freq));
   });
 }
 
 function updateTransitAnim(){
   const t=TRANSIT_DATA;if(!t)return;
   animateTransit();
-  const nt=document.getElementById('nt-metro');
-  const nl=document.getElementById('nt-line2');
-  const nb=document.getElementById('nt-bus');
-  if(nt)nt.textContent=formatMin(nextDep(t.metro_interval));
-  if(nl)nl.textContent=formatMin(nextDep(t.metro_interval));
-  if(nb)nb.textContent=formatMin(nextDep(t.bus_interval));
+  const a=document.getElementById('nt-metro');
+  const b=document.getElementById('nt-line2');
+  const c=document.getElementById('nt-bus');
+  if(a)a.textContent=formatMin(nextDep(t.metro_interval));
+  if(b)b.textContent=formatMin(nextDep(t.metro_interval));
+  if(c)c.textContent=formatMin(nextDep(t.bus_interval));
 }
 
 </script>
