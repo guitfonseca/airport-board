@@ -120,7 +120,7 @@ function busProgress(intervalMin){
 let transitInterval=null;
 
 function buildTransitCards(){
-  const t=TRANSIT_DATA[TRANSIT_AP];if(!t)return;
+  const t=TRANSIT_DATA;if(!t)return;
   const lc=t.metro_color;
   const card=document.getElementById("transit-cards");
   if(!card)return;
@@ -208,7 +208,7 @@ function buildTransitCards(){
 }
 
 function animateTransit(){
-  const t=TRANSIT_DATA[TRANSIT_AP];if(!t)return;
+  const t=TRANSIT_DATA;if(!t)return;
 
   // Animate line1
   function animateLine(stations, color, lineId, intervalMin){
@@ -262,7 +262,7 @@ function animateTransit(){
 }
 
 function updateTransitAnim(){
-  const t=TRANSIT_DATA[TRANSIT_AP];if(!t)return;
+  const t=TRANSIT_DATA;if(!t)return;
   animateTransit();
   const nt=document.getElementById('nt-metro');
   const nl=document.getElementById('nt-line2');
@@ -1282,7 +1282,7 @@ function busProgress(intervalMin){
 let transitInterval=null;
 
 function buildTransitCards(){
-  const t=TRANSIT_DATA[TRANSIT_AP];if(!t)return;
+  const t=TRANSIT_DATA;if(!t)return;
   const lc=t.metro_color;
   const card=document.getElementById("transit-cards");
   if(!card)return;
@@ -1370,7 +1370,7 @@ function buildTransitCards(){
 }
 
 function animateTransit(){
-  const t=TRANSIT_DATA[TRANSIT_AP];if(!t)return;
+  const t=TRANSIT_DATA;if(!t)return;
 
   // Animate line1
   function animateLine(stations, color, lineId, intervalMin){
@@ -1424,7 +1424,7 @@ function animateTransit(){
 }
 
 function updateTransitAnim(){
-  const t=TRANSIT_DATA[TRANSIT_AP];if(!t)return;
+  const t=TRANSIT_DATA;if(!t)return;
   animateTransit();
   const nt=document.getElementById('nt-metro');
   const nl=document.getElementById('nt-line2');
