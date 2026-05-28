@@ -5,7 +5,7 @@
 <title>SJK – São José dos Campos – SP</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#07090f;--panel:#0c1220;--border:#1e2d4a;--acc:#00e5ff;--acc-dk:#00131a;--acc-tx:#000;--green:#00e676;--red:#ff3d00;--blue:#40c4ff;--white:#e8eaf6;--dim:#546e7a;--muted:#263238}
+:root{--bg:#07090f;--panel:#0c1220;--border:#1e2d4a;--acc:#00e5ff;--acc-dk:#00131a;--acc-tx:#000;--green:#00e676;--white:#e8eaf6;--dim:#546e7a;--muted:#263238}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--white);font-family:'Barlow Condensed',sans-serif;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px);pointer-events:none;z-index:9999}
@@ -25,8 +25,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
 @keyframes tk{from{transform:translateX(0)}to{transform:translateX(-100%)}}
 .views{display:flex;background:var(--panel);border-bottom:1px solid var(--border);padding:0 28px;overflow-x:auto}
 .vbtn{padding:12px 22px;background:none;border:none;border-bottom:3px solid transparent;color:var(--dim);font-family:'Barlow Condensed',sans-serif;font-size:.84rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap}
-.vbtn:hover{color:var(--white)}
-.vbtn.active{color:var(--acc);border-bottom-color:var(--acc)}
+.vbtn:hover{color:var(--white)}.vbtn.active{color:var(--acc);border-bottom-color:var(--acc)}
 .wrap{padding:20px 28px;max-width:1800px;margin:0 auto}
 .fbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
 .dpills{display:flex;gap:4px;flex-wrap:wrap}
@@ -38,6 +37,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
 .fsrch{background:var(--panel);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:.8rem;padding:6px 11px;border-radius:4px;outline:none;min-width:170px}
 .fsrch:focus{border-color:var(--acc)}
 .cnt{background:var(--acc);color:var(--acc-tx);font-size:.66rem;font-weight:900;padding:2px 8px;border-radius:12px;font-family:'Share Tech Mono',monospace}
+.now-lbl{font-size:.68rem;color:var(--dim);font-family:'Share Tech Mono',monospace;letter-spacing:.08em}
 .bt{width:100%;border-collapse:collapse}
 .bt th{background:#1a2535;color:var(--dim);font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:8px 11px;text-align:left;border-bottom:1px solid color-mix(in srgb,var(--acc) 28%,transparent);white-space:nowrap}
 .bt td{padding:9px 11px;font-size:.92rem;border-bottom:1px solid rgba(30,45,74,.35);vertical-align:middle;white-space:nowrap}
@@ -46,10 +46,11 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
 .bt tr:hover td{background:#152035}
 .bt tr.intl td{background:rgba(255,160,0,.04)}
 .bt tr.intl:hover td{background:rgba(255,160,0,.09)}
+.bt tr.next-flight td{background:rgba(0,230,118,.06)!important;border-left:3px solid var(--green)}
 .tc{font-family:'Share Tech Mono',monospace;font-size:1.25rem;color:var(--acc);letter-spacing:.04em}
 .tc.arr{color:#00e676}
 .tdst{font-weight:700;font-size:.98rem}
-.tia{font-family:'Share Tech Mono',monospace;font-size:.84rem;color:var(--blue);font-weight:700}
+.tia{font-family:'Share Tech Mono',monospace;font-size:.84rem;color:#40c4ff;font-weight:700}
 .tac{font-size:.82rem;color:#78909c}
 .tmeta{font-size:.8rem;color:var(--dim);font-family:'Share Tech Mono',monospace}
 .tgt{font-family:'Share Tech Mono',monospace;font-size:.88rem;font-weight:700;color:var(--acc)}
@@ -61,8 +62,11 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
 .c-eur{color:#ce93d8;background:rgba(206,147,216,.12)}
 .c-car{color:#f48fb1;background:rgba(244,143,177,.12)}
 .c-afr{color:#a5d6a7;background:rgba(165,214,167,.12)}
+.c-mid{color:#ffd54f;background:rgba(255,213,79,.11)}
+.c-mex{color:#4caf50;background:rgba(76,175,80,.11)}
+.c-asia{color:#ff8a65;background:rgba(255,138,101,.11)}
+.c-oce{color:#80deea;background:rgba(128,222,234,.11)}
 .al{font-size:.64rem;font-weight:700;padding:2px 7px;border-radius:2px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em;border:1px solid;white-space:nowrap}
-/* STATUS — distinct, never ambiguous */
 .st{font-family:'Share Tech Mono',monospace;font-size:.69rem;letter-spacing:.09em;padding:3px 8px;border-radius:3px;white-space:nowrap;font-weight:700}
 .st-sch{color:#546e7a;background:#0c1420;border:1px solid #1e2d4a}
 .st-ont{color:#40c4ff;background:rgba(64,196,255,.09);border:1px solid rgba(64,196,255,.25)}
@@ -79,17 +83,16 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
 #tab-pax .bt .tc{font-size:1.55rem}
 #tab-pax .bt .tdst{font-size:1.1rem}
 #tab-pax .bt td{padding:12px 14px}
-.al-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:24px}
-.al-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px 16px;display:flex;align-items:center;gap:12px}
-.al-code{font-family:'Share Tech Mono',monospace;font-size:1.2rem;font-weight:700;min-width:32px}
-.al-nm{font-size:.86rem;color:var(--white)}
-.ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.al-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:24px}
+.al-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.al-code{font-family:'Share Tech Mono',monospace;font-size:1.1rem;font-weight:700;min-width:28px}
+.al-nm{font-size:.82rem}
+.ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
 .ic{background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:20px}
 .ic h3{font-size:.68rem;color:var(--acc);letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px;font-weight:700}
 .ir{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,45,74,.4);font-size:.84rem}
 .ir:last-child{border:none}
-.ik{color:var(--dim)}
-.iv{color:var(--white);font-family:'Share Tech Mono',monospace;font-size:.78rem}
+.ik{color:var(--dim)}.iv{color:var(--white);font-family:'Share Tech Mono',monospace;font-size:.78rem}
 .sec{display:flex;align-items:center;gap:10px;margin:20px 0 10px;font-size:.68rem;color:var(--dim);letter-spacing:.2em;text-transform:uppercase}
 .sec::after{content:'';flex:1;height:1px;background:var(--border)}
 .savebtn{background:var(--acc);color:var(--acc-tx);border:none;padding:7px 16px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
@@ -126,18 +129,19 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
   <button class="vbtn" onclick="showV('mgr')">⚙ Status</button>
   <button class="vbtn" onclick="showV('info')">✦ Aeroporto</button>
 </div>
-<!-- DEP -->
 <div class="wrap" id="tab-dep">
   <div class="fbar">
     <div class="dpills" id="dp-dep"></div>
     <select class="fsel" id="tf-dep" onchange="rDep()">
       <option value="ALL">Todos</option><option value="DOM">Doméstico</option>
-      <option value="LAT">América Latina</option><option value="EUA">EUA</option>
-      <option value="CAN">Canadá</option><option value="CAR">Caribe/Am.Central</option>
-      <option value="EUR">Europa</option><option value="AFR">África/Atlântico</option>
+      <option value="LAT">América Latina</option><option value="CAR">Caribe/Am.Central</option>
+      <option value="MEX">México</option><option value="EUA">EUA</option><option value="CAN">Canadá</option>
+      <option value="EUR">Europa</option><option value="MID">Oriente Médio</option>
+      <option value="AFR">África</option><option value="ASIA">Ásia</option><option value="OCE">Oceania</option>
     </select>
     <input class="fsrch" id="sr-dep" placeholder="Destino, IATA, cia..." oninput="rDep()"/>
     <span class="cnt" id="cnt-dep">0</span>
+    <span class="now-lbl" id="now-lbl-dep"></span>
   </div>
   <table class="bt"><thead><tr>
     <th>Partida</th><th>Destino</th><th>IATA</th><th>Cia. Aérea</th><th>Tipo</th>
@@ -145,17 +149,17 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
   </tr></thead><tbody id="tb-dep"></tbody></table>
   <div class="empty" id="em-dep" style="display:none">Nenhum voo encontrado.</div>
 </div>
-<!-- ARR -->
 <div class="wrap" id="tab-arr" style="display:none">
   <div class="fbar">
     <div class="dpills" id="dp-arr"></div>
     <select class="fsel" id="tf-arr" onchange="rArr()">
       <option value="ALL">Todos</option><option value="DOM">Doméstico</option>
-      <option value="LAT">América Latina</option><option value="EUA">EUA</option>
-      <option value="CAN">Canadá</option><option value="CAR">Caribe/Am.Central</option>
-      <option value="EUR">Europa</option><option value="AFR">África/Atlântico</option>
+      <option value="LAT">América Latina</option><option value="CAR">Caribe/Am.Central</option>
+      <option value="MEX">México</option><option value="EUA">EUA</option><option value="CAN">Canadá</option>
+      <option value="EUR">Europa</option><option value="MID">Oriente Médio</option>
+      <option value="AFR">África</option><option value="ASIA">Ásia</option><option value="OCE">Oceania</option>
     </select>
-    <input class="fsrch" id="sr-arr" placeholder="Origem, IATA, cia..." oninput="rArr()"/>
+    <input class="fsrch" id="sr-arr" placeholder="Destino, IATA, cia..." oninput="rArr()"/>
     <span class="cnt" id="cnt-arr">0</span>
   </div>
   <table class="bt"><thead><tr>
@@ -164,7 +168,6 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
   </tr></thead><tbody id="tb-arr"></tbody></table>
   <div class="empty" id="em-arr" style="display:none">Nenhum voo encontrado.</div>
 </div>
-<!-- PAX -->
 <div class="wrap" id="tab-pax" style="display:none">
   <div class="fbar">
     <div class="dpills" id="dp-pax"></div>
@@ -175,11 +178,10 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
     <span class="cnt" id="cnt-pax">0</span>
   </div>
   <table class="bt"><thead><tr>
-    <th>Horário</th><th>Destino / Origem</th><th>IATA</th><th>Cia. Aérea</th><th>Portão/Esteira</th><th>Status</th>
+    <th>Horário</th><th>Destino / Origem</th><th>IATA</th><th>Cia. Aérea</th><th>Portão / Esteira</th><th>Status</th>
   </tr></thead><tbody id="tb-pax"></tbody></table>
   <div class="empty" id="em-pax" style="display:none">Nenhum voo encontrado.</div>
 </div>
-<!-- MGR -->
 <div class="wrap" id="tab-mgr" style="display:none">
   <div class="fbar">
     <div class="dpills" id="dp-mgr"></div>
@@ -196,48 +198,40 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
   </tr></thead><tbody id="tb-mgr"></tbody></table>
   <div class="empty" id="em-mgr" style="display:none">Nenhum voo encontrado.</div>
 </div>
-<!-- INFO -->
 <div class="wrap" id="tab-info" style="display:none">
   <div class="sec">Companhias Aéreas</div>
   <div class="al-grid" id="al-grid"></div>
   <div class="sec">Dados do Aeroporto</div>
   <div class="ig" id="ig"></div>
 </div>
-
 <script>
-const AI={"name": "Aeroporto Prof. Urbano Ernesto Stumpf", "city": "São José dos Campos – SP", "iata": "SJK", "icao": "SBSJ", "runway": "2.676 m × 45 m", "elevation": "647 m / 2.123 ft", "operator": "SJK Airport", "terminals": "Terminal único"};
-const FD=[["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E190", "G3", ["06:00", "06:30", "06:00", "06:30", "06:00", "07:00", "08:00"]], ["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E190", "AD", ["07:30", "08:00", "07:30", "08:00", "07:30", "09:00", "10:30"]], ["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E195", "LA", ["09:30", "10:00", "09:30", "10:00", "09:30", "11:00", "13:00"]], ["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E190", "2Z", ["11:30", "12:00", "11:30", "12:00", "11:30", "13:00", null]], ["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E195", "G3", ["13:30", "14:00", "13:30", "14:00", "13:30", "15:00", null]], ["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E190", "AD", ["15:30", "16:00", "15:30", "16:00", "15:30", "17:00", null]], ["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E195", "LA", ["17:30", "18:00", "17:30", "18:00", "17:30", null, null]], ["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E190", "2Z", ["19:30", "20:00", "19:30", "20:00", "19:30", null, null]], ["Congonhas", "CGH", "DOM", 95, 40, "Embraer E175", "G3", ["06:30", "07:00", "06:30", "07:00", "06:30", "07:30", "09:00"]], ["Congonhas", "CGH", "DOM", 95, 40, "Embraer E175", "AD", ["08:30", "09:00", "08:30", "09:00", "08:30", "10:00", "11:30"]], ["Congonhas", "CGH", "DOM", 95, 40, "Embraer E190", "LA", ["11:00", "11:30", "11:00", "11:30", "11:00", "12:30", "14:00"]], ["Congonhas", "CGH", "DOM", 95, 40, "Embraer E175", "2Z", ["13:30", "14:00", "13:30", "14:00", "13:30", "15:30", null]], ["Congonhas", "CGH", "DOM", 95, 40, "Embraer E190", "G3", ["16:00", "16:30", "16:00", "16:30", "16:00", "18:00", null]], ["Congonhas", "CGH", "DOM", 95, 40, "Embraer E175", "AD", ["18:30", "19:00", "18:30", "19:00", "18:30", null, null]], ["Campinas – Viracopos", "VCP", "DOM", 83, 35, "ATR 72-600", "LA", ["06:30", "07:00", "06:30", "07:00", "06:30", "08:00", "09:30"]], ["Campinas – Viracopos", "VCP", "DOM", 83, 35, "ATR 72-600", "2Z", ["09:00", "09:30", "09:00", "09:30", "09:00", "11:00", "13:00"]], ["Campinas – Viracopos", "VCP", "DOM", 83, 35, "Embraer E175", "G3", ["12:00", "12:30", "12:00", "12:30", "12:00", "14:00", null]], ["Campinas – Viracopos", "VCP", "DOM", 83, 35, "ATR 72-600", "AD", ["15:00", "15:30", "15:00", "15:30", "15:00", "17:00", null]], ["Campinas – Viracopos", "VCP", "DOM", 83, 35, "ATR 72-600", "LA", ["18:00", "18:30", "18:00", "18:30", "18:00", null, null]], ["Brasília", "BSB", "DOM", 1015, 105, "Airbus A320", "2Z", ["06:00", "06:30", "06:00", "06:30", "06:00", "07:00", "08:00"]], ["Brasília", "BSB", "DOM", 1015, 105, "Airbus A320", "G3", ["09:00", "09:30", "09:00", "09:30", "09:00", "10:30", "12:00"]], ["Brasília", "BSB", "DOM", 1015, 105, "Boeing 737-800", "AD", ["12:30", "13:00", "12:30", "13:00", "12:30", "14:00", "16:00"]], ["Brasília", "BSB", "DOM", 1015, 105, "Airbus A320", "LA", ["15:30", "16:00", "15:30", "16:00", "15:30", "17:30", null]], ["Brasília", "BSB", "DOM", 1015, 105, "Boeing 737-800", "2Z", ["18:30", "19:00", "18:30", "19:00", "18:30", null, null]], ["Brasília", "BSB", "DOM", 1015, 105, "Airbus A320", "G3", ["21:00", null, "21:00", null, "21:00", null, null]], ["Belo Horizonte", "CNF", "DOM", 580, 75, "Embraer E195", "AD", ["06:00", "07:00", "06:00", "07:00", "06:00", "07:30", "09:00"]], ["Belo Horizonte", "CNF", "DOM", 580, 75, "Airbus A319", "LA", ["09:30", "10:30", "09:30", "10:30", "09:30", "11:30", "13:00"]], ["Belo Horizonte", "CNF", "DOM", 580, 75, "Embraer E195", "2Z", ["13:00", "14:00", "13:00", "14:00", "13:00", "15:30", null]], ["Belo Horizonte", "CNF", "DOM", 580, 75, "Airbus A319", "G3", ["16:30", "17:30", "16:30", "17:30", "16:30", "18:30", null]], ["Belo Horizonte", "CNF", "DOM", 580, 75, "Embraer E195", "AD", ["19:30", "20:30", "19:30", "20:30", "19:30", null, null]], ["Rio de Janeiro – Galeão", "GIG", "DOM", 350, 55, "Airbus A319", "LA", ["06:30", "07:30", "06:30", "07:30", "06:30", "08:00", "09:30"]], ["Rio de Janeiro – Galeão", "GIG", "DOM", 350, 55, "Airbus A320", "2Z", ["10:00", "11:00", "10:00", "11:00", "10:00", "12:00", "14:00"]], ["Rio de Janeiro – Galeão", "GIG", "DOM", 350, 55, "Airbus A319", "G3", ["13:30", "14:30", "13:30", "14:30", "13:30", "16:00", null]], ["Rio de Janeiro – Galeão", "GIG", "DOM", 350, 55, "Airbus A320", "AD", ["17:00", "18:00", "17:00", "18:00", "17:00", null, null]], ["Rio de Janeiro – Galeão", "GIG", "DOM", 350, 55, "Airbus A319", "LA", ["20:00", null, "20:00", null, "20:00", null, null]], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 310, 50, "Embraer E190", "2Z", ["07:00", "08:00", "07:00", "08:00", "07:00", "09:00", "10:30"]], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 310, 50, "Embraer E190", "G3", ["11:00", "12:00", "11:00", "12:00", "11:00", "13:30", null]], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 310, 50, "Embraer E190", "AD", ["15:00", "16:00", "15:00", "16:00", "15:00", "17:30", null]], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 310, 50, "Embraer E190", "LA", ["18:30", "19:30", "18:30", "19:30", "18:30", null, null]], ["Ribeirão Preto", "RAO", "DOM", 225, 55, "ATR 72-600", "2Z", ["07:00", "07:30", "07:00", "07:30", "07:00", "09:00", "10:00"]], ["Ribeirão Preto", "RAO", "DOM", 225, 55, "ATR 72-600", "G3", ["12:00", "12:30", "12:00", "12:30", "12:00", "14:00", null]], ["Ribeirão Preto", "RAO", "DOM", 225, 55, "ATR 72-600", "AD", ["17:00", "17:30", "17:00", "17:30", "17:00", null, null]], ["Bauru", "JTC", "DOM", 280, 65, "ATR 72-600", "LA", ["08:00", null, "08:30", null, "08:00", null, null]], ["Bauru", "JTC", "DOM", 280, 65, "ATR 72-600", "2Z", ["14:00", null, "14:30", null, "14:00", null, null]], ["Presidente Prudente", "PPB", "DOM", 500, 90, "Embraer E175", "G3", [null, "09:00", null, "09:30", null, "10:00", null]], ["Marília", "MII", "DOM", 350, 75, "ATR 72-600", "AD", [null, null, "08:30", null, null, null, null]], ["Goiânia", "GYN", "DOM", 910, 100, "Embraer E195", "LA", [null, null, "09:00", "09:30", "09:00", null, null]], ["Palmas", "PMW", "DOM", 1620, 155, "Airbus A319", "2Z", [null, "08:00", null, "08:30", null, null, null]], ["Campo Grande", "CGR", "DOM", 1070, 115, "Embraer E195", "G3", [null, null, null, "09:00", null, "10:00", null]], ["Cuiabá", "CGB", "DOM", 1600, 165, "Airbus A319", "AD", [null, null, null, null, null, "08:30", "10:00"]], ["Manaus", "MAO", "DOM", 2695, 265, "Boeing 737-800", "LA", [null, null, null, null, "09:00", null, "09:00"]], ["Belém", "BEL", "DOM", 2700, 265, "Boeing 737-800", "2Z", [null, null, null, "13:00", null, null, "11:00"]], ["Porto Velho", "PVH", "DOM", 2600, 240, "Boeing 737-800", "G3", [null, null, null, null, null, "08:00", null]], ["Curitiba", "CWB", "DOM", 540, 70, "Embraer E190", "AD", ["07:00", "08:00", "07:00", "08:00", "07:00", "09:00", "10:30"]], ["Curitiba", "CWB", "DOM", 540, 70, "Embraer E190", "LA", ["11:00", "12:00", "11:00", "12:00", "11:00", "13:30", null]], ["Curitiba", "CWB", "DOM", 540, 70, "Embraer E190", "2Z", ["15:00", "16:00", "15:00", "16:00", "15:00", "17:30", null]], ["Curitiba", "CWB", "DOM", 540, 70, "Embraer E190", "G3", ["18:30", "19:30", "18:30", "19:30", "18:30", null, null]], ["Florianópolis", "FLN", "DOM", 680, 85, "Embraer E195", "AD", [null, "08:00", null, "09:00", null, "10:00", "11:30"]], ["Florianópolis", "FLN", "DOM", 680, 85, "Embraer E195", "LA", [null, "14:30", null, "15:00", null, "15:30", null]], ["Porto Alegre", "POA", "DOM", 1100, 120, "Boeing 737-800", "2Z", ["06:00", null, "07:00", "08:00", null, "08:30", "10:00"]], ["Porto Alegre", "POA", "DOM", 1100, 120, "Boeing 737-800", "G3", ["13:00", null, "13:00", "14:00", null, "14:30", null]], ["Salvador", "SSA", "DOM", 1500, 155, "Airbus A320", "AD", ["07:00", null, "07:30", null, "07:00", null, "09:00"]], ["Salvador", "SSA", "DOM", 1500, 155, "Airbus A320", "LA", ["14:30", null, "15:00", null, "14:30", null, null]], ["Recife", "REC", "DOM", 2200, 220, "Boeing 737-800", "2Z", [null, null, "06:30", null, null, "06:00", null]], ["Fortaleza", "FOR", "DOM", 2800, 275, "Boeing 737-800", "G3", [null, null, null, "07:00", null, null, null]], ["São Luís", "SLZ", "DOM", 2600, 255, "Boeing 737-800", "AD", [null, null, null, null, null, null, "08:00"]], ["João Pessoa", "JPA", "DOM", 2450, 240, "Boeing 737-800", "LA", [null, null, null, null, null, "07:30", null]], ["Uberlândia", "UDI", "DOM", 700, 85, "Embraer E175", "2Z", [null, "08:00", null, "08:30", null, null, null]], ["Londrina", "LDB", "DOM", 660, 80, "Embraer E190", "G3", [null, null, null, "09:00", null, null, null]], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2200, 220, "Airbus A320", "LA", ["09:00", null, "10:00", null, null, "09:00", null]], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2200, 220, "Boeing 737-800", "LA", [null, null, "21:30", null, "22:00", "21:00", "21:00"]], ["Santiago", "SCL", "LAT", 2630, 260, "Airbus A320", "LA", [null, null, null, null, null, "10:00", "21:00"]], ["Lima", "LIM", "LAT", 3700, 360, "Boeing 737-800", "LA", [null, "09:00", null, null, null, null, "22:00"]], ["Montevidéu", "MVD", "LAT", 2100, 210, "Airbus A319", "LA", [null, null, "09:00", null, null, null, "20:00"]], ["Assunção", "ASU", "LAT", 2000, 185, "Embraer E195", "AD", [null, null, null, null, null, null, "14:00"]], ["Bogotá", "BOG", "LAT", 4050, 390, "Boeing 737-800", "LA", [null, null, null, null, "22:00", null, null]], ["Ciudad de Panamá", "PTY", "LAT", 5700, 510, "Boeing 737-800", "AA", [null, null, null, null, "23:00", null, null]], ["Miami", "MIA", "EUA", 7200, 615, "Boeing 757-200", "AA", [null, null, null, null, null, "09:00", "22:00"]], ["Fort Lauderdale", "FLL", "EUA", 7250, 620, "Boeing 757-200", "AA", [null, null, null, null, null, null, "22:00"]], ["Nova York – JFK", "JFK", "EUA", 7900, 640, "Boeing 757-200", "UA", [null, null, null, null, null, "22:30", null]], ["Lisboa", "LIS", "EUR", 9200, 755, "Boeing 757-200", "TP", [null, null, null, null, null, "22:00", "22:00"]], ["Madrid", "MAD", "EUR", 9300, 760, "Boeing 757-200", "IB", [null, null, null, null, null, null, "23:00"]], ["Londres – Heathrow", "LHR", "EUR", 9300, 760, "Boeing 757-200", "BA", [null, null, null, null, null, "23:00", null]]];
-const AL={"G3": {"name": "GOL", "color": "#ff6600"}, "AD": {"name": "Azul", "color": "#003087"}, "LA": {"name": "LATAM", "color": "#d91b5b"}, "2Z": {"name": "Voepass", "color": "#0066cc"}, "TP": {"name": "TAP Air Portugal", "color": "#00a854"}, "AA": {"name": "American Airlines", "color": "#0078d2"}, "UA": {"name": "United Airlines", "color": "#003580"}, "AC": {"name": "Air Canada", "color": "#d62b1f"}, "IB": {"name": "Iberia", "color": "#cc0000"}, "BA": {"name": "British Airways", "color": "#2e5796"}, "AF": {"name": "Air France", "color": "#002395"}, "KL": {"name": "KLM", "color": "#00a1de"}, "LH": {"name": "Lufthansa", "color": "#05164d"}, "AZ": {"name": "ITA Airways", "color": "#007cb5"}, "SA": {"name": "South African", "color": "#0a2d6e"}};
+const AI={"name": "Aeroporto Prof. Urbano Ernesto Stumpf", "city": "São José dos Campos – SP", "iata": "SJK", "icao": "SBSJ", "runway": "2.676 m × 45 m", "elevation": "647 m / 2.123 ft", "operator": "SJK Airport", "terminals": "Terminal único"};const FD=[["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E190", "G3", ["06:05", "06:05", "06:05", "06:05", "06:05", "07:35", "09:10"]], ["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E195", "AD", ["08:40", "08:40", "08:40", "08:40", "08:40", "10:50", null]], ["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E190", "LA", ["11:15", "11:15", "11:15", "11:15", "11:15", "13:45", null]], ["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E195", "2Z", ["14:35", "14:35", "14:35", "14:35", "14:35", null, null]], ["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E190", "G3", ["17:50", "17:50", "17:50", "17:50", "17:50", null, null]], ["Guarulhos", "GRU", "DOM", 81, 35, "Embraer E190", "AD", ["20:25", "20:25", "20:25", "20:25", "20:25", null, null]], ["Congonhas", "CGH", "DOM", 95, 40, "Embraer E175", "LA", ["07:10", "07:10", "07:10", "07:10", "07:10", "08:55", "10:25"]], ["Congonhas", "CGH", "DOM", 95, 40, "Embraer E190", "2Z", ["10:45", "10:45", "10:45", "10:45", "10:45", "12:50", null]], ["Congonhas", "CGH", "DOM", 95, 40, "Embraer E175", "G3", ["14:20", "14:20", "14:20", "14:20", "14:20", "16:35", null]], ["Congonhas", "CGH", "DOM", 95, 40, "Embraer E190", "AD", ["18:55", "18:55", "18:55", "18:55", "18:55", null, null]], ["Campinas – Viracopos", "VCP", "DOM", 83, 35, "ATR 72-600", "LA", ["07:30", "07:30", "07:30", "07:30", "07:30", "09:15", "10:50"]], ["Campinas – Viracopos", "VCP", "DOM", 83, 35, "ATR 72-600", "2Z", ["12:45", "12:45", "12:45", "12:45", "12:45", "14:55", null]], ["Campinas – Viracopos", "VCP", "DOM", 83, 35, "Embraer E175", "G3", ["17:20", "17:20", "17:20", "17:20", "17:20", null, null]], ["Brasília", "BSB", "DOM", 1015, 105, "Airbus A320", "AD", ["06:25", "06:25", "06:25", "06:25", "06:25", "08:10", "09:30"]], ["Brasília", "BSB", "DOM", 1015, 105, "Boeing 737-800", "LA", ["10:15", "10:15", "10:15", "10:15", "10:15", "12:40", "14:20"]], ["Brasília", "BSB", "DOM", 1015, 105, "Airbus A320", "2Z", ["14:50", "14:50", "14:50", "14:50", "14:50", "17:25", null]], ["Brasília", "BSB", "DOM", 1015, 105, "Boeing 737-800", "G3", ["19:35", "19:35", "19:35", "19:35", "19:35", null, null]], ["Belo Horizonte", "CNF", "DOM", 580, 75, "Embraer E195", "AD", ["07:15", "07:15", "07:15", "07:15", "07:15", "09:05", "10:30"]], ["Belo Horizonte", "CNF", "DOM", 580, 75, "Airbus A319", "LA", ["12:20", "12:20", "12:20", "12:20", "12:20", "14:35", null]], ["Belo Horizonte", "CNF", "DOM", 580, 75, "Embraer E195", "2Z", ["18:10", "18:10", "18:10", "18:10", "18:10", null, null]], ["Rio de Janeiro – Galeão", "GIG", "DOM", 350, 55, "Airbus A319", "G3", ["07:40", "07:40", "07:40", "07:40", "07:40", "09:45", "11:10"]], ["Rio de Janeiro – Galeão", "GIG", "DOM", 350, 55, "Airbus A320", "AD", ["13:25", "13:25", "13:25", "13:25", "13:25", "15:30", null]], ["Rio de Janeiro – Galeão", "GIG", "DOM", 350, 55, "Airbus A319", "LA", ["18:50", "18:50", "18:50", "18:50", "18:50", null, null]], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 310, 50, "Embraer E190", "2Z", ["08:35", "08:35", "08:35", "08:35", "08:35", "10:55", null]], ["Rio de Janeiro – Santos Dumont", "SDU", "DOM", 310, 50, "Embraer E190", "G3", ["16:45", "16:45", "16:45", "16:45", "16:45", null, null]], ["Ribeirão Preto", "RAO", "DOM", 225, 55, "ATR 72-600", "AD", ["08:20", "08:20", "08:20", "08:20", "08:20", null, null]], ["Ribeirão Preto", "RAO", "DOM", 225, 55, "ATR 72-600", "LA", ["15:10", "15:10", "15:10", "15:10", "15:10", null, null]], ["Bauru", "JTC", "DOM", 280, 65, "ATR 72-600", "2Z", ["09:05", null, "09:05", null, "09:05", null, null]], ["Presidente Prudente", "PPB", "DOM", 500, 90, "Embraer E175", "G3", [null, "10:10", null, "10:10", null, null, null]], ["Marília", "MII", "DOM", 350, 75, "ATR 72-600", "AD", [null, null, "10:25", null, null, null, null]], ["Uberlândia", "UDI", "DOM", 700, 85, "Embraer E175", "LA", [null, "09:50", null, "09:50", null, null, null]], ["Londrina", "LDB", "DOM", 660, 80, "Embraer E190", "2Z", [null, null, null, "11:05", null, null, null]], ["Goiânia", "GYN", "DOM", 910, 100, "Embraer E195", "G3", [null, null, "10:15", null, "10:15", null, null]], ["Palmas", "PMW", "DOM", 1620, 155, "Airbus A319", "AD", [null, "09:20", null, "09:20", null, null, null]], ["Campo Grande", "CGR", "DOM", 1070, 115, "Embraer E195", "LA", [null, null, null, "10:45", null, "11:50", null]], ["Cuiabá", "CGB", "DOM", 1600, 165, "Airbus A319", "2Z", [null, null, null, null, null, "10:20", "12:15"]], ["Manaus", "MAO", "DOM", 2695, 265, "Boeing 737-800", "G3", [null, null, null, null, "10:05", null, "10:05"]], ["Belém", "BEL", "DOM", 2700, 265, "Boeing 737-800", "AD", [null, null, null, "14:15", null, null, "12:10"]], ["Curitiba", "CWB", "DOM", 540, 70, "Embraer E190", "LA", ["08:10", "09:05", "08:10", "09:05", "08:10", "10:25", "11:45"]], ["Curitiba", "CWB", "DOM", 540, 70, "Embraer E190", "2Z", ["14:30", "15:25", "14:30", "15:25", "14:30", "17:10", null]], ["Florianópolis", "FLN", "DOM", 680, 85, "Embraer E195", "G3", [null, "09:40", null, "10:15", null, "11:20", "13:05"]], ["Porto Alegre", "POA", "DOM", 1100, 120, "Boeing 737-800", "AD", ["07:25", null, "08:05", "09:15", null, "10:35", "12:20"]], ["Porto Alegre", "POA", "DOM", 1100, 120, "Boeing 737-800", "LA", ["16:10", null, "16:10", "17:05", null, null, null]], ["Salvador", "SSA", "DOM", 1500, 155, "Airbus A320", "2Z", ["08:05", null, "08:35", null, "08:05", null, "10:15"]], ["Recife", "REC", "DOM", 2200, 220, "Boeing 737-800", "G3", [null, null, "07:45", null, null, "07:20", null]], ["Fortaleza", "FOR", "DOM", 2800, 275, "Boeing 737-800", "AD", [null, null, null, "08:10", null, null, null]], ["São Luís", "SLZ", "DOM", 2600, 255, "Boeing 737-800", "LA", [null, null, null, null, null, null, "09:25"]], ["João Pessoa", "JPA", "DOM", 2450, 240, "Boeing 737-800", "2Z", [null, null, null, null, null, "08:45", null]], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2200, 220, "Airbus A320", "LA", ["10:10", null, "10:10", null, null, "10:10", null]], ["Buenos Aires – Ezeiza", "EZE", "LAT", 2200, 220, "Boeing 737-800", "LA", [null, null, "22:40", null, "22:40", "22:15", "22:15"]], ["Santiago", "SCL", "LAT", 2630, 260, "Airbus A320", "LA", [null, null, null, null, null, "11:05", "22:20"]], ["Lima", "LIM", "LAT", 3700, 360, "Boeing 737-800", "LA", [null, "10:25", null, null, null, null, "23:10"]], ["Montevidéu", "MVD", "LAT", 2100, 210, "Airbus A319", "LA", [null, null, "10:50", null, null, null, "21:35"]], ["Assunção", "ASU", "LAT", 2000, 185, "Embraer E195", "AD", [null, null, null, null, null, null, "15:20"]], ["Bogotá", "BOG", "LAT", 4050, 390, "Boeing 737-800", "LA", [null, null, null, null, "23:10", null, null]], ["San José – Costa Rica", "SJO", "CAR", 5700, 510, "Boeing 737-800", "AA", [null, null, null, null, "23:40", null, null]], ["Ushuaia", "USH", "LAT", 3400, 305, "Boeing 737-800", "LA", [null, null, null, null, null, null, "10:30"]], ["Havana", "HAV", "CAR", 7100, 600, "Boeing 737-800", "LA", [null, null, null, null, null, "23:05", null]], ["Ciudad de Panamá", "PTY", "LAT", 5700, 510, "Boeing 737-800", "AA", [null, null, null, null, "23:25", null, null]], ["Miami", "MIA", "EUA", 7200, 615, "Boeing 757-200", "AA", [null, null, null, null, null, "10:20", "23:15"]], ["Fort Lauderdale", "FLL", "EUA", 7250, 620, "Boeing 757-200", "AA", [null, null, null, null, null, null, "23:05"]], ["Nova York – JFK", "JFK", "EUA", 7900, 640, "Boeing 757-200", "UA", [null, null, null, null, null, "23:40", null]], ["Dallas – Fort Worth", "DFW", "EUA", 8200, 660, "Boeing 757-200", "AA", [null, null, null, null, null, null, "23:30"]], ["Lisboa", "LIS", "EUR", 9200, 755, "Boeing 757-200", "TP", [null, null, null, null, null, "23:10", "23:10"]], ["Madrid", "MAD", "EUR", 9300, 760, "Boeing 757-200", "IB", [null, null, null, null, null, null, "23:45"]], ["Londres – Heathrow", "LHR", "EUR", 9300, 760, "Boeing 757-200", "BA", [null, null, null, null, null, "23:50", null]], ["Dubai", "DXB", "MID", 12500, 920, "Boeing 777-300ER", "EK", [null, null, null, null, null, "21:30", null]], ["Cairo", "CAI", "MID", 9500, 720, "Boeing 767-300ER", "MS", [null, null, null, null, null, null, "22:45"]], ["Cidade do México", "MEX", "MEX", 7400, 610, "Boeing 757-200", "AM", [null, null, null, null, null, "22:55", null]]];const AL={"G3": {"name": "GOL", "color": "#ff6600"}, "AD": {"name": "Azul", "color": "#003087"}, "LA": {"name": "LATAM", "color": "#d91b5b"}, "2Z": {"name": "Voepass", "color": "#4488cc"}, "TP": {"name": "TAP Air Portugal", "color": "#00a854"}, "AA": {"name": "American Airlines", "color": "#0078d2"}, "UA": {"name": "United Airlines", "color": "#003580"}, "AC": {"name": "Air Canada", "color": "#d62b1f"}, "IB": {"name": "Iberia", "color": "#cc0000"}, "BA": {"name": "British Airways", "color": "#2e5796"}, "AF": {"name": "Air France", "color": "#002395"}, "KL": {"name": "KLM", "color": "#00a1de"}, "LH": {"name": "Lufthansa", "color": "#05164d"}, "AZ": {"name": "ITA Airways", "color": "#007cb5"}, "SA": {"name": "South African", "color": "#0a2d6e"}, "EK": {"name": "Emirates", "color": "#d71921"}, "MS": {"name": "EgyptAir", "color": "#007749"}, "QR": {"name": "Qatar Airways", "color": "#5c0632"}, "TK": {"name": "Turkish Airlines", "color": "#c60c30"}, "AM": {"name": "Aeroméxico", "color": "#003366"}, "AI": {"name": "Air India", "color": "#e74c3c"}, "QF": {"name": "Qantas", "color": "#e02020"}, "NZ": {"name": "Air New Zealand", "color": "#00235b"}, "EI": {"name": "Aer Lingus", "color": "#006636"}, "FI": {"name": "Icelandair", "color": "#003366"}, "SK": {"name": "SAS", "color": "#003d8f"}};
 const DAYS=["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
-const GATES=["A1","A2","A3","A4","A5","A6","B1","B2","B3","B4","B5","C1","C2","C3","D1","D2","D3","E1","E2"];
+const GATES=["A1","A2","A3","A4","A5","A6","B1","B2","B3","B4","B5","C1","C2","C3","D1","D2","D3","E1","E2","F1","F2"];
 const BELTS=["1","2","3","4","5","6","7","8"];
 const ST_DEP=[{v:"sch",l:"Programado"},{v:"ont",l:"No Horário"},{v:"board",l:"Embarcando"},{v:"final",l:"Embarque Final"},{v:"dep",l:"Partiu"},{v:"del",l:"Atrasado"},{v:"can",l:"Cancelado"}];
 const ST_ARR=[{v:"sch",l:"Programado"},{v:"del",l:"Atrasado"},{v:"arr",l:"Chegando"},{v:"lnd",l:"Pousou"},{v:"can",l:"Cancelado"}];
-const today=(d=>d===0?6:d-1)(new Date().getDay());
-const AD={dep:today,arr:today,pax:today,mgr:today};
+const CM={DOM:"dom",LAT:"lat",EUA:"eua",CAN:"can",CAR:"car",EUR:"eur",AFR:"afr",MID:"mid",MEX:"mex",ASIA:"asia",OCE:"oce"};
+const CL={DOM:"DOM",LAT:"LATAM",EUA:"EUA",CAN:"CAN",CAR:"CARIBE",EUR:"EUR",AFR:"AFR",MID:"ORIENTE",MEX:"MÉXICO",ASIA:"ÁSIA",OCE:"OCEANIA"};
+function jsDayToIdx(d){return d===0?6:d-1;}
+const todayIdx=jsDayToIdx(new Date().getDay());
+const AD={dep:todayIdx,arr:todayIdx,pax:todayIdx,mgr:todayIdx};
 const SS={};
-function addM(t,m){const[h,mm]=t.split(":").map(Number);const tot=h*60+mm+m;return`${String(Math.floor(tot/60)%24).padStart(2,"0")}:${String(tot%60).padStart(2,"0")}`}
-function durS(m){const h=Math.floor(m/60),r=m%60;return h>0?`${h}h${r>0?r+"m":""}`:`${r}m`}
-function stk(mode,iata,t,day){return`${mode}__${iata}__${t}__${day}`}
-function gate(fi){return GATES[fi%GATES.length]}
-function belt(fi){return BELTS[fi%BELTS.length]}
-function chipH(t){
-  const m={DOM:"dom",LAT:"lat",EUA:"eua",CAN:"can",CAR:"car",EUR:"eur",AFR:"afr"};
-  const l={DOM:"DOM",LAT:"LATAM",EUA:"EUA",CAN:"CAN",CAR:"CARIBE",EUR:"EUR",AFR:"AFR"};
-  return`<span class="chip c-${m[t]||"dom"}">${l[t]||t}</span>`;
-}
-function alH(code){
-  const a=AL[code];
-  if(!a)return`<span class="al" style="color:#546e7a;border-color:#263238">${code}</span>`;
-  return`<span class="al" style="color:${a.color};border-color:${a.color}55;background:${a.color}14">${a.name}</span>`;
-}
-function stH(v){
-  const l={sch:"Programado",ont:"No Horário",board:"Embarcando",final:"Emb. Final",dep:"Partiu",del:"Atrasado",can:"Cancelado",arr:"Chegando",lnd:"Pousou"};
-  return`<span class="st st-${v}">${l[v]||v}</span>`;
-}
+function nowMins(){const n=new Date();return n.getHours()*60+n.getMinutes();}
+function toMins(t){const[h,m]=t.split(":").map(Number);return h*60+m;}
+function addM(t,m){const[h,mm]=t.split(":").map(Number);const tot=h*60+mm+m;return String(Math.floor(tot/60)%24).padStart(2,"0")+":"+String(tot%60).padStart(2,"0");}
+function durS(m){const h=Math.floor(m/60),r=m%60;return h>0?h+"h"+(r>0?r+"m":""):r+"m";}
+function stk(mode,iata,t,day){return mode+"__"+iata+"__"+t+"__"+day;}
+function gate(fi){return GATES[fi%GATES.length];}
+function belt(fi){return BELTS[fi%BELTS.length];}
+function chipH(t){return`<span class="chip c-${CM[t]||"dom"}">${CL[t]||t}</span>`;}
+function alH(c){const a=AL[c];if(!a)return`<span class="al" style="color:#546e7a;border-color:#263238">${c}</span>`;return`<span class="al" style="color:${a.color};border-color:${a.color}55;background:${a.color}14">${a.name}</span>`;}
+function stH(v){const l={sch:"Programado",ont:"No Horário",board:"Embarcando",final:"Emb. Final",dep:"Partiu",del:"Atrasado",can:"Cancelado",arr:"Chegando",lnd:"Pousou"};return`<span class="st st-${v}">${l[v]||v}</span>`;}
+function shouldShow(t,day){return day!==todayIdx||toMins(t)>=nowMins()-30;}
+function getNext(rows,day){if(day!==todayIdx)return -1;const nm=nowMins();for(let i=0;i<rows.length;i++){if(toMins(rows[i].time)>=nm)return i;}return -1;}
 function depRows(day,tf,sr){
   return FD.map((f,fi)=>({f,fi}))
-    .filter(({f})=>f[7][day]!=null)
+    .filter(({f})=>f[7][day]!=null&&shouldShow(f[7][day],day))
     .filter(({f})=>tf==="ALL"||f[2]===tf)
     .filter(({f})=>!sr||f[0].toLowerCase().includes(sr)||f[1].toLowerCase().includes(sr)||(AL[f[6]]?.name||"").toLowerCase().includes(sr))
     .map(({f,fi})=>({time:f[7][day],dest:f[0],iata:f[1],tipo:f[2],dist:f[3],dur:f[4],ac:f[5],al:f[6],fi,gate:gate(fi),st:SS[stk("dep",f[1],f[7][day],day)]||"sch"}))
@@ -248,75 +242,56 @@ function arrRows(day,tf,sr){
     .filter(({f})=>f[7][day]!=null)
     .filter(({f})=>tf==="ALL"||f[2]===tf)
     .filter(({f})=>!sr||f[0].toLowerCase().includes(sr)||f[1].toLowerCase().includes(sr)||(AL[f[6]]?.name||"").toLowerCase().includes(sr))
-    .map(({f,fi})=>{
-      const dep=f[7][day];
-      const retArr=addM(addM(dep,f[4]),60+f[4]);
-      return {time:retArr,orig:f[0],iata:f[1],tipo:f[2],dist:f[3],dur:f[4],ac:f[5],al:f[6],fi,belt:belt(fi),st:SS[stk("arr",f[1],retArr,day)]||"sch"};
-    })
+    .map(({f,fi})=>{const arrT=addM(f[7][day],f[4]);return{time:arrT,dest:f[0],iata:f[1],tipo:f[2],dist:f[3],dur:f[4],ac:f[5],al:f[6],fi,belt:belt(fi),st:SS[stk("arr",f[1],arrT,day)]||"sch"};} )
+    .filter(r=>shouldShow(r.time,day))
     .sort((a,b)=>a.time.localeCompare(b.time));
 }
 function rDep(){
   const day=AD.dep,tf=document.getElementById("tf-dep").value,sr=document.getElementById("sr-dep").value.toLowerCase();
-  const rows=depRows(day,tf,sr);
-  document.getElementById("tb-dep").innerHTML=rows.map(r=>`
-    <tr${r.tipo!=="DOM"?' class="intl"':''}><td class="tc">${r.time}</td><td class="tdst">${r.dest}</td>
-    <td class="tia">${r.iata}</td><td>${alH(r.al)}</td><td>${chipH(r.tipo)}</td>
-    <td class="tac">${r.ac}</td><td class="tmeta">${Number(r.dist).toLocaleString("pt-BR")} km</td>
-    <td class="tmeta">${durS(r.dur)}</td><td class="tgt">${r.gate}</td>
-    <td>${stH(r.st)}</td></tr>`).join("");
+  const rows=depRows(day,tf,sr);const ni=getNext(rows,day);
+  document.getElementById("tb-dep").innerHTML=rows.map((r,i)=>{
+    const cls=[r.tipo!=="DOM"?"intl":"",i===ni?"next-flight":""].filter(Boolean).join(" ");
+    return`<tr class="${cls}"><td class="tc">${r.time}</td><td class="tdst">${r.dest}</td><td class="tia">${r.iata}</td><td>${alH(r.al)}</td><td>${chipH(r.tipo)}</td><td class="tac">${r.ac}</td><td class="tmeta">${Number(r.dist).toLocaleString("pt-BR")} km</td><td class="tmeta">${durS(r.dur)}</td><td class="tgt">${r.gate}</td><td>${stH(r.st)}</td></tr>`;
+  }).join("");
   document.getElementById("cnt-dep").textContent=rows.length;
   document.getElementById("em-dep").style.display=rows.length===0?"block":"none";
+  const lbl=document.getElementById("now-lbl-dep");
+  if(day===todayIdx){const n=new Date();lbl.textContent="A partir de "+String(n.getHours()).padStart(2,"0")+":"+String(Math.max(0,n.getMinutes()-30)).padStart(2,"0");}else lbl.textContent="";
 }
 function rArr(){
   const day=AD.arr,tf=document.getElementById("tf-arr").value,sr=document.getElementById("sr-arr").value.toLowerCase();
-  const rows=arrRows(day,tf,sr);
-  document.getElementById("tb-arr").innerHTML=rows.map(r=>`
-    <tr${r.tipo!=="DOM"?' class="intl"':''}><td class="tc arr">${r.time}</td>
-    <td class="tdst">Retorno de ${r.orig.split(" –")[0]}</td>
-    <td class="tia">${r.iata}</td><td>${alH(r.al)}</td><td>${chipH(r.tipo)}</td>
-    <td class="tac">${r.ac}</td><td class="tmeta">${Number(r.dist).toLocaleString("pt-BR")} km</td>
-    <td class="tmeta">${durS(r.dur)}</td><td class="tgt">${r.belt}</td>
-    <td>${stH(r.st)}</td></tr>`).join("");
+  const rows=arrRows(day,tf,sr);const ni=getNext(rows,day);
+  document.getElementById("tb-arr").innerHTML=rows.map((r,i)=>{
+    const cls=[r.tipo!=="DOM"?"intl":"",i===ni?"next-flight":""].filter(Boolean).join(" ");
+    return`<tr class="${cls}"><td class="tc arr">${r.time}</td><td class="tdst">${r.dest}</td><td class="tia">${r.iata}</td><td>${alH(r.al)}</td><td>${chipH(r.tipo)}</td><td class="tac">${r.ac}</td><td class="tmeta">${Number(r.dist).toLocaleString("pt-BR")} km</td><td class="tmeta">${durS(r.dur)}</td><td class="tgt">${r.belt}</td><td>${stH(r.st)}</td></tr>`;
+  }).join("");
   document.getElementById("cnt-arr").textContent=rows.length;
   document.getElementById("em-arr").style.display=rows.length===0?"block":"none";
 }
 function rPax(){
   const day=AD.pax,mode=document.getElementById("paxmode").value,sr=document.getElementById("sr-pax").value.toLowerCase();
-  const rows=mode==="dep"?depRows(day,"ALL",sr):arrRows(day,"ALL",sr);
-  const isA=mode==="arr";
-  document.getElementById("tb-pax").innerHTML=rows.map(r=>{
-    const lbl=isA?`Retorno de ${(r.orig||r.dest).split(" –")[0]}`:r.dest;
+  const isA=mode==="arr";const rows=isA?arrRows(day,"ALL",sr):depRows(day,"ALL",sr);const ni=getNext(rows,day);
+  document.getElementById("tb-pax").innerHTML=rows.map((r,i)=>{
+    const cls=[r.tipo!=="DOM"?"intl":"",i===ni?"next-flight":""].filter(Boolean).join(" ");
     const loc=isA?`Esteira ${r.belt}`:`Portão ${r.gate}`;
-    return`<tr${r.tipo!=="DOM"?' class="intl"':''}>
-      <td class="tc${isA?' arr':''}">${r.time}</td><td class="tdst">${lbl}</td>
-      <td class="tia">${r.iata}</td><td>${alH(r.al)}</td>
-      <td class="tgt">${loc}</td><td>${stH(r.st)}</td></tr>`;
+    return`<tr class="${cls}"><td class="tc${isA?" arr":""}">${r.time}</td><td class="tdst">${r.dest}</td><td class="tia">${r.iata}</td><td>${alH(r.al)}</td><td class="tgt">${loc}</td><td>${stH(r.st)}</td></tr>`;
   }).join("");
   document.getElementById("cnt-pax").textContent=rows.length;
   document.getElementById("em-pax").style.display=rows.length===0?"block":"none";
 }
 function rMgr(){
   const day=AD.mgr,mode=document.getElementById("mgrmode").value,sr=document.getElementById("sr-mgr").value.toLowerCase();
-  const rows=mode==="dep"?depRows(day,"ALL",sr):arrRows(day,"ALL",sr);
-  const isA=mode==="arr";
-  const opts=isA?ST_ARR:ST_DEP;
+  const isA=mode==="arr";const rows=isA?arrRows(day,"ALL",sr):depRows(day,"ALL",sr);const opts=isA?ST_ARR:ST_DEP;
   document.getElementById("tb-mgr").innerHTML=rows.map((r,ri)=>{
-    const lbl=isA?`Retorno de ${(r.orig||r.dest).split(" –")[0]}`:r.dest;
     const loc=isA?`Esteira ${r.belt}`:`Portão ${r.gate}`;
-    const sk=stk(mode,r.iata,r.time,day);
-    const cur=SS[sk]||"sch";
+    const sk=stk(mode,r.iata,r.time,day);const cur=SS[sk]||"sch";
     const optH=opts.map(o=>`<option value="${o.v}"${o.v===cur?" selected":""}>${o.l}</option>`).join("");
-    return`<tr${r.tipo!=="DOM"?' class="intl"':''}>
-      <td class="tc${isA?' arr':''}">${r.time}</td><td class="tdst">${lbl}</td>
-      <td class="tia">${r.iata}</td><td>${alH(r.al)}</td><td class="tac">${r.ac}</td>
-      <td class="tgt">${loc}</td>
-      <td><select class="stsel" data-sk="${sk}" onchange="liveP(this,${ri})">${optH}</select></td>
-      <td id="sp${ri}">${stH(cur)}</td></tr>`;
+    return`<tr class="${r.tipo!=="DOM"?"intl":""}"><td class="tc${isA?" arr":""}">${r.time}</td><td class="tdst">${r.dest}</td><td class="tia">${r.iata}</td><td>${alH(r.al)}</td><td class="tac">${r.ac}</td><td class="tgt">${loc}</td><td><select class="stsel" data-sk="${sk}" onchange="liveP(this,${ri})">${optH}</select></td><td id="sp${ri}">${stH(cur)}</td></tr>`;
   }).join("");
   document.getElementById("cnt-mgr").textContent=rows.length;
   document.getElementById("em-mgr").style.display=rows.length===0?"block":"none";
 }
-function liveP(sel,ri){document.getElementById(`sp${ri}`).innerHTML=stH(sel.value);}
+function liveP(sel,ri){document.getElementById("sp"+ri).innerHTML=stH(sel.value);}
 function saveAll(){
   document.querySelectorAll(".stsel").forEach(s=>SS[s.dataset.sk]=s.value);
   rDep();rArr();rPax();rMgr();
@@ -325,71 +300,27 @@ function saveAll(){
   setTimeout(()=>n.textContent="",3000);
 }
 function rInfo(){
-  document.getElementById("al-grid").innerHTML=Object.entries(AL).map(([code,a])=>
-    `<div class="al-card"><div class="al-code" style="color:${a.color}">${code}</div><div><div class="al-nm">${a.name}</div></div></div>`).join("");
+  document.getElementById("al-grid").innerHTML=Object.entries(AL).map(([c,a])=>`<div class="al-card"><div class="al-code" style="color:${a.color}">${c}</div><div class="al-nm">${a.name}</div></div>`).join("");
   const total=FD.length,dom=FD.filter(f=>f[2]==="DOM").length;
-  document.getElementById("ig").innerHTML=`
-    <div class="ic"><h3>Identificação</h3>
-      <div class="ir"><span class="ik">IATA</span><span class="iv">${AI.iata}</span></div>
-      <div class="ir"><span class="ik">ICAO</span><span class="iv">${AI.icao}</span></div>
-      <div class="ir"><span class="ik">Nome</span><span class="iv">${AI.name}</span></div>
-      <div class="ir"><span class="ik">Cidade</span><span class="iv">${AI.city}</span></div>
-      <div class="ir"><span class="ik">Operador</span><span class="iv">${AI.operator}</span></div>
-    </div>
-    <div class="ic"><h3>Infraestrutura</h3>
-      <div class="ir"><span class="ik">Pista</span><span class="iv">${AI.runway}</span></div>
-      <div class="ir"><span class="ik">Elevação</span><span class="iv">${AI.elevation}</span></div>
-      <div class="ir"><span class="ik">Terminais</span><span class="iv">${AI.terminals}</span></div>
-      <div class="ir"><span class="ik">Operação</span><span class="iv">IFR/VFR 24h</span></div>
-    </div>
-    <div class="ic"><h3>Rotas</h3>
-      <div class="ir"><span class="ik">Total de entradas</span><span class="iv">${total}</span></div>
-      <div class="ir"><span class="ik">Doméstico</span><span class="iv">${dom}</span></div>
-      <div class="ir"><span class="ik">Internacional</span><span class="iv">${total-dom}</span></div>
-      <div class="ir"><span class="ik">Turnaround mín.</span><span class="iv">60 min</span></div>
-    </div>
-    <div class="ic"><h3>Legenda de Status</h3>
-      <div class="ir"><span class="ik">Cinza</span><span class="iv">Programado</span></div>
-      <div class="ir"><span class="ik">Azul ciano piscando</span><span class="iv">Embarcando</span></div>
-      <div class="ir"><span class="ik">Laranja piscando</span><span class="iv">Embarque Final</span></div>
-      <div class="ir"><span class="ik">Verde</span><span class="iv">Partiu / Pousou</span></div>
-      <div class="ir"><span class="ik">Vermelho piscando</span><span class="iv">Atrasado</span></div>
-    </div>`;
+  document.getElementById("ig").innerHTML=`<div class="ic"><h3>Identificação</h3><div class="ir"><span class="ik">IATA/ICAO</span><span class="iv">${AI.iata} / ${AI.icao}</span></div><div class="ir"><span class="ik">Nome</span><span class="iv">${AI.name}</span></div><div class="ir"><span class="ik">Cidade</span><span class="iv">${AI.city}</span></div><div class="ir"><span class="ik">Operador</span><span class="iv">${AI.operator}</span></div></div><div class="ic"><h3>Infraestrutura</h3><div class="ir"><span class="ik">Pista</span><span class="iv">${AI.runway}</span></div><div class="ir"><span class="ik">Elevação</span><span class="iv">${AI.elevation}</span></div><div class="ir"><span class="ik">Terminais</span><span class="iv">${AI.terminals}</span></div><div class="ir"><span class="ik">Operação</span><span class="iv">IFR/VFR 24h</span></div></div><div class="ic"><h3>Rotas</h3><div class="ir"><span class="ik">Total de entradas</span><span class="iv">${total}</span></div><div class="ir"><span class="ik">Doméstico</span><span class="iv">${dom}</span></div><div class="ir"><span class="ik">Internacional</span><span class="iv">${total-dom}</span></div></div><div class="ic"><h3>Status — Legenda</h3><div class="ir"><span class="ik">Cinza</span><span class="iv">Programado</span></div><div class="ir"><span class="ik">Ciano piscando</span><span class="iv">Embarcando</span></div><div class="ir"><span class="ik">Laranja piscando</span><span class="iv">Embarque Final</span></div><div class="ir"><span class="ik">Verde</span><span class="iv">Partiu / Pousou</span></div><div class="ir"><span class="ik">Vermelho</span><span class="iv">Atrasado / Cancelado</span></div></div>`;
 }
 function showV(name){
-  ["dep","arr","pax","mgr","info"].forEach(t=>document.getElementById(`tab-${t}`).style.display=t===name?"block":"none");
+  ["dep","arr","pax","mgr","info"].forEach(t=>document.getElementById("tab-"+t).style.display=t===name?"block":"none");
   document.querySelectorAll(".vbtn").forEach((b,i)=>b.classList.toggle("active",["dep","arr","pax","mgr","info"][i]===name));
-  if(name==="info")rInfo();
-  if(name==="pax")rPax();
-  if(name==="mgr")rMgr();
+  if(name==="info")rInfo();if(name==="pax")rPax();if(name==="mgr")rMgr();
 }
 function initPills(id,key,cb){
   const w=document.getElementById(id);
-  DAYS.forEach((d,i)=>{
-    const b=document.createElement("button");
-    b.className="pill"+(i===AD[key]?" active":"");
-    b.textContent=d.substring(0,3);
-    b.onclick=()=>{w.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));b.classList.add("active");AD[key]=i;cb();};
-    w.appendChild(b);
-  });
+  DAYS.forEach((d,i)=>{const b=document.createElement("button");b.className="pill"+(i===AD[key]?" active":"");b.textContent=d.substring(0,3);b.onclick=()=>{w.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));b.classList.add("active");AD[key]=i;cb();};w.appendChild(b);});
 }
-function tick(){
-  const n=new Date();
-  document.getElementById("clk").textContent=n.toLocaleTimeString("pt-BR",{timeZone:"America/Sao_Paulo"});
-  document.getElementById("clkd").textContent=n.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"short",year:"numeric",timeZone:"America/Sao_Paulo"});
-}
+function tick(){const n=new Date();document.getElementById("clk").textContent=n.toLocaleTimeString("pt-BR",{timeZone:"America/Sao_Paulo"});document.getElementById("clkd").textContent=n.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"short",year:"numeric",timeZone:"America/Sao_Paulo"});}
 function buildTicker(){
-  const cnt=FD.filter(f=>f[7][AD.dep]!=null).length;
-  const cias=Object.values(AL).map(a=>a.name).join(" · ");
-  document.getElementById("tkrtxt").textContent=
-    `✈ ${AI.iata} — ${AI.name.toUpperCase()}     ✈ ${cnt} PARTIDAS HOJE     ✈ PISTA: ${AI.runway} · ${AI.elevation}     ✈ ${cias}     `;
+  const cnt=FD.filter(f=>f[7][todayIdx]!=null&&shouldShow(f[7][todayIdx],todayIdx)).length;
+  document.getElementById("tkrtxt").textContent="✈ "+AI.iata+" — "+AI.name.toUpperCase()+"     ✈ "+cnt+" PARTIDAS HOJE     ✈ "+AI.runway+" · "+AI.elevation+"     ✈ "+Object.values(AL).map(a=>a.name).join(" · ")+"     ";
 }
-["dep","arr","pax","mgr"].forEach(k=>initPills(`dp-${k}`,k,()=>{
-  if(k==="dep")rDep();else if(k==="arr")rArr();else if(k==="pax")rPax();else rMgr();
-}));
-rDep();buildTicker();tick();setInterval(tick,1000);
-document.getElementById("paxmode").onchange=rPax;
-document.getElementById("mgrmode").onchange=rMgr;
+["dep","arr","pax","mgr"].forEach(k=>initPills("dp-"+k,k,()=>{if(k==="dep")rDep();else if(k==="arr")rArr();else if(k==="pax")rPax();else rMgr();}));
+document.getElementById("paxmode").onchange=rPax;document.getElementById("mgrmode").onchange=rMgr;
+rDep();buildTicker();tick();setInterval(tick,1000);setInterval(()=>{rDep();rArr();rPax();},60000);
 </script>
 </body>
 </html>
