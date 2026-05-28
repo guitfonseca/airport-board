@@ -498,23 +498,24 @@ function rHist(){
 // ── VOOS AO VIVO ──────────────────────────────────────────────────────────────
 function lerp(a,b,t){return a+(b-a)*t;}
 function getPlanePos(f,fi,day){
-  // compute progress 0-1 based on current time vs departure and duration
   const dep=f[7][day];if(!dep)return null;
   const dest=COORDS[f[1]];const home=HOME;
   if(!dest||!home)return null;
   const depM=toMins(dep);
-  const arrM=depM+f[4];
+  const dur=f[4];
+  const arrM=depM+dur; // may exceed 1440 (midnight crossing)
   const nm=nowMins();
-  if(nm<depM||nm>arrM)return null; // not in flight
-  const prog=(nm-depM)/f[4];
-  // Great-circle approx: linear interp (good enough for simulation)
+  // Handle midnight crossing: if depM > 1200 (late night) and nm < 600 (early morning)
+  // the flight is still in progress on the next calendar day
+  const nmAdj = (depM > 1200 && nm < 600) ? nm + 1440 : nm;
+  if(nmAdj < depM || nmAdj > arrM) return null;
+  const prog = Math.max(0, Math.min(1, (nmAdj - depM) / dur));
   const lat=lerp(home[0],dest[0],prog);
   const lon=lerp(home[1],dest[1],prog);
-  // Rotation angle
   const dLat=dest[0]-home[0];
   const dLon=dest[1]-home[1];
   const angle=Math.atan2(dLon,dLat)*180/Math.PI;
-  return {lat,lon,angle,prog,dest:f[0],iata:f[1],tipo:f[2],ac:f[5],al:f[6],fnum:flightNum(f[6],fi),dep,arr:addM(dep,f[4])};
+  return {lat,lon,angle,prog,dest:f[0],iata:f[1],tipo:f[2],ac:f[5],al:f[6],fnum:flightNum(f[6],fi),dep,arr:addM(dep,dur)};
 }
 function initLiveMap(){
   if(liveMapInst)return;
@@ -535,7 +536,7 @@ function renderLive(){
     if(!pos)return;
     airborne++;
     const a=AL[f[6]];const color=a?a.color:"#ffffff";
-    // Plane icon rotated
+    const home=HOME;const dest=COORDS[f[1]];
     const trail=L.polyline([home,[pos.lat,pos.lon]],{color,weight:2,opacity:.55,dashArray:"4,4"}).addTo(liveMapInst);
     if(dest){const rem=L.polyline([[pos.lat,pos.lon],dest],{color,weight:1.5,opacity:.2,dashArray:"3,6"}).addTo(liveMapInst);livePlaneMarkers.push(rem);}
     const icon=L.divIcon({html:`<div style="color:${color};font-size:19px;transform:rotate(${pos.angle}deg);text-shadow:0 0 6px ${color},0 0 12px ${color}55;filter:drop-shadow(0 0 4px ${color});line-height:1;">✈</div>`,className:"",iconSize:[22,22],iconAnchor:[11,11]});
