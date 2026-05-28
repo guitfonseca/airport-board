@@ -531,29 +531,64 @@ function renderLive(){
   livePlaneMarkers.forEach(m=>liveMapInst.removeLayer(m));livePlaneMarkers=[];
   const day=todayIdx;
   let airborne=0,boarding=0,arriving=0,delayed=0;
+
+  // ── PARTIDAS AO VIVO ────────────────────────────────────────────────────────
   FD.forEach((f,fi)=>{
     const pos=getPlanePos(f,fi,day);
     if(!pos)return;
     airborne++;
     const a=AL[f[6]];const color=a?a.color:"#ffffff";
     const home=HOME;const dest=COORDS[f[1]];
-    const trail=L.polyline([home,[pos.lat,pos.lon]],{color,weight:2,opacity:.55,dashArray:"4,4"}).addTo(liveMapInst);
-    if(dest){const rem=L.polyline([[pos.lat,pos.lon],dest],{color,weight:1.5,opacity:.2,dashArray:"3,6"}).addTo(liveMapInst);livePlaneMarkers.push(rem);}
-    const icon=L.divIcon({html:`<div style="color:${color};font-size:19px;transform:rotate(${pos.angle}deg);text-shadow:0 0 6px ${color},0 0 12px ${color}55;filter:drop-shadow(0 0 4px ${color});line-height:1;">✈</div>`,className:"",iconSize:[22,22],iconAnchor:[11,11]});
+    // Trilha percorrida
+    const trail=L.polyline([home,[pos.lat,pos.lon]],{color,weight:2,opacity:.6,dashArray:"5,4"}).addTo(liveMapInst);
+    // Caminho restante
+    if(dest){const rem=L.polyline([[pos.lat,pos.lon],dest],{color,weight:1.5,opacity:.18,dashArray:"3,7"}).addTo(liveMapInst);livePlaneMarkers.push(rem);}
+    // Ícone SVG avião
+    const svgPlane=`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" style="transform:rotate(${pos.angle-45}deg);filter:drop-shadow(0 0 3px ${color})"><path fill="${color}" d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
+    const icon=L.divIcon({html:svgPlane,className:"",iconSize:[22,22],iconAnchor:[11,11]});
     const m=L.marker([pos.lat,pos.lon],{icon,zIndexOffset:1000}).addTo(liveMapInst);
     const pct=Math.round(pos.prog*100);const rm=Math.round(f[4]*(1-pos.prog));
     const rh=Math.floor(rm/60),rmm=rm%60;const remStr=rh>0?`${rh}h${rmm}m`:`${rmm}m`;
-    m.bindPopup(`<div style="font-family:'Barlow Condensed',sans-serif;min-width:180px"><div style="font-size:1.1rem;font-weight:700;color:${color};margin-bottom:4px">${pos.fnum}</div><div style="font-size:.9rem;margin-bottom:6px">${f[0]}</div><div style="font-size:.78rem;color:#90a0b0;margin-bottom:8px">${a?.name||f[6]} · ${pos.ac}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:.76rem"><div style="color:#546e7a">Partiu</div><div style="font-family:monospace">${pos.dep}</div><div style="color:#546e7a">Chega</div><div style="font-family:monospace">${pos.arr}</div><div style="color:#546e7a">Restante</div><div style="font-family:monospace;color:${color}">${remStr}</div></div><div style="margin-top:8px;background:#1a2535;border-radius:3px;height:4px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${color};border-radius:3px"></div></div><div style="font-size:.68rem;color:#546e7a;margin-top:3px;text-align:right">${pct}% do trajeto</div></div>`);
+    m.bindPopup(`<div style="font-family:'Barlow Condensed',sans-serif;min-width:190px"><div style="font-size:1.1rem;font-weight:700;color:${color};margin-bottom:4px">${pos.fnum} ↑</div><div style="font-size:.9rem;font-weight:700;margin-bottom:4px">${f[0]}</div><div style="font-size:.76rem;color:#90a0b0;margin-bottom:8px">${a?.name||f[6]} · ${pos.ac}</div><div style="display:grid;grid-template-columns:auto 1fr;gap:3px 8px;font-size:.74rem"><span style="color:#546e7a">Partiu</span><span style="font-family:monospace">${pos.dep}</span><span style="color:#546e7a">Chega</span><span style="font-family:monospace">${pos.arr}</span><span style="color:#546e7a">Restante</span><span style="font-family:monospace;color:${color}">${remStr}</span></div><div style="margin-top:8px;background:#1a2535;border-radius:3px;height:4px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${color};border-radius:3px"></div></div><div style="font-size:.66rem;color:#546e7a;margin-top:3px;text-align:right">${pct}% do trajeto · saída</div></div>`);
     livePlaneMarkers.push(trail,m);
-    // Count status
     const st=getSt("dep",f[1],f[7][day],day);
-    if(st==="board"||st==="final")boarding++;
-    if(st==="arr")arriving++;
-    if(st==="del")delayed++;
+    if(st==="board"||st==="final")boarding++;if(st==="del")delayed++;
   });
-  // Also count today's arrivals coming in
-  const arrToday=arrRows(day,"ALL","").filter(r=>r.st==="arr");
-  arriving+=arrToday.length;
+
+  // ── CHEGADAS AO VIVO ────────────────────────────────────────────────────────
+  FD.forEach((f,fi)=>{
+    const arrT=f[8]&&f[8][day];if(!arrT)return;
+    const orig=COORDS[f[1]];if(!orig)return;
+    // Inbound: arrived from dest, flying back to home
+    const inbDepM=toMins(arrT)-f[4];
+    const nm=nowMins();
+    const nmAdj=(inbDepM>1200&&nm<600)?nm+1440:nm;
+    const inbArrM=inbDepM+f[4];
+    if(nmAdj<inbDepM||nmAdj>inbArrM)return;
+    const prog=Math.max(0,Math.min(1,(nmAdj-inbDepM)/f[4]));
+    const home=HOME;
+    const lat=lerp(orig[0],home[0],prog);
+    const lon=lerp(orig[1],home[1],prog);
+    const dLat=home[0]-orig[0];const dLon=home[1]-orig[1];
+    const angle=Math.atan2(dLon,dLat)*180/Math.PI;
+    const a=AL[f[6]];const color=a?a.color:"#88ffaa";
+    // Trilha da chegada (de orig até posição atual)
+    const arrTrail=L.polyline([orig,[lat,lon]],{color,weight:2,opacity:.5,dashArray:"5,4"}).addTo(liveMapInst);
+    const arrRem=L.polyline([[lat,lon],home],{color,weight:1.5,opacity:.15,dashArray:"3,7"}).addTo(liveMapInst);
+    // Ícone SVG chegada (ligeiramente mais translúcido)
+    const svgArr=`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" style="transform:rotate(${angle-45}deg);filter:drop-shadow(0 0 4px ${color})"><path fill="${color}" opacity="0.9" d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
+    const arrIcon=L.divIcon({html:svgArr,className:"",iconSize:[22,22],iconAnchor:[11,11]});
+    const mArr=L.marker([lat,lon],{icon:arrIcon,zIndexOffset:900}).addTo(liveMapInst);
+    const rmArr=Math.round(f[4]*(1-prog));
+    const rhA=Math.floor(rmArr/60),rmA=rmArr%60;
+    const remA=rhA>0?`${rhA}h${rmA}m`:`${rmA}m`;
+    const pctA=Math.round(prog*100);
+    const fnum=flightNum(f[6],fi);
+    mArr.bindPopup(`<div style="font-family:'Barlow Condensed',sans-serif;min-width:190px"><div style="font-size:1.1rem;font-weight:700;color:${color};margin-bottom:4px">${fnum} ↓</div><div style="font-size:.9rem;font-weight:700;margin-bottom:4px">${f[0]} → ${AI.iata}</div><div style="font-size:.76rem;color:#90a0b0;margin-bottom:8px">${a?.name||f[6]} · ${f[5]}</div><div style="display:grid;grid-template-columns:auto 1fr;gap:3px 8px;font-size:.74rem"><span style="color:#546e7a">Origem</span><span style="font-family:monospace">${f[1]}</span><span style="color:#546e7a">Chegada prev.</span><span style="font-family:monospace">${arrT}</span><span style="color:#546e7a">Restante</span><span style="font-family:monospace;color:${color}">${remA}</span></div><div style="margin-top:8px;background:#1a2535;border-radius:3px;height:4px;overflow:hidden"><div style="height:100%;width:${pctA}%;background:${color};border-radius:3px"></div></div><div style="font-size:.66rem;color:#546e7a;margin-top:3px;text-align:right">${pctA}% do percurso · chegada</div></div>`);
+    livePlaneMarkers.push(arrTrail,arrRem,mArr);
+    arriving++;
+  });
+
   document.getElementById("ls-airborne").textContent=airborne;
   document.getElementById("ls-board").textContent=boarding;
   document.getElementById("ls-arr").textContent=arriving;
