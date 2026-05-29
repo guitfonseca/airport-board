@@ -1112,6 +1112,7 @@ function _trainState(plan,elapsed){
 
 // ── Diagram (single line, with optional Y fork) ─────────────────────────────
 const NTRAINS = (typeof METRO_NTRAINS!=='undefined')?METRO_NTRAINS:2;
+const TRAIN_PALETTE=['#ff5252','#ff9800','#ffeb3b','#69f0ae','#40c4ff','#ea80fc','#ff6e40','#b9f6ca','#80d8ff','#ffd740','#ccff90','#f48fb1'];
 function _metroDiagram(){
   const t=TRANSIT_DATA;const lc=t.metro_color;
   const M=_metroModel();
@@ -1161,7 +1162,7 @@ function _metroDiagram(){
   const zones=`<text class="ml-zone" x="${(xs[0]+(split>0?xs[split-1]:xs[0]))/2}" y="${H-8}" text-anchor="middle">✈ AEROPORTO</text>
     <text class="ml-zone" x="${(xs[Math.min(split,nMain-1)]+xs[nMain-1])/2}" y="${H-8}" text-anchor="middle" style="fill:${lc}">EXTENSÃO À CIDADE</text>
     <line x1="${airEnd}" y1="34" x2="${airEnd}" y2="${H-18}" class="ml-divider"/>`;
-  const trains=Array.from({length:NTRAINS},(_,k)=>`<circle class="ml-train" id="mtrain${k}" cx="${xs[0]}" cy="${y}" r="6.5" style="--lc:${lc}"/>`).join('');
+  const trains=Array.from({length:NTRAINS},(_,k)=>`<circle class="ml-train" id="mtrain${k}" cx="${xs[0]}" cy="${y}" r="6.5" style="--lc:${TRAIN_PALETTE[k%TRAIN_PALETTE.length]}"/>`).join('');
   const svg=`<svg class="ml-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
     <path class="ml-line" d="${dpath}" style="--lc:${lc}"/>
     ${branchPaths}${zones}${dots}${branchDots}${trains}${labels}${branchLabels}

@@ -1054,7 +1054,7 @@ function buildAnnPool(r){
 
 
 const METRO_NTRAINS=4;
-const TRANSIT_DATA={"metro_color": "#00a859", "metro_interval": 3, "dwell_sec": 30, "metro_note": "VLT do Vale · Aeroporto & Centro", "line_name": "VLT do Vale · Terminais & São José", "terminals": [{"name": "T2 Intl · Portal Tamoios", "zone": "air"}, {"name": "T2 Intl · Palmeiras Imperiais", "zone": "air"}, {"name": "T1 · Hall Cassiano Ricardo", "zone": "air"}, {"name": "T1 · Ala Embraer", "zone": "air"}, {"name": "T1 · Vila de S. J. do Paraíba", "zone": "air"}], "city_trunk": [{"name": "Parque Tecnológico", "zone": "city"}, {"name": "Jd. Aquarius", "zone": "city"}, {"name": "Centro · Vila", "zone": "city", "terminus": true}], "branches": [], "bus_interval": 15};
+const TRANSIT_DATA={"metro_color": "#00a859", "metro_interval": 7, "dwell_sec": 60, "metro_note": "VLT do Vale · Aeroporto & Centro", "line_name": "VLT do Vale · Terminais & São José", "terminals": [{"name": "T2 Intl · Portal Tamoios", "zone": "air"}, {"name": "T2 Intl · Saguão Paraíba", "zone": "air"}, {"name": "T1 · Hall Bandeirante", "zone": "air"}, {"name": "T1 · Ala Embraer", "zone": "air"}, {"name": "T1 · Praça Urubupungá", "zone": "air"}], "city_trunk": [{"name": "Parque Tecnológico", "zone": "city"}, {"name": "Jd. Aquarius", "zone": "city"}, {"name": "Centro · Vila", "zone": "city", "terminus": true}], "branches": [], "bus_interval": 15};
 const BUS_ROUTES_DATA=[{"name": "SJK → Centro", "color": "#00a859", "freq": 15, "stops": 8, "coords": [[-23.2292, -45.8711], [-23.225, -45.878], [-23.215, -45.882], [-23.205, -45.884], [-23.197, -45.885], [-23.19, -45.886], [-23.184, -45.887], [-23.1794, -45.8869]]}, {"name": "SJK → Taubaté", "color": "#8800cc", "freq": 30, "stops": 4, "coords": [[-23.2292, -45.8711], [-23.13, -45.78], [-23.06, -45.62], [-23.0244, -45.5603]]}, {"name": "SJK → São Paulo", "color": "#0057a8", "freq": 40, "stops": 2, "coords": [[-23.2292, -45.8711], [-23.5426, -46.6334]]}];
 // ── TRANSIT v2: timed stops + ping-pong (ré) + branches ─────────────────────
 let _bM=null,_bV=[],_tT=null;
@@ -1112,6 +1112,7 @@ function _trainState(plan,elapsed){
 
 // ── Diagram (single line, with optional Y fork) ─────────────────────────────
 const NTRAINS = (typeof METRO_NTRAINS!=='undefined')?METRO_NTRAINS:2;
+const TRAIN_PALETTE=['#ff5252','#ff9800','#ffeb3b','#69f0ae','#40c4ff','#ea80fc','#ff6e40','#b9f6ca','#80d8ff','#ffd740','#ccff90','#f48fb1'];
 function _metroDiagram(){
   const t=TRANSIT_DATA;const lc=t.metro_color;
   const M=_metroModel();
@@ -1161,7 +1162,7 @@ function _metroDiagram(){
   const zones=`<text class="ml-zone" x="${(xs[0]+(split>0?xs[split-1]:xs[0]))/2}" y="${H-8}" text-anchor="middle">✈ AEROPORTO</text>
     <text class="ml-zone" x="${(xs[Math.min(split,nMain-1)]+xs[nMain-1])/2}" y="${H-8}" text-anchor="middle" style="fill:${lc}">EXTENSÃO À CIDADE</text>
     <line x1="${airEnd}" y1="34" x2="${airEnd}" y2="${H-18}" class="ml-divider"/>`;
-  const trains=Array.from({length:NTRAINS},(_,k)=>`<circle class="ml-train" id="mtrain${k}" cx="${xs[0]}" cy="${y}" r="6.5" style="--lc:${lc}"/>`).join('');
+  const trains=Array.from({length:NTRAINS},(_,k)=>`<circle class="ml-train" id="mtrain${k}" cx="${xs[0]}" cy="${y}" r="6.5" style="--lc:${TRAIN_PALETTE[k%TRAIN_PALETTE.length]}"/>`).join('');
   const svg=`<svg class="ml-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
     <path class="ml-line" d="${dpath}" style="--lc:${lc}"/>
     ${branchPaths}${zones}${dots}${branchDots}${trains}${labels}${branchLabels}
@@ -1176,7 +1177,7 @@ function _getMlMeta(){const m=document.getElementById('mlmeta');if(!m)return nul
 let _metroPlan=null,_lastStation={};
 function _ensurePlan(nStations){
   const t=TRANSIT_DATA;
-  const runSec=Math.max(8, Math.round(t.metro_interval*60*0.6));
+  const runSec=30;
   if(!_metroPlan||_metroPlan.n!==nStations){_metroPlan=_segPlan(nStations,t.dwell_sec||60,runSec);_metroPlan.n=nStations;}
   return _metroPlan;
 }
@@ -1224,7 +1225,7 @@ let _planCache={};
 function _routePlan(nStations){
   const t=TRANSIT_DATA;
   if(_planCache[nStations])return _planCache[nStations];
-  const runSec=Math.max(8, Math.round(t.metro_interval*60*0.6));
+  const runSec=30;
   const p=_segPlan(nStations,t.dwell_sec||60,runSec);
   _planCache[nStations]=p;return p;
 }
