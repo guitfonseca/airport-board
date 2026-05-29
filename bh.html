@@ -195,6 +195,10 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
 .ml-zone{fill:var(--dim);font-size:10px;font-weight:700;letter-spacing:.12em;font-family:'Share Tech Mono',monospace}
 .ml-divider{stroke:var(--border);stroke-width:1.5;stroke-dasharray:3,4}
 
+.ml-branch{opacity:.92}
+.ml-branch-lbl{font-size:9px;font-weight:900;letter-spacing:.1em;font-family:'Share Tech Mono',monospace;text-transform:uppercase}
+.ml-train.dwelling{animation:mldwell .8s ease-in-out infinite alternate}
+@keyframes mldwell{from{opacity:1}to{opacity:.55}}
 </style>
 </head>
 <body>
@@ -1047,131 +1051,190 @@ function buildAnnPool(r){
   return pool;
 }
 
-const TRANSIT_DATA={"metro_interval": 5, "bus_interval": 11, "metro_color": "#007dc5", "metro_line": "Linha BH-Aeroporto (Metro BH)", "metro_note": "Operação 05h30-23h · Intervalo de 5 min", "line1_name": "Linha Interna - Terminais", "line1_color": "#007dc5", "line1_stations": [{"id": "t1", "name": "Terminal T1 Dom.", "type": "terminal"}, {"id": "t2", "name": "Terminal T2 Intl", "type": "terminal"}, {"id": "cnf", "name": "Aeroporto CNF", "type": "hub"}], "line2_name": "Extensao ao Centro BH", "line2_color": "#007dc5", "line2_stations": [{"id": "cnf", "name": "Aeroporto CNF", "type": "hub"}, {"id": "conf", "name": "Confins", "type": "city"}, {"id": "peleo", "name": "Pedro Leopoldo", "type": "city"}, {"id": "vnd", "name": "Venda Nova", "type": "city"}, {"id": "pamp", "name": "Pampulha", "type": "city"}, {"id": "sante", "name": "Santa Ines", "type": "city"}, {"id": "prasa", "name": "Praca Sete / BH", "type": "terminus"}], "bus_routes": [{"name": "CNF ao Centro BH", "freq": 11, "color": "#007dc5"}, {"name": "CNF a Pampulha / UFMG", "freq": 20, "color": "#009846"}, {"name": "CNF a Nova Lima", "freq": 40, "color": "#cc6600"}]};
-const BUS_ROUTES_DATA=[{"name": "CNF BH Centro", "color": "#007dc5", "freq": 11, "coords": [[-19.6244, -43.9719], [-19.78, -43.94], [-19.8278, -43.9678]]}, {"name": "CNF Pampulha", "color": "#009846", "freq": 20, "coords": [[-19.6244, -43.9719], [-19.868, -43.9688]]}, {"name": "CNF Nova Lima", "color": "#cc6600", "freq": 40, "coords": [[-19.6244, -43.9719], [-19.9826, -43.8451]]}];
 
 
-const METRO_GEO=[[-19.6244, -43.9719], [-19.68, -43.965], [-19.74, -43.952], [-19.8278, -43.9678], [-19.85, -43.97]];
-// ── TRANSIT (clean metro line + bus-only map) ───────────────────────────────
-let _bM=null,_bV=[],_tT=null,_lS={metro:-1};
-function _tP(iv){const n=nowMinsTransit(),s=new Date().getSeconds();return((n%iv)*60+s)/(iv*60);}
+const METRO_NTRAINS=3;
+const TRANSIT_DATA={"metro_color": "#007dc5", "metro_interval": 5, "dwell_sec": 120, "metro_note": "Trem Aeroporto + Conexão BH", "line_name": "Trem CNF · Terminais & Centro", "terminals": [{"name": "T1 · Hall Aroeira", "zone": "air"}, {"name": "T1 · Saguão Pequi", "zone": "air"}, {"name": "T2 · Galeria Sempre-Viva", "zone": "air"}, {"name": "T2 · Praça Ipê-Amarelo", "zone": "air"}, {"name": "T2 · Embarque Cerrado", "zone": "air"}], "city_trunk": [{"name": "Confins", "zone": "city"}, {"name": "Vespasiano", "zone": "city"}, {"name": "Pampulha", "zone": "city"}, {"name": "Praça Sete · BH", "zone": "city", "terminus": true}], "branches": [], "bus_interval": 11};
+const BUS_ROUTES_DATA=[{"name": "CNF → BH Centro", "color": "#007dc5", "freq": 11, "stops": 10, "coords": [[-19.6244, -43.9719], [-19.65, -43.96], [-19.68, -43.96], [-19.71, -43.955], [-19.74, -43.95], [-19.76, -43.95], [-19.78, -43.955], [-19.8, -43.96], [-19.82, -43.965], [-19.8278, -43.9678]]}, {"name": "CNF → Pampulha", "color": "#009846", "freq": 20, "stops": 5, "coords": [[-19.6244, -43.9719], [-19.7, -43.965], [-19.77, -43.96], [-19.83, -43.965], [-19.868, -43.9688]]}, {"name": "CNF → Nova Lima", "color": "#cc6600", "freq": 40, "stops": 4, "coords": [[-19.6244, -43.9719], [-19.74, -43.94], [-19.88, -43.89], [-19.9826, -43.8451]]}];
+// ── TRANSIT v2: timed stops + ping-pong (ré) + branches ─────────────────────
+let _bM=null,_bV=[],_tT=null;
+function nowSec(){const n=new Date();return n.getHours()*3600+n.getMinutes()*60+n.getSeconds();}
 function nowMinsTransit(){const n=new Date();return n.getHours()*60+n.getMinutes();}
 function nextDep(iv){const n=nowMinsTransit(),r=iv-(n%iv);return r===iv?0:r;}
 function formatMin(m){return m===0?"Agora":m+"min";}
 
-// Build one unified metro line combining terminals (airport) + city extension.
-function _unifiedStations(){
+// Build the unified station list. For branches, we lay out trunk then BOTH branches
+// stacked (Y split) but keep everything in ONE diagram.
+function _metroModel(){
   const t=TRANSIT_DATA;
-  const term=t.line1_stations.filter(s=>s.type==='terminal').map(s=>({name:s.name,zone:'air'}));
-  const hub={name:t.line2_stations[0].name,zone:'air'};
-  // city part = line2 minus hub, only main branch (skip branch B duplicates, keep branch A path)
-  const city=t.line2_stations.slice(1).filter(s=>!s.branch||s.branch==='A').map(s=>({name:s.name,zone:'city',terminus:s.type==='terminus'}));
-  // unified: terminals -> hub -> city
-  return [...term, hub, ...city];
+  const term=t.terminals||[];
+  const trunk=t.city_trunk||[];
+  const branches=t.branches||[];
+  // main path = terminals + trunk + (first branch inline). Other branches drawn as fork.
+  const main=[...term,...trunk];
+  if(branches.length){
+    return {main, branches, hasBranch:true};
+  }
+  return {main:[...main], branches:[], hasBranch:false};
 }
 
-const NTRAINS=3;
+// ── Train motion with dwell. Returns {p, atStation, stationIdx} for a phase 0..1
+// One full cycle = travel all segments + dwell at each station, forward then back (ré).
+function _segPlan(nStations,dwellSec,runSecPerSeg){
+  // build timeline: [dwell@0, run, dwell@1, run, ... dwell@last] forward,
+  // then reverse: dwell@last already counted; run back, dwell, ...
+  const events=[];
+  // forward
+  for(let i=0;i<nStations;i++){
+    events.push({type:'dwell',station:i,dur:dwellSec});
+    if(i<nStations-1)events.push({type:'run',from:i,to:i+1,dur:runSecPerSeg});
+  }
+  // backward (ré) — skip re-dwelling the last station (already dwelt)
+  for(let i=nStations-1;i>0;i--){
+    events.push({type:'run',from:i,to:i-1,dur:runSecPerSeg});
+    if(i-1>0)events.push({type:'dwell',station:i-1,dur:dwellSec});
+  }
+  const total=events.reduce((s,e)=>s+e.dur,0);
+  return {events,total};
+}
+
+function _trainState(plan,elapsed){
+  let t=((elapsed%plan.total)+plan.total)%plan.total;
+  for(const e of plan.events){
+    if(t<e.dur){
+      if(e.type==='dwell')return {pos:e.station,frac:0,moving:false,station:e.station};
+      const f=t/e.dur;return {pos:e.from+(e.to-e.from)*f,frac:f,moving:true};
+    }
+    t-=e.dur;
+  }
+  return {pos:0,frac:0,moving:false,station:0};
+}
+
+// ── Diagram (single line, with optional Y fork) ─────────────────────────────
+const NTRAINS = (typeof METRO_NTRAINS!=='undefined')?METRO_NTRAINS:2;
 function _metroDiagram(){
   const t=TRANSIT_DATA;const lc=t.metro_color;
-  const st=_unifiedStations();const n=st.length;
-  const W=Math.max(560, n*120);const H=150;
-  const y=70;const padX=46;
-  const xs=st.map((s,i)=>padX + (n>1?i/(n-1):0)*(W-padX*2));
-  // zone split index (first city station)
-  const split=st.findIndex(s=>s.zone==='city');
-  // line segments: airport part (slightly thicker, station color) + city part
-  let segs='';
-  // single smooth line
-  let dpath="M"+xs[0]+" "+y;
-  for(let i=1;i<n;i++)dpath+=" L"+xs[i]+" "+y;
-  // dots + labels
+  const M=_metroModel();
+  const main=M.main;const nMain=main.length;
+  const W=Math.max(620, nMain*108 + (M.hasBranch?180:0));
+  const H=M.hasBranch?210:150;
+  const y=M.hasBranch?80:70;const padX=52;
+  const trunkW = M.hasBranch ? W-padX*2-150 : W-padX*2;
+  const xs=main.map((s,i)=>padX + (nMain>1?i/(nMain-1):0)*trunkW);
+  // line path (main)
+  let dpath="M"+xs[0]+" "+y;for(let i=1;i<nMain;i++)dpath+=" L"+xs[i]+" "+y;
+  // dots+labels main
   let dots='',labels='';
-  st.forEach((s,i)=>{
-    const x=xs[i];
-    const big=(i===0||i===n-1||s.terminus);
+  main.forEach((s,i)=>{
+    const x=xs[i];const big=(i===0||s.terminus);
     dots+=`<circle class="ml-dot" id="mdot${i}" cx="${x}" cy="${y}" r="${big?9:7}" style="--lc:${lc}"/>`;
-    // alternate labels above/below for readability
     const above=i%2===0;
-    labels+=`<text class="ml-lbl ${above?'above':'below'}" x="${x}" y="${above?y-20:y+26}" text-anchor="middle">${s.name}</text>`;
+    labels+=`<text class="ml-lbl ${above?'above':'below'}" x="${x}" y="${above?y-18:y+24}" text-anchor="middle">${s.name}</text>`;
   });
-  // zone brackets/labels
-  const airEnd=split>0?(xs[split-1]+xs[split])/2:xs[Math.floor(n/2)];
-  const zones=`<text class="ml-zone" x="${(xs[0]+ (split>0?xs[split-1]:xs[0]))/2}" y="${H-8}" text-anchor="middle">✈ AEROPORTO</text>
-    <text class="ml-zone" x="${(xs[Math.min(split,n-1)]+xs[n-1])/2}" y="${H-8}" text-anchor="middle" style="fill:${lc}">EXTENSÃO À CIDADE</text>
-    <line x1="${airEnd}" y1="40" x2="${airEnd}" y2="${H-18}" class="ml-divider"/>`;
+  // branches (fork from last trunk station)
+  let branchPaths='',branchDots='',branchLabels='';
+  let branchMeta=[];
+  if(M.hasBranch){
+    const forkX=xs[nMain-1],forkY=y;
+    M.branches.forEach((br,bi)=>{
+      const dir=bi===0?-1:1; // up / down
+      const bxs=[],bys=[];
+      br.stations.forEach((s,si)=>{
+        const bx=forkX+ (si+1)*110;
+        const by=forkY + dir*(38+si*6);
+        bxs.push(bx);bys.push(by);
+        const big=s.terminus;
+        branchDots+=`<circle class="ml-dot" id="mbr${bi}_${si}" cx="${bx}" cy="${by}" r="${big?9:7}" style="--lc:${lc}"/>`;
+        branchLabels+=`<text class="ml-lbl ${dir<0?'above':'below'}" x="${bx}" y="${dir<0?by-14:by+20}" text-anchor="middle">${s.name}</text>`;
+      });
+      // path from fork to first branch station then along
+      let bp=`M${forkX} ${forkY} L${bxs[0]} ${bys[0]}`;
+      for(let k=1;k<bxs.length;k++)bp+=` L${bxs[k]} ${bys[k]}`;
+      branchPaths+=`<path class="ml-line ml-branch" d="${bp}" style="--lc:${lc}"/>`;
+      branchLabels+=`<text class="ml-branch-lbl" x="${bxs[0]}" y="${dir<0?bys[0]-30:bys[0]+34}" text-anchor="middle" style="fill:${lc}">${br.label}</text>`;
+      branchMeta.push({xs:bxs.map(v=>Math.round(v)),ys:bys.map(v=>Math.round(v))});
+    });
+  }
+  // zone divider
+  const split=main.findIndex(s=>s.zone==='city');
+  const airEnd=split>0?(xs[split-1]+xs[split])/2:xs[Math.floor(nMain/2)];
+  const zones=`<text class="ml-zone" x="${(xs[0]+(split>0?xs[split-1]:xs[0]))/2}" y="${H-8}" text-anchor="middle">✈ AEROPORTO</text>
+    <text class="ml-zone" x="${(xs[Math.min(split,nMain-1)]+xs[nMain-1])/2}" y="${H-8}" text-anchor="middle" style="fill:${lc}">EXTENSÃO À CIDADE</text>
+    <line x1="${airEnd}" y1="34" x2="${airEnd}" y2="${H-18}" class="ml-divider"/>`;
+  const trains=Array.from({length:NTRAINS},(_,k)=>`<circle class="ml-train" id="mtrain${k}" cx="${xs[0]}" cy="${y}" r="6.5" style="--lc:${lc}"/>`).join('');
   const svg=`<svg class="ml-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
     <path class="ml-line" d="${dpath}" style="--lc:${lc}"/>
-    ${zones}
-    ${dots}
-    ${Array.from({length:NTRAINS},(_,k)=>`<circle class="ml-train" id="mtrain${k}" cx="${xs[0]}" cy="${y}" r="6.5" style="--lc:${lc}"/>`).join("")}
-    ${labels}
+    ${branchPaths}${zones}${dots}${branchDots}${trains}${labels}${branchLabels}
   </svg>`;
-  return `<div class="ml-scroll"><div data-xs='${JSON.stringify(xs.map(x=>Math.round(x)))}' data-y="${y}" id="mlmeta" style="display:none"></div>${svg}</div>`;
+  const meta={xs:xs.map(v=>Math.round(v)),y:y,nMain:nMain,branches:branchMeta};
+  return `<div class="ml-scroll"><div id="mlmeta" style="display:none">${JSON.stringify(meta).replace(/'/g,"&#39;")}</div>${svg}</div>`;
 }
 
+function _getMlMeta(){const m=document.getElementById('mlmeta');if(!m)return null;try{return JSON.parse(m.textContent);}catch(e){return null;}}
+
+// ── Animate: dwell-aware multi-train ping-pong ──────────────────────────────
+let _metroPlan=null,_lastStation={};
+function _ensurePlan(nStations){
+  const t=TRANSIT_DATA;
+  const runSec=Math.max(8, Math.round(t.metro_interval*60*0.6));
+  if(!_metroPlan||_metroPlan.n!==nStations){_metroPlan=_segPlan(nStations,t.dwell_sec||60,runSec);_metroPlan.n=nStations;}
+  return _metroPlan;
+}
+function _aMetro(){
+  const meta=_getMlMeta();if(!meta)return;
+  const t=TRANSIT_DATA;const n=meta.nMain;
+  const plan=_ensurePlan(n);
+  const now=nowSec();
+  // light up stations based on train #0
+  for(let k=0;k<NTRAINS;k++){
+    const tr=document.getElementById('mtrain'+k);if(!tr)continue;
+    // stagger each train by an equal slice of the full cycle; alternate which end they start
+    const stagger=(plan.total/NTRAINS)*k;
+    const stt=_trainState(plan, now + stagger);
+    const seg=Math.floor(stt.pos),f=stt.pos-seg;
+    const x0=meta.xs[seg],x1=meta.xs[Math.min(n-1,seg+1)]!=null?meta.xs[Math.min(n-1,seg+1)]:x0;
+    tr.setAttribute('cx',(x0+(x1-x0)*f).toFixed(1));tr.setAttribute('cy',meta.y);
+    tr.classList.toggle('dwelling',!stt.moving);
+  }
+  // station highlight from train 0
+  const s0=_trainState(plan,now);
+  const cur=Math.round(s0.pos);
+  document.querySelectorAll('.ml-dot').forEach(d=>{d.classList.remove('active','passed');});
+  const cd=document.getElementById('mdot'+cur);
+  if(cd){cd.classList.add('active');}
+  for(let i=0;i<cur;i++){const d=document.getElementById('mdot'+i);if(d)d.classList.add('passed');}
+  // sound when train 0 arrives at a new station (dwell start)
+  if(!s0.moving && _lastStation.s0!==cur){maybePlayTrain();_lastStation.s0=cur;}
+}
+function _aT(){_aMetro();_uB();}
+
+// ── buildTransitCards ───────────────────────────────────────────────────────
 function buildTransitCards(){
   const t=TRANSIT_DATA;if(!t)return;
   const el=document.getElementById('transit-cards');if(!el)return;
   const lc=t.metro_color;
-  const bLg=BUS_ROUTES_DATA.map(r=>`<div class="bus-leg-item"><div class="bus-leg-dot" style="background:${r.color}"></div><span style="color:${r.color}">${r.name}</span></div>`).join('');
+  const bLg=BUS_ROUTES_DATA.map(r=>`<div class="bus-leg-item"><div class="bus-leg-dot" style="background:${r.color}"></div><span style="color:${r.color}">${r.name} · ${r.stops} paradas</span></div>`).join('');
   const bNx=BUS_ROUTES_DATA.map((r,i)=>`<div class="bus-next-item" style="border-color:${r.color}"><span class="bni-name" style="color:${r.color}">${(r.name.split('→')[1]||r.name).trim()}</span><span class="bni-val" style="color:${r.color}" id="bnxt${i}">${formatMin(nextDep(r.freq))}</span></div>`).join('');
   el.innerHTML=`
   <div class="tc-card">
     <div class="tc-hdr" style="border-left:4px solid ${lc}">
-      <div><div class="tc-title" style="color:${lc}">${t.line2_name}</div><div class="tc-note">${t.metro_note} · aeroporto → cidade</div></div>
-      <div class="next-box"><div class="nb-lbl">Próximo trem</div><div class="nb-val" style="color:${lc}" id="ntm">${formatMin(nextDep(t.metro_interval))}</div><div class="nb-freq">a cada ${t.metro_interval} min</div></div>
+      <div><div class="tc-title" style="color:${lc}">${t.line_name}</div><div class="tc-note">${t.metro_note}</div></div>
+      <div class="next-box"><div class="nb-lbl">Próximo trem</div><div class="nb-val" style="color:${lc}" id="ntm">${formatMin(nextDep(t.metro_interval))}</div><div class="nb-freq">a cada ${t.metro_interval} min · para ${Math.round((t.dwell_sec||60)/60*100)/100}min</div></div>
     </div>
     <div class="tc-body">${_metroDiagram()}</div>
   </div>
   <div class="tc-card">
     <div class="tc-hdr" style="border-left:4px solid #f5b301">
       <div><div class="tc-title" style="color:#f5b301">Linhas de Ônibus</div><div class="tc-note">Posição em tempo real na cidade</div></div>
-      <div class="next-box"><div class="nb-lbl">Mais próximo</div><div class="nb-val" style="color:#f5b301" id="ntb">${formatMin(nextDep(t.bus_interval))}</div><div class="nb-freq">a cada ${t.bus_interval} min</div></div>
+      <div class="next-box"><div class="nb-lbl">Mais próximo</div><div class="nb-val" style="color:#f5b301" id="ntb">${formatMin(nextDep(t.bus_interval||t.bus[0].freq))}</div><div class="nb-freq">tempo real</div></div>
     </div>
     <div class="tc-body"><div class="bus-legend">${bLg}</div><div class="bus-map" id="busmap"></div><div class="bus-next-list">${bNx}</div></div>
   </div>`;
   setTimeout(_iB,150);_aT();if(_tT)clearInterval(_tT);_tT=setInterval(_tkT,1000);
 }
 
-function _getMlMeta(){const m=document.getElementById('mlmeta');if(!m)return null;try{return{xs:JSON.parse(m.getAttribute('data-xs')),y:+m.getAttribute('data-y')};}catch(e){return null;}}
-
-// Position of a train along the metro line. phase 0..1; dir +1 (air→city) or -1 (city→air)
-function _trainXY(meta,n,phase,dir){
-  let p = dir>0 ? phase : 1-phase;
-  p=Math.max(0,Math.min(1,p));
-  const seg=Math.max(0,Math.min(Math.floor(p*(n-1)),n-2)),sf=p*(n-1)-seg;
-  const x0=meta.xs[seg],x1=meta.xs[seg+1]!=null?meta.xs[seg+1]:x0;
-  return {x:x0+(x1-x0)*sf, p};
-}
-
-function _aMetro(prog){
-  const st=_unifiedStations();const n=st.length;
-  const raw=prog*(n-1),idx=Math.min(Math.round(raw),n-1);
-  st.forEach((s,i)=>{const d=document.getElementById('mdot'+i);if(!d)return;
-    const active=i<=idx;const cur=i===idx;
-    d.classList.toggle('passed',active&&!cur);d.classList.toggle('active',cur);});
-  const meta=_getMlMeta();
-  if(meta&&meta.xs&&meta.xs.length&&n>1){
-    for(let k=0;k<NTRAINS;k++){
-      const tr=document.getElementById('mtrain'+k);if(!tr)continue;
-      // stagger phase evenly; even k go air→city, odd k go city→air
-      const dir = (k%2===0)?1:-1;
-      const offset = (k/NTRAINS);
-      const phase = (prog + offset) % 1;
-      const r=_trainXY(meta,n,phase,dir);
-      tr.setAttribute('cx',r.x.toFixed(1));tr.setAttribute('cy',meta.y);
-    }
-  }
-  return idx;
-}
-function _aT(){
-  const t=TRANSIT_DATA;if(!t)return;
-  const p=_tP(t.metro_interval);const ni=_aMetro(p);
-  if(ni!==_lS.metro&&_lS.metro>=0)maybePlayTrain();_lS.metro=ni;
-  _uB();
-}
-
-// ── Bus-only Leaflet map ────────────────────────────────────────────────────
+// ── Bus map (stops shown, vehicles ida/volta) ───────────────────────────────
+function _bP(iv){const n=nowMinsTransit(),s=new Date().getSeconds();return((n%iv)*60+s)/(iv*60);}
 function _lp(a,b,t){return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];}
 function _pL(c,p){const n=c.length-1;if(n<=0)return c[0];const sp=p*n,si=Math.min(Math.floor(sp),n-1);return _lp(c[si],c[si+1],sp-si);}
 function _bsv(c,fl){return `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="16" viewBox="0 0 26 16" style="${fl?'transform:scaleX(-1)':''}"><rect x="0" y="0" width="26" height="14" rx="3" fill="${c}" opacity=".92"/><rect x="2" y="2" width="5" height="5" rx="1" fill="white" opacity=".65"/><rect x="9" y="2" width="5" height="5" rx="1" fill="white" opacity=".65"/><rect x="17" y="2" width="5" height="5" rx="1" fill="white" opacity=".65"/><rect x="2" y="10" width="4" height="4" rx="2" fill="white" opacity=".8"/><rect x="20" y="10" width="4" height="4" rx="2" fill="white" opacity=".8"/></svg>`;}
@@ -1180,19 +1243,25 @@ function _iB(){
   if(_bM){_bM.invalidateSize();_uB();return;}
   _bM=L.map('busmap',{center:HOME||[-15,-47],zoom:11});
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',maxZoom:19,subdomains:'abcd'}).addTo(_bM);
-  BUS_ROUTES_DATA.forEach(r=>{L.polyline(r.coords,{color:r.color,weight:3,opacity:.6,dashArray:'6,5'}).addTo(_bM).bindPopup(`<b style="color:${r.color}">${r.name}</b><br>A cada ${r.freq} min`);[r.coords[0],r.coords[r.coords.length-1]].forEach(pt=>L.circleMarker(pt,{radius:5,fillColor:r.color,fillOpacity:.9,color:'#fff',weight:1.5}).addTo(_bM));});
+  BUS_ROUTES_DATA.forEach(r=>{
+    L.polyline(r.coords,{color:r.color,weight:3,opacity:.6,dashArray:'6,5'}).addTo(_bM).bindPopup(`<b style="color:${r.color}">${r.name}</b><br>${r.stops} paradas · a cada ${r.freq} min`);
+    // draw each stop
+    r.coords.forEach((pt,si)=>L.circleMarker(pt,{radius:si===0||si===r.coords.length-1?5:3.5,fillColor:r.color,fillOpacity:.95,color:'#fff',weight:1.4}).addTo(_bM).bindPopup(`<b style="color:${r.color}">Parada ${si+1}/${r.coords.length}</b><br>${r.name}`));
+  });
   try{_bM.fitBounds(L.polyline(BUS_ROUTES_DATA.flatMap(r=>r.coords)).getBounds().pad(0.15));}catch(e){}
   _uB();
 }
 function _uB(){
   if(!_bM)return;_bV.forEach(m=>_bM.removeLayer(m));_bV=[];
-  BUS_ROUTES_DATA.forEach((r)=>{const p=_tP(r.freq);[[p,false],[1-p,true]].forEach(([pr,fl])=>{const pt=_pL(r.coords,pr);const mk=L.marker(pt,{icon:L.divIcon({html:_bsv(r.color,fl),className:'',iconSize:[26,16],iconAnchor:[13,8]}),zIndexOffset:fl?400:500}).addTo(_bM);mk.bindPopup(`<b style="color:${r.color}">${r.name}</b><br>${fl?'Volta':'Ida'} · ${Math.round(pr*100)}%`);_bV.push(mk);});});
+  BUS_ROUTES_DATA.forEach((r)=>{const p=_bP(r.freq);[[p,false],[1-p,true]].forEach(([pr,fl])=>{const pt=_pL(r.coords,pr);const mk=L.marker(pt,{icon:L.divIcon({html:_bsv(r.color,fl),className:'',iconSize:[26,16],iconAnchor:[13,8]}),zIndexOffset:fl?400:500}).addTo(_bM);mk.bindPopup(`<b style="color:${r.color}">${r.name}</b><br>${fl?'Volta':'Ida'} · ${Math.round(pr*100)}%`);_bV.push(mk);});});
 }
 function _tkT(){
   const t=TRANSIT_DATA;if(!t)return;_aT();
-  [['ntm',t.metro_interval],['ntb',t.bus_interval]].forEach(([id,iv])=>{const e=document.getElementById(id);if(e)e.textContent=formatMin(nextDep(iv));});
-  BUS_ROUTES_DATA.forEach((r,i)=>{const e=document.getElementById('bnxt'+i);if(e)e.textContent=formatMin(nextDep(r.freq));});
+  const e=document.getElementById('ntm');if(e)e.textContent=formatMin(nextDep(t.metro_interval));
+  const eb=document.getElementById('ntb');if(eb)eb.textContent=formatMin(nextDep(t.bus[0].freq));
+  BUS_ROUTES_DATA.forEach((r,i)=>{const el=document.getElementById('bnxt'+i);if(el)el.textContent=formatMin(nextDep(r.freq));});
 }
+
 
 
 
