@@ -187,8 +187,8 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
 .ml-line{fill:none;stroke:var(--lc);stroke-width:6;stroke-linecap:round;opacity:.9}
 .ml-dot{fill:var(--bg);stroke:var(--lc);stroke-width:3;transition:fill .3s,stroke .3s,r .3s}
 .ml-dot.passed{fill:var(--lc);opacity:.55}
-.ml-dot.active{fill:var(--lc);stroke:#fff;filter:drop-shadow(0 0 7px var(--lc));animation:mlpulse 1.1s ease-in-out infinite alternate}
-@keyframes mlpulse{from{r:7}to{r:11}}
+.ml-dot.active{fill:var(--lc);stroke:#fff;filter:drop-shadow(0 0 5px var(--lc))}
+
 .ml-train{fill:#fff;stroke:var(--lc);stroke-width:2.5;filter:drop-shadow(0 0 6px var(--lc));transition:cx 1.2s cubic-bezier(.4,0,.2,1)}
 .ml-lbl{fill:var(--white);font-size:11px;font-weight:600;font-family:'Barlow Condensed',sans-serif}
 .ml-lbl.below{fill:var(--dim)}
@@ -1053,8 +1053,8 @@ function buildAnnPool(r){
 
 
 
-const METRO_NTRAINS=2;
-const TRANSIT_DATA={"metro_color": "#00a859", "metro_interval": 7, "dwell_sec": 140, "metro_note": "VLT Aeroporto + Extensão Vale", "line_name": "VLT SJK · Terminais & Centro", "terminals": [{"name": "T1 · Hall Jacarandá", "zone": "air"}, {"name": "T1 · Saguão Manacá", "zone": "air"}, {"name": "T1 · Praça Cambará", "zone": "air"}, {"name": "T2 Intl · Portal Aurora", "zone": "air"}, {"name": "T2 Intl · Embarque Vale", "zone": "air"}], "city_trunk": [{"name": "CTA / Parque Tec.", "zone": "city"}, {"name": "Jd. Aquarius", "zone": "city"}, {"name": "Centro SJK", "zone": "city", "terminus": true}], "branches": [], "bus_interval": 15};
+const METRO_NTRAINS=4;
+const TRANSIT_DATA={"metro_color": "#00a859", "metro_interval": 7, "dwell_sec": 140, "metro_note": "VLT do Vale · Aeroporto & Centro", "line_name": "VLT do Vale · Terminais & São José", "terminals": [{"name": "T1 · Embraer", "zone": "air"}, {"name": "T1 · Bandeirante", "zone": "air"}, {"name": "T1 · Urubupungá", "zone": "air"}, {"name": "T2 Intl · Paraíba", "zone": "air"}, {"name": "T2 Intl · Tamoios", "zone": "air"}], "city_trunk": [{"name": "Parque Tecnológico", "zone": "city"}, {"name": "Jd. Aquarius", "zone": "city"}, {"name": "Centro · Vila", "zone": "city", "terminus": true}], "branches": [], "bus_interval": 15};
 const BUS_ROUTES_DATA=[{"name": "SJK → Centro", "color": "#00a859", "freq": 15, "stops": 8, "coords": [[-23.2292, -45.8711], [-23.225, -45.878], [-23.215, -45.882], [-23.205, -45.884], [-23.197, -45.885], [-23.19, -45.886], [-23.184, -45.887], [-23.1794, -45.8869]]}, {"name": "SJK → Taubaté", "color": "#8800cc", "freq": 30, "stops": 4, "coords": [[-23.2292, -45.8711], [-23.13, -45.78], [-23.06, -45.62], [-23.0244, -45.5603]]}, {"name": "SJK → São Paulo", "color": "#0057a8", "freq": 40, "stops": 2, "coords": [[-23.2292, -45.8711], [-23.5426, -46.6334]]}];
 // ── TRANSIT v2: timed stops + ping-pong (ré) + branches ─────────────────────
 let _bM=null,_bV=[],_tT=null;

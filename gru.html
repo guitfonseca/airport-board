@@ -187,8 +187,8 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
 .ml-line{fill:none;stroke:var(--lc);stroke-width:6;stroke-linecap:round;opacity:.9}
 .ml-dot{fill:var(--bg);stroke:var(--lc);stroke-width:3;transition:fill .3s,stroke .3s,r .3s}
 .ml-dot.passed{fill:var(--lc);opacity:.55}
-.ml-dot.active{fill:var(--lc);stroke:#fff;filter:drop-shadow(0 0 7px var(--lc));animation:mlpulse 1.1s ease-in-out infinite alternate}
-@keyframes mlpulse{from{r:7}to{r:11}}
+.ml-dot.active{fill:var(--lc);stroke:#fff;filter:drop-shadow(0 0 5px var(--lc))}
+
 .ml-train{fill:#fff;stroke:var(--lc);stroke-width:2.5;filter:drop-shadow(0 0 6px var(--lc));transition:cx 1.2s cubic-bezier(.4,0,.2,1)}
 .ml-lbl{fill:var(--white);font-size:11px;font-weight:600;font-family:'Barlow Condensed',sans-serif}
 .ml-lbl.below{fill:var(--dim)}
@@ -1053,8 +1053,8 @@ function buildAnnPool(r){
 
 
 
-const METRO_NTRAINS=4;
-const TRANSIT_DATA={"metro_color": "#e30613", "metro_interval": 3, "dwell_sec": 60, "metro_note": "VLT Conexão Terminais + Trem à Cidade", "line_name": "VLT GRU · Terminais & Cidade", "terminals": [{"name": "T1 · Portão Aurora", "zone": "air"}, {"name": "T1 · Saguão Cristal", "zone": "air"}, {"name": "T2 · Ala Tucano", "zone": "air"}, {"name": "T2 · Praça Ipê", "zone": "air"}, {"name": "T2 · Mirante Sabiá", "zone": "air"}, {"name": "T3 · Hall Jacarandá", "zone": "air"}, {"name": "T3 · Galeria Quaresmeira", "zone": "air"}, {"name": "T3 · Pátio Aurora", "zone": "air"}, {"name": "T3 · Embarque Cumbica", "zone": "air"}], "city_trunk": [{"name": "Eng. Goulart", "zone": "city"}, {"name": "Tatuapé", "zone": "city"}], "branches": [{"label": "Ramal Leste", "stations": [{"name": "Corinthians-Itaquera", "zone": "city", "terminus": true}]}, {"label": "Ramal Centro", "stations": [{"name": "Brás", "zone": "city"}, {"name": "Luz", "zone": "city", "terminus": true}]}], "bus_interval": 7};
+const METRO_NTRAINS=12;
+const TRANSIT_DATA={"metro_color": "#e30613", "metro_interval": 3, "dwell_sec": 60, "metro_note": "VLT Bandeirante · Terminais & Capital", "line_name": "VLT Tietê · Terminais & São Paulo", "terminals": [{"name": "T1 · Bela Vista", "zone": "air"}, {"name": "T1 · Bixiga", "zone": "air"}, {"name": "T2 · Liberdade", "zone": "air"}, {"name": "T2 · Paraíso", "zone": "air"}, {"name": "T2 · Higienópolis", "zone": "air"}, {"name": "T3 · Anhangabaú", "zone": "air"}, {"name": "T3 · Ibirapuera", "zone": "air"}, {"name": "T3 · Pacaembu", "zone": "air"}, {"name": "T3 · Jabaquara", "zone": "air"}], "city_trunk": [{"name": "Eng. Goulart", "zone": "city"}, {"name": "Tatuapé", "zone": "city"}], "branches": [{"label": "Ramal Leste", "stations": [{"name": "Itaquera", "zone": "city", "terminus": true}]}, {"label": "Ramal Centro", "stations": [{"name": "Brás", "zone": "city"}, {"name": "Luz", "zone": "city", "terminus": true}]}], "bus_interval": 7};
 const BUS_ROUTES_DATA=[{"name": "GRU → Terminal Tietê", "color": "#0057a8", "freq": 7, "stops": 4, "coords": [[-23.4356, -46.4731], [-23.46, -46.49], [-23.48, -46.55], [-23.5013, -46.6138]]}, {"name": "GRU → Congonhas", "color": "#cc0000", "freq": 12, "stops": 6, "coords": [[-23.4356, -46.4731], [-23.47, -46.52], [-23.5, -46.58], [-23.53, -46.62], [-23.59, -46.64], [-23.6261, -46.6553]]}, {"name": "GRU → Guarulhos Centro", "color": "#009846", "freq": 18, "stops": 8, "coords": [[-23.4356, -46.4731], [-23.44, -46.49], [-23.45, -46.5], [-23.455, -46.51], [-23.46, -46.515], [-23.462, -46.52], [-23.463, -46.525], [-23.4634, -46.5299]]}];
 // ── TRANSIT v2: timed stops + ping-pong (ré) + branches ─────────────────────
 let _bM=null,_bV=[],_tT=null;
