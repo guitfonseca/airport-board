@@ -1070,6 +1070,7 @@ function _unifiedStations(){
   return [...term, hub, ...city];
 }
 
+const NTRAINS=2;
 function _metroDiagram(){
   const t=TRANSIT_DATA;const lc=t.metro_color;
   const st=_unifiedStations();const n=st.length;
@@ -1102,7 +1103,7 @@ function _metroDiagram(){
     <path class="ml-line" d="${dpath}" style="--lc:${lc}"/>
     ${zones}
     ${dots}
-    <circle class="ml-train" id="mtrain" cx="${xs[0]}" cy="${y}" r="7" style="--lc:${lc}"/>
+    ${Array.from({length:NTRAINS},(_,k)=>`<circle class="ml-train" id="mtrain${k}" cx="${xs[0]}" cy="${y}" r="6.5" style="--lc:${lc}"/>`).join("")}
     ${labels}
   </svg>`;
   return `<div class="ml-scroll"><div data-xs='${JSON.stringify(xs.map(x=>Math.round(x)))}' data-y="${y}" id="mlmeta" style="display:none"></div>${svg}</div>`;
@@ -1133,17 +1134,33 @@ function buildTransitCards(){
 }
 
 function _getMlMeta(){const m=document.getElementById('mlmeta');if(!m)return null;try{return{xs:JSON.parse(m.getAttribute('data-xs')),y:+m.getAttribute('data-y')};}catch(e){return null;}}
+
+// Position of a train along the metro line. phase 0..1; dir +1 (air→city) or -1 (city→air)
+function _trainXY(meta,n,phase,dir){
+  let p = dir>0 ? phase : 1-phase;
+  p=Math.max(0,Math.min(1,p));
+  const seg=Math.max(0,Math.min(Math.floor(p*(n-1)),n-2)),sf=p*(n-1)-seg;
+  const x0=meta.xs[seg],x1=meta.xs[seg+1]!=null?meta.xs[seg+1]:x0;
+  return {x:x0+(x1-x0)*sf, p};
+}
+
 function _aMetro(prog){
   const st=_unifiedStations();const n=st.length;
   const raw=prog*(n-1),idx=Math.min(Math.round(raw),n-1);
   st.forEach((s,i)=>{const d=document.getElementById('mdot'+i);if(!d)return;
     const active=i<=idx;const cur=i===idx;
     d.classList.toggle('passed',active&&!cur);d.classList.toggle('active',cur);});
-  const meta=_getMlMeta();const tr=document.getElementById('mtrain');
-  if(meta&&meta.xs&&meta.xs.length&&tr&&n>1){
-    const seg=Math.max(0,Math.min(Math.floor(prog*(n-1)),n-2)),sf=prog*(n-1)-seg;
-    const x0=meta.xs[seg],x1=meta.xs[seg+1]!=null?meta.xs[seg+1]:x0;
-    tr.setAttribute('cx',(x0+(x1-x0)*sf).toFixed(1));tr.setAttribute('cy',meta.y);
+  const meta=_getMlMeta();
+  if(meta&&meta.xs&&meta.xs.length&&n>1){
+    for(let k=0;k<NTRAINS;k++){
+      const tr=document.getElementById('mtrain'+k);if(!tr)continue;
+      // stagger phase evenly; even k go air→city, odd k go city→air
+      const dir = (k%2===0)?1:-1;
+      const offset = (k/NTRAINS);
+      const phase = (prog + offset) % 1;
+      const r=_trainXY(meta,n,phase,dir);
+      tr.setAttribute('cx',r.x.toFixed(1));tr.setAttribute('cy',meta.y);
+    }
   }
   return idx;
 }

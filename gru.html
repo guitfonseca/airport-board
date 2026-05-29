@@ -5,147 +5,7 @@
 <title>GRU – Guarulhos</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-// ── AUDIO ────────────────────────────────────────────────────────────────────
-let _ac=null;
-function _ctx(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac;}
-function playDingDong(){
-  try{const c=_ctx();[523.25,659.25,783.99,1046.50].forEach((f,i)=>{
-    const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);
-    o.type='sine';o.frequency.value=f;const t=c.currentTime+i*.22;
-    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18,t+.04);
-    g.gain.exponentialRampToValueAtTime(.001,t+.6);o.start(t);o.stop(t+.65);
-  });}catch(e){}
-}
-function playTrainArrive(){
-  try{const c=_ctx();
-    const b=c.createBuffer(1,c.sampleRate*1.0,c.sampleRate);const d=b.getChannelData(0);
-    for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.07*Math.max(0,1-i/d.length);
-    const s=c.createBufferSource();s.buffer=b;
-    const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=200;
-    s.connect(fl);fl.connect(c.destination);s.start();
-    const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);
-    o.type='sawtooth';o.frequency.setValueAtTime(700,c.currentTime);
-    o.frequency.linearRampToValueAtTime(180,c.currentTime+.7);
-    g.gain.setValueAtTime(.04,c.currentTime);g.gain.linearRampToValueAtTime(0,c.currentTime+.8);
-    o.start();o.stop(c.currentTime+.8);
-  }catch(e){}
-}
-let _lastDing=0,_lastTrain=0;
-function maybePlayDing(){const n=Date.now();if(n-_lastDing>8000){playDingDong();_lastDing=n;}}
-function maybePlayTrain(){const n=Date.now();if(n-_lastTrain>5000){playTrainArrive();_lastTrain=n;}}
-function playStatusSound(st){
-  try{const c=_ctx();
-    const sounds={
-      ont:()=>{[880,1108].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=f;const t=c.currentTime+i*.18;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.12,t+.04);g.gain.exponentialRampToValueAtTime(.001,t+.9);o.start(t);o.stop(t+1);});},
-      board:()=>{[523,659,784,1047].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=f;const t=c.currentTime+i*.15;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.14,t+.04);g.gain.exponentialRampToValueAtTime(.001,t+.7);o.start(t);o.stop(t+.8);});},
-      final:()=>{[1200,0,1200].forEach((f,i)=>{if(!f)return;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=f;const t=c.currentTime+i*.25;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.08,t+.02);g.gain.linearRampToValueAtTime(.08,t+.15);g.gain.linearRampToValueAtTime(0,t+.2);o.start(t);o.stop(t+.25);});},
-      taxi:()=>{const b=c.createBuffer(1,c.sampleRate*.5,c.sampleRate);const d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.06*(1-i/d.length);const s=c.createBufferSource();s.buffer=b;const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=160;s.connect(fl);fl.connect(c.destination);s.start();},
-      dep:()=>{[523,659,784,1047,1319].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=f;const t=c.currentTime+i*.1;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.1,t+.05);g.gain.exponentialRampToValueAtTime(.001,t+1.5);o.start(t);o.stop(t+1.6);});},
-      del:()=>{[400,350].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=f;const t=c.currentTime+i*.4;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.07,t+.05);g.gain.linearRampToValueAtTime(.07,t+.3);g.gain.linearRampToValueAtTime(0,t+.4);o.start(t);o.stop(t+.45);});},
-      lnd:()=>{[784,659,523].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=f;const t=c.currentTime+i*.2;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.11,t+.04);g.gain.exponentialRampToValueAtTime(.001,t+1.2);o.start(t);o.stop(t+1.3);})}
-    };
-    if(sounds[st])sounds[st]();
-  }catch(e){}
-}
-
-
-// ── TRANSIT ────────────────────────────────────────────────────────────────
-const TRANSIT_DATA={"metro_interval": 2, "bus_interval": 7, "metro_color": "#e30613", "metro_line": "Linha 13 Jade (CPTM)", "metro_note": "Operação 05h-00h · Intervalo de 2 min", "line1_name": "Linha Interna - Terminais", "line1_color": "#e30613", "line1_stations": [{"id": "t2", "name": "Terminal T2", "type": "terminal"}, {"id": "t3d", "name": "Terminal T3 Dom.", "type": "terminal"}, {"id": "t3i", "name": "Terminal T3 Intl", "type": "terminal"}, {"id": "gru", "name": "Aeroporto GRU", "type": "hub"}], "line2_name": "Extensao Cidade", "line2_color": "#e30613", "line2_stations": [{"id": "gru", "name": "Aeroporto GRU", "type": "hub"}, {"id": "eng", "name": "Engenheiro Goulart", "type": "city"}, {"id": "tatuape", "name": "Tatuape", "type": "city"}, {"id": "cors", "name": "Corinthians-Itaquera", "type": "terminus", "branch": "A"}, {"id": "bras", "name": "Bras", "type": "city", "branch": "B"}, {"id": "luz", "name": "Luz", "type": "city", "branch": "B"}, {"id": "rep", "name": "Republica", "type": "city", "branch": "B"}, {"id": "pln", "name": "Palmeiras-Barra Funda", "type": "terminus", "branch": "B"}], "bus_routes": [{"name": "Airport Express ao Tiete", "freq": 7, "color": "#0057a8"}, {"name": "GRU ao Guarulhos Centro", "freq": 12, "color": "#009846"}, {"name": "GRU ao Congonhas (CGH)", "freq": 30, "color": "#cc0000"}]};
-const BUS_ROUTES_DATA=[{"name": "Airport Express → Tietê", "color": "#0057a8", "freq": 7, "coords": [[-23.4356, -46.4731], [-23.47, -46.51], [-23.5013, -46.6138]]}, {"name": "GRU → Guarulhos Centro", "color": "#009846", "freq": 12, "coords": [[-23.4356, -46.4731], [-23.4634, -46.5299]]}, {"name": "GRU → Congonhas", "color": "#cc0000", "freq": 30, "coords": [[-23.4356, -46.4731], [-23.5505, -46.6333], [-23.6261, -46.6553]]}];
-let _bM=null,_bV=[],_tT=null,_lS={l1:-1,l2:-1};
-function _tP(iv){const n=nowMinsTransit(),s=new Date().getSeconds();return((n%iv)*60+s)/(iv*60);}
-function _bP(iv){const n=nowMinsTransit(),s=new Date().getSeconds();return((n%iv)*60+s)/(iv*60);}
-function _sts(arr,pfx,lc){
-  return arr.map((s,i)=>`<div class="mstop"><div class="mdot ${s.type}" id="${pfx}d${i}" style="--lc:${lc};--bg:var(--bg)"></div><div class="mstop-label"><span class="mstop-name ${s.type}" id="${pfx}n${i}">${s.name}</span>${s.type==='terminal'?'<span class="mstop-tag">✈ Terminal</span>':''}${s.type==='hub'?'<span class="mstop-tag">⬤ Hub</span>':''}${s.type==='terminus'?'<span class="mstop-tag">⬤ Terminus</span>':''}</div></div>`).join('');
-}
-function buildTransitCards(){
-  const t=TRANSIT_DATA;if(!t)return;
-  const el=document.getElementById('transit-cards');if(!el)return;
-  const lc=t.metro_color;
-  const tb=(id)=>`<div class="tbar-row"><span class="tbar-label" style="color:${lc}">Trem</span><div class="tbar-track" id="tb${id}" style="--lc:${lc}"><div class="tbar-train" id="tc${id}" style="--lc:${lc};left:0">M</div></div><span class="tbar-pct" style="color:${lc}" id="tp${id}">0%</span></div>`;
-  const l2=t.line2_stations,fi=l2.findIndex(s=>s.branch);
-  const trk=fi>0?l2.slice(0,fi):l2,bA=l2.filter(s=>s.branch==='A'),bB=l2.filter(s=>s.branch==='B');
-  const hF=bA.length&&bB.length;
-  const l2h=hF?`<div class="mline" style="--lc:${lc}">${_sts(trk,'l2t',lc)}</div><div class="fork-stem" style="background:${lc}"></div><div class="fork-cols"><div class="fork-col" style="--lc:${lc}"><div class="fork-tag" style="background:${lc}18;color:${lc}">Ramal A</div>${_sts(bA,'brA',lc)}</div><div class="fork-col" style="--lc:${lc}"><div class="fork-tag" style="background:${lc}18;color:${lc}">Ramal B</div>${_sts(bB,'brB',lc)}</div></div>`:`<div class="mline" style="--lc:${lc}">${_sts(l2,'l2t',lc)}</div>`;
-  const bLg=BUS_ROUTES_DATA.map(r=>`<div class="bus-leg-item"><div class="bus-leg-dot" style="background:${r.color}"></div><span style="color:${r.color}">${r.name}</span></div>`).join('');
-  const bNx=BUS_ROUTES_DATA.map((r,i)=>`<div class="bus-next-item" style="border-color:${r.color}"><span class="bni-name" style="color:${r.color}">${r.name.split('→')[1]?.trim()||r.name}</span><span class="bni-val" style="color:${r.color}" id="bnxt${i}">${formatMin(nextDep(r.freq))}</span></div>`).join('');
-  el.innerHTML=`<div class="tc-card"><div class="tc-hdr" style="border-left:4px solid ${lc}"><div><div class="tc-title" style="color:${lc}">${t.line1_name}</div><div class="tc-note">${t.metro_note}</div></div><div class="next-box"><div class="nb-lbl">Próximo trem</div><div class="nb-val" style="color:${lc}" id="ntm">${formatMin(nextDep(t.metro_interval))}</div><div class="nb-freq">a cada ${t.metro_interval} min</div></div></div><div class="tc-body"><div class="mline" style="--lc:${lc}">${_sts(t.line1_stations,'l1',lc)}</div>${tb('l1')}</div></div><div class="tc-card"><div class="tc-hdr" style="border-left:4px solid ${lc}"><div><div class="tc-title" style="color:${lc}">${t.line2_name}</div><div class="tc-note">${hF?'Conexão · 2 Ramais':'Conexão com a cidade'}</div></div><div class="next-box"><div class="nb-lbl">Próximo trem</div><div class="nb-val" style="color:${lc}" id="ntl2">${formatMin(nextDep(t.metro_interval))}</div><div class="nb-freq">a cada ${t.metro_interval} min</div></div></div><div class="tc-body">${l2h}${tb('l2')}</div></div><div class="tc-card"><div class="tc-hdr" style="border-left:4px solid #ffd54f"><div><div class="tc-title" style="color:#ffd54f">Linhas de Ônibus</div><div class="tc-note">Posição em tempo real na cidade</div></div><div class="next-box"><div class="nb-lbl">Mais próximo</div><div class="nb-val" style="color:#ffd54f" id="ntb">${formatMin(nextDep(t.bus_interval))}</div><div class="nb-freq">a cada ${t.bus_interval} min</div></div></div><div class="tc-body"><div class="bus-legend">${bLg}</div><div class="bus-map" id="busmap"></div><div class="bus-next-list">${bNx}</div></div></div>`;
-  setTimeout(_iB,150);_aT();if(_tT)clearInterval(_tT);_tT=setInterval(_tkT,1000);
-}
-function _lp(a,b,t){return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];}
-function _pL(c,p){const n=c.length-1;if(n<=0)return c[0];const sp=p*n,si=Math.min(Math.floor(sp),n-1);return _lp(c[si],c[si+1],sp-si);}
-function _bsv(c,fl){return `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="16" viewBox="0 0 26 16" style="${fl?'transform:scaleX(-1)':''}"><rect x="0" y="0" width="26" height="14" rx="3" fill="${c}" opacity=".92"/><rect x="2" y="2" width="5" height="5" rx="1" fill="white" opacity=".65"/><rect x="9" y="2" width="5" height="5" rx="1" fill="white" opacity=".65"/><rect x="17" y="2" width="5" height="5" rx="1" fill="white" opacity=".65"/><rect x="2" y="10" width="4" height="4" rx="2" fill="white" opacity=".8"/><rect x="20" y="10" width="4" height="4" rx="2" fill="white" opacity=".8"/></svg>`;}
-function _iB(){
-  const el=document.getElementById('busmap');if(!el)return;
-  if(_bM){_bM.invalidateSize();_uB();return;}
-  _bM=L.map('busmap',{center:HOME||[-15,-47],zoom:11});
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18}).addTo(_bM);
-  BUS_ROUTES_DATA.forEach(r=>{L.polyline(r.coords,{color:r.color,weight:3,opacity:.45,dashArray:'6,5'}).addTo(_bM).bindPopup(`<b style="color:${r.color}">${r.name}</b><br>A cada ${r.freq} min`);[r.coords[0],r.coords[r.coords.length-1]].forEach(pt=>L.circleMarker(pt,{radius:5,fillColor:r.color,fillOpacity:.9,color:'#fff',weight:1.5}).addTo(_bM));});
-  _uB();
-}
-function _uB(){
-  if(!_bM)return;_bV.forEach(m=>_bM.removeLayer(m));_bV=[];
-  BUS_ROUTES_DATA.forEach((r)=>{const p=_bP(r.freq);[[p,false],[1-p,true]].forEach(([pr,fl])=>{const pt=_pL(r.coords,pr);const mk=L.marker(pt,{icon:L.divIcon({html:_bsv(r.color,fl),className:'',iconSize:[26,16],iconAnchor:[13,8]}),zIndexOffset:fl?400:500}).addTo(_bM);mk.bindPopup(`<b style="color:${r.color}">${r.name}</b><br>${fl?'Volta':'Ida'} · ${Math.round(pr*100)}%`);_bV.push(mk);});});
-}
-function _aSt(arr,pfx,prog,lc){
-  const n=arr.length,raw=prog*n,idx=Math.min(Math.floor(raw),n-1),frac=raw-idx;
-  arr.forEach((s,i)=>{const d=document.getElementById(`${pfx}d${i}`),nm=document.getElementById(`${pfx}n${i}`);if(!d)return;const isA=i===idx,isN=!isA&&i===idx+1&&frac>0.65;d.className='mdot '+s.type+(isA?' active':isN?' next':'');d.style.setProperty('--lc',lc);d.style.setProperty('--bg','var(--bg)');if(nm)nm.className='mstop-name '+s.type+(isA?' active':'');});return idx;
-}
-function _aB(id,prog){const tr=document.getElementById('tb'+id),cu=document.getElementById('tc'+id),pt=document.getElementById('tp'+id);if(tr&&cu){const w=tr.offsetWidth||280;cu.style.left=Math.max(0,Math.min(prog*(w-28),w-28))+'px';}if(pt)pt.textContent=Math.round(prog*100)+'%';}
-function _aT(){
-  const t=TRANSIT_DATA;if(!t)return;const lc=t.metro_color;
-  const p1=_tP(t.metro_interval);const ni1=_aSt(t.line1_stations,'l1',p1,lc);if(ni1!==_lS.l1&&_lS.l1>=0)maybePlayTrain();_lS.l1=ni1;_aB('l1',p1);
-  const p2=_tP(t.metro_interval);const l2=t.line2_stations,fi=l2.findIndex(s=>s.branch),trk=fi>0?l2.slice(0,fi):l2,bA=l2.filter(s=>s.branch==='A'),bB=l2.filter(s=>s.branch==='B');
-  if(bA.length&&bB.length){const ni2=_aSt(trk,'l2t',p2,lc);if(ni2!==_lS.l2&&_lS.l2>=0)maybePlayTrain();_lS.l2=ni2;_aSt(bA,'brA',p2,lc);_aSt(bB,'brB',p2,lc);}
-  else{const ni2=_aSt(l2,'l2t',p2,lc);if(ni2!==_lS.l2&&_lS.l2>=0)maybePlayTrain();_lS.l2=ni2;}
-  _aB('l2',p2);_uB();
-}
-function _tkT(){
-  const t=TRANSIT_DATA;if(!t)return;_aT();
-  [['ntm',t.metro_interval],['ntl2',t.metro_interval],['ntb',t.bus_interval]].forEach(([id,iv])=>{const e=document.getElementById(id);if(e)e.textContent=formatMin(nextDep(iv));});
-  BUS_ROUTES_DATA.forEach((r,i)=>{const e=document.getElementById('bnxt'+i);if(e)e.textContent=formatMin(nextDep(r.freq));});
-}
-function nowMinsTransit(){const n=new Date();return n.getHours()*60+n.getMinutes();}
-function nextDep(iv){const n=nowMinsTransit(),r=iv-(n%iv);return r===iv?0:r;}
-function formatMin(m){return m===0?'Agora':m+'min';}
-
-
-// ── MANUAL FLIGHTS ─────────────────────────────────────────────────────────
-let _manualFlights=[];
-function addManualFlight(){
-  const time=document.getElementById('add-time').value.trim();
-  const dest=document.getElementById('add-dest').value.trim();
-  const iata=document.getElementById('add-iata').value.trim().toUpperCase();
-  const al=document.getElementById('add-al').value.trim();
-  const ac=document.getElementById('add-ac').value.trim()||'—';
-  const gate_=document.getElementById('add-gate').value.trim().toUpperCase()||'—';
-  const tipo=document.getElementById('add-tipo').value;
-  const st=document.getElementById('add-status').value;
-  if(!time||!dest||!iata){document.getElementById('add-note').textContent='Preencha horário, destino e IATA.';setTimeout(()=>document.getElementById('add-note').textContent='',3000);return;}
-  _manualFlights.push({id:'m'+Date.now(),time,dest,iata,al,ac,gate:gate_,tipo,st});
-  _renderML();rDep();
-  document.getElementById('add-note').textContent='Voo adicionado!';
-  setTimeout(()=>document.getElementById('add-note').textContent='',2000);
-  ['add-time','add-dest','add-iata','add-al','add-ac','add-gate'].forEach(id=>document.getElementById(id).value='');
-}
-function clearManualFlights(){_manualFlights=[];_renderML();rDep();}
-function removeManualFlight(id){_manualFlights=_manualFlights.filter(f=>f.id!==id);_renderML();rDep();}
-function _renderML(){
-  const el=document.getElementById('manual-list');if(!el)return;
-  if(!_manualFlights.length){el.innerHTML='';return;}
-  el.innerHTML=_manualFlights.map(f=>`<div style="display:flex;align-items:center;gap:10px;padding:7px 12px;background:var(--muted);border-radius:5px;margin-bottom:5px;flex-wrap:wrap"><span style="font-family:'Share Tech Mono',monospace;font-size:1rem;color:var(--acc)">${f.time}</span><span style="font-weight:700">${f.dest}</span><span style="font-family:'Share Tech Mono',monospace;font-size:.8rem;color:#40c4ff">${f.iata}</span><span style="font-size:.76rem;color:var(--dim)">${f.al||'—'}</span><span style="font-size:.76rem;color:var(--dim)">${f.ac}</span>${stH(f.st)}<button onclick="removeManualFlight('${f.id}')" style="background:rgba(255,23,68,.12);border:1px solid rgba(255,23,68,.3);color:#ff1744;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:.7rem;margin-left:auto">×</button></div>`).join('');
-}
-const _origDepRows=depRows;
-function depRows(day,tf,sr){
-  const rows=_origDepRows(day,tf,sr);
-  if(!_manualFlights.length)return rows;
-  const nm=nowMins();
-  const extras=_manualFlights.filter(f=>(tf==='ALL'||f.tipo===tf)&&(!sr||f.dest.toLowerCase().includes(sr)||f.iata.toLowerCase().includes(sr)||(f.al||'').toLowerCase().includes(sr))).map((f,i)=>({time:f.time,dest:f.dest,iata:f.iata,tipo:f.tipo,dist:0,dur:0,ac:f.ac,al:f.al,fi:9000+i,ap:AI?.iata||'',gate:f.gate,belt:'—',terminal:TRM_DOM||'T',st:f.st,fnum:f.iata+'9999',isManual:true})).filter(r=>toMins(r.time)>=nm-30);
-  return[...rows,...extras].sort((a,b)=>a.time.localeCompare(b.time));
-}
-
-</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root{--bg:#080e0d;--panel:#0d1918;--border:#1e2d4a;--acc:#00c853;--acc-tx:#000;--green:#00e676;--white:#e8eaf6;--dim:#546e7a;--muted:#263238}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -237,7 +97,17 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
 /* LIVE MAP */
 #live-map{height:520px;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
 .live-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:14px}
-.lstat{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px 16px}
+.lstat{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px 16px;cursor:pointer;transition:border-color .2s,background .2s}
+.lstat:hover{border-color:var(--acc)}
+.lstat.sel{border-color:var(--acc);background:rgba(255,255,255,.03)}
+.live-list{margin-top:14px}
+.live-list-hdr{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.llrow{display:grid;grid-template-columns:62px 1fr auto auto;gap:10px;align-items:center;padding:9px 12px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-bottom:6px}
+.llrow-time{font-family:'Share Tech Mono',monospace;font-weight:700;color:var(--acc)}
+.llrow-dest{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.llrow-sub{font-size:.7rem;color:var(--dim)}
+.llrow-iata{font-family:'Share Tech Mono',monospace;font-size:.8rem;color:#40c4ff}
+.live-empty{color:var(--dim);font-size:.82rem;padding:14px;text-align:center}
 .lstat-val{font-family:'Share Tech Mono',monospace;font-size:1.4rem;color:var(--acc);font-weight:700}
 .lstat-lbl{font-size:.66rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
 /* ROUTE MAP */
@@ -310,47 +180,21 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
 /* Live plane icon */
 .plane-icon{font-size:16px;line-height:1;transform-origin:center}
 @media(max-width:768px){.wrap{padding:12px}.iata{font-size:2rem}#live-map,#map-container{height:350px}}
+.transit-wrap{display:flex;flex-direction:column;gap:20px}.tc-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}.tc-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}.tc-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700}.tc-note{font-size:.63rem;color:var(--dim);margin-top:3px}.next-box{text-align:right;flex-shrink:0}.nb-lbl{font-size:.58rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}.nb-val{font-family:'Share Tech Mono',monospace;font-size:1.5rem;font-weight:700;line-height:1.1}.nb-freq{font-size:.62rem;color:var(--dim)}.tc-body{padding:16px 18px}.mline{position:relative;padding-left:30px}.mline::before{content:'';position:absolute;left:10px;top:18px;bottom:18px;width:4px;border-radius:2px;background:var(--lc)}.mstop{display:flex;align-items:center;gap:12px;padding:7px 0;position:relative}.mdot{width:22px;height:22px;border-radius:50%;border:3px solid var(--lc);background:var(--bg);position:absolute;left:-30px;z-index:2;transition:background .35s,box-shadow .35s,transform .35s}.mdot.active{background:var(--lc);box-shadow:0 0 0 4px color-mix(in srgb,var(--lc) 25%,transparent),0 0 14px var(--lc)}.mdot.next{animation:nextpulse .65s ease-in-out infinite alternate}@keyframes nextpulse{from{box-shadow:0 0 4px var(--lc)}to{box-shadow:0 0 0 6px color-mix(in srgb,var(--lc) 28%,transparent),0 0 18px var(--lc);transform:scale(1.22)}}.mstop-label{display:flex;flex-direction:column;gap:1px}.mstop-name{font-size:.85rem;font-weight:600;transition:all .3s}.mstop-name.active{font-weight:900;color:var(--lc)}.mstop-tag{font-size:.59rem;color:var(--dim);font-family:'Share Tech Mono',monospace}.fork-stem{width:4px;height:14px;background:var(--lc);border-radius:2px;margin-left:10px}.fork-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fork-col{padding-left:22px;position:relative}.fork-col::before{content:'';position:absolute;left:8px;top:2px;bottom:12px;width:3px;border-radius:2px;background:var(--lc)}.fork-col:first-child::before{opacity:.65}.fork-tag{font-size:.6rem;font-weight:900;letter-spacing:.12em;padding:2px 7px;border-radius:3px;margin-bottom:5px;display:inline-block;font-family:'Share Tech Mono',monospace}.tbar-row{display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)}.tbar-label{font-size:.68rem;font-weight:700;font-family:'Share Tech Mono',monospace;white-space:nowrap}.tbar-track{flex:1;height:10px;background:var(--muted);border-radius:5px;position:relative}.tbar-train{position:absolute;top:50%;width:28px;height:18px;transform:translateY(-50%);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;font-family:'Share Tech Mono',monospace;transition:left 1.3s cubic-bezier(.4,0,.2,1);border:1.5px solid var(--lc);background:color-mix(in srgb,var(--lc) 18%,transparent);box-shadow:0 0 8px var(--lc);z-index:2}.tbar-pct{font-family:'Share Tech Mono',monospace;font-size:.72rem;font-weight:700;min-width:34px;text-align:right}.bus-map{height:260px;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:12px}.bus-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}.bus-leg-item{display:flex;align-items:center;gap:6px;font-size:.74rem}.bus-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}.bus-next-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.bus-next-item{display:flex;align-items:center;gap:8px;background:var(--muted);border-radius:5px;padding:5px 10px;border-left:3px solid}.bni-name{font-size:.74rem;font-weight:600}.bni-val{font-family:'Share Tech Mono',monospace;font-size:.9rem;font-weight:700}
 
-/* TRANSIT */
-.transit-wrap{display:flex;flex-direction:column;gap:20px}
-.tc-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.tc-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
-.tc-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
-.tc-note{font-size:.63rem;color:var(--dim);margin-top:3px}
-.next-box{text-align:right;flex-shrink:0}
-.nb-lbl{font-size:.58rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
-.nb-val{font-family:'Share Tech Mono',monospace;font-size:1.5rem;font-weight:700;line-height:1.1}
-.nb-freq{font-size:.62rem;color:var(--dim)}
-.tc-body{padding:16px 18px}
-.mline{position:relative;padding-left:30px}
-.mline::before{content:'';position:absolute;left:10px;top:18px;bottom:18px;width:4px;border-radius:2px;background:var(--lc)}
-.mstop{display:flex;align-items:center;gap:12px;padding:7px 0;position:relative}
-.mdot{width:22px;height:22px;border-radius:50%;border:3px solid var(--lc);background:var(--bg);position:absolute;left:-30px;z-index:2;transition:background .35s,box-shadow .35s,transform .35s}
-.mdot.active{background:var(--lc);box-shadow:0 0 0 4px color-mix(in srgb,var(--lc) 25%,transparent),0 0 14px var(--lc)}
-.mdot.next{animation:nextpulse .65s ease-in-out infinite alternate}
-@keyframes nextpulse{from{box-shadow:0 0 4px var(--lc)}to{box-shadow:0 0 0 6px color-mix(in srgb,var(--lc) 28%,transparent),0 0 18px var(--lc);transform:scale(1.22)}}
-.mstop-label{display:flex;flex-direction:column;gap:1px}
-.mstop-name{font-size:.85rem;font-weight:600;transition:all .3s}
-.mstop-name.active{font-weight:900;color:var(--lc)}
-.mstop-tag{font-size:.59rem;color:var(--dim);font-family:'Share Tech Mono',monospace}
-.fork-stem{width:4px;height:14px;background:var(--lc);border-radius:2px;margin-left:10px}
-.fork-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fork-col{padding-left:22px;position:relative}
-.fork-col::before{content:'';position:absolute;left:8px;top:2px;bottom:12px;width:3px;border-radius:2px;background:var(--lc)}
-.fork-col:first-child::before{opacity:.65}
-.fork-tag{font-size:.6rem;font-weight:900;letter-spacing:.12em;padding:2px 7px;border-radius:3px;margin-bottom:5px;display:inline-block;font-family:'Share Tech Mono',monospace}
-.tbar-row{display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)}
-.tbar-label{font-size:.68rem;font-weight:700;font-family:'Share Tech Mono',monospace;white-space:nowrap}
-.tbar-track{flex:1;height:10px;background:var(--muted);border-radius:5px;position:relative}
-.tbar-train{position:absolute;top:50%;width:28px;height:18px;transform:translateY(-50%);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;font-family:'Share Tech Mono',monospace;transition:left 1.3s cubic-bezier(.4,0,.2,1);border:1.5px solid var(--lc);background:color-mix(in srgb,var(--lc) 18%,transparent);box-shadow:0 0 8px var(--lc);z-index:2}
-.tbar-pct{font-family:'Share Tech Mono',monospace;font-size:.72rem;font-weight:700;min-width:34px;text-align:right}
-.bus-map{height:260px;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:12px}
-.bus-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
-.bus-leg-item{display:flex;align-items:center;gap:6px;font-size:.74rem}
-.bus-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.bus-next-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.bus-next-item{display:flex;align-items:center;gap:8px;background:var(--muted);border-radius:5px;padding:5px 10px;border-left:3px solid}
-.bni-name{font-size:.74rem;font-weight:600}.bni-val{font-family:'Share Tech Mono',monospace;font-size:.9rem;font-weight:700}
+.ml-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding:4px 0}
+.ml-svg{display:block;height:150px;min-width:100%}
+.ml-line{fill:none;stroke:var(--lc);stroke-width:6;stroke-linecap:round;opacity:.9}
+.ml-dot{fill:var(--bg);stroke:var(--lc);stroke-width:3;transition:fill .3s,stroke .3s,r .3s}
+.ml-dot.passed{fill:var(--lc);opacity:.55}
+.ml-dot.active{fill:var(--lc);stroke:#fff;filter:drop-shadow(0 0 7px var(--lc));animation:mlpulse 1.1s ease-in-out infinite alternate}
+@keyframes mlpulse{from{r:7}to{r:11}}
+.ml-train{fill:#fff;stroke:var(--lc);stroke-width:2.5;filter:drop-shadow(0 0 6px var(--lc));transition:cx 1.2s cubic-bezier(.4,0,.2,1)}
+.ml-lbl{fill:var(--white);font-size:11px;font-weight:600;font-family:'Barlow Condensed',sans-serif}
+.ml-lbl.below{fill:var(--dim)}
+.ml-zone{fill:var(--dim);font-size:10px;font-weight:700;letter-spacing:.12em;font-family:'Share Tech Mono',monospace}
+.ml-divider{stroke:var(--border);stroke-width:1.5;stroke-dasharray:3,4}
+
 </style>
 </head>
 <body>
@@ -376,11 +220,11 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
 <div class="views">
   <button class="vbtn active" onclick="showV('dep')">↑ Partidas</button>
   <button class="vbtn" onclick="showV('arr')">↓ Chegadas</button>
-  <button class="vbtn" onclick="showV('pax')"> Passageiro</button>
-  <button class="vbtn" onclick="showV('hist')"> Histórico</button>
+  <button class="vbtn" onclick="showV('pax')">👤 Passageiro</button>
+  <button class="vbtn" onclick="showV('hist')">📋 Histórico</button>
   <button class="vbtn" onclick="showV('live')">✈ Voos ao Vivo</button>
-  <button class="vbtn" onclick="showV('map')"> Rotas</button>
-  <button class="vbtn" onclick="showV('conn')"> Conexões</button>
+  <button class="vbtn" onclick="showV('map')">🗺 Rotas</button>
+  <button class="vbtn" onclick="showV('conn')">🔀 Conexões</button>
   <button class="vbtn" onclick="showV('gate')">🚪 Portão</button>
   <button class="vbtn" onclick="showV('mgr')">⚙ Status</button>
   <button class="vbtn" onclick="showV('transit')">🚇 Transporte</button>
@@ -462,12 +306,13 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
 <!-- VOOS AO VIVO -->
 <div class="wrap" id="tab-live" style="display:none">
   <div class="live-stats">
-    <div class="lstat"><div class="lstat-val" id="ls-airborne">0</div><div class="lstat-lbl">Em voo agora</div></div>
-    <div class="lstat"><div class="lstat-val" id="ls-board">0</div><div class="lstat-lbl">Embarcando</div></div>
-    <div class="lstat"><div class="lstat-val" id="ls-arr">0</div><div class="lstat-lbl">Chegando</div></div>
-    <div class="lstat"><div class="lstat-val" id="ls-del">0</div><div class="lstat-lbl">Atrasados</div></div>
+    <div class="lstat" data-cat="airborne" onclick="showLiveList('airborne')"><div class="lstat-val" id="ls-airborne">0</div><div class="lstat-lbl">Em voo agora</div></div>
+    <div class="lstat" data-cat="board" onclick="showLiveList('board')"><div class="lstat-val" id="ls-board">0</div><div class="lstat-lbl">Embarcando</div></div>
+    <div class="lstat" data-cat="arr" onclick="showLiveList('arr')"><div class="lstat-val" id="ls-arr">0</div><div class="lstat-lbl">Chegando</div></div>
+    <div class="lstat" data-cat="del" onclick="showLiveList('del')"><div class="lstat-val" id="ls-del">0</div><div class="lstat-lbl">Atrasados</div></div>
   </div>
   <div id="live-map"></div>
+  <div class="live-list" id="live-list"></div>
 </div>
 <!-- MAPA ROTAS -->
 <div class="wrap" id="tab-map" style="display:none">
@@ -515,25 +360,6 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
     <th>Horário</th><th>Destino</th><th>IATA</th><th>Cia.</th><th>Aeronave</th><th>Terminal</th><th>Portão</th><th>Alterar Status</th><th>Status Atual</th>
   </tr></thead><tbody id="tb-mgr"></tbody></table>
   <div class="empty" id="em-mgr" style="display:none">Nenhum voo encontrado.</div>
-  <div style="margin-top:24px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:18px">
-    <div class="sec" style="margin-top:0">Adicionar voo manual</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:12px">
-      <div><div style="font-size:.6rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Horário</div><input class="fsrch" id="add-time" placeholder="09:45" style="width:100%" maxlength="5"/></div>
-      <div><div style="font-size:.6rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Destino</div><input class="fsrch" id="add-dest" placeholder="Buenos Aires" style="width:100%"/></div>
-      <div><div style="font-size:.6rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">IATA</div><input class="fsrch" id="add-iata" placeholder="EZE" style="width:100%;text-transform:uppercase" maxlength="4"/></div>
-      <div><div style="font-size:.6rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Cia. Aérea</div><input class="fsrch" id="add-al" placeholder="LATAM" style="width:100%"/></div>
-      <div><div style="font-size:.6rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Aeronave</div><input class="fsrch" id="add-ac" placeholder="Boeing 737" style="width:100%"/></div>
-      <div><div style="font-size:.6rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Portão</div><input class="fsrch" id="add-gate" placeholder="C3" style="width:100%;text-transform:uppercase" maxlength="5"/></div>
-      <div><div style="font-size:.6rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Tipo</div><select class="fsel" id="add-tipo" style="width:100%"><option value="DOM">Doméstico</option><option value="LAT">Am. Latina</option><option value="EUA">EUA</option><option value="EUR">Europa</option><option value="CAR">Caribe</option><option value="MID">Oriente Médio</option><option value="AFR">África</option><option value="ASIA">Ásia</option><option value="OCE">Oceania</option></select></div>
-      <div><div style="font-size:.6rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Status</div><select class="fsel" id="add-status" style="width:100%"><option value="sch">Programado</option><option value="ont">No Horário</option><option value="board">Embarcando</option><option value="final">Emb. Final</option><option value="taxi">Na Pista</option><option value="dep">Partiu</option><option value="del">Atrasado</option><option value="can">Cancelado</option></select></div>
-    </div>
-    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-      <button class="savebtn" onclick="addManualFlight()" style="background:var(--acc)">Adicionar voo</button>
-      <button class="savebtn" onclick="clearManualFlights()" style="background:var(--muted);color:var(--dim);border:1px solid var(--border)">Limpar manuais</button>
-      <span style="font-size:.7rem;color:var(--dim)" id="add-note"></span>
-    </div>
-    <div id="manual-list" style="margin-top:12px"></div>
-  </div>
 </div>
 <!-- INFO -->
 <div class="wrap" id="tab-info" style="display:none">
@@ -595,8 +421,8 @@ function shouldShow(t,day){return day!==todayIdx||toMins(t)>=nowMins()-30;}
 function getNext(rows,day){if(day!==todayIdx)return-1;const nm=nowMins();for(let i=0;i<rows.length;i++){if(toMins(rows[i].time)>=nm)return i;}return-1;}
 function autoSt(t,mode){
   const d=toMins(t)-nowMins();
-  if(mode==="dep"){if(d>120)return"sch";if(d>60)return"ont";if(d>30)return"board";if(d>5)return"final";return"dep";}
-  else{if(d>60)return"sch";if(d>20)return"arr";return"lnd";}
+  if(mode==="dep"){if(d>120)return"sch";if(d>60)return"ont";if(d>30)return"board";if(d>5)return"final";if(d>-8)return"taxi";return"dep";}
+  else{if(d>60)return"sch";if(d>20)return"arr";if(d>-10)return"taxi";return"lnd";}
 }
 function getSt(mode,iata,t,day){
   const k=stk(mode,iata,t,day);
@@ -664,9 +490,7 @@ function rArr(){
 function rPax(){
   const day=AD.pax,mode=document.getElementById("paxmode").value,sr=document.getElementById("sr-pax").value.toLowerCase();
   const isA=mode==="arr";
-  const allRows=isA?arrRows(day,"ALL",sr):depRows(day,"ALL",sr);
-  const rows=allRows.slice(0,10);
-  const ni=getNext(rows,day);
+  const rows=(isA?arrRows(day,"ALL",sr):depRows(day,"ALL",sr)).slice(0,10);const ni=getNext(rows,day);
   document.getElementById("tb-pax").innerHTML=rows.map((r,i)=>`
     <tr class="${rowCls(r,i===ni)}">
       <td class="tc${isA?" arr":""}">${r.time}</td><td class="tdst">${r.dest}</td>
@@ -729,85 +553,30 @@ function initLiveMap(){
 function renderLive(){
   if(!liveMapInst)return;
   livePlaneMarkers.forEach(m=>liveMapInst.removeLayer(m));livePlaneMarkers=[];
-  const day=todayIdx;let airborne=0,boarding=0,arriving=0,delayed=0;
-
-  // ── DEPARTURES IN FLIGHT ─────────────────────────────────────────────────
+  const day=todayIdx;
+  let airborne=0,boarding=0,arriving=0,delayed=0;
   FD.forEach((f,fi)=>{
-    const dep=f[7][day];if(!dep)return;
-    const dest=COORDS[f[1]];const home=HOME;if(!dest||!home)return;
-    const depM=toMins(dep);const dur=f[4];const arrM=depM+dur;const nm=nowMins();
-    const nmAdj=(depM>1200&&nm<600)?nm+1440:nm;
-    if(nmAdj<depM||nmAdj>arrM)return;
-    const prog=Math.max(0,Math.min(1,(nmAdj-depM)/dur));
+    const pos=getPlanePos(f,fi,day);
+    if(!pos)return;
     airborne++;
-    const lat=lerp(home[0],dest[0],prog);const lon=lerp(home[1],dest[1],prog);
-    const angle=Math.atan2(dest[1]-home[1],dest[0]-home[0])*180/Math.PI;
     const a=AL[f[6]];const color=a?a.color:"#ffffff";
-    const fnum=flightNum(f[6],fi);
-    // Trail + remaining path
-    const trail=L.polyline([home,[lat,lon]],{color,weight:2,opacity:.6,dashArray:"5,4"}).addTo(liveMapInst);
-    const remLine=L.polyline([[lat,lon],dest],{color,weight:1.5,opacity:.18,dashArray:"3,7"}).addTo(liveMapInst);
-    // SVG plane icon
-    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" style="transform:rotate(${angle-45}deg);filter:drop-shadow(0 0 3px ${color})"><path fill="${color}" d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
-    const icon=L.divIcon({html:svg,className:"",iconSize:[22,22],iconAnchor:[11,11]});
-    const m=L.marker([lat,lon],{icon,zIndexOffset:1000}).addTo(liveMapInst);
-    const pct=Math.round(prog*100);const rm=Math.round(dur*(1-prog));
-    const rh=Math.floor(rm/60),rmm=rm%60;const remStr=rh>0?`${rh}h${rmm}m`:`${rmm}m`;
-    m.bindPopup(`<div style="font-family:'Barlow Condensed',sans-serif;min-width:190px">
-      <div style="font-size:1.1rem;font-weight:700;color:${color};margin-bottom:4px">${fnum} ↑</div>
-      <div style="font-size:.9rem;font-weight:700;margin-bottom:4px">${f[0]}</div>
-      <div style="font-size:.76rem;color:#90a0b0;margin-bottom:8px">${a?.name||f[6]} · ${f[5]}</div>
-      <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 8px;font-size:.74rem">
-        <span style="color:#546e7a">Partiu</span><span style="font-family:monospace">${dep}</span>
-        <span style="color:#546e7a">Chega</span><span style="font-family:monospace">${addM(dep,dur)}</span>
-        <span style="color:#546e7a">Restante</span><span style="font-family:monospace;color:${color}">${remStr}</span>
-      </div>
-      <div style="margin-top:8px;background:#1a2535;border-radius:3px;height:4px;overflow:hidden">
-        <div style="height:100%;width:${pct}%;background:${color};border-radius:3px"></div>
-      </div>
-      <div style="font-size:.66rem;color:#546e7a;margin-top:3px;text-align:right">${pct}% do trajeto · saída</div>
-    </div>`);
-    livePlaneMarkers.push(trail,remLine,m);
-    const st=autoSt(dep,"dep");
-    if(st==="board"||st==="final")boarding++;if(st==="del")delayed++;
+    // Plane icon rotated
+    const icon=L.divIcon({
+      html:`<div style="color:${color};font-size:18px;transform:rotate(${pos.angle}deg);text-shadow:0 0 4px rgba(0,0,0,.8);filter:drop-shadow(0 0 3px ${color})">✈</div>`,
+      className:"",iconSize:[22,22],iconAnchor:[11,11]
+    });
+    const m=L.marker([pos.lat,pos.lon],{icon}).addTo(liveMapInst);
+    m.bindPopup(`<b>${pos.fnum}</b> — ${pos.dest}<br>${a?.name||f[6]} · ${pos.ac}<br>Dep: ${pos.dep} · Arr: ${pos.arr}<br>Progresso: ${Math.round(pos.prog*100)}%`);
+    livePlaneMarkers.push(m);
+    // Count status
+    const st=getSt("dep",f[1],f[7][day],day);
+    if(st==="board"||st==="final")boarding++;
+    if(st==="arr")arriving++;
+    if(st==="del")delayed++;
   });
-
-  // ── ARRIVALS IN FLIGHT ───────────────────────────────────────────────────
-  FD.forEach((f,fi)=>{
-    const arrT=f[8]&&f[8][day];if(!arrT)return;
-    const orig=COORDS[f[1]];if(!orig)return;
-    const inbDepM=toMins(arrT)-f[4];const nm=nowMins();
-    const nmAdj=(inbDepM>1200&&nm<600)?nm+1440:nm;
-    const inbArrM=inbDepM+f[4];
-    if(nmAdj<inbDepM||nmAdj>inbArrM)return;
-    const prog=Math.max(0,Math.min(1,(nmAdj-inbDepM)/f[4]));
-    const lat=lerp(orig[0],HOME[0],prog);const lon=lerp(orig[1],HOME[1],prog);
-    const angle=Math.atan2(HOME[1]-orig[1],HOME[0]-orig[0])*180/Math.PI;
-    const a=AL[f[6]];const color=a?a.color:"#88ffaa";
-    const fnum=flightNum(f[6],fi);
-    const trail=L.polyline([orig,[lat,lon]],{color,weight:2,opacity:.5,dashArray:"5,4"}).addTo(liveMapInst);
-    const remLine=L.polyline([[lat,lon],HOME],{color,weight:1.5,opacity:.15,dashArray:"3,7"}).addTo(liveMapInst);
-    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" style="transform:rotate(${angle-45}deg);filter:drop-shadow(0 0 4px ${color})"><path fill="${color}" opacity=".9" d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
-    const icon=L.divIcon({html:svg,className:"",iconSize:[22,22],iconAnchor:[11,11]});
-    const mArr=L.marker([lat,lon],{icon,zIndexOffset:900}).addTo(liveMapInst);
-    const rmArr=Math.round(f[4]*(1-prog));const rhA=Math.floor(rmArr/60),rmA=rmArr%60;
-    mArr.bindPopup(`<div style="font-family:'Barlow Condensed',sans-serif;min-width:190px">
-      <div style="font-size:1.1rem;font-weight:700;color:${color};margin-bottom:4px">${fnum} ↓</div>
-      <div style="font-size:.9rem;font-weight:700;margin-bottom:4px">${f[0]} → ${AI.iata}</div>
-      <div style="font-size:.76rem;color:#90a0b0;margin-bottom:8px">${a?.name||f[6]} · ${f[5]}</div>
-      <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 8px;font-size:.74rem">
-        <span style="color:#546e7a">Origem</span><span style="font-family:monospace">${f[1]}</span>
-        <span style="color:#546e7a">Chegada prev.</span><span style="font-family:monospace">${arrT}</span>
-        <span style="color:#546e7a">Restante</span><span style="font-family:monospace;color:${color}">${rhA>0?rhA+"h"+rmA+"m":rmA+"m"}</span>
-      </div>
-      <div style="margin-top:8px;background:#1a2535;border-radius:3px;height:4px;overflow:hidden">
-        <div style="height:100%;width:${Math.round(prog*100)}%;background:${color};border-radius:3px"></div>
-      </div>
-      <div style="font-size:.66rem;color:#546e7a;margin-top:3px;text-align:right">${Math.round(prog*100)}% · chegada</div>
-    </div>`);
-    livePlaneMarkers.push(trail,remLine,mArr);arriving++;
-  });
-
+  // Also count today's arrivals coming in
+  const arrToday=arrRows(day,"ALL","").filter(r=>r.st==="arr");
+  arriving+=arrToday.length;
   document.getElementById("ls-airborne").textContent=airborne;
   document.getElementById("ls-board").textContent=boarding;
   document.getElementById("ls-arr").textContent=arriving;
@@ -908,29 +677,18 @@ const ANN=[
 ];
 let annPool=[],annIdx=0;
 function buildAnnPool(r){
-  const dest=r.dest.split(" –")[0].split(" —")[0].trim();
-  const ci=COUNTRY_INFO&&COUNTRY_INFO[r.iata]||{};
-  const isDom=r.tipo==="DOM";
   const pool=[];
-  // Random passenger names for immersion
-  const names=["Carlos Mendes","Ana Lima","Pedro Sousa","Maria Costa","João Silva","Lucia Ferreira","Rafael Gomes","Beatriz Alves","Fernando Nunes","Camila Rocha","André Martins","Isabela Santos","Thiago Carvalho","Natalia Vieira","Bruno Pereira"];
-  const name=names[Math.floor(Date.now()/10000)%names.length];
-  pool.push({pt:`Passageiros do voo ${r.fnum} com destino a ${dest} — embarque imediato no portão ${r.gate}`,en:`Passengers on flight ${r.fnum} to ${dest} — immediate boarding at gate ${r.gate}`,es:`Pasajeros vuelo ${r.fnum} destino ${dest} — embarque inmediato puerta ${r.gate}`,u:true});
-  pool.push({pt:`Último chamado — ${name}, passageiro do voo ${r.fnum} para ${dest}. Portão ${r.gate}, terminal ${r.terminal}`,en:`Final call — ${name}, passenger on flight ${r.fnum} to ${dest}. Gate ${r.gate}, terminal ${r.terminal}`,es:`Último llamado — ${name}, pasajero del vuelo ${r.fnum} a ${dest}. Puerta ${r.gate}, terminal ${r.terminal}`,u:true});
-  pool.push({pt:`Segurança: líquidos acima de 100ml não permitidos na cabine. Remova eletrônicos na triagem`,en:`Security: liquids over 100ml not allowed in cabin. Remove electronics at screening`,es:`Seguridad: líquidos >100ml no permitidos. Retire electrónicos en seguridad`,u:false});
-  pool.push({pt:`Baterias de lítio e power banks: somente na bagagem de mão, não no despacho`,en:`Lithium batteries and power banks: carry-on only, not checked baggage`,es:`Baterías de litio: solo equipaje de mano, no en bodega`,u:false});
-  if(!isDom){
-    if(ci.visa)pool.push({pt:`${dest} — Documentação: ${ci.visa}`,en:`${dest} — Entry requirements: ${ci.visa}`,es:`${dest} — Requisitos: ${ci.visa}`,u:false});
-    if(ci.vaccine&&ci.vaccine!=="Nenhuma obrigatória")pool.push({pt:`${dest} — Vacinação: ${ci.vaccine}. Carteira pode ser solicitada`,en:`${dest} — Vaccination: ${ci.vaccine}. Certificate may be required`,es:`${dest} — Vacunación: ${ci.vaccine}. Carné puede ser solicitado`,u:false});
-    if(ci.customs)pool.push({pt:`Alfândega em ${dest}: ${ci.customs}`,en:`Customs at ${dest}: ${ci.customs}`,es:`Aduana en ${dest}: ${ci.customs}`,u:false});
-    if(ci.currency)pool.push({pt:`Moeda em ${dest}: ${ci.currency}`,en:`Currency in ${dest}: ${ci.currency}`,es:`Moneda en ${dest}: ${ci.currency}`,u:false});
-    if(ci.tip)pool.push({pt:`Dica para ${dest}: ${ci.tip}`,en:`Tip for ${dest}: ${ci.tip}`,es:`Consejo para ${dest}: ${ci.tip}`,u:false});
-    pool.push({pt:`Passaporte: validade mínima de 6 meses além da data de retorno`,en:`Passport: minimum validity 6 months beyond return date`,es:`Pasaporte: validez mínima 6 meses más allá del retorno`,u:false});
-    pool.push({pt:`Preencha o formulário de imigração durante o voo para agilizar o desembarque`,en:`Complete the immigration form during the flight to speed up arrival`,es:`Complete el formulario de inmigración durante el vuelo`,u:false});
+  for(let i=0;i<3;i++){
+    const[fn,ln]=randomName(r.tipo,r.fi*100+i);
+    const name=fn+" "+ln;
+    pool.push({pt:ANN[0].pt(name,r.dest,r.terminal,r.gate),en:ANN[0].en(name,r.dest,r.terminal,r.gate),es:ANN[0].es(name,r.dest,r.terminal,r.gate),u:true});
   }
-  pool.push({pt:`Duração estimada do voo: ${durS(r.dur)}. Agradecemos a preferência`,en:`Estimated flight duration: ${durS(r.dur)}. Thank you for flying with us`,es:`Duración estimada: ${durS(r.dur)}. Gracias por elegirnos`,u:false});
-  pool.push({pt:`Wi-Fi gratuito no terminal ${r.terminal}. Rede: AirportFree`,en:`Free Wi-Fi in terminal ${r.terminal}. Network: AirportFree`,es:`Wi-Fi gratuito en terminal ${r.terminal}. Red: AirportFree`,u:false});
-  pool.push({pt:`Itens perdidos: balcão de achados e perdidos no terminal ${r.terminal}`,en:`Lost items: lost & found counter in terminal ${r.terminal}`,es:`Objetos perdidos: mostrador en terminal ${r.terminal}`,u:false});
+  pool.push({pt:ANN[1].pt(r.fnum,r.dest),en:ANN[1].en(r.fnum,r.dest),es:ANN[1].es(r.fnum,r.dest),u:false});
+  pool.push({pt:ANN[2].pt(r.fnum,r.dest,r.time),en:ANN[2].en(r.fnum,r.dest,r.time),es:ANN[2].es(r.fnum,r.dest,r.time),u:false});
+  pool.push({pt:ANN[3].pt(),en:ANN[3].en(),es:ANN[3].es(),u:false});
+  pool.push({pt:ANN[4].pt(),en:ANN[4].en(),es:ANN[4].es(),u:false});
+  pool.push({pt:ANN[5].pt(r.fnum,r.dest,r.gate),en:ANN[5].en(r.fnum,r.dest,r.gate),es:ANN[5].es(r.fnum,r.dest,r.gate),u:true});
+  if(r.tipo!=="DOM")pool.push({pt:ANN[6].pt(r.fnum,r.dest),en:ANN[6].en(r.fnum,r.dest),es:ANN[6].es(r.fnum,r.dest),u:false});
   return pool;
 }
 function showNextAnn(){
@@ -943,17 +701,11 @@ function showNextAnn(){
   el.insertBefore(div,el.firstChild);
   setTimeout(()=>div.classList.add("show-en"),3000);
   setTimeout(()=>div.classList.add("show-es"),6500);
-  while(el.children.length>2)el.removeChild(el.lastChild);
+  while(el.children.length>3)el.removeChild(el.lastChild);
 }
-
-// ── STATUS TRANSLATIONS ──────────────────────────────────────────────────────
-const ST_LANGS={sch:{pt:"PROGRAMADO",en:"SCHEDULED",es:"PROGRAMADO"},ont:{pt:"NO HORÁRIO",en:"ON TIME",es:"EN HORA"},board:{pt:"EMBARCANDO",en:"BOARDING",es:"ABORDANDO"},final:{pt:"EMB. FINAL",en:"FINAL BOARDING",es:"ÚLTIMO ABORDAJE"},taxi:{pt:"NA PISTA",en:"ON RUNWAY",es:"EN PISTA"},dep:{pt:"PARTIU",en:"DEPARTED",es:"DESPEGADO"},del:{pt:"ATRASADO",en:"DELAYED",es:"DEMORADO"},can:{pt:"CANCELADO",en:"CANCELLED",es:"CANCELADO"},arr:{pt:"CHEGANDO",en:"ARRIVING",es:"LLEGANDO"},lnd:{pt:"POUSOU",en:"LANDED",es:"ATERRIZÓ"}};
-const GATE_LABELS={pt:{status:"Status",ac:"Aeronave",trm:"Terminal",gate:"Portão",dur:"Duração",dist:"Distância",wth:"Clima em",ann:"📢 Avisos do Portão"},en:{status:"Status",ac:"Aircraft",trm:"Terminal",gate:"Gate",dur:"Duration",dist:"Distance",wth:"Weather in",ann:"📢 Gate Announcements"},es:{status:"Estado",ac:"Aeronave",trm:"Terminal",gate:"Puerta",dur:"Duración",dist:"Distancia",wth:"Clima en",ann:"📢 Avisos de Puerta"}};
-const ST_COLORS={board:"#00e5ff",final:"#ff6d00",taxi:"#ffee58",dep:"#00e676",del:"#ff1744",can:"#b71c1c",arr:"#00e676",lnd:"#b9f6ca"};
-let _gLI=0,_gLT=null,_gSt=null;
-
 function loadGate(){
-  const val=document.getElementById("gate-sel").value;if(!val)return;
+  const val=document.getElementById("gate-sel").value;
+  if(!val)return;
   const[fi,day]=val.split("__").map(Number);
   const f=FD[fi];if(!f||!f[7][day])return;
   const depT=f[7][day];
@@ -962,62 +714,41 @@ function loadGate(){
     st:getSt("dep",f[1],depT,day),fnum:flightNum(f[6],fi)};
   const w=WEATHER[f[1]]||["--","--"];
   const alD=AL[f[6]]||{name:f[6],color:"#fff"};
-  const showAnn=["board","final","taxi","dep"].includes(r.st);
-  if(r.st!==_gSt){playStatusSound(r.st);_gSt=r.st;}
-  const stColor=ST_COLORS[r.st]||"#e8eaf6";
-  const langs=ST_LANGS[r.st]||{pt:r.st.toUpperCase(),en:r.st.toUpperCase(),es:r.st.toUpperCase()};
+  const stC={board:"#00e5ff",final:"#ff6d00",dep:"#00e676",del:"#ff1744"};
+  const stL={sch:"PROGRAMADO",ont:"NO HORÁRIO",board:"EMBARCANDO",final:"EMB. FINAL",dep:"PARTIU",del:"ATRASADO",can:"CANCELADO"};
   document.getElementById("gate-screen").innerHTML=`
     <div class="gs-header">
       <div><div class="gs-fn">${r.fnum}</div><div style="font-size:.7rem;opacity:.8;letter-spacing:.1em">${alD.name.toUpperCase()}</div></div>
-      <div class="gs-dest">${r.dest}</div>
-      <div class="gs-time">${r.time}</div>
+      <div class="gs-dest">${r.dest}</div><div class="gs-time">${r.time}</div>
     </div>
     <div class="gs-body">
-      <div class="gs-st-big">
-        <div class="gs-st-lbl" id="gs-lang-lbl">Status</div>
-        <div class="gs-st-val" id="gs-st-live" style="color:${stColor};transition:opacity .5s">${langs.pt}</div>
-        <div style="display:flex;gap:6px;margin-top:8px">
-          <div style="width:8px;height:8px;border-radius:50%;background:var(--acc);opacity:1" id="ldot-0"></div>
-          <div style="width:8px;height:8px;border-radius:50%;background:#7eb8ff;opacity:.3" id="ldot-1"></div>
-          <div style="width:8px;height:8px;border-radius:50%;background:#ff8a65;opacity:.3" id="ldot-2"></div>
-        </div>
-      </div>
+      <div class="gs-st-big"><div class="gs-st-lbl">Status</div>
+        <div class="gs-st-val" style="color:${stC[r.st]||"#e8eaf6"}">${stL[r.st]||r.st.toUpperCase()}</div></div>
       <div class="gs-det">
-        <div class="gs-row"><span class="gs-key" id="lbl-ac">Aeronave</span><span class="gs-val">${r.ac}</span></div>
-        <div class="gs-row"><span class="gs-key" id="lbl-trm">Terminal</span><span class="gs-val">${r.terminal}</span></div>
-        <div class="gs-row"><span class="gs-key" id="lbl-gate">Portão / Gate</span><span class="gs-val">${r.gate}</span></div>
-        <div class="gs-row"><span class="gs-key" id="lbl-dur">Duração</span><span class="gs-val">${durS(r.dur)}</span></div>
-        <div class="gs-row"><span class="gs-key" id="lbl-dist">Distância</span><span class="gs-val">${Number(r.dist).toLocaleString("pt-BR")} km</span></div>
+        <div class="gs-row"><span class="gs-key">Aeronave</span><span class="gs-val">${r.ac}</span></div>
+        <div class="gs-row"><span class="gs-key">Terminal</span><span class="gs-val">${r.terminal}</span></div>
+        <div class="gs-row"><span class="gs-key">Portão / Gate</span><span class="gs-val">${r.gate}</span></div>
+        <div class="gs-row"><span class="gs-key">Duração</span><span class="gs-val">${durS(r.dur)}</span></div>
+        <div class="gs-row"><span class="gs-key">Distância</span><span class="gs-val">${Number(r.dist).toLocaleString("pt-BR")} km</span></div>
       </div>
     </div>
     <div class="gs-wth">
       <div class="gs-wth-temp">${w[0]}</div>
-      <div><div style="font-size:.62rem;color:#78909c;letter-spacing:.1em;text-transform:uppercase" id="lbl-wth">Clima em ${r.dest.split(" –")[0]}</div>
+      <div><div style="font-size:.62rem;color:#78909c;letter-spacing:.1em;text-transform:uppercase">Clima em ${r.dest.split(" –")[0]}</div>
       <div class="gs-wth-desc">${w[1]}</div></div>
     </div>
-    <div class="gs-anns"${showAnn?'':' style="display:none"'}>
-      <div class="gs-ann-lbl" id="lbl-ann">📢 Avisos do Portão</div>
+    <div class="gs-anns">
+      <div class="gs-ann-lbl">📢 Avisos · Announcements · Avisos de Puerta</div>
       <div id="ann-list"></div>
     </div>`;
-  _gLI=0;if(_gLT)clearInterval(_gLT);
-  _rGL(r.st);_gLT=setInterval(()=>_rGL(r.st),4000);
-  if(showAnn){annPool=buildAnnPool(r);annIdx=0;if(annInterval)clearInterval(annInterval);showNextAnn();annInterval=setInterval(showNextAnn,15000);}
-}
-
-function _rGL(st){
-  const lgs=["pt","en","es"];const lg=lgs[_gLI%3];_gLI++;
-  const sv=document.getElementById("gs-st-live");const sl=document.getElementById("gs-lang-lbl");
-  if(sv){sv.style.opacity="0";setTimeout(()=>{sv.textContent=(ST_LANGS[st]||{})[lg]||st.toUpperCase();sv.style.color=lg==="pt"?"var(--acc)":lg==="en"?"#7eb8ff":"#ff8a65";sv.style.opacity="1";},300);}
-  if(sl)sl.textContent=GATE_LABELS[lg].status;
-  [["lbl-ac","ac"],["lbl-trm","trm"],["lbl-gate","gate"],["lbl-dur","dur"],["lbl-dist","dist"]].forEach(([id,k])=>{const el=document.getElementById(id);if(el)el.textContent=GATE_LABELS[lg][k];});
-  const we=document.getElementById("lbl-wth");if(we){const d=we.textContent.split(" ").pop();we.textContent=GATE_LABELS[lg].wth+" "+d;}
-  const ae=document.getElementById("lbl-ann");if(ae)ae.textContent=GATE_LABELS[lg].ann;
-  lgs.forEach((l,i)=>{const d=document.getElementById("ldot-"+i);if(d)d.style.opacity=i===(_gLI-1)%3?"1":".3";});
+  annPool=buildAnnPool(r);annIdx=0;
+  if(annInterval)clearInterval(annInterval);
+  showNextAnn();annInterval=setInterval(showNextAnn,9000);
 }
 function populateGate(day){
   const sel=document.getElementById("gate-sel");
   sel.innerHTML=`<option value="">Escolha um voo...</option>`;
-  depRows(todayIdx,"ALL","").forEach(r=>{const o=document.createElement("option");o.value=`${r.fi}__${day}`;o.textContent=`${r.time} ${r.iata} – ${r.dest} (${r.gate})`;sel.appendChild(o);});
+  depRows(day,"ALL","").forEach(r=>{const o=document.createElement("option");o.value=`${r.fi}__${day}`;o.textContent=`${r.time} ${r.iata} – ${r.dest} (${r.gate})`;sel.appendChild(o);});
 }
 
 // ── MANAGER ───────────────────────────────────────────────────────────────────
@@ -1080,9 +811,10 @@ function showV(name){
     document.getElementById("tab-"+t).style.display=t===name?"block":"none");
   document.querySelectorAll(".vbtn").forEach((b,i)=>
     b.classList.toggle("active",["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","info"][i]===name));
+  if(name==="transit"){buildTransitCards();}
   if(name==="live"){setTimeout(()=>{initLiveMap();liveMapInst&&liveMapInst.invalidateSize();renderLive();},100);}
   if(name==="map"){setTimeout(()=>{initRouteMap();routeMapInst&&routeMapInst.invalidateSize();},100);}
-  if(name==="info")rInfo();if(name==="transit")buildTransitCards();if(name==="pax")rPax();if(name==="mgr")rMgr();
+  if(name==="info")rInfo();if(name==="pax")rPax();if(name==="mgr")rMgr();
   if(name==="hist")rHist();if(name==="conn")initConn();
   if(name==="gate")populateGate(AD.gate);
 }
@@ -1128,6 +860,379 @@ setInterval(()=>{rDep();rArr();rPax();rHist();if(liveMapInst)renderLive();},6000
 setInterval(rotateTicker,15000);
 // Refresh live map every 2 minutes
 setInterval(()=>{if(liveMapInst)renderLive();},120000);
+
+
+// ── AUDIO ────────────────────────────────────────────────────────────────────
+let _ac=null;
+function _ctx(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac;}
+function playDingDong(){
+  try{const c=_ctx();[523.25,659.25,783.99,1046.50].forEach((f,i)=>{
+    const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);
+    o.type='sine';o.frequency.value=f;const t=c.currentTime+i*.22;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18,t+.04);
+    g.gain.exponentialRampToValueAtTime(.001,t+.6);o.start(t);o.stop(t+.65);
+  });}catch(e){}
+}
+function playTrainArrive(){
+  try{const c=_ctx();
+    const b=c.createBuffer(1,c.sampleRate*1.0,c.sampleRate);const d=b.getChannelData(0);
+    for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.07*Math.max(0,1-i/d.length);
+    const s=c.createBufferSource();s.buffer=b;
+    const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=200;
+    s.connect(fl);fl.connect(c.destination);s.start();
+    const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);
+    o.type='sawtooth';o.frequency.setValueAtTime(700,c.currentTime);
+    o.frequency.linearRampToValueAtTime(180,c.currentTime+.7);
+    g.gain.setValueAtTime(.04,c.currentTime);g.gain.linearRampToValueAtTime(0,c.currentTime+.8);
+    o.start();o.stop(c.currentTime+.8);
+  }catch(e){}
+}
+let _lastDing=0,_lastTrain=0;
+function maybePlayDing(){const n=Date.now();if(n-_lastDing>8000){playDingDong();_lastDing=n;}}
+function maybePlayTrain(){const n=Date.now();if(n-_lastTrain>5000){playTrainArrive();_lastTrain=n;}}
+function playStatusSound(st){
+  try{const c=_ctx();
+    const sounds={
+      ont:()=>{[880,1108].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=f;const t=c.currentTime+i*.18;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.12,t+.04);g.gain.exponentialRampToValueAtTime(.001,t+.9);o.start(t);o.stop(t+1);});},
+      board:()=>{[523,659,784,1047].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=f;const t=c.currentTime+i*.15;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.14,t+.04);g.gain.exponentialRampToValueAtTime(.001,t+.7);o.start(t);o.stop(t+.8);});},
+      final:()=>{[1200,0,1200].forEach((f,i)=>{if(!f)return;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=f;const t=c.currentTime+i*.25;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.08,t+.02);g.gain.linearRampToValueAtTime(.08,t+.15);g.gain.linearRampToValueAtTime(0,t+.2);o.start(t);o.stop(t+.25);});},
+      taxi:()=>{const b=c.createBuffer(1,c.sampleRate*.5,c.sampleRate);const d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.06*(1-i/d.length);const s=c.createBufferSource();s.buffer=b;const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=160;s.connect(fl);fl.connect(c.destination);s.start();},
+      dep:()=>{[523,659,784,1047,1319].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=f;const t=c.currentTime+i*.1;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.1,t+.05);g.gain.exponentialRampToValueAtTime(.001,t+1.5);o.start(t);o.stop(t+1.6);});},
+      del:()=>{[400,350].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=f;const t=c.currentTime+i*.4;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.07,t+.05);g.gain.linearRampToValueAtTime(.07,t+.3);g.gain.linearRampToValueAtTime(0,t+.4);o.start(t);o.stop(t+.45);});},
+      lnd:()=>{[784,659,523].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=f;const t=c.currentTime+i*.2;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.11,t+.04);g.gain.exponentialRampToValueAtTime(.001,t+1.2);o.start(t);o.stop(t+1.3);})}
+    };
+    if(sounds[st])sounds[st]();
+  }catch(e){}
+}
+
+function renderLive(){
+  if(!liveMapInst)return;
+  livePlaneMarkers.forEach(m=>liveMapInst.removeLayer(m));livePlaneMarkers=[];
+  const day=todayIdx;let airborne=0,boarding=0,arriving=0,delayed=0;
+
+  // ── DEPARTURES IN FLIGHT ─────────────────────────────────────────────────
+  FD.forEach((f,fi)=>{
+    const dep=f[7][day];if(!dep)return;
+    const dest=COORDS[f[1]];const home=HOME;if(!dest||!home)return;
+    const depM=toMins(dep);const dur=f[4];const arrM=depM+dur;const nm=nowMins();
+    const nmAdj=(depM>1200&&nm<600)?nm+1440:nm;
+    if(nmAdj<depM||nmAdj>arrM)return;
+    const prog=Math.max(0,Math.min(1,(nmAdj-depM)/dur));
+    airborne++;
+    const lat=lerp(home[0],dest[0],prog);const lon=lerp(home[1],dest[1],prog);
+    const angle=Math.atan2(dest[1]-home[1],dest[0]-home[0])*180/Math.PI;
+    const a=AL[f[6]];const color=a?a.color:"#ffffff";
+    const fnum=flightNum(f[6],fi);
+    // Trail + remaining path
+    const trail=L.polyline([home,[lat,lon]],{color,weight:2,opacity:.6,dashArray:"5,4"}).addTo(liveMapInst);
+    const remLine=L.polyline([[lat,lon],dest],{color,weight:1.5,opacity:.18,dashArray:"3,7"}).addTo(liveMapInst);
+    // SVG plane icon
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" style="transform:rotate(${angle-45}deg);filter:drop-shadow(0 0 3px ${color})"><path fill="${color}" d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
+    const icon=L.divIcon({html:svg,className:"",iconSize:[22,22],iconAnchor:[11,11]});
+    const m=L.marker([lat,lon],{icon,zIndexOffset:1000}).addTo(liveMapInst);
+    const pct=Math.round(prog*100);const rm=Math.round(dur*(1-prog));
+    const rh=Math.floor(rm/60),rmm=rm%60;const remStr=rh>0?`${rh}h${rmm}m`:`${rmm}m`;
+    m.bindPopup(`<div style="font-family:'Barlow Condensed',sans-serif;min-width:190px">
+      <div style="font-size:1.1rem;font-weight:700;color:${color};margin-bottom:4px">${fnum} ↑</div>
+      <div style="font-size:.9rem;font-weight:700;margin-bottom:4px">${f[0]}</div>
+      <div style="font-size:.76rem;color:#90a0b0;margin-bottom:8px">${a?.name||f[6]} · ${f[5]}</div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 8px;font-size:.74rem">
+        <span style="color:#546e7a">Partiu</span><span style="font-family:monospace">${dep}</span>
+        <span style="color:#546e7a">Chega</span><span style="font-family:monospace">${addM(dep,dur)}</span>
+        <span style="color:#546e7a">Restante</span><span style="font-family:monospace;color:${color}">${remStr}</span>
+      </div>
+      <div style="margin-top:8px;background:#1a2535;border-radius:3px;height:4px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${color};border-radius:3px"></div>
+      </div>
+      <div style="font-size:.66rem;color:#546e7a;margin-top:3px;text-align:right">${pct}% do trajeto · saída</div>
+    </div>`);
+    livePlaneMarkers.push(trail,remLine,m);
+    const st=autoSt(dep,"dep");
+    if(st==="board"||st==="final")boarding++;if(st==="del")delayed++;
+  });
+
+  // ── ARRIVALS IN FLIGHT ───────────────────────────────────────────────────
+  FD.forEach((f,fi)=>{
+    const arrT=f[8]&&f[8][day];if(!arrT)return;
+    const orig=COORDS[f[1]];if(!orig)return;
+    const inbDepM=toMins(arrT)-f[4];const nm=nowMins();
+    const nmAdj=(inbDepM>1200&&nm<600)?nm+1440:nm;
+    const inbArrM=inbDepM+f[4];
+    if(nmAdj<inbDepM||nmAdj>inbArrM)return;
+    const prog=Math.max(0,Math.min(1,(nmAdj-inbDepM)/f[4]));
+    const lat=lerp(orig[0],HOME[0],prog);const lon=lerp(orig[1],HOME[1],prog);
+    const angle=Math.atan2(HOME[1]-orig[1],HOME[0]-orig[0])*180/Math.PI;
+    const a=AL[f[6]];const color=a?a.color:"#88ffaa";
+    const fnum=flightNum(f[6],fi);
+    const trail=L.polyline([orig,[lat,lon]],{color,weight:2,opacity:.5,dashArray:"5,4"}).addTo(liveMapInst);
+    const remLine=L.polyline([[lat,lon],HOME],{color,weight:1.5,opacity:.15,dashArray:"3,7"}).addTo(liveMapInst);
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" style="transform:rotate(${angle-45}deg);filter:drop-shadow(0 0 4px ${color})"><path fill="${color}" opacity=".9" d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>`;
+    const icon=L.divIcon({html:svg,className:"",iconSize:[22,22],iconAnchor:[11,11]});
+    const mArr=L.marker([lat,lon],{icon,zIndexOffset:900}).addTo(liveMapInst);
+    const rmArr=Math.round(f[4]*(1-prog));const rhA=Math.floor(rmArr/60),rmA=rmArr%60;
+    mArr.bindPopup(`<div style="font-family:'Barlow Condensed',sans-serif;min-width:190px">
+      <div style="font-size:1.1rem;font-weight:700;color:${color};margin-bottom:4px">${fnum} ↓</div>
+      <div style="font-size:.9rem;font-weight:700;margin-bottom:4px">${f[0]} → ${AI.iata}</div>
+      <div style="font-size:.76rem;color:#90a0b0;margin-bottom:8px">${a?.name||f[6]} · ${f[5]}</div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 8px;font-size:.74rem">
+        <span style="color:#546e7a">Origem</span><span style="font-family:monospace">${f[1]}</span>
+        <span style="color:#546e7a">Chegada prev.</span><span style="font-family:monospace">${arrT}</span>
+        <span style="color:#546e7a">Restante</span><span style="font-family:monospace;color:${color}">${rhA>0?rhA+"h"+rmA+"m":rmA+"m"}</span>
+      </div>
+      <div style="margin-top:8px;background:#1a2535;border-radius:3px;height:4px;overflow:hidden">
+        <div style="height:100%;width:${Math.round(prog*100)}%;background:${color};border-radius:3px"></div>
+      </div>
+      <div style="font-size:.66rem;color:#546e7a;margin-top:3px;text-align:right">${Math.round(prog*100)}% · chegada</div>
+    </div>`);
+    livePlaneMarkers.push(trail,remLine,mArr);arriving++;
+  });
+
+  document.getElementById("ls-airborne").textContent=airborne;
+  document.getElementById("ls-board").textContent=boarding;
+  document.getElementById("ls-arr").textContent=arriving;
+  document.getElementById("ls-del").textContent=delayed;
+  if(typeof _refreshLiveList==="function")_refreshLiveList();
+}
+
+const ST_LANGS={sch:{pt:"PROGRAMADO",en:"SCHEDULED",es:"PROGRAMADO"},ont:{pt:"NO HORÁRIO",en:"ON TIME",es:"EN HORA"},board:{pt:"EMBARCANDO",en:"BOARDING",es:"ABORDANDO"},final:{pt:"EMB. FINAL",en:"FINAL BOARDING",es:"ÚLTIMO ABORDAJE"},taxi:{pt:"NA PISTA",en:"ON RUNWAY",es:"EN PISTA"},dep:{pt:"PARTIU",en:"DEPARTED",es:"DESPEGADO"},del:{pt:"ATRASADO",en:"DELAYED",es:"DEMORADO"},can:{pt:"CANCELADO",en:"CANCELLED",es:"CANCELADO"},arr:{pt:"CHEGANDO",en:"ARRIVING",es:"LLEGANDO"},lnd:{pt:"POUSOU",en:"LANDED",es:"ATERRIZÓ"}};
+const GATE_LBL={pt:{s:"Status",ac:"Aeronave",trm:"Terminal",g:"Portão",dur:"Duração",dist:"Distância",wth:"Clima em",ann:"📢 Avisos do Portão"},en:{s:"Status",ac:"Aircraft",trm:"Terminal",g:"Gate",dur:"Duration",dist:"Distance",wth:"Weather in",ann:"📢 Gate Announcements"},es:{s:"Estado",ac:"Aeronave",trm:"Terminal",g:"Puerta",dur:"Duración",dist:"Distancia",wth:"Clima en",ann:"📢 Avisos de Puerta"}};
+const ST_C={board:"#00e5ff",final:"#ff6d00",taxi:"#ffee58",dep:"#00e676",del:"#ff1744",can:"#b71c1c",arr:"#00e676",lnd:"#b9f6ca"};
+const COUNTRY_INFO={"EZE":{"visa":"Não requer visto","vaccine":"Nenhuma obrigatória","customs":"US$ 300 franquia","currency":"Peso Argentino","tip":"Declare valores acima de US$ 10.000"},"SCL":{"visa":"Não requer visto","vaccine":"Nenhuma obrigatória","customs":"US$ 500 franquia","currency":"Peso Chileno","tip":"Proibido levar frutas e vegetais frescos"},"LIM":{"visa":"Não requer visto","vaccine":"Febre amarela recomendada","customs":"US$ 500 franquia","currency":"Sol Peruano","tip":"Reserva antecipada obrigatória para Machu Picchu"},"BOG":{"visa":"Não requer visto","vaccine":"Febre amarela recomendada","customs":"US$ 200 franquia","currency":"Peso Colombiano","tip":"Atenção à altitude em cidades andinas"},"MIA":{"visa":"ESTA necessário","vaccine":"Nenhuma obrigatória","customs":"US$ 800 franquia","currency":"Dólar (USD)","tip":"Gorjeta padrão 18-20%"},"JFK":{"visa":"ESTA necessário","vaccine":"Nenhuma obrigatória","customs":"US$ 800 franquia","currency":"Dólar (USD)","tip":"ESTA em esta.cbp.dhs.gov"},"LAX":{"visa":"ESTA necessário","vaccine":"Nenhuma obrigatória","customs":"US$ 800 franquia","currency":"Dólar (USD)","tip":"Trânsito intenso — reserve tempo extra"},"YYZ":{"visa":"AVE necessária","vaccine":"Nenhuma obrigatória","customs":"CAD 800 franquia","currency":"Dólar Canadense","tip":"AVE em canada.ca antes de embarcar"},"YVR":{"visa":"AVE necessária","vaccine":"Nenhuma obrigatória","customs":"CAD 800 franquia","currency":"Dólar Canadense","tip":"Fuso Pacífico UTC-8"},"LIS":{"visa":"Sem visto (Schengen 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Brasileiros podem trabalhar com visto especial"},"MAD":{"visa":"Sem visto (Schengen 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Horário UTC+2 em junho"},"LHR":{"visa":"UK ETA obrigatória","vaccine":"Nenhuma obrigatória","customs":"£ 390 franquia","currency":"Libra (GBP)","tip":"ETA UK desde jan/2024 — gov.uk/eta"},"CDG":{"visa":"Sem visto (Schengen 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Metrô de Paris: zoneamento por distância"},"FRA":{"visa":"Sem visto (Schengen 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Pontualidade muito valorizada"},"AMS":{"visa":"Sem visto (Schengen 90 dias)","vaccine":"Nenhuma obrigatória","customs":"€ 430 franquia","currency":"Euro (EUR)","tip":"Bicicleta tem prioridade no trânsito"},"ZRH":{"visa":"Sem visto (Schengen 90 dias)","vaccine":"Nenhuma obrigatória","customs":"CHF 300 franquia","currency":"Franco Suíço (CHF)","tip":"Suíça não é UE mas aceita visto Schengen"},"DXB":{"visa":"Visto na chegada (30 dias)","vaccine":"Nenhuma obrigatória","customs":"Álcool proibido em público","currency":"Dirham (AED)","tip":"Código de vestimenta obrigatório"},"DOH":{"visa":"Visto na chegada (30 dias)","vaccine":"Nenhuma obrigatória","customs":"Álcool somente em hotéis licenciados","currency":"Riyal (QAR)","tip":"Respeitar horários de oração"},"NRT":{"visa":"Não requer visto (90 dias)","vaccine":"Nenhuma obrigatória","customs":"¥ 200.000 franquia","currency":"Iene (JPY)","tip":"Gorjeta é considerada rude no Japão"},"ICN":{"visa":"Não requer visto (90 dias)","vaccine":"Nenhuma obrigatória","customs":"USD 600 franquia","currency":"Won (KRW)","tip":"K-pop e tecnologia de ponta"},"JNB":{"visa":"Não requer visto","vaccine":"Febre amarela (trânsito endêmico)","customs":"ZAR 5000 franquia","currency":"Rand (ZAR)","tip":"Não exiba objetos de valor"},"LAD":{"visa":"Visto obrigatório","vaccine":"Febre amarela obrigatória","customs":"USD 300 declarar","currency":"Kwanza (AOA)","tip":"Solicitar visto com 2 semanas de antecedência"},"SVO":{"visa":"Visto obrigatório","vaccine":"Nenhuma obrigatória","customs":"€ 10.000 franquia","currency":"Rublo (RUB)","tip":"Solicitar visto com antecedência"},"PTY":{"visa":"Não requer visto","vaccine":"Febre amarela recomendada","customs":"US$ 500 franquia","currency":"Balboa/USD","tip":"Canal do Panamá: visita obrigatória"},"HAV":{"visa":"Cartão de turista obrigatório","vaccine":"Nenhuma obrigatória","customs":"Limite rigoroso de moeda","currency":"Peso Cubano","tip":"Cartão adquirido no check-in"}};
+let _gLI=0,_gLT=null,_gSt=null;
+function loadGate(){
+  const val=document.getElementById("gate-sel").value;if(!val)return;
+  const[fi,day]=val.split("__").map(Number);
+  const f=FD[fi];if(!f||!f[7][day])return;
+  const depT=f[7][day];
+  const r={dest:f[0],iata:f[1],tipo:f[2],dist:f[3],dur:f[4],ac:f[5],al:f[6],fi,gate:gate(f[2],fi),terminal:terminal(f[2]),time:depT,st:getSt("dep",f[1],depT,day),fnum:flightNum(f[6],fi)};
+  const w=WEATHER[f[1]]||["--","--"],alD=AL[f[6]]||{name:f[6],color:"#fff"};
+  const showAnn=["board","final","taxi","dep"].includes(r.st);
+  if(r.st!==_gSt){playStatusSound(r.st);_gSt=r.st;}
+  const stColor=ST_C[r.st]||"#e8eaf6",langs=ST_LANGS[r.st]||{pt:r.st.toUpperCase(),en:r.st.toUpperCase(),es:r.st.toUpperCase()};
+  document.getElementById("gate-screen").innerHTML=`<div class="gs-header"><div><div class="gs-fn">${r.fnum}</div><div style="font-size:.7rem;opacity:.8;letter-spacing:.1em">${alD.name.toUpperCase()}</div></div><div class="gs-dest">${r.dest}</div><div class="gs-time">${r.time}</div></div><div class="gs-body"><div class="gs-st-big"><div class="gs-st-lbl" id="gsl">Status</div><div class="gs-st-val" id="gsv" style="color:${stColor};transition:opacity .5s">${langs.pt}</div><div style="display:flex;gap:6px;margin-top:8px"><div style="width:8px;height:8px;border-radius:50%;background:var(--acc);opacity:1" id="ld0"></div><div style="width:8px;height:8px;border-radius:50%;background:#7eb8ff;opacity:.3" id="ld1"></div><div style="width:8px;height:8px;border-radius:50%;background:#ff8a65;opacity:.3" id="ld2"></div></div></div><div class="gs-det"><div class="gs-row"><span class="gs-key" id="lac">Aeronave</span><span class="gs-val">${r.ac}</span></div><div class="gs-row"><span class="gs-key" id="ltr">Terminal</span><span class="gs-val">${r.terminal}</span></div><div class="gs-row"><span class="gs-key" id="lgt">Portão</span><span class="gs-val">${r.gate}</span></div><div class="gs-row"><span class="gs-key" id="ldu">Duração</span><span class="gs-val">${durS(r.dur)}</span></div><div class="gs-row"><span class="gs-key" id="ldi">Distância</span><span class="gs-val">${Number(r.dist).toLocaleString("pt-BR")} km</span></div></div></div><div class="gs-wth"><div class="gs-wth-temp">${w[0]}</div><div><div style="font-size:.62rem;color:#78909c;letter-spacing:.1em;text-transform:uppercase" id="lwth">Clima em ${r.dest.split(" –")[0]}</div><div class="gs-wth-desc">${w[1]}</div></div></div><div class="gs-anns"${showAnn?'':' style="display:none"'}><div class="gs-ann-lbl" id="lann">📢 Avisos do Portão</div><div id="ann-list"></div></div>`;
+  _gLI=0;if(_gLT)clearInterval(_gLT);_rGL(r.st);_gLT=setInterval(()=>_rGL(r.st),4000);
+  if(showAnn){annPool=buildAnnPool(r);annIdx=0;if(annInterval)clearInterval(annInterval);showNextAnn();annInterval=setInterval(showNextAnn,15000);}
+}
+function _rGL(st){
+  const lgs=["pt","en","es"],lg=lgs[_gLI%3];_gLI++;
+  const sv=document.getElementById("gsv"),sl=document.getElementById("gsl");
+  if(sv){sv.style.opacity="0";setTimeout(()=>{sv.textContent=(ST_LANGS[st]||{})[lg]||st.toUpperCase();sv.style.color=lg==="pt"?"var(--acc)":lg==="en"?"#7eb8ff":"#ff8a65";sv.style.opacity="1";},300);}
+  if(sl)sl.textContent=GATE_LBL[lg].s;
+  [["lac","ac"],["ltr","trm"],["lgt","g"],["ldu","dur"],["ldi","dist"]].forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.textContent=GATE_LBL[lg][k];});
+  const we=document.getElementById("lwth");if(we){const d=we.textContent.split(" ").pop();we.textContent=GATE_LBL[lg].wth+" "+d;}
+  const ae=document.getElementById("lann");if(ae)ae.textContent=GATE_LBL[lg].ann;
+  lgs.forEach((l,i)=>{const d=document.getElementById("ld"+i);if(d)d.style.opacity=i===(_gLI-1)%3?"1":".3";});
+}
+function buildAnnPool(r){
+  const dest=r.dest.split(" \u2013")[0].trim();
+  const ci=COUNTRY_INFO[r.iata]||{};
+  const isDom=r.tipo==="DOM";
+  const names=["Carlos Mendes","Ana Lima","Pedro Sousa","Maria Costa","João Silva","Lucia Ferreira","Rafael Gomes","Beatriz Alves","Fernando Nunes","Camila Rocha"];
+  const name=names[Math.floor(Date.now()/10000)%names.length];
+  const pool=[];
+  pool.push({pt:`Passageiros do voo ${r.fnum} com destino a ${dest} — embarque imediato no portão ${r.gate}`,en:`Passengers on flight ${r.fnum} to ${dest} — immediate boarding at gate ${r.gate}`,es:`Pasajeros vuelo ${r.fnum} destino ${dest} — embarque inmediato puerta ${r.gate}`,u:true});
+  pool.push({pt:`Último chamado — ${name}, passageiro do voo ${r.fnum} para ${dest}. Portão ${r.gate}, terminal ${r.terminal}`,en:`Final call — ${name}, passenger on flight ${r.fnum} to ${dest}. Gate ${r.gate}, terminal ${r.terminal}`,es:`Último llamado — ${name}, pasajero del vuelo ${r.fnum} a ${dest}. Puerta ${r.gate}, terminal ${r.terminal}`,u:true});
+  pool.push({pt:`Segurança: líquidos acima de 100ml não permitidos na cabine`,en:`Security: liquids over 100ml not allowed in cabin`,es:`Seguridad: líquidos >100ml no permitidos`,u:false});
+  pool.push({pt:`Baterias de lítio e power banks: somente na bagagem de mão`,en:`Lithium batteries and power banks: carry-on only`,es:`Baterías de litio: solo equipaje de mano`,u:false});
+  if(!isDom){
+    if(ci.visa)pool.push({pt:`${dest} — Documentação: ${ci.visa}`,en:`${dest} — Entry: ${ci.visa}`,es:`${dest} — Requisitos: ${ci.visa}`,u:false});
+    if(ci.vaccine&&ci.vaccine!=="Nenhuma obrigatória")pool.push({pt:`${dest} — Vacinação: ${ci.vaccine}`,en:`${dest} — Vaccination: ${ci.vaccine}`,es:`${dest} — Vacunación: ${ci.vaccine}`,u:false});
+    if(ci.customs)pool.push({pt:`Alfândega em ${dest}: ${ci.customs}`,en:`Customs at ${dest}: ${ci.customs}`,es:`Aduana en ${dest}: ${ci.customs}`,u:false});
+    if(ci.currency)pool.push({pt:`Moeda em ${dest}: ${ci.currency}`,en:`Currency: ${ci.currency}`,es:`Moneda en ${dest}: ${ci.currency}`,u:false});
+    if(ci.tip)pool.push({pt:`Dica para ${dest}: ${ci.tip}`,en:`Tip for ${dest}: ${ci.tip}`,es:`Consejo para ${dest}: ${ci.tip}`,u:false});
+    pool.push({pt:`Passaporte: validade mínima de 6 meses além do retorno`,en:`Passport: min 6 months validity beyond return`,es:`Pasaporte: validez mínima 6 meses`,u:false});
+  }
+  pool.push({pt:`Duração do voo: ${durS(r.dur)}. Obrigado pela preferência`,en:`Flight duration: ${durS(r.dur)}. Thank you for flying with us`,es:`Duración: ${durS(r.dur)}. Gracias por elegirnos`,u:false});
+  pool.push({pt:`Wi-Fi gratuito no terminal ${r.terminal}. Rede: AirportFree`,en:`Free Wi-Fi in terminal ${r.terminal}. Network: AirportFree`,es:`Wi-Fi gratuito en terminal ${r.terminal}. Red: AirportFree`,u:false});
+  return pool;
+}
+
+const TRANSIT_DATA={"metro_interval": 2, "bus_interval": 7, "metro_color": "#e30613", "metro_line": "Linha 13 Jade (CPTM)", "metro_note": "Operação 05h-00h · Intervalo de 2 min", "line1_name": "Linha Interna - Terminais", "line1_color": "#e30613", "line1_stations": [{"id": "t2", "name": "Terminal T2", "type": "terminal"}, {"id": "t3d", "name": "Terminal T3 Dom.", "type": "terminal"}, {"id": "t3i", "name": "Terminal T3 Intl", "type": "terminal"}, {"id": "gru", "name": "Aeroporto GRU", "type": "hub"}], "line2_name": "Extensao Cidade", "line2_color": "#e30613", "line2_stations": [{"id": "gru", "name": "Aeroporto GRU", "type": "hub"}, {"id": "eng", "name": "Engenheiro Goulart", "type": "city"}, {"id": "tatuape", "name": "Tatuape", "type": "city"}, {"id": "cors", "name": "Corinthians-Itaquera", "type": "terminus", "branch": "A"}, {"id": "bras", "name": "Bras", "type": "city", "branch": "B"}, {"id": "luz", "name": "Luz", "type": "city", "branch": "B"}, {"id": "rep", "name": "Republica", "type": "city", "branch": "B"}, {"id": "pln", "name": "Palmeiras-Barra Funda", "type": "terminus", "branch": "B"}], "bus_routes": [{"name": "Airport Express ao Tiete", "freq": 7, "color": "#0057a8"}, {"name": "GRU ao Guarulhos Centro", "freq": 12, "color": "#009846"}, {"name": "GRU ao Congonhas (CGH)", "freq": 30, "color": "#cc0000"}]};
+const BUS_ROUTES_DATA=[{"name": "Express Tietê", "color": "#0057a8", "freq": 7, "coords": [[-23.4356, -46.4731], [-23.47, -46.51], [-23.5013, -46.6138]]}, {"name": "GRU Guarulhos", "color": "#009846", "freq": 12, "coords": [[-23.4356, -46.4731], [-23.4634, -46.5299]]}, {"name": "GRU Congonhas", "color": "#cc0000", "freq": 30, "coords": [[-23.4356, -46.4731], [-23.5505, -46.6333], [-23.6261, -46.6553]]}];
+
+
+const METRO_GEO=[[-23.4356, -46.4731], [-23.452, -46.505], [-23.473, -46.538], [-23.5013, -46.6138], [-23.544, -46.636], [-23.5505, -46.6333]];
+// ── TRANSIT (clean metro line + bus-only map) ───────────────────────────────
+let _bM=null,_bV=[],_tT=null,_lS={metro:-1};
+function _tP(iv){const n=nowMinsTransit(),s=new Date().getSeconds();return((n%iv)*60+s)/(iv*60);}
+function nowMinsTransit(){const n=new Date();return n.getHours()*60+n.getMinutes();}
+function nextDep(iv){const n=nowMinsTransit(),r=iv-(n%iv);return r===iv?0:r;}
+function formatMin(m){return m===0?"Agora":m+"min";}
+
+// Build one unified metro line combining terminals (airport) + city extension.
+function _unifiedStations(){
+  const t=TRANSIT_DATA;
+  const term=t.line1_stations.filter(s=>s.type==='terminal').map(s=>({name:s.name,zone:'air'}));
+  const hub={name:t.line2_stations[0].name,zone:'air'};
+  // city part = line2 minus hub, only main branch (skip branch B duplicates, keep branch A path)
+  const city=t.line2_stations.slice(1).filter(s=>!s.branch||s.branch==='A').map(s=>({name:s.name,zone:'city',terminus:s.type==='terminus'}));
+  // unified: terminals -> hub -> city
+  return [...term, hub, ...city];
+}
+
+const NTRAINS=4;
+function _metroDiagram(){
+  const t=TRANSIT_DATA;const lc=t.metro_color;
+  const st=_unifiedStations();const n=st.length;
+  const W=Math.max(560, n*120);const H=150;
+  const y=70;const padX=46;
+  const xs=st.map((s,i)=>padX + (n>1?i/(n-1):0)*(W-padX*2));
+  // zone split index (first city station)
+  const split=st.findIndex(s=>s.zone==='city');
+  // line segments: airport part (slightly thicker, station color) + city part
+  let segs='';
+  // single smooth line
+  let dpath="M"+xs[0]+" "+y;
+  for(let i=1;i<n;i++)dpath+=" L"+xs[i]+" "+y;
+  // dots + labels
+  let dots='',labels='';
+  st.forEach((s,i)=>{
+    const x=xs[i];
+    const big=(i===0||i===n-1||s.terminus);
+    dots+=`<circle class="ml-dot" id="mdot${i}" cx="${x}" cy="${y}" r="${big?9:7}" style="--lc:${lc}"/>`;
+    // alternate labels above/below for readability
+    const above=i%2===0;
+    labels+=`<text class="ml-lbl ${above?'above':'below'}" x="${x}" y="${above?y-20:y+26}" text-anchor="middle">${s.name}</text>`;
+  });
+  // zone brackets/labels
+  const airEnd=split>0?(xs[split-1]+xs[split])/2:xs[Math.floor(n/2)];
+  const zones=`<text class="ml-zone" x="${(xs[0]+ (split>0?xs[split-1]:xs[0]))/2}" y="${H-8}" text-anchor="middle">✈ AEROPORTO</text>
+    <text class="ml-zone" x="${(xs[Math.min(split,n-1)]+xs[n-1])/2}" y="${H-8}" text-anchor="middle" style="fill:${lc}">EXTENSÃO À CIDADE</text>
+    <line x1="${airEnd}" y1="40" x2="${airEnd}" y2="${H-18}" class="ml-divider"/>`;
+  const svg=`<svg class="ml-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+    <path class="ml-line" d="${dpath}" style="--lc:${lc}"/>
+    ${zones}
+    ${dots}
+    ${Array.from({length:NTRAINS},(_,k)=>`<circle class="ml-train" id="mtrain${k}" cx="${xs[0]}" cy="${y}" r="6.5" style="--lc:${lc}"/>`).join("")}
+    ${labels}
+  </svg>`;
+  return `<div class="ml-scroll"><div data-xs='${JSON.stringify(xs.map(x=>Math.round(x)))}' data-y="${y}" id="mlmeta" style="display:none"></div>${svg}</div>`;
+}
+
+function buildTransitCards(){
+  const t=TRANSIT_DATA;if(!t)return;
+  const el=document.getElementById('transit-cards');if(!el)return;
+  const lc=t.metro_color;
+  const bLg=BUS_ROUTES_DATA.map(r=>`<div class="bus-leg-item"><div class="bus-leg-dot" style="background:${r.color}"></div><span style="color:${r.color}">${r.name}</span></div>`).join('');
+  const bNx=BUS_ROUTES_DATA.map((r,i)=>`<div class="bus-next-item" style="border-color:${r.color}"><span class="bni-name" style="color:${r.color}">${(r.name.split('→')[1]||r.name).trim()}</span><span class="bni-val" style="color:${r.color}" id="bnxt${i}">${formatMin(nextDep(r.freq))}</span></div>`).join('');
+  el.innerHTML=`
+  <div class="tc-card">
+    <div class="tc-hdr" style="border-left:4px solid ${lc}">
+      <div><div class="tc-title" style="color:${lc}">${t.line2_name}</div><div class="tc-note">${t.metro_note} · aeroporto → cidade</div></div>
+      <div class="next-box"><div class="nb-lbl">Próximo trem</div><div class="nb-val" style="color:${lc}" id="ntm">${formatMin(nextDep(t.metro_interval))}</div><div class="nb-freq">a cada ${t.metro_interval} min</div></div>
+    </div>
+    <div class="tc-body">${_metroDiagram()}</div>
+  </div>
+  <div class="tc-card">
+    <div class="tc-hdr" style="border-left:4px solid #f5b301">
+      <div><div class="tc-title" style="color:#f5b301">Linhas de Ônibus</div><div class="tc-note">Posição em tempo real na cidade</div></div>
+      <div class="next-box"><div class="nb-lbl">Mais próximo</div><div class="nb-val" style="color:#f5b301" id="ntb">${formatMin(nextDep(t.bus_interval))}</div><div class="nb-freq">a cada ${t.bus_interval} min</div></div>
+    </div>
+    <div class="tc-body"><div class="bus-legend">${bLg}</div><div class="bus-map" id="busmap"></div><div class="bus-next-list">${bNx}</div></div>
+  </div>`;
+  setTimeout(_iB,150);_aT();if(_tT)clearInterval(_tT);_tT=setInterval(_tkT,1000);
+}
+
+function _getMlMeta(){const m=document.getElementById('mlmeta');if(!m)return null;try{return{xs:JSON.parse(m.getAttribute('data-xs')),y:+m.getAttribute('data-y')};}catch(e){return null;}}
+
+// Position of a train along the metro line. phase 0..1; dir +1 (air→city) or -1 (city→air)
+function _trainXY(meta,n,phase,dir){
+  let p = dir>0 ? phase : 1-phase;
+  p=Math.max(0,Math.min(1,p));
+  const seg=Math.max(0,Math.min(Math.floor(p*(n-1)),n-2)),sf=p*(n-1)-seg;
+  const x0=meta.xs[seg],x1=meta.xs[seg+1]!=null?meta.xs[seg+1]:x0;
+  return {x:x0+(x1-x0)*sf, p};
+}
+
+function _aMetro(prog){
+  const st=_unifiedStations();const n=st.length;
+  const raw=prog*(n-1),idx=Math.min(Math.round(raw),n-1);
+  st.forEach((s,i)=>{const d=document.getElementById('mdot'+i);if(!d)return;
+    const active=i<=idx;const cur=i===idx;
+    d.classList.toggle('passed',active&&!cur);d.classList.toggle('active',cur);});
+  const meta=_getMlMeta();
+  if(meta&&meta.xs&&meta.xs.length&&n>1){
+    for(let k=0;k<NTRAINS;k++){
+      const tr=document.getElementById('mtrain'+k);if(!tr)continue;
+      // stagger phase evenly; even k go air→city, odd k go city→air
+      const dir = (k%2===0)?1:-1;
+      const offset = (k/NTRAINS);
+      const phase = (prog + offset) % 1;
+      const r=_trainXY(meta,n,phase,dir);
+      tr.setAttribute('cx',r.x.toFixed(1));tr.setAttribute('cy',meta.y);
+    }
+  }
+  return idx;
+}
+function _aT(){
+  const t=TRANSIT_DATA;if(!t)return;
+  const p=_tP(t.metro_interval);const ni=_aMetro(p);
+  if(ni!==_lS.metro&&_lS.metro>=0)maybePlayTrain();_lS.metro=ni;
+  _uB();
+}
+
+// ── Bus-only Leaflet map ────────────────────────────────────────────────────
+function _lp(a,b,t){return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];}
+function _pL(c,p){const n=c.length-1;if(n<=0)return c[0];const sp=p*n,si=Math.min(Math.floor(sp),n-1);return _lp(c[si],c[si+1],sp-si);}
+function _bsv(c,fl){return `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="16" viewBox="0 0 26 16" style="${fl?'transform:scaleX(-1)':''}"><rect x="0" y="0" width="26" height="14" rx="3" fill="${c}" opacity=".92"/><rect x="2" y="2" width="5" height="5" rx="1" fill="white" opacity=".65"/><rect x="9" y="2" width="5" height="5" rx="1" fill="white" opacity=".65"/><rect x="17" y="2" width="5" height="5" rx="1" fill="white" opacity=".65"/><rect x="2" y="10" width="4" height="4" rx="2" fill="white" opacity=".8"/><rect x="20" y="10" width="4" height="4" rx="2" fill="white" opacity=".8"/></svg>`;}
+function _iB(){
+  const el=document.getElementById('busmap');if(!el)return;
+  if(_bM){_bM.invalidateSize();_uB();return;}
+  _bM=L.map('busmap',{center:HOME||[-15,-47],zoom:11});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',maxZoom:19,subdomains:'abcd'}).addTo(_bM);
+  BUS_ROUTES_DATA.forEach(r=>{L.polyline(r.coords,{color:r.color,weight:3,opacity:.6,dashArray:'6,5'}).addTo(_bM).bindPopup(`<b style="color:${r.color}">${r.name}</b><br>A cada ${r.freq} min`);[r.coords[0],r.coords[r.coords.length-1]].forEach(pt=>L.circleMarker(pt,{radius:5,fillColor:r.color,fillOpacity:.9,color:'#fff',weight:1.5}).addTo(_bM));});
+  try{_bM.fitBounds(L.polyline(BUS_ROUTES_DATA.flatMap(r=>r.coords)).getBounds().pad(0.15));}catch(e){}
+  _uB();
+}
+function _uB(){
+  if(!_bM)return;_bV.forEach(m=>_bM.removeLayer(m));_bV=[];
+  BUS_ROUTES_DATA.forEach((r)=>{const p=_tP(r.freq);[[p,false],[1-p,true]].forEach(([pr,fl])=>{const pt=_pL(r.coords,pr);const mk=L.marker(pt,{icon:L.divIcon({html:_bsv(r.color,fl),className:'',iconSize:[26,16],iconAnchor:[13,8]}),zIndexOffset:fl?400:500}).addTo(_bM);mk.bindPopup(`<b style="color:${r.color}">${r.name}</b><br>${fl?'Volta':'Ida'} · ${Math.round(pr*100)}%`);_bV.push(mk);});});
+}
+function _tkT(){
+  const t=TRANSIT_DATA;if(!t)return;_aT();
+  [['ntm',t.metro_interval],['ntb',t.bus_interval]].forEach(([id,iv])=>{const e=document.getElementById(id);if(e)e.textContent=formatMin(nextDep(iv));});
+  BUS_ROUTES_DATA.forEach((r,i)=>{const e=document.getElementById('bnxt'+i);if(e)e.textContent=formatMin(nextDep(r.freq));});
+}
+
+
+
+
+
+
+// ── LIVE LISTS (click a stat box to see flights) ────────────────────────────
+let _liveCat=null;
+function _liveCollect(cat){
+  const day=todayIdx,out=[];
+  FD.forEach((f,fi)=>{
+    const dep=f[7][day],arrT=f[8]&&f[8][day];
+    if(cat==='airborne'){
+      if(typeof getPlanePos==='function'){const p=getPlanePos(f,fi,day);if(p)out.push({t:p.dep||dep,dest:f[0],iata:f[1],al:f[6],ac:f[5],extra:Math.round((p.prog||0)*100)+'%',dir:'↑'});}
+    } else if(cat==='board'){
+      if(dep){const st=getSt("dep",f[1],dep,day);if(st==='board'||st==='final')out.push({t:dep,dest:f[0],iata:f[1],al:f[6],ac:f[5],extra:st==='final'?'Emb. Final':'Embarcando',dir:'↑'});}
+    } else if(cat==='arr'){
+      if(arrT){const st=getSt("arr",f[1],arrT,day);if(st==='arr')out.push({t:arrT,dest:f[0],iata:f[1],al:f[6],ac:f[5],extra:'Chegando',dir:'↓'});}
+    } else if(cat==='del'){
+      if(dep){const st=getSt("dep",f[1],dep,day);if(st==='del')out.push({t:dep,dest:f[0],iata:f[1],al:f[6],ac:f[5],extra:'Atrasado',dir:'↑'});}
+    }
+  });
+  out.sort((a,b)=>(a.t||'').localeCompare(b.t||''));
+  return out;
+}
+function showLiveList(cat){
+  const lbls={airborne:'Em voo agora',board:'Embarcando / Emb. Final',arr:'Chegando',del:'Atrasados'};
+  if(_liveCat===cat){_liveCat=null;const el=document.getElementById('live-list');if(el)el.innerHTML='';document.querySelectorAll('.lstat').forEach(b=>b.classList.remove('sel'));return;}
+  _liveCat=cat;
+  document.querySelectorAll('.lstat').forEach(b=>b.classList.toggle('sel',b.getAttribute('data-cat')===cat));
+  const rows=_liveCollect(cat);
+  const el=document.getElementById('live-list');if(!el)return;
+  if(!rows.length){el.innerHTML=`<div class="live-list-hdr">${lbls[cat]}</div><div class="live-empty">Nenhum voo nesta categoria agora.</div>`;return;}
+  el.innerHTML=`<div class="live-list-hdr">${lbls[cat]} · ${rows.length}</div>`+rows.map(r=>{
+    const a=AL[r.al]||{name:r.al,color:'#fff'};const fn=flightNum(r.al,0);
+    return `<div class="llrow"><span class="llrow-time">${r.dir} ${r.t||'--:--'}</span><div><div class="llrow-dest">${r.dest}</div><div class="llrow-sub">${a.name} · ${r.ac}</div></div><span class="llrow-iata">${r.iata}</span><span class="llrow-sub">${r.extra}</span></div>`;
+  }).join('');
+}
+function _refreshLiveList(){if(_liveCat){const c=_liveCat;_liveCat=null;showLiveList(c);}}
+
 </script>
 <div class="wrap" id="tab-transit" style="display:none"><div class="transit-wrap" id="transit-cards"></div></div>
 </body>
