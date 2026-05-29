@@ -1054,7 +1054,7 @@ function buildAnnPool(r){
 
 
 const METRO_NTRAINS=4;
-const TRANSIT_DATA={"metro_color": "#00a859", "metro_interval": 7, "dwell_sec": 140, "metro_note": "VLT do Vale · Aeroporto & Centro", "line_name": "VLT do Vale · Terminais & São José", "terminals": [{"name": "T1 · Embraer", "zone": "air"}, {"name": "T1 · Bandeirante", "zone": "air"}, {"name": "T1 · Urubupungá", "zone": "air"}, {"name": "T2 Intl · Paraíba", "zone": "air"}, {"name": "T2 Intl · Tamoios", "zone": "air"}], "city_trunk": [{"name": "Parque Tecnológico", "zone": "city"}, {"name": "Jd. Aquarius", "zone": "city"}, {"name": "Centro · Vila", "zone": "city", "terminus": true}], "branches": [], "bus_interval": 15};
+const TRANSIT_DATA={"metro_color": "#00a859", "metro_interval": 7, "dwell_sec": 140, "metro_note": "VLT do Vale · Aeroporto & Centro", "line_name": "VLT do Vale · Terminais & São José", "terminals": [{"name": "T2 Intl · Portal Tamoios", "zone": "air"}, {"name": "T2 Intl · Saguão Paraíba", "zone": "air"}, {"name": "T1 · Hall Bandeirante", "zone": "air"}, {"name": "T1 · Ala Embraer", "zone": "air"}, {"name": "T1 · Praça Urubupungá", "zone": "air"}], "city_trunk": [{"name": "Parque Tecnológico", "zone": "city"}, {"name": "Jd. Aquarius", "zone": "city"}, {"name": "Centro · Vila", "zone": "city", "terminus": true}], "branches": [], "bus_interval": 15};
 const BUS_ROUTES_DATA=[{"name": "SJK → Centro", "color": "#00a859", "freq": 15, "stops": 8, "coords": [[-23.2292, -45.8711], [-23.225, -45.878], [-23.215, -45.882], [-23.205, -45.884], [-23.197, -45.885], [-23.19, -45.886], [-23.184, -45.887], [-23.1794, -45.8869]]}, {"name": "SJK → Taubaté", "color": "#8800cc", "freq": 30, "stops": 4, "coords": [[-23.2292, -45.8711], [-23.13, -45.78], [-23.06, -45.62], [-23.0244, -45.5603]]}, {"name": "SJK → São Paulo", "color": "#0057a8", "freq": 40, "stops": 2, "coords": [[-23.2292, -45.8711], [-23.5426, -46.6334]]}];
 // ── TRANSIT v2: timed stops + ping-pong (ré) + branches ─────────────────────
 let _bM=null,_bV=[],_tT=null;
@@ -1182,29 +1182,51 @@ function _ensurePlan(nStations){
 }
 function _aMetro(){
   const meta=_getMlMeta();if(!meta)return;
-  const t=TRANSIT_DATA;const n=meta.nMain;
-  const plan=_ensurePlan(n);
+  const t=TRANSIT_DATA;const nMain=meta.nMain;
+  const hasBr=meta.branches&&meta.branches.length;
+  // Build full routes (as point arrays). With branches: each route = main + one branch.
+  function mainPts(){const a=[];for(let i=0;i<nMain;i++)a.push([meta.xs[i],meta.y]);return a;}
+  let routes;
+  if(hasBr){
+    routes=meta.branches.map(br=>{
+      const pts=mainPts();
+      for(let i=0;i<br.xs.length;i++)pts.push([br.xs[i],br.ys[i]]);
+      return pts;
+    });
+  } else {
+    routes=[mainPts()];
+  }
   const now=nowSec();
-  // light up stations based on train #0
+  // Reset dot states; we'll light from train 0
+  document.querySelectorAll('.ml-dot').forEach(d=>d.classList.remove('active','passed'));
   for(let k=0;k<NTRAINS;k++){
     const tr=document.getElementById('mtrain'+k);if(!tr)continue;
-    // stagger each train by an equal slice of the full cycle; alternate which end they start
+    const route=routes[k%routes.length];
+    const nR=route.length;
+    const plan=_routePlan(nR);
     const stagger=(plan.total/NTRAINS)*k;
     const stt=_trainState(plan, now + stagger);
-    const seg=Math.floor(stt.pos),f=stt.pos-seg;
-    const x0=meta.xs[seg],x1=meta.xs[Math.min(n-1,seg+1)]!=null?meta.xs[Math.min(n-1,seg+1)]:x0;
-    tr.setAttribute('cx',(x0+(x1-x0)*f).toFixed(1));tr.setAttribute('cy',meta.y);
+    const seg=Math.max(0,Math.min(Math.floor(stt.pos),nR-2)),f=stt.pos-seg;
+    const p0=route[seg],p1=route[Math.min(nR-1,seg+1)]||p0;
+    tr.setAttribute('cx',(p0[0]+(p1[0]-p0[0])*f).toFixed(1));
+    tr.setAttribute('cy',(p0[1]+(p1[1]-p0[1])*f).toFixed(1));
     tr.classList.toggle('dwelling',!stt.moving);
   }
-  // station highlight from train 0
-  const s0=_trainState(plan,now);
-  const cur=Math.round(s0.pos);
-  document.querySelectorAll('.ml-dot').forEach(d=>{d.classList.remove('active','passed');});
-  const cd=document.getElementById('mdot'+cur);
-  if(cd){cd.classList.add('active');}
-  for(let i=0;i<cur;i++){const d=document.getElementById('mdot'+i);if(d)d.classList.add('passed');}
-  // sound when train 0 arrives at a new station (dwell start)
+  // Highlight stations along train 0's route (main dots indices align with route[0..nMain-1])
+  const r0=routes[0];const plan0=_routePlan(r0.length);
+  const s0=_trainState(plan0,now);const cur=Math.round(s0.pos);
+  if(cur<nMain){const cd=document.getElementById('mdot'+cur);if(cd)cd.classList.add('active');
+    for(let i=0;i<cur;i++){const d=document.getElementById('mdot'+i);if(d)d.classList.add('passed');}}
   if(!s0.moving && _lastStation.s0!==cur){maybePlayTrain();_lastStation.s0=cur;}
+}
+// plan cache per route length
+let _planCache={};
+function _routePlan(nStations){
+  const t=TRANSIT_DATA;
+  if(_planCache[nStations])return _planCache[nStations];
+  const runSec=Math.max(8, Math.round(t.metro_interval*60*0.6));
+  const p=_segPlan(nStations,t.dwell_sec||60,runSec);
+  _planCache[nStations]=p;return p;
 }
 function _aT(){_aMetro();_uB();}
 
