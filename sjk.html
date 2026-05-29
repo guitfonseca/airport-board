@@ -1055,39 +1055,6 @@ function _aT(){const t=TRANSIT_DATA;if(!t)return;const lc=t.metro_color;const p1
 function _tkT(){const t=TRANSIT_DATA;if(!t)return;_aT();[['ntm',t.metro_interval],['ntl2',t.metro_interval],['ntb',t.bus_interval]].forEach(([id,iv])=>{const e=document.getElementById(id);if(e)e.textContent=formatMin(nextDep(iv));});BUS_ROUTES_DATA.forEach((r,i)=>{const e=document.getElementById('bnxt'+i);if(e)e.textContent=formatMin(nextDep(r.freq));});}
 
 
-// ── MANUAL FLIGHTS ─────────────────────────────────────────────────────────
-let _manualFlights=[];
-function addManualFlight(){
-  const time=document.getElementById('add-time').value.trim();
-  const dest=document.getElementById('add-dest').value.trim();
-  const iata=document.getElementById('add-iata').value.trim().toUpperCase();
-  const al=document.getElementById('add-al').value.trim();
-  const ac=document.getElementById('add-ac').value.trim()||'—';
-  const gate_=document.getElementById('add-gate').value.trim().toUpperCase()||'—';
-  const tipo=document.getElementById('add-tipo').value;
-  const st=document.getElementById('add-status').value;
-  if(!time||!dest||!iata){document.getElementById('add-note').textContent='Preencha horário, destino e IATA.';setTimeout(()=>document.getElementById('add-note').textContent='',3000);return;}
-  _manualFlights.push({id:'m'+Date.now(),time,dest,iata,al,ac,gate:gate_,tipo,st});
-  _renderML();rDep();
-  document.getElementById('add-note').textContent='Voo adicionado!';
-  setTimeout(()=>document.getElementById('add-note').textContent='',2000);
-  ['add-time','add-dest','add-iata','add-al','add-ac','add-gate'].forEach(id=>document.getElementById(id).value='');
-}
-function clearManualFlights(){_manualFlights=[];_renderML();rDep();}
-function removeManualFlight(id){_manualFlights=_manualFlights.filter(f=>f.id!==id);_renderML();rDep();}
-function _renderML(){
-  const el=document.getElementById('manual-list');if(!el)return;
-  if(!_manualFlights.length){el.innerHTML='';return;}
-  el.innerHTML=_manualFlights.map(f=>`<div style="display:flex;align-items:center;gap:10px;padding:7px 12px;background:var(--muted);border-radius:5px;margin-bottom:5px;flex-wrap:wrap"><span style="font-family:'Share Tech Mono',monospace;font-size:1rem;color:var(--acc)">${f.time}</span><span style="font-weight:700">${f.dest}</span><span style="font-family:'Share Tech Mono',monospace;font-size:.8rem;color:#40c4ff">${f.iata}</span><span style="font-size:.76rem;color:var(--dim)">${f.al||'—'}</span><span style="font-size:.76rem;color:var(--dim)">${f.ac}</span>${stH(f.st)}<button onclick="removeManualFlight('${f.id}')" style="background:rgba(255,23,68,.12);border:1px solid rgba(255,23,68,.3);color:#ff1744;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:.7rem;margin-left:auto">×</button></div>`).join('');
-}
-const _origDepRows=depRows;
-function depRows(day,tf,sr){
-  const rows=_origDepRows(day,tf,sr);
-  if(!_manualFlights.length)return rows;
-  const nm=nowMins();
-  const extras=_manualFlights.filter(f=>(tf==='ALL'||f.tipo===tf)&&(!sr||f.dest.toLowerCase().includes(sr)||f.iata.toLowerCase().includes(sr)||(f.al||'').toLowerCase().includes(sr))).map((f,i)=>({time:f.time,dest:f.dest,iata:f.iata,tipo:f.tipo,dist:0,dur:0,ac:f.ac,al:f.al,fi:9000+i,ap:AI?.iata||'',gate:f.gate,belt:'—',terminal:TRM_DOM||'T',st:f.st,fnum:f.iata+'9999',isManual:true})).filter(r=>toMins(r.time)>=nm-30);
-  return[...rows,...extras].sort((a,b)=>a.time.localeCompare(b.time));
-}
 
 </script>
 <div class="wrap" id="tab-transit" style="display:none"><div class="transit-wrap" id="transit-cards"></div></div>
