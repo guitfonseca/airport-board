@@ -199,6 +199,46 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
 .ml-branch-lbl{font-size:9px;font-weight:900;letter-spacing:.1em;font-family:'Share Tech Mono',monospace;text-transform:uppercase}
 .ml-train.dwelling{animation:mldwell .8s ease-in-out infinite alternate}
 @keyframes mldwell{from{opacity:1}to{opacity:.55}}
+
+.patio-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.patio-title{font-size:1rem;font-weight:700;letter-spacing:.04em;color:var(--acc)}
+.patio-speed{display:flex;align-items:center;gap:6px}
+.patio-spd-lbl{font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);margin-right:4px}
+.patio-spd{background:var(--panel);border:1px solid var(--border);color:var(--white);border-radius:6px;padding:5px 11px;cursor:pointer;font-family:inherit;font-size:.8rem}
+.patio-spd.on{background:var(--acc);color:#001;border-color:var(--acc);font-weight:700}
+.patio-clock{font-family:'Share Tech Mono',monospace;font-size:1.1rem;color:var(--acc);margin-left:10px}
+.patio-stage{position:relative;background:#070b12;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+#patio-svg svg{width:100%;height:auto;display:block}
+.patio-below{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-top:12px}
+.patio-hud{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:.78rem;min-width:165px}
+.patio-hud h4{font-size:.64rem;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);margin:0 0 6px}
+.ph-row{display:flex;justify-content:space-between;gap:16px;margin:2px 0}
+.ph-row .v{font-family:'Share Tech Mono',monospace;font-weight:700}
+.patio-strip{position:absolute;right:12px;top:12px;width:200px;max-height:calc(100% - 24px);overflow-y:auto;background:rgba(10,16,24,.92);border:1px solid var(--border);border-radius:8px;backdrop-filter:blur(8px)}
+.ps-hdr{padding:7px 11px;font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,16,24,.96)}
+.ps-row{display:flex;align-items:center;gap:7px;padding:5px 11px;font-size:.72rem;border-bottom:1px solid rgba(30,42,56,.4)}
+.ps-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ps-fn{font-family:'Share Tech Mono',monospace;font-weight:700;width:50px}
+.ps-st{margin-left:auto;font-size:.58rem;text-transform:uppercase}
+.patio-panel{position:absolute;right:12px;top:12px;width:248px;background:rgba(10,16,24,.97);border:1px solid var(--acc);border-radius:10px;display:none;z-index:10;box-shadow:0 8px 28px rgba(0,0,0,.6);overflow:hidden}
+.patio-panel.show{display:block}
+.patio-pclose{position:absolute;right:8px;top:5px;background:none;border:none;color:var(--dim);font-size:1.4rem;cursor:pointer;line-height:1;z-index:2}
+.patio-pclose:hover{color:var(--white)}
+.pp-head{padding:13px 15px;background:linear-gradient(135deg,rgba(0,212,255,.12),transparent)}
+.pp-fn{font-family:'Share Tech Mono',monospace;font-size:1.3rem;font-weight:800;color:var(--acc)}
+.pp-route{font-size:.85rem;margin-top:3px}
+.pp-state{display:inline-block;margin-top:7px;padding:3px 10px;border-radius:20px;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.pp-rows{padding:8px 15px 14px}
+.pp-row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid rgba(30,42,56,.5);font-size:.78rem}
+.pp-row:last-child{border:none}
+.pp-row .k{color:var(--dim);text-transform:uppercase;font-size:.62rem;letter-spacing:.07em;padding-top:2px}
+.pp-row .v{text-align:right;font-weight:600}
+.pp-gate{font-family:'Share Tech Mono',monospace;font-size:1.05rem;color:var(--acc)}
+.patio-legend{display:flex;gap:14px;flex-wrap:wrap;flex:1;align-items:center;font-size:.7rem;color:var(--dim)}
+.pl-item{display:flex;align-items:center;gap:6px}
+.pl-dot{width:10px;height:10px;border-radius:3px}
+@media(max-width:720px){.patio-strip{display:none}}
+
 </style>
 </head>
 <body>
@@ -232,6 +272,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
   <button class="vbtn" onclick="showV('gate')">🚪 Portão</button>
   <button class="vbtn" onclick="showV('mgr')">⚙ Status</button>
   <button class="vbtn" onclick="showV('transit')">🚇 Transporte</button>
+  <button class="vbtn" onclick="showV('patio')">⊞ Pátio</button>
   <button class="vbtn" onclick="showV('info')">✦ Info</button>
 </div>
 
@@ -366,6 +407,20 @@ header{display:flex;align-items:center;justify-content:space-between;padding:10p
   <div class="empty" id="em-mgr" style="display:none">Nenhum voo encontrado.</div>
 </div>
 <!-- INFO -->
+
+<!-- PÁTIO -->
+<div class="wrap" id="tab-patio" style="display:none">
+  <div class="patio-bar">
+    <div class="patio-title">⊞ Simulação de Pátio · Radar de Solo</div>
+    <div class="patio-speed"><span class="patio-clock" id="patio-clock">--:--:--</span></div>
+  </div>
+  <div class="patio-stage">
+    <div id="patio-svg"></div>
+    <div class="patio-strip" id="patio-strip"></div>
+    <div class="patio-panel" id="patio-panel"><button class="patio-pclose" id="patio-close">×</button><div id="patio-panel-body"></div></div>
+  </div>
+  <div class="patio-below"><div class="patio-hud" id="patio-hud"></div><div class="patio-legend" id="patio-legend"></div></div>
+</div>
 <div class="wrap" id="tab-info" style="display:none">
   <div class="sec">Companhias Aéreas</div>
   <div class="al-grid" id="al-grid"></div>
@@ -811,11 +866,12 @@ function rInfo(){
 
 // ── VIEW SWITCHER ─────────────────────────────────────────────────────────────
 function showV(name){
-  ["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","info"].forEach(t=>
+  ["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","patio","info"].forEach(t=>
     document.getElementById("tab-"+t).style.display=t===name?"block":"none");
   document.querySelectorAll(".vbtn").forEach((b,i)=>
-    b.classList.toggle("active",["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","info"][i]===name));
+    b.classList.toggle("active",["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","patio","info"][i]===name));
   if(name==="transit"){buildTransitCards();}
+  if(name==="patio"){buildPatio();}
   if(name==="live"){setTimeout(()=>{initLiveMap();liveMapInst&&liveMapInst.invalidateSize();renderLive();},100);}
   if(name==="map"){setTimeout(()=>{initRouteMap();routeMapInst&&routeMapInst.invalidateSize();},100);}
   if(name==="info")rInfo();if(name==="pax")rPax();if(name==="mgr")rMgr();
@@ -1324,6 +1380,309 @@ function showLiveList(cat){
   }).join('');
 }
 function _refreshLiveList(){if(_liveCat){const c=_liveCat;_liveCat=null;showLiveList(c);}}
+
+
+const PATIO_CFG={
+  runways:[
+    {x1:130,y1:160,x2:820,y2:160,name:'15/33',w:20},
+    {x1:230,y1:470,x2:640,y2:470,name:'06/24',w:14},
+  ],
+  taxiways:[{pts:[[130,275],[840,275]]},{pts:[[430,275],[430,400]]}],
+  termY:320, termStagger:[0], metroTrains:4,
+};
+const PATIO_METRO_PALETTE=['#ff5252','#ff9800','#ffeb3b','#69f0ae','#40c4ff','#ea80fc','#ff6e40','#b9f6ca'];
+// ════════ PÁTIO (ground radar) — usa dados reais do arquivo ════════
+const PATIO={
+  // airport-specific runway/terminal geometry; gates come from real GATES_DOM/INT
+  layout:null, raf:null, clock:null, pinned:null, built:false,
+};
+// ── Terminais reais (das estações do metrô) + distribuição de gates ──
+function _patioRealTerminals(){
+  // extrai prefixos T1,T2,T3.. das estações de terminal do TRANSIT_DATA, na ordem que aparecem
+  const seen=[];
+  TRANSIT_DATA.terminals.forEach(s=>{const m=s.name.match(/^(T\d+|TU)/);if(m&&!seen.includes(m[1]))seen.push(m[1]);});
+  if(!seen.length)seen.push(TRM_DOM);
+  return seen; // ex GRU: ['T3','T2','T1'] na ordem do diagrama
+}
+function _patioGatesByTerminal(){
+  const terms=_patioRealTerminals();              // ordem do diagrama (ex T3,T2,T1)
+  const ordTerms=[...terms].sort((a,b)=>{const na=parseInt(a.replace(/\D/g,''))||99,nb=parseInt(b.replace(/\D/g,''))||99;return na-nb;}); // T1,T2,T3
+  const byT={};terms.forEach(t=>byT[t]=[]);
+  const all=[];
+  GATES_DOM.forEach(g=>{if(!all.includes(g))all.push(g);});
+  GATES_INT.forEach(g=>{if(!all.includes(g))all.push(g);});
+  // distribuir os gates igualmente (em blocos contíguos) pelos terminais em ordem numérica
+  const nT=ordTerms.length;const per=Math.ceil(all.length/nT);
+  all.forEach((g,i)=>{const ti=Math.min(Math.floor(i/per),nT-1);byT[ordTerms[ti]].push(g);});
+  return {terms,byT};
+}
+function _patioLayout(){
+  const cfg=PATIO_CFG;
+  const {terms,byT}=_patioGatesByTerminal();
+  // posicionar terminais lado a lado, largura proporcional ao nº de gates
+  const totalG=terms.reduce((s,t)=>s+byT[t].length,0)||1;
+  let cx=120;const usableW=760;const out=[];
+  terms.forEach((t,i)=>{
+    const gc=byT[t].length;
+    const w=Math.max(105,(gc/totalG)*usableW);
+    const yo=cfg.termStagger[i%cfg.termStagger.length]||0;
+    out.push({id:t,x:cx,y:cfg.termY+yo,w,h:44,gates:byT[t]});
+    cx+=w+44;
+  });
+  return {runways:cfg.runways,taxiways:cfg.taxiways,terminals:out};
+}
+function _patioGateSlots(t){
+  const slots=[];const pad=14;const span=t.w-pad*2;const n=t.gates.length;
+  for(let i=0;i<n;i++){const gx=t.x+pad+(n>1?i/(n-1):0.5)*span;slots.push({x:gx,y:t.y+t.h+8,label:t.gates[i],idx:i});}
+  return slots;
+}
+function _patioAssign(f,fi){
+  const L=PATIO.layout;
+  // achar o gate real desta f: usa o mesmo gate que a aba portão usaria
+  const gates=f[2]==='DOM'?GATES_DOM:GATES_INT;
+  const gLabel=gates[fi%gates.length];
+  // achar em qual terminal (do layout) esse gate está
+  let term=L.terminals[0],slot=null;
+  for(const t of L.terminals){const s=_patioGateSlots(t).find(x=>x.label===gLabel);if(s){term=t;slot=s;break;}}
+  if(!slot){const s=_patioGateSlots(term);slot=s[fi%s.length];}
+  return {term:term.id,gate:slot.label,gx:slot.x,gy:slot.y};
+}
+
+const _PH={approach:8*60,landing:90,rwyexit:60,taxiIn:4*60,turnGate:40*60,pushback:90,taxiOut:5*60,lineup:40,takeoff:80,climb:6*60};
+const _PSTATE={approach:'Aproximação',landing:'Pousando',rwyexit:'Saindo da pista',taxiIn:'Táxi p/ portão',gate:'No portão',pushback:'Pushback',taxiOut:'Táxi p/ pista',lineup:'Alinhando',takeoff:'Decolando',climb:'Subindo'};
+const _PCOL={approach:'#ffd740',landing:'#ff5252',rwyexit:'#ff9800',taxiIn:'#40c4ff',gate:'#69f0ae',pushback:'#ea80fc',taxiOut:'#40c4ff',lineup:'#ffd740',takeoff:'#ff5252',climb:'#80d8ff'};
+
+function _patioDay(){const d=new Date().getDay();return (d+6)%7;}
+function _patioNowSec(){const n=PATIO.clock||new Date();return n.getHours()*3600+n.getMinutes()*60+n.getSeconds();}
+function _phm(s){if(!s)return null;const[a,b]=s.split(':');return (+a)*3600+(+b)*60;}
+
+function _patioCompute(){
+  const day=_patioDay();const now=_patioNowSec();const list=[];
+  FD.forEach((f,fi)=>{
+    const arrT=_phm(f[8]&&f[8][day]);
+    if(arrT!=null){
+      const land=arrT,tA=land-_PH.approach,tLE=land+_PH.landing,tEE=tLE+_PH.rwyexit,tGA=tEE+_PH.taxiIn,tGE=tGA+_PH.turnGate;
+      if(now>=tA&&now<tGA){let ph,pr;
+        if(now<land){ph='approach';pr=(now-tA)/_PH.approach;}
+        else if(now<tLE){ph='landing';pr=(now-land)/_PH.landing;}
+        else if(now<tEE){ph='rwyexit';pr=(now-tLE)/_PH.rwyexit;}
+        else{ph='taxiIn';pr=(now-tEE)/_PH.taxiIn;}
+        list.push({f,fi,dir:'arr',ph,pr});
+      }else if(now>=tGA&&now<tGE){list.push({f,fi,dir:'arr',ph:'gate',pr:(now-tGA)/_PH.turnGate});}
+    }
+    const depT=_phm(f[7]&&f[7][day]);
+    if(depT!=null){
+      const tPS=depT-_PH.pushback-_PH.taxiOut-_PH.lineup,tPE=tPS+_PH.pushback,tTE=tPE+_PH.taxiOut,tLE=tTE+_PH.lineup,tTO=depT+_PH.takeoff,tCE=tTO+_PH.climb,gss=tPS-_PH.turnGate;
+      if(now>=gss&&now<tPS){list.push({f,fi,dir:'dep',ph:'gate',pr:(now-gss)/_PH.turnGate});}
+      else if(now>=tPS&&now<tPE){list.push({f,fi,dir:'dep',ph:'pushback',pr:(now-tPS)/_PH.pushback});}
+      else if(now>=tPE&&now<tTE){list.push({f,fi,dir:'dep',ph:'taxiOut',pr:(now-tPE)/_PH.taxiOut});}
+      else if(now>=tTE&&now<tLE){list.push({f,fi,dir:'dep',ph:'lineup',pr:(now-tTE)/_PH.lineup});}
+      else if(now>=tLE&&now<tTO){list.push({f,fi,dir:'dep',ph:'takeoff',pr:(now-tLE)/(_PH.takeoff+(depT-tLE))});}
+      else if(now>=tTO&&now<tCE){list.push({f,fi,dir:'dep',ph:'climb',pr:(now-tTO)/_PH.climb});}
+    }
+  });
+  const L=PATIO.layout;
+  list.forEach(a=>{const g=_patioAssign(a.f,a.fi);a.gate=g.gate;a.term=g.term;a.gx=g.gx;a.gy=g.gy;});
+  return list;
+}
+
+function _patioLerp(a,b,t){return a+(b-a)*t;}
+function _patioPos(a){
+  const L=PATIO.layout;const rw=L.runways[a.fi%L.runways.length];
+  const txY=L.taxiways[0].pts[0][1];const gx=a.gx,gy=a.gy;
+  const rwMid=(rw.x1+rw.x2)/2,rwY=rw.y1;let x,y,hd=0;
+  switch(a.ph){
+    case 'approach':x=_patioLerp(1180,rw.x2,a.pr);y=_patioLerp(rwY-110,rwY,a.pr);hd=180;break;
+    case 'landing':x=_patioLerp(rw.x2,rwMid,a.pr);y=rwY;hd=180;break;
+    case 'rwyexit':x=rwMid;y=_patioLerp(rwY,txY,a.pr);hd=(txY>rwY?180:0);break;
+    case 'taxiIn':{const h=0.55;if(a.pr<h){x=_patioLerp(rwMid,gx,a.pr/h);y=txY;hd=(gx<rwMid?270:90);}else{x=gx;y=_patioLerp(txY,gy,(a.pr-h)/(1-h));hd=180;}break;}
+    case 'gate':x=gx;y=gy;hd=180;break;
+    case 'pushback':x=gx;y=_patioLerp(gy,txY,a.pr);hd=0;break;
+    case 'taxiOut':{const h=0.5;if(a.pr<h){x=gx;y=txY;hd=0;}else{x=_patioLerp(gx,rw.x1+70,(a.pr-h)/h);y=txY;hd=(rw.x1+70<gx?270:90);}break;}
+    case 'lineup':x=rw.x1+70;y=_patioLerp(txY,rwY,a.pr);hd=0;break;
+    case 'takeoff':x=_patioLerp(rw.x1+70,rw.x2-50,a.pr);y=rwY;hd=0;break;
+    case 'climb':x=_patioLerp(rw.x2-50,-180,a.pr);y=_patioLerp(rwY,rwY-130,a.pr);hd=0;break;
+    default:x=gx;y=gy;
+  }
+  return {x,y,hd};
+}
+function _patioPlane(col,sc,hd){return `<g transform="rotate(${hd})"><path d="M0,-11 L2.4,-3 L11,1 L11,3.5 L2.4,2 L1.6,9 L4.5,11 L4.5,12.5 L0,11.4 L-4.5,12.5 L-4.5,11 L-1.6,9 L-2.4,2 L-11,3.5 L-11,1 L-2.4,-3 Z" fill="${col}" stroke="rgba(0,0,0,.35)" stroke-width=".6" transform="scale(${sc})"/></g>`;}
+
+// ── metro animation state (uses real TRANSIT_DATA stations) ──
+function _patioMetroStations(){
+  // unified line: terminals (air) + trunk (city). Returns count + which map to terminals.
+  const t=TRANSIT_DATA;
+  return {nTerm:t.terminals.length,nTrunk:t.city_trunk.length,total:t.terminals.length+t.city_trunk.length};
+}
+
+function _patioRender(){
+  const L=PATIO.layout;if(!L)return;const acs=_patioCompute();PATIO._acs=acs;
+  const now=_patioNowSec();
+  let s=`<svg viewBox="0 0 1000 600" style="width:100%;height:auto;display:block">`;
+  s+=`<defs><pattern id="pgrid" width="42" height="42" patternUnits="userSpaceOnUse"><path d="M42 0H0V42" fill="none" stroke="#101a26" stroke-width="1"/></pattern><filter id="pglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter></defs>`;
+  s+=`<rect width="1000" height="600" fill="#070b12"/><rect width="1000" height="600" fill="url(#pgrid)"/>`;
+
+  // ── metrô: estações reais do TRANSIT_DATA, com dwell + ping-pong ──
+  const mlc=TRANSIT_DATA.metro_color;
+  // estações de terminal (air) agrupadas perto dos prédios + tronco (city) indo p/ direita
+  const airStations=TRANSIT_DATA.terminals.map(s=>s.name);
+  const cityStations=TRANSIT_DATA.city_trunk.map(s=>s.name);
+  const mpts=[];
+  // distribuir estações-terminal ao longo da faixa dos terminais (acima dos prédios)
+  const x0=L.terminals[0].x, x1=L.terminals[L.terminals.length-1].x+L.terminals[L.terminals.length-1].w;
+  const yLine=Math.min(...L.terminals.map(t=>t.y))-26;
+  const nAir=airStations.length;
+  for(let i=0;i<nAir;i++){
+    const x=x0 + (nAir>1? i/(nAir-1):0.5)*(x1-x0);
+    mpts.push({x,y:yLine,name:airStations[i],kind:'air'});
+  }
+  // tronco: continua à direita descendo levemente
+  const last=mpts[mpts.length-1];
+  for(let i=0;i<cityStations.length;i++){
+    mpts.push({x:last.x+(i+1)*54, y:yLine-(i+1)*10, name:cityStations[i], kind:'city'});
+  }
+  const total=mpts.length;
+  const polyStr=mpts.map(p=>p.x.toFixed(0)+','+p.y.toFixed(0)).join(' ');
+  s+=`<polyline points="${polyStr}" fill="none" stroke="${mlc}" stroke-width="4.5" opacity=".55" stroke-linecap="round" stroke-linejoin="round"/>`;
+  mpts.forEach((p,i)=>{
+    const big=(i===0||i===total-1||p.kind==='city'&&i===total-1);
+    s+=`<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="${p.kind==='city'?3.5:4}" fill="#070b12" stroke="${mlc}" stroke-width="2"/>`;
+  });
+  s+=`<text x="${mpts[0].x.toFixed(0)}" y="${(yLine-11).toFixed(0)}" fill="${mlc}" font-size="9" font-weight="700" font-family="monospace">Ⓜ ${TRANSIT_DATA.line_name||'METRÔ'} · ${total} est.</text>`;
+  // trens com dwell (parada) usando timing real
+  const NT=PATIO_CFG.metroTrains;
+  const dwell=(TRANSIT_DATA.dwell_sec||40);
+  const runSec=14; // tempo entre estações na animação do pátio
+  // timeline ida: dwell em cada estação + run entre elas; volta idem (ré)
+  const segs=total-1;
+  const oneWay=total*dwell+segs*runSec;
+  const cycle=oneWay*2 - dwell; // ida+volta sem recontar última parada
+  function metroPos(elapsed){
+    let t=((elapsed%cycle)+cycle)%cycle;
+    // construir eventos
+    // ida
+    for(let i=0;i<total;i++){
+      if(t<dwell)return {i:i,f:0};
+      t-=dwell;
+      if(i<total-1){if(t<runSec)return {i:i,f:t/runSec};t-=runSec;}
+    }
+    // volta
+    for(let i=total-1;i>0;i--){
+      if(t<runSec)return {i:i,f:-(t/runSec)};t-=runSec;
+      if(i-1>0){if(t<dwell)return {i:i-1,f:0};t-=dwell;}
+    }
+    return {i:0,f:0};
+  }
+  for(let k=0;k<NT;k++){
+    const stt=metroPos(now + (cycle/NT)*k);
+    let p0,p1,sf;
+    if(stt.f>=0){p0=mpts[stt.i];p1=mpts[Math.min(total-1,stt.i+1)]||p0;sf=stt.f;}
+    else{p0=mpts[stt.i];p1=mpts[Math.max(0,stt.i-1)]||p0;sf=-stt.f;}
+    const tx=p0.x+(p1.x-p0.x)*sf, ty=p0.y+(p1.y-p0.y)*sf;
+    const tcol=PATIO_METRO_PALETTE[k%PATIO_METRO_PALETTE.length];
+    s+=`<rect x="${(tx-5).toFixed(1)}" y="${(ty-3).toFixed(1)}" width="10" height="6" rx="2" fill="${tcol}" stroke="#000" stroke-width=".4" filter="url(#pglow)"/>`;
+  }
+
+  // ── taxiways ──
+  L.taxiways.forEach(tw=>{const pts=tw.pts.map(p=>p.join(',')).join(' ');
+    s+=`<polyline points="${pts}" fill="none" stroke="#16240f" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>`;
+    s+=`<polyline points="${pts}" fill="none" stroke="#3a5f2f" stroke-width="1.5" stroke-dasharray="2,9" opacity=".7"/>`;});
+
+  // ── runways ──
+  L.runways.forEach(rw=>{const w=rw.w||20;
+    s+=`<line x1="${rw.x1}" y1="${rw.y1}" x2="${rw.x2}" y2="${rw.y2}" stroke="#11151d" stroke-width="${w}"/>`;
+    s+=`<line x1="${rw.x1+24}" y1="${rw.y1}" x2="${rw.x2-24}" y2="${rw.y2}" stroke="#3a4456" stroke-width="2" stroke-dasharray="20,16"/>`;
+    for(let i=0;i<5;i++){const o=-8+i*4;s+=`<line x1="${rw.x1+4}" y1="${rw.y1+o}" x2="${rw.x1+16}" y2="${rw.y1+o}" stroke="#5a6678" stroke-width="1.6"/><line x1="${rw.x2-16}" y1="${rw.y2+o}" x2="${rw.x2-4}" y2="${rw.y2+o}" stroke="#5a6678" stroke-width="1.6"/>`;}
+    s+=`<text x="${rw.x1+8}" y="${rw.y1-w/2-6}" fill="#46546a" font-size="10" font-family="monospace" font-weight="700">${rw.name}</text>`;});
+
+  // ── terminals + REAL numbered gates ──
+  L.terminals.forEach(t=>{
+    s+=`<rect x="${t.x-12}" y="${t.y-10}" width="${t.w+24}" height="${t.h+34}" rx="7" fill="#0b1119" stroke="#15202e"/>`;
+    s+=`<rect x="${t.x}" y="${t.y}" width="${t.w}" height="${t.h}" rx="5" fill="#1b2636" stroke="#2c3d52" stroke-width="1.5"/>`;
+    s+=`<text x="${t.x+t.w/2}" y="${t.y+t.h/2+5}" fill="#8298ae" font-size="15" font-weight="800" text-anchor="middle">${t.id}</text>`;
+    _patioGateSlots(t).forEach(g=>{
+      const occ=acs.some(a=>a.gx===g.x&&a.gy===g.y&&a.ph==='gate');
+      s+=`<line x1="${g.x}" y1="${t.y+t.h}" x2="${g.x}" y2="${g.y}" stroke="#2c3d52" stroke-width="1.2"/>`;
+      s+=`<circle cx="${g.x}" cy="${g.y}" r="3.2" fill="${occ?'#69f0ae':'#16202e'}" stroke="${occ?'#69f0ae':'#3a4d63'}" stroke-width="1.3"/>`;
+      s+=`<text x="${g.x}" y="${g.y+15}" fill="#5a6b7d" font-size="8" font-weight="700" text-anchor="middle" font-family="monospace">${g.label}</text>`;
+    });
+  });
+
+  // ── aircraft ──
+  acs.forEach(a=>{const p=_patioPos(a);const col=_PCOL[a.ph];const fly=(a.ph==='approach'||a.ph==='climb');
+    s+=`<g class="pplane" data-key="${a.dir}${a.fi}" transform="translate(${p.x.toFixed(1)},${p.y.toFixed(1)})" opacity="${fly?.85:1}" style="cursor:pointer">`;
+    if(fly)s+=`<circle r="15" fill="${col}" opacity=".12" filter="url(#pglow)"/>`;
+    s+=_patioPlane(col,fly?1.18:1,p.hd);s+=`</g>`;});
+  s+=`</svg>`;
+  document.getElementById('patio-svg').innerHTML=s;
+
+  // bind clicks + hud + strip
+
+  _patioHUD(acs);_patioStrip(acs);
+  if(PATIO.pinned){const a=acs.find(x=>(x.dir+x.fi)===PATIO.pinned);if(a)_patioPanel(a,true);}
+}
+
+function _patioFN(a){const n=100+((a.fi*53)%899);return (a.f[6]||'')+n;}
+function _patioPanel(a,silent){
+  if(!a)return;PATIO.pinned=a.dir+a.fi;
+  const col=_PCOL[a.ph];const day=_patioDay();
+  const t=a.dir==='arr'?(a.f[8]&&a.f[8][day]):(a.f[7]&&a.f[7][day]);
+  const alName=(AL[a.f[6]]&&AL[a.f[6]].name)||a.f[6];
+  document.getElementById('patio-panel-body').innerHTML=`
+    <div class="pp-head"><div class="pp-fn">${_patioFN(a)}</div>
+      <div class="pp-route">${a.dir==='arr'?'↓ Chegando de':'↑ Partindo para'} <b>${a.f[0]}</b></div>
+      <span class="pp-state" style="background:${col}22;color:${col};border:1px solid ${col}">${_PSTATE[a.ph]}</span></div>
+    <div class="pp-rows">
+      <div class="pp-row"><span class="k">Destino</span><span class="v">${a.f[0]} (${a.f[1]})</span></div>
+      <div class="pp-row"><span class="k">Companhia</span><span class="v">${alName}</span></div>
+      <div class="pp-row"><span class="k">Aeronave</span><span class="v">${a.f[5]}</span></div>
+      <div class="pp-row"><span class="k">${a.dir==='arr'?'Pouso':'Decolagem'}</span><span class="v">${t||'--:--'}</span></div>
+      <div class="pp-row"><span class="k">Terminal</span><span class="v">${a.term}</span></div>
+      <div class="pp-row"><span class="k">Portão</span><span class="v pp-gate">${a.gate}</span></div>
+      <div class="pp-row"><span class="k">Tipo</span><span class="v">${a.f[2]==='DOM'?'Doméstico':'Internacional'}</span></div>
+    </div>`;
+  document.getElementById('patio-panel').classList.add('show');
+}
+function _patioClosePanel(){PATIO.pinned=null;document.getElementById('patio-panel').classList.remove('show');}
+function _patioHUD(acs){const c={};acs.forEach(a=>{const g=(a.ph==='approach'||a.ph==='climb')?'air':(a.ph==='gate'?'gate':'ground');c[g]=(c[g]||0)+1;});
+  document.getElementById('patio-hud').innerHTML=`<h4>Pátio · ${AI.iata}</h4>
+    <div class="ph-row"><span>No ar</span><span class="v" style="color:#80d8ff">${c.air||0}</span></div>
+    <div class="ph-row"><span>Em solo</span><span class="v" style="color:#40c4ff">${c.ground||0}</span></div>
+    <div class="ph-row"><span>Nos portões</span><span class="v" style="color:#69f0ae">${c.gate||0}</span></div>
+    <div class="ph-row"><span>Total</span><span class="v">${acs.length}</span></div>`;}
+function _patioStrip(acs){const sorted=[...acs].sort((a,b)=>a.ph.localeCompare(b.ph));
+  let h=`<div class="ps-hdr">Tráfego · ${acs.length}</div>`;
+  sorted.slice(0,30).forEach(a=>{h+=`<div class="ps-row"><span class="ps-dot" style="background:${_PCOL[a.ph]}"></span><span class="ps-fn">${_patioFN(a)}</span><span style="color:#5a6b7d">${a.f[1]}</span><span class="ps-st" style="color:${_PCOL[a.ph]}">${_PSTATE[a.ph]}</span></div>`;});
+  document.getElementById('patio-strip').innerHTML=h;}
+function _patioLegend(){const items=[['approach','Aproximação'],['landing','Pousando'],['taxiIn','Táxi'],['gate','No portão'],['pushback','Pushback'],['takeoff','Decolando'],['climb','Subindo']];
+  document.getElementById('patio-legend').innerHTML=items.map(([k,l])=>`<span class="pl-item"><span class="pl-dot" style="background:${_PCOL[k]}"></span>${l}</span>`).join('');}
+
+let _patioSpeed=1,_patioLast=0;
+function _patioLoop(ts){
+  PATIO.clock=new Date();
+  const h=String(PATIO.clock.getHours()).padStart(2,'0'),m=String(PATIO.clock.getMinutes()).padStart(2,'0'),sc=String(PATIO.clock.getSeconds()).padStart(2,'0');
+  const ce=document.getElementById('patio-clock');if(ce)ce.textContent=`${h}:${m}:${sc}`;
+  if(ts-_patioLast>200){_patioRender();_patioLast=ts;}
+  PATIO.raf=requestAnimationFrame(_patioLoop);
+}
+function buildPatio(){
+  if(!PATIO.built){
+    PATIO.layout=_patioLayout();
+    _patioLegend();
+    document.getElementById('patio-close').addEventListener('click',_patioClosePanel);
+    document.getElementById('patio-svg').addEventListener('click',ev=>{
+      const g=ev.target.closest('.pplane');if(!g)return;
+      const key=g.getAttribute('data-key');const a=(PATIO._acs||[]).find(x=>(x.dir+x.fi)===key);
+      if(a)_patioPanel(a);
+    });
+    
+    PATIO.built=true;
+    PATIO.clock=new Date();
+    PATIO.raf=requestAnimationFrame(_patioLoop);
+  }else{
+    PATIO.layout=_patioLayout();
+  }
+}
 
 </script>
 <div class="wrap" id="tab-transit" style="display:none"><div class="transit-wrap" id="transit-cards"></div></div>
