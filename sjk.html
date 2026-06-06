@@ -402,6 +402,35 @@ body.radar-on #live-map::after,body.radar-on #patio-svg::after{content:'';positi
 body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
 @keyframes radarSweep{to{transform:rotate(360deg)}}
 
+
+.pv-section{margin-bottom:22px}
+.pv-h{font-size:.9rem;text-transform:uppercase;letter-spacing:.06em;color:var(--white);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.pv-h-gov{color:#ffd740}
+.pv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.pv-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;transition:transform .15s}
+.pv-card:hover{transform:translateY(-2px)}
+.pv-gov{border-left:3px solid #ffd740}
+.pv-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.pv-reg{font-family:'Share Tech Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--acc)}
+.pv-st{font-size:.62rem;font-weight:700;text-transform:uppercase;padding:3px 9px;border:1px solid;border-radius:20px}
+.pv-ac{font-size:.92rem;font-weight:600;color:var(--white);margin-bottom:6px}
+.pv-meta{display:flex;justify-content:space-between;gap:8px;font-size:.76rem;color:var(--dim);flex-wrap:wrap}
+.pv-op{color:var(--acc)}
+.pv-mission{font-size:.74rem;color:#ffd740;margin-top:6px;font-style:italic}
+.pv-empty{color:var(--dim);font-size:.82rem;padding:14px}
+.pv-note{font-size:.74rem;color:var(--dim);background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:8px}
+
+
+.pv-tag-exec{background:rgba(156,39,176,.2);color:var(--acc);padding:2px 8px;border-radius:12px;font-size:.7rem;font-weight:700}
+.pv-tag-gov{background:rgba(255,215,64,.18);color:#ffd740;padding:2px 8px;border-radius:12px;font-size:.7rem;font-weight:700}
+.pv-reg-cell{font-family:'Share Tech Mono',monospace;color:var(--acc)}
+.pv-st-cell{font-weight:600}
+.fd-photo-btn{display:block;text-align:center;background:var(--panel);border:1px solid var(--acc);border-radius:8px;padding:12px;color:var(--acc);text-decoration:none;font-weight:600;font-size:.86rem}
+.fd-photo-btn:hover{background:rgba(156,39,176,.12)}
+
+.pv-filters{display:flex;gap:8px;margin-bottom:14px}
+.pv-pill{background:var(--panel);border:1px solid var(--border);color:var(--white);border-radius:20px;padding:7px 16px;cursor:pointer;font-family:inherit;font-size:.8rem}
+.pv-pill.on{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700}
 </style>
 </head>
 <body><div class="imm-toast" id="imm-toast"></div>
@@ -446,6 +475,7 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
   <button class="vbtn" onclick="showV('atc')">📡 ATC</button>
   <button class="vbtn" onclick="showV('emg')">🚨 Emergências</button>
   <button class="vbtn" onclick="showV('imm')">🎧 Imersão</button>
+  <button class="vbtn" onclick="showV('priv')">🔑 Modo Privado</button>
   <button class="vbtn" onclick="showV('info')">✦ Info</button>
 </div>
 
@@ -627,6 +657,13 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
   <h2 style="margin-bottom:8px;font-size:1.1rem;letter-spacing:.04em;color:var(--acc)">🎧 Imersão</h2>
   <p style="color:var(--dim);font-size:.84rem;margin-bottom:16px">Ative sons de aeroporto, chamadas de embarque trilíngues e o efeito de radar no mapa.</p>
   <div id="imm-body"></div>
+</div>
+
+<!-- MODO PRIVADO -->
+<div class="wrap" id="tab-priv" style="display:none">
+  <h2 style="margin-bottom:6px;font-size:1.1rem;letter-spacing:.04em;color:var(--acc)">🔑 Modo Privado · Terminal Executivo</h2>
+  <p style="color:var(--dim);font-size:.84rem;margin-bottom:16px">Aviação executiva e voos oficiais operando no terminal privado (FBO). Não aparecem nos painéis comerciais.</p>
+  <div id="priv-body"></div>
 </div>
 <div class="wrap" id="tab-info" style="display:none">
   <div class="sec">Companhias Aéreas</div>
@@ -1075,10 +1112,10 @@ function rInfo(){
 
 // ── VIEW SWITCHER ─────────────────────────────────────────────────────────────
 function showV(name){
-  ["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","patio","stats","meteo","atc","emg","imm","info"].forEach(t=>
+  ["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","patio","stats","meteo","atc","emg","imm","priv","info"].forEach(t=>
     document.getElementById("tab-"+t).style.display=t===name?"block":"none");
   document.querySelectorAll(".vbtn").forEach((b,i)=>
-    b.classList.toggle("active",["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","patio","stats","meteo","atc","emg","imm","info"][i]===name));
+    b.classList.toggle("active",["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","patio","stats","meteo","atc","emg","imm","priv","info"][i]===name));
   if(name==="transit"){buildTransitCards();}
   if(name==="patio"){buildPatio();}
   if(name==="stats"){buildStats();}
@@ -1086,6 +1123,7 @@ function showV(name){
   if(name==="atc"){buildATC();}
   if(name==="emg"){buildEmergencyControls();}
   if(name==="imm"){buildImmersion();}
+  if(name==="priv"){buildPrivate();}
   if(name==="live"){setTimeout(()=>{initLiveMap();liveMapInst&&liveMapInst.invalidateSize();renderLive();},100);}
   if(name==="map"){setTimeout(()=>{initRouteMap();routeMapInst&&routeMapInst.invalidateSize();},100);}
   if(name==="info")rInfo();if(name==="pax")rPax();if(name==="mgr")rMgr();
@@ -1603,6 +1641,8 @@ const PATIO_CFG={
   ],
   taxiways:[{pts:[[130,275],[840,275]]},{pts:[[430,275],[430,400]]}],
   termY:320, termStagger:[0], metroTrains:4,
+  execTerminal:{x:90,y:545,w:140,h:34,label:'Terminal Executivo · FBO'},
+  remoteStands:{x:600,y:300,cols:4,rows:2,dx:42,dy:40,label:'Estacionamento Remoto'},
 };
 const PATIO_METRO_PALETTE=['#ff5252','#ff9800','#ffeb3b','#69f0ae','#40c4ff','#ea80fc','#ff6e40','#b9f6ca'];
 // ════════ PÁTIO (ground radar) — usa dados reais do arquivo ════════
@@ -1697,11 +1737,40 @@ function _patioCompute(){
   });
   const L=PATIO.layout;
   list.forEach(a=>{const g=_patioAssign(a.f,a.fi);a.gate=g.gate;a.term=g.term;a.gx=g.gx;a.gy=g.gy;});
+  // ── aeronaves PRIVADAS no pátio executivo (canto inferior) ──
+  if(typeof PRIVATE_DATA!=='undefined' && PATIO_CFG.execTerminal){
+    const allP=[].concat((PRIVATE_DATA.exec||[]).map((r,i)=>({r,gov:false,i})),(PRIVATE_DATA.gov||[]).map((r,i)=>({r,gov:true,i:100+i})));
+    const et=PATIO_CFG.execTerminal;
+    const perRow=Math.max(1,Math.floor(et.w/34));
+    allP.forEach((p,k)=>{
+      const st=p.r[5];let ph='gate';
+      if(st==='Decolando')ph='taxiOut';else if(st==='Pousou')ph='taxiIn';else ph='gate';
+      const px=et.x+14+(k%perRow)*34, py=et.y-16-Math.floor(k/perRow)*30;
+      list.push({priv:true,gov:p.gov,reg:p.r[3],ac:p.r[2],loc:p.r[1],op:p.r[4],st:st,ph:ph,
+        gx:px,gy:py,fixedX:px,fixedY:py,pidx:(p.gov?'g':'e')+(p.gov?p.i-100:p.i)});
+    });
+  }
+  // marca voos comerciais "gate" cujo embarque é distante (>3h) como REMOTO
+  if(PATIO_CFG.remoteStands){
+    const rs=PATIO_CFG.remoteStands;let ri=0;
+    list.forEach(a=>{
+      if(a.priv||a.ph!=='gate')return;
+      // tempo até a partida deste voo
+      const day=_patioDay();const dt=a.f&&a.f[7]&&a.f[7][day]?_phm(a.f[7][day]):null;
+      const now=_patioNowSec();
+      if(dt!=null && (dt-now)>3*3600){
+        // posição remota
+        const col=ri%rs.cols, row=Math.floor(ri/rs.cols)%rs.rows;
+        a.remote=true;a.gx=rs.x+col*rs.dx;a.gy=rs.y+row*rs.dy;ri++;
+      }
+    });
+  }
   return list;
 }
 
 function _patioLerp(a,b,t){return a+(b-a)*t;}
 function _patioPos(a){
+  if(a.priv){return {x:a.fixedX,y:a.fixedY,hd:a.ph==="taxiOut"?90:0};}
   const L=PATIO.layout;const rw=L.runways[a.fi%L.runways.length];
   const txY=L.taxiways[0].pts[0][1];const gx=a.gx,gy=a.gy;
   const rwMid=(rw.x1+rw.x2)/2,rwY=rw.y1;let x,y,hd=0;
@@ -1822,11 +1891,36 @@ function _patioRender(){
     });
   });
 
+  // ── terminal executivo (FBO) ──
+  if(PATIO_CFG.execTerminal){const et=PATIO_CFG.execTerminal;
+    s+=`<rect x="${et.x-8}" y="${et.y-58}" width="${et.w+16}" height="${et.h+62}" rx="6" fill="#0b1119" stroke="#15202e"/>`;
+    s+=`<rect x="${et.x}" y="${et.y}" width="${et.w}" height="${et.h}" rx="4" fill="#1a1426" stroke="#3a2c52" stroke-width="1.5"/>`;
+    s+=`<text x="${et.x+et.w/2}" y="${et.y+et.h/2+4}" fill="#b96fd0" font-size="10" font-weight="700" text-anchor="middle">⚷ FBO</text>`;
+    s+=`<text x="${et.x-8}" y="${et.y-62}" fill="#7e6a90" font-size="8.5" font-family="monospace">${et.label}</text>`;
+  }
+  // ── posições de estacionamento remoto ──
+  if(PATIO_CFG.remoteStands){const rs=PATIO_CFG.remoteStands;
+    s+=`<rect x="${rs.x-16}" y="${rs.y-20}" width="${rs.cols*rs.dx+16}" height="${rs.rows*rs.dy+16}" rx="6" fill="#0a0f17" stroke="#15202e" stroke-dasharray="4,3"/>`;
+    s+=`<text x="${rs.x-14}" y="${rs.y-24}" fill="#46546a" font-size="8.5" font-family="monospace">${rs.label}</text>`;
+    for(let r=0;r<rs.rows;r++)for(let c=0;c<rs.cols;c++){
+      s+=`<rect x="${rs.x+c*rs.dx-14}" y="${rs.y+r*rs.dy-14}" width="28" height="28" rx="3" fill="none" stroke="#1e2d3a" stroke-width="1"/>`;
+      s+=`<text x="${rs.x+c*rs.dx}" y="${rs.y+r*rs.dy+20}" fill="#3a4d63" font-size="7" text-anchor="middle" font-family="monospace">R${r*rs.cols+c+1}</text>`;
+    }
+  }
   // ── aircraft ──
-  acs.forEach(a=>{const p=_patioPos(a);const col=_PCOL[a.ph];const fly=(a.ph==='approach'||a.ph==='climb');
+  acs.forEach(a=>{const p=_patioPos(a);
+    if(a.priv){
+      const pcol=a.gov?'#ffd740':'#b96fd0';
+      s+=`<g class="pplane ppriv" data-pkey="${a.pidx}" transform="translate(${p.x.toFixed(1)},${p.y.toFixed(1)})" style="cursor:pointer">`;
+      s+=_patioPlane(pcol,0.78,p.hd);
+      s+=`<circle r="9" fill="none" stroke="${pcol}" stroke-width=".7" opacity=".5" stroke-dasharray="2,2"/></g>`;
+      return;
+    }
+    const col=_PCOL[a.ph];const fly=(a.ph==='approach'||a.ph==='climb');
     s+=`<g class="pplane" data-key="${a.dir}${a.fi}" transform="translate(${p.x.toFixed(1)},${p.y.toFixed(1)})" opacity="${fly?.85:1}" style="cursor:pointer">`;
     if(fly)s+=`<circle r="15" fill="${col}" opacity=".12" filter="url(#pglow)"/>`;
     s+=_patioPlane(col,fly?1.18:1,p.hd);s+=`</g>`;});
+
   s+=`</svg>`;
   document.getElementById('patio-svg').innerHTML=s;
 
@@ -1858,15 +1952,18 @@ function _patioPanel(a,silent){
   document.getElementById('patio-panel').classList.add('show');
 }
 function _patioClosePanel(){PATIO.pinned=null;document.getElementById('patio-panel').classList.remove('show');}
-function _patioHUD(acs){const c={};acs.forEach(a=>{const g=(a.ph==='approach'||a.ph==='climb')?'air':(a.ph==='gate'?'gate':'ground');c[g]=(c[g]||0)+1;});
+function _patioHUD(acs){const c={};let npriv=0;acs.forEach(a=>{if(a.priv){npriv++;return;}const g=(a.ph==='approach'||a.ph==='climb')?'air':(a.ph==='gate'?'gate':'ground');c[g]=(c[g]||0)+1;});c.priv=npriv;
   document.getElementById('patio-hud').innerHTML=`<h4>Pátio · ${AI.iata}</h4>
     <div class="ph-row"><span>No ar</span><span class="v" style="color:#80d8ff">${c.air||0}</span></div>
     <div class="ph-row"><span>Em solo</span><span class="v" style="color:#40c4ff">${c.ground||0}</span></div>
     <div class="ph-row"><span>Nos portões</span><span class="v" style="color:#69f0ae">${c.gate||0}</span></div>
-    <div class="ph-row"><span>Total</span><span class="v">${acs.length}</span></div>`;}
+    <div class="ph-row"><span>Total</span><span class="v">${acs.length-(c.priv||0)}</span></div>
+    <div class="ph-row"><span>Privados (FBO)</span><span class="v" style="color:#b96fd0">${c.priv||0}</span></div>`;}
 function _patioStrip(acs){const sorted=[...acs].sort((a,b)=>a.ph.localeCompare(b.ph));
   let h=`<div class="ps-hdr">Tráfego · ${acs.length}</div>`;
-  sorted.slice(0,30).forEach(a=>{h+=`<div class="ps-row"><span class="ps-dot" style="background:${_PCOL[a.ph]}"></span><span class="ps-fn">${_patioFN(a)}</span><span style="color:#5a6b7d">${a.f[1]}</span><span class="ps-st" style="color:${_PCOL[a.ph]}">${_PSTATE[a.ph]}</span></div>`;});
+  sorted.slice(0,40).forEach(a=>{
+    if(a.priv){const pc=a.gov?'#ffd740':'#b96fd0';h+=`<div class="ps-row"><span class="ps-dot" style="background:${pc}"></span><span class="ps-fn">${a.reg}</span><span style="color:#5a6b7d">${a.gov?'GOV':'EXEC'}</span><span class="ps-st" style="color:${pc}">${a.st}</span></div>`;return;}
+    h+=`<div class="ps-row"><span class="ps-dot" style="background:${_PCOL[a.ph]}"></span><span class="ps-fn">${_patioFN(a)}</span><span style="color:#5a6b7d">${a.f[1]}</span><span class="ps-st" style="color:${_PCOL[a.ph]}">${_PSTATE[a.ph]}</span></div>`;});
   document.getElementById('patio-strip').innerHTML=h;}
 function _patioLegend(){const items=[['approach','Aproximação'],['landing','Pousando'],['taxiIn','Táxi'],['gate','No portão'],['pushback','Pushback'],['takeoff','Decolando'],['climb','Subindo']];
   document.getElementById('patio-legend').innerHTML=items.map(([k,l])=>`<span class="pl-item"><span class="pl-dot" style="background:${_PCOL[k]}"></span>${l}</span>`).join('');}
@@ -1886,6 +1983,7 @@ function buildPatio(){
     document.getElementById('patio-close').addEventListener('click',_patioClosePanel);
     document.getElementById('patio-svg').addEventListener('click',ev=>{
       const g=ev.target.closest('.pplane');if(!g)return;
+      if(g.classList.contains('ppriv')){const pk=g.getAttribute('data-pkey');openPrivDetails(pk);return;}
       const key=g.getAttribute('data-key');const a=(PATIO._acs||[]).find(x=>(x.dir+x.fi)===key);
       if(a)_patioPanel(a);
     });
@@ -2033,6 +2131,7 @@ function openFlightDetails(fi,mode){
           <div><span class="fd-ac-k">Alcance</span><span class="fd-ac-v">${sp?Number(sp.range).toLocaleString('pt-BR')+' km':'—'}</span></div>
           <div><span class="fd-ac-k">Motores</span><span class="fd-ac-v">${sp?sp.engines:'—'}</span></div>
           <div><span class="fd-ac-k">Envergadura</span><span class="fd-ac-v">${sp?sp.ws+' m':'—'}</span></div>
+        </div>
         </div></div>`;})()}
     ${ci?`<div class="fd-ci"><div class="fd-ci-t">ℹ Informações de viagem</div>
       <div class="fd-ci-row"><b>Visto:</b> ${ci.visa||'—'}</div>
@@ -2490,6 +2589,97 @@ function toggleRadar(){
   document.body.classList.toggle('radar-on',_radarOn);
   if(b){b.classList.toggle('on',_radarOn);b.textContent=_radarOn?'📡 Efeito radar no mapa: LIGADO':'📡 Efeito radar no mapa: desligado';}
 }
+
+
+const PRIVATE_DATA={"exec": [["SBSP", "Congonhas · Brasil", "Embraer Phenom 100EV", "PR-PHN", "Embraer Executive", "No pátio"], ["SBGR", "Guarulhos · Brasil", "Embraer Praetor 600", "PR-PRA", "Embraer Demo", "Decolando"], ["KMIA", "Miami · EUA", "Embraer Phenom 300E", "N300EM", "Embraer NA", "Pousou"], ["SBRJ", "Rio · Brasil", "Cessna Citation CJ4", "PR-CJX", "Avantto", "No pátio"], ["LFPB", "Paris · França", "Embraer Praetor 500", "F-HPRA", "Embraer Europe", "No pátio"]], "gov": [["SBBR", "Brasil", "Embraer VC-2 (Legacy 600)", "FAB2581", "Visita técnica · FAB", "No pátio"], ["SBSP", "Brasil", "Embraer KC-390 (demo)", "FAB2856", "Demonstração militar", "Pousou"]]};
+
+
+
+// ════════ MODO PRIVADO (tabela completa) ════════
+function _privAll(){
+  // junta exec + gov com tipo e horário determinístico
+  const D=PRIVATE_DATA||{exec:[],gov:[]};
+  const out=[];
+  (D.exec||[]).forEach((r,i)=>out.push({cat:'Executivo',org:r[0],loc:r[1],ac:r[2],reg:r[3],op:r[4],st:r[5],idx:'e'+i}));
+  (D.gov||[]).forEach((r,i)=>out.push({cat:'Oficial',org:r[0],loc:r[1],ac:r[2],reg:r[3],op:r[4],st:r[5],idx:'g'+i}));
+  // horário fictício estável por registro
+  out.forEach((r,i)=>{const seed=r.reg.charCodeAt(2)+i*37;const h=(6+seed%16);const m=(seed*7)%60;
+    r.time=`${String(h).padStart(2,'0')}:${String(Math.floor(m/5)*5).padStart(2,'0')}`;});
+  out.sort((a,b)=>a.time.localeCompare(b.time));
+  return out;
+}
+function buildPrivate(){
+  const el=document.getElementById('priv-body');if(!el)return;
+  let rows=_privAll();
+  const flt=window._privFilter||'ALL';
+  if(flt==='exec')rows=rows.filter(r=>r.cat==='Executivo');
+  else if(flt==='gov')rows=rows.filter(r=>r.cat==='Oficial');
+  const stColor=s=>s==='Pousou'?'#69f0ae':s==='Decolando'?'#ff6e40':s==='No pátio'?'#40c4ff':'#ffd740';
+  const body=rows.map(r=>`
+    <tr class="clickrow" onclick="openPrivDetails('${r.idx}')">
+      <td class="tc">${r.time}</td>
+      <td class="tdst">${r.loc}</td>
+      <td><span class="${r.cat==='Oficial'?'pv-tag-gov':'pv-tag-exec'}">${r.cat}</span></td>
+      <td>${r.ac}</td>
+      <td class="pv-reg-cell">${r.reg}</td>
+      <td>${r.op}</td>
+      <td><span class="pv-st-cell" style="color:${stColor(r.st)}">${r.st}</span></td>
+    </tr>`).join('');
+  el.innerHTML=`
+    <div class="pv-filters">
+      <button class="pv-pill ${flt==='ALL'?'on':''}" onclick="setPrivFilter('ALL')">Todos</button>
+      <button class="pv-pill ${flt==='exec'?'on':''}" onclick="setPrivFilter('exec')">🛩 Executivo</button>
+      <button class="pv-pill ${flt==='gov'?'on':''}" onclick="setPrivFilter('gov')">🏛 Oficial</button>
+    </div>
+    <div class="bt-wrap"><table class="bt"><thead><tr>
+      <th>Hora</th><th>Origem</th><th>Categoria</th><th>Aeronave</th><th>Matrícula</th><th>Operador / Missão</th><th>Status</th>
+    </tr></thead><tbody>${body}</tbody></table></div>
+    <div class="pv-note">⚷ Terminal Executivo / FBO — operações privadas e oficiais, não listadas nos painéis comerciais.</div>`;
+}
+function setPrivFilter(f){window._privFilter=f;buildPrivate();}
+function openPrivDetails(idx){
+  const rows=_privAll();const r=rows.find(x=>x.idx===idx);if(!r)return;
+  const isGov=r.cat==='Oficial';
+  const col=isGov?'#ffd740':'var(--acc)';
+  const oCoord=COORDS[AI.iata]||HOME;
+  const dCoord=COORDS[r.org]||_airportCoord(r.org);
+  document.getElementById('fd-body').innerHTML=`
+    <div class="fd-head" style="background:linear-gradient(135deg,${isGov?'#ffd74033':'rgba(156,39,176,.2)'},transparent)">
+      <button class="fd-close" onclick="closeFlightDetails()">×</button>
+      <div class="fd-fn" style="color:${col}">${r.reg}</div>
+      <div class="fd-al"><span class="fd-aldot" style="background:${col}"></span>${r.op}</div>
+      <div class="fd-route-big">
+        <div class="fd-ep"><div class="fd-iata">${r.org}</div><div class="fd-city">${r.loc.split('·')[0].trim()}</div></div>
+        <div class="fd-arrow">→<div class="fd-dur">${r.cat}</div></div>
+        <div class="fd-ep"><div class="fd-iata">${AI.iata}</div><div class="fd-city">${(AI.city||'').split('/')[0].trim()}</div></div>
+      </div>
+    </div>
+    
+    <div class="fd-rows">
+      <div class="fd-row"><span class="fd-k">Categoria</span><span class="fd-v">${isGov?'🏛 Voo Oficial / Governo':'🛩 Aviação Executiva'}</span></div>
+      <div class="fd-row"><span class="fd-k">Aeronave</span><span class="fd-v">${r.ac}</span></div>
+      <div class="fd-row"><span class="fd-k">Matrícula</span><span class="fd-v fd-gate">${r.reg}</span></div>
+      <div class="fd-row"><span class="fd-k">Origem</span><span class="fd-v">${r.loc}</span></div>
+      <div class="fd-row"><span class="fd-k">${isGov?'Missão':'Operador'}</span><span class="fd-v">${r.op}</span></div>
+      <div class="fd-row"><span class="fd-k">Horário</span><span class="fd-v fd-time">${r.time}</span></div>
+      <div class="fd-row"><span class="fd-k">Status</span><span class="fd-v">${r.st}</span></div>
+    </div>`;
+  document.getElementById('fd-panel').classList.add('show');
+  document.getElementById('fd-overlay').classList.add('show');
+}
+function _airportCoord(iata){
+  // fallback aproximado p/ aeroportos privados não no COORDS
+  const FB={TEB:[40.85,-74.06],LFPB:[48.97,2.44],EGGW:[51.87,-0.36],LSGG:[46.23,6.10],KMIA:[25.79,-80.29],
+    SAEZ:[-34.82,-58.53],LIRA:[41.80,12.59],OMDB:[25.25,55.36],KLAS:[36.08,-115.15],SBSP:[-23.62,-46.65],
+    KADW:[38.81,-76.87],EDDK:[50.87,7.14],SBBR:[-15.87,-47.92],RJTT:[35.55,139.78],EGVN:[51.75,-1.58],
+    SBRJ:[-22.91,-43.16],SBGR:[-23.43,-46.47]};
+  return FB[iata]||HOME;
+}
+
+// ── silhueta SVG da aeronave + botão de foto real ──
+
+
+
 
 </script>
 <div class="wrap" id="tab-transit" style="display:none"><div class="transit-wrap" id="transit-cards"></div></div>
