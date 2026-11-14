@@ -578,6 +578,7 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
 .gv-phr{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
 .gv-ph{display:flex;gap:8px;align-items:center;background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:8px;padding:9px 10px;color:var(--white);font-family:inherit;font-size:.82rem;font-weight:600;cursor:pointer;text-align:left}
 .gv-ph:hover{border-color:var(--acc)}.gv-ph span{font-size:1.05rem}
+.tv-simclk{font-family:"Share Tech Mono",monospace;font-size:.82rem;color:var(--acc);margin-left:6px}
 </style>
 </head>
 <body><div class="imm-toast" id="imm-toast"></div>
@@ -841,6 +842,18 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
 </div>
 
 <script>
+// ── relógio simulado do Transporte (botões 1x/2x/5x/10x para testar acelerado) ──
+var SIM={speed:1,r:0,s:0};
+function _simNow(){return SIM.r?SIM.s+(Date.now()-SIM.r)*SIM.speed:Date.now();}
+function simSpeed(x){const cur=_simNow();SIM.s=cur;SIM.r=Date.now();SIM.speed=x;
+  if(TV.timer){clearInterval(TV.timer);TV.timer=setInterval(()=>_tvTick(false),Math.max(120,1000/x));}
+  VOX.q=VOX.q.filter(it=>!it.exp);_simBar();_tvTick(true);}
+function simReal(){SIM.r=0;SIM.s=0;SIM.speed=1;if(TV.timer){clearInterval(TV.timer);TV.timer=setInterval(()=>_tvTick(false),1000);}
+  if(TV.ride){TV.ride=null;TV.view='stop';}_simBar();_tvShell();}
+function _simBar(){const el=document.getElementById('tv-speed');if(!el)return;
+  el.innerHTML=`<span class="gs-lbl">⏩ Velocidade</span>${[1,2,5,10].map(x=>`<button class="gv-chip${SIM.speed===x?' on':''}" onclick="simSpeed(${x})">${x}x</button>`).join('')}<span class="tv-simclk" id="tv-simclk"></span>${SIM.r?`<button class="gv-chip" onclick="simReal()" title="Voltar ao horário de agora">⟲ Horário real</button>`:''}`;}
+setInterval(()=>{const e=document.getElementById('tv-simclk');if(e){const d=new Date(_simNow());e.textContent='🕐 '+d.toLocaleTimeString('pt-BR')+(SIM.r?' (simulado)':'');}},250);
+
 // ── mapas: Esri (sem chave) com troca automática para OpenStreetMap se falhar ──
 function _mkTiles(map){const P=[
   {u:'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',ref:'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',a:'Tiles © Esri — Esri, HERE, Garmin, © OpenStreetMap',nz:16},
@@ -2874,7 +2887,7 @@ const _TV_MST=[...(TRANSIT_DATA.terminals||[]),...(TRANSIT_DATA.city_trunk||[])]
 const TV_METRO={key:'metro',kind:'metro',code:'TG',name:TRANSIT_DATA.line_name||'Metrô',color:TRANSIT_DATA.metro_color||'#007dc5',
   stops:_TV_MST.map(s=>s.name),zones:_TV_MST.map(s=>s.zone),
   run:_TV_MST.slice(1).map((s,i)=>[75,80,85,75,120,140,155,150][i]||90),
-  dwell:45,od:240,td:240,start:60,end:27*60-1,vmax:90,h24:true,
+  dwell:45,dw:s=>_TV_MST[s]&&_TV_MST[s].zone==='air'?110:45,od:240,td:240,start:60,end:27*60-1,vmax:90,h24:true,
   hw:m=>{const h=(m/60)%24;if(h<5)return 15;if(h<6)return 8;if(h<9)return 4;if(h<17)return 6;if(h<20)return 4;if(h<23)return 8;return 12;}};
 const TV_BUS_STOPS=[
   ["Aeroporto CNF · T1","Confins · Centro","Lagoa Santa · Rodoviária","Vespasiano","Cidade Administrativa","Venda Nova · Estação","São Gabriel","Floresta","Rodoviária de BH","Praça Sete · Centro"],
@@ -2895,12 +2908,12 @@ const TV={mode:'metro',view:'stop',busLine:0,stop:{},ride:null,car:2,alight:null
 
 // ── motor ──
 const _tvC={};
-function _tvNow(){const n=new Date();let s=n.getHours()*3600+n.getMinutes()*60+n.getSeconds();if(s<3*3600)s+=86400;return s;}
+function _tvNow(){const n=new Date(_simNow());let s=n.getHours()*3600+n.getMinutes()*60+n.getSeconds();if(s<3*3600)s+=86400;return s;}
 function _tvHM(sec){sec=((Math.round(sec)%86400)+86400)%86400;return String(Math.floor(sec/3600)).padStart(2,'0')+':'+String(Math.floor(sec/60)%60).padStart(2,'0');}
 function _tvCD(sec){if(sec<=0)return'agora';if(sec<600){const m=Math.floor(sec/60),s=sec%60;return m+':'+String(s).padStart(2,'0');}if(sec<3600)return Math.round(sec/60)+' min';return Math.floor(sec/3600)+'h'+String(Math.floor(sec/60)%60).padStart(2,'0');}
 function _tvFs(ln,dir,p){return dir===0?p:ln.stops.length-1-p;}
 function _tvOff(ln,dir){const ck=ln.key+'|o'+dir;if(_tvC[ck])return _tvC[ck];const n=ln.stops.length;const run=dir===0?ln.run:[...ln.run].reverse();
-  const arr=[0],dep=[0];for(let k=1;k<n;k++){arr[k]=dep[k-1]+run[k-1];dep[k]=k===n-1?arr[k]:arr[k]+ln.dwell;}
+  const arr=[0],dep=[0];for(let k=1;k<n;k++){arr[k]=dep[k-1]+run[k-1];dep[k]=k===n-1?arr[k]:arr[k]+(ln.dw?ln.dw(dir===0?k:n-1-k):ln.dwell);}
   const end=arr[n-1];dep[n-1]=end+(ln.td||0);return _tvC[ck]={arr,dep,end,total:end+(ln.td||0)};}
 function _tvTrips(ln,dir){const ck=ln.key+'|t'+dir;if(_tvC[ck])return _tvC[ck];const out=[];let m=ln.start+(dir?Math.round(ln.hw(ln.start)/2):0);
   while(m<=ln.end){out.push(m*60);m+=ln.hw(m);}return _tvC[ck]=out;}
@@ -3007,9 +3020,10 @@ function _tvRideHTML(ln,R,now){const U=_tvU(ln),isM=ln.kind==='metro',o=_tvOff(l
   if(st.phase==='done')return`<div class="tv-card" style="--lc:${ln.color}"><div class="tv-ride-h"><div class="tv-ride-id">${U.ic} ${id}</div><div class="tv-msg">🏁 Fim da linha — chegou a <b>${_tvEsc(last)}</b> às ${_tvHM(t0+o.end)}.</div><div class="gv-row" style="margin-top:12px"><button class="gv-btn" data-tv="arrive">📍 Ver horários desta ${U.st}</button><button class="gv-btn ghost" data-tv="exit">Escolher outro ${U.v}</button></div></div></div>`;
   const hasDest=TV.alight!=null&&_tvFs(ln,R.dir,TV.alight)===aP;const arrived=!waiting&&st.phase==='dwell'&&st.at===aP&&hasDest;
   let msg;
-  if(waiting)msg=pre&&board===0?`⏳ Você está na plataforma de <b>${_tvEsc(nm(0))}</b>. O ${U.v} abre as portas em <b data-until="${t0-(ln.od||ln.dwell)}"></b>`:`⏳ Aguardando na plataforma de <b>${_tvEsc(nm(board))}</b> — o ${U.v} chega em <b data-until="${board===0?t0-(ln.od||ln.dwell):arrAt(board)}"></b>`;
+  if(waiting&&R.cont)msg=`🔄 Este ${U.v} inverteu o sentido e parte para <b>${_tvEsc(last)}</b> às ${_tvHM(t0)}. Pode continuar a bordo — portas abrem em <b data-until="${t0-(ln.od||ln.dwell)}"></b>`;
+  else if(waiting)msg=pre&&board===0?`⏳ Você está na plataforma de <b>${_tvEsc(nm(0))}</b>. O ${U.v} abre as portas em <b data-until="${t0-(ln.od||ln.dwell)}"></b>`:`⏳ Aguardando na plataforma de <b>${_tvEsc(nm(board))}</b> — o ${U.v} chega em <b data-until="${board===0?t0-(ln.od||ln.dwell):arrAt(board)}"></b>`;
   else if(arrived)msg=`🎉 Você chegou a <b>${_tvEsc(nm(aP))}</b>. Desembarque agora${isM?` — portas do lado <b>${_tvDoor(ln,R.dir,aP)}</b>`:''}!`;
-  else if(st.phase==='dwell'&&st.at===n-1)msg=`🏁 Fim da linha em <b>${_tvEsc(nm(st.at))}</b>. Todos devem desembarcar — obrigado por viajar conosco!`;
+  else if(st.phase==='dwell'&&st.at===n-1)msg=`🏁 Fim da linha em <b>${_tvEsc(nm(st.at))}</b>. Este ${U.v} vai inverter o sentido — desça aqui ou continue a bordo.`;
   else if(st.phase==='dwell')msg=`🚉 Parado em <b>${_tvEsc(nm(st.at))}</b> · portas abertas · parte em <b data-until="${t0+o.dep[st.at]}"></b>`;
   else msg=`➡ Próxima ${U.st}: <b>${_tvEsc(nm(st.to))}</b> · chega em <b data-until="${arrAt(st.to)}"></b>${isM?` · portas à ${_tvDoor(ln,R.dir,st.to)}`:''}`;
   const nextP=waiting?board:(st.phase==='dwell'?st.at:st.to),from=waiting?board:curP,left=aP-from;
@@ -3094,7 +3108,7 @@ function _tvTick(force){const tab=document.getElementById('tab-transit');if(!tab
     const gd=_tvGridDir(ln,s),gk=Math.floor(now/60)+'|'+gd+'|'+s;
     if(force||TV.keys.grid!==gk){TV.keys.grid=gk;const el=document.getElementById('tv-grid');if(el)el.innerHTML=_tvGridHTML(ln,s,gd,now);}
     _tvStripTick(ln,now,null);_tvBusMapTick(ln,now,null);}
-  else if(TV.ride&&TV.ride.key===ln.key){const R=TV.ride,rk=_tvRideKey(ln,R,now);
+  else if(TV.ride&&TV.ride.key===ln.key&&(_tvContinue(ln,TV.ride,now)||true)){const R=TV.ride,rk=_tvRideKey(ln,R,now);
     if(force||TV.keys.ride!==rk){const prev=TV.keys.ride;TV.keys.ride=rk;const el=document.getElementById('tv-ride');if(el)el.innerHTML=_tvRideHTML(ln,R,now);
       if(VOX.cur)_voxCap(VOX.cur);
       const st=_tvState(ln,R.dir,R.ti,now);if(TV.alight!=null&&st&&st.phase==='run'&&_tvFs(ln,R.dir,TV.alight)<=st.from){TV.alight=null;}}
@@ -3139,7 +3153,7 @@ function _tvOnChange(ev){const el=ev.target.closest('[data-tvsel]');if(!el)retur
 // substitui a versão antiga da aba Transporte
 function buildTransitCards(){const tab=document.getElementById('tab-transit');if(!tab)return;
   if(!TV.bound){TV.bound=true;tab.addEventListener('click',_tvOnClick);tab.addEventListener('change',_tvOnChange);}
-  if(!TV.timer)TV.timer=setInterval(()=>_tvTick(false),1000);
+  if(!TV.timer)TV.timer=setInterval(()=>_tvTick(false),Math.max(120,1000/SIM.speed));_simBar();
   _tvShell();}
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -3158,7 +3172,7 @@ function _voxChime(){try{const c=_ctx();if(!c)return;if(c.state==='suspended')c.
 function voxSay(items,opts){opts=opts||{};
   if(!voxOK()){_voxCap({k:'pt',text:'⚠ Este navegador não tem voz sintetizada. Tente o Chrome, Edge ou Safari.'});return;}
   if(opts.interrupt)voxStop();
-  items.filter(it=>opts.force||VOX.langs[it.k]).forEach(it=>VOX.q.push(opts.ttl?Object.assign({exp:Date.now()+opts.ttl*1000},it):it));
+  items.filter(it=>opts.force||VOX.langs[it.k]).forEach(it=>VOX.q.push(opts.ttl?Object.assign({exp:Date.now()+opts.ttl*1000/SIM.speed},it):it));
   if(opts.chime&&!VOX.busy&&!VOX.hold){VOX.hold=true;_voxChime();setTimeout(()=>{VOX.hold=false;_voxPump();},1250);}else _voxPump();}
 function _voxPump(){if(VOX.busy||VOX.hold)return;if(!VOX.q.length){VOX.cur=null;_voxCap(null);return;}
   while(VOX.q.length&&VOX.q[0].exp&&VOX.q[0].exp<Date.now())VOX.q.shift();if(!VOX.q.length){VOX.cur=null;_voxCap(null);return;}
@@ -3302,7 +3316,7 @@ function _voxChime(kind){try{const c=_ctx();if(!c)return;if(c.state==='suspended
 function voxSay(items,opts){opts=opts||{};
   if(!voxOK()){_voxCap({k:'pt',text:'⚠ Este navegador não tem voz sintetizada. Tente o Chrome, Edge ou Safari.'});return;}
   if(opts.interrupt)voxStop();else if(opts.flush)VOX.q=[];
-  items.filter(it=>opts.force||VOX.langs[it.k]).forEach(it=>VOX.q.push(opts.ttl?Object.assign({exp:Date.now()+opts.ttl*1000},it):it));
+  items.filter(it=>opts.force||VOX.langs[it.k]).forEach(it=>VOX.q.push(opts.ttl?Object.assign({exp:Date.now()+opts.ttl*1000/SIM.speed},it):it));
   if(opts.chime&&!VOX.busy&&!VOX.hold){VOX.hold=true;_voxChime(opts.chimeKind);setTimeout(()=>{VOX.hold=false;_voxPump();},opts.chimeKind==='door'?1650:opts.chimeKind==='open'?1500:1250);}
   else{if(opts.chime&&opts.chimeKind==='door')_voxChime('door');_voxPump();}}
 
@@ -3460,7 +3474,7 @@ function _sfxTone(c,t,f,len,type,vol){const o=c.createOscillator(),g=c.createGai
   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.015);if(type==='square'){g.gain.setValueAtTime(vol,t+len-.03);g.gain.linearRampToValueAtTime(0,t+len);}else g.gain.exponentialRampToValueAtTime(.001,t+len);o.start(t);o.stop(t+len+.05);}
 function _sfxBell(c,t,f,vol){_sfxTone(c,t,f,1.4,'sine',vol);_sfxTone(c,t,f*2.01,.7,'sine',vol*.25);_sfxTone(c,t,f*3.02,.35,'sine',vol*.08);}
 const VOX_HOLD={train:1500,open:3200,door:1900,bell:1300,airport:1300};
-function _voxChime(kind){try{const c=_ctx();if(!c)return;if(c.state==='suspended')c.resume();const t=c.currentTime+.02;
+function _voxChime3(kind){try{const c=_ctx();if(!c)return;if(c.state==='suspended')c.resume();const t=c.currentTime+.02;
   if(kind==='train'){_sfxBell(c,t,783.99,.2);_sfxBell(c,t+.32,659.25,.2);_sfxBell(c,t+.64,523.25,.22);}            // "plim-plim-plom" de metrô
   else if(kind==='open'){_sfxTone(c,t,70,.25,'sine',.35);_sfxNoise(c,c.destination,t+.05,.9,3200,900,.22);          // tranco + "pssshh" das portas abrindo
     _sfxBell(c,t+1.3,783.99,.18);_sfxBell(c,t+1.6,659.25,.18);_sfxBell(c,t+1.9,523.25,.2);}
@@ -3472,7 +3486,7 @@ function _voxChime(kind){try{const c=_ctx();if(!c)return;if(c.state==='suspended
 function voxSay(items,opts){opts=opts||{};
   if(!voxOK()){_voxCap({k:'pt',text:'⚠ Este navegador não tem voz sintetizada. Tente o Chrome, Edge ou Safari.'});return;}
   if(opts.interrupt)voxStop();else if(opts.flush)VOX.q=[];
-  const its=items.filter(it=>opts.force||VOX.langs[it.k]).map(it=>Object.assign({},it,opts.ttl?{exp:Date.now()+opts.ttl*1000}:{}));
+  const its=items.filter(it=>opts.force||VOX.langs[it.k]).map(it=>Object.assign({},it,opts.ttl?{exp:Date.now()+opts.ttl*1000/SIM.speed}:{}));
   if(opts.chime){if(its.length)its[0].snd=opts.chimeKind||'airport';else _voxChime(opts.chimeKind);}
   its.forEach(x=>VOX.q.push(x));_voxPump();}
 function _voxPump(){if(VOX.busy||VOX.hold)return;
@@ -3494,7 +3508,7 @@ function _tvEvKey(ln,R,now){const st=_tvState(ln,R.dir,R.ti,now);if(!st||st.phas
   const o=_tvOff(ln,R.dir),seg=o.arr[st.to]-o.dep[st.from],el=seg-st.left;
   if(st.left<=30)return'appr|'+st.to;if(seg>=400&&el>=seg*.62)return'info2|'+st.from;if(seg>=110&&el>=20)return'info|'+st.from;return'dep|'+st.from;}
 // ── o que cada aviso fala ──
-function _tvEvMsg(ln,R,now,k){const[type,ix]=k.split('|'),i=+ix,n=ln.stops.length,isM=ln.kind==='metro',dir=R.dir;
+function _tvEvMsg3(ln,R,now,k){const[type,ix]=k.split('|'),i=+ix,n=ln.stops.length,isM=ln.kind==='metro',dir=R.dir;
   const raw=p=>ln.stops[_tvFs(ln,dir,p)],nm=p=>_voxClean(isM?raw(p).replace(/^T\d\s*·\s*/,''):raw(p)),to=nm(n-1);
   const U=isM?{pt:'trem',en:'train',es:'tren'}:{pt:'ônibus',en:'bus',es:'autobús'};
   if(type==='at0b')return{sound:'train',pt:`Este ${U.pt} parte em cerca de 2 minutos com destino a ${to}. Embarque com atenção e acomode-se.`,en:`This ${U.en} departs in about 2 minutes for ${to}. Please board and take your seat.`,es:`Este ${U.es} sale en unos 2 minutos con destino a ${to}. Suba con atención y acomódese.`};
@@ -3506,9 +3520,9 @@ function _tvEvMsg(ln,R,now,k){const[type,ix]=k.split('|'),i=+ix,n=ln.stops.lengt
       return{sound:'open',pt:`${isM?'Estação terminal':'Ponto final'}, ${X}${tn.pt}. Você chegou ao Aeroporto Internacional de Belo Horizonte.${other.pt} Muito obrigado por viajar ${isM?'no Trem das Gerais':'conosco'}. Foi um prazer receber você em Minas Gerais: desejamos a todos uma ótima viagem de volta aos seus destinos, e volte sempre!`,
         en:`This is the last stop, ${X}${tn.en}. You have arrived at Belo Horizonte International Airport.${other.en} Thank you for riding ${isM?'the Trem das Gerais':'with us'}. It was a pleasure having you in Minas Gerais. We wish you all a safe journey home, and please come back soon!`,
         es:`${isM?'Estación terminal':'Parada final'}, ${X}${tn.es}. Usted llegó al Aeropuerto Internacional de Belo Horizonte.${other.es} Muchas gracias por viajar ${isM?'en el Trem das Gerais':'con nosotros'}. Fue un placer recibirle en Minas Gerais: les deseamos a todos un buen viaje de regreso a sus destinos, ¡y vuelva pronto!`};}
-    if(isM)return{sound:'open',pt:`Estação terminal, ${X}. Você chegou ao centro de Belo Horizonte! Muito obrigado por viajar no Trem das Gerais. Aproveite a cidade: aqui ao lado ficam a Praça da Liberdade e o Circuito Cultural, com museus e pontos de informação turística. Na saída da estação há ônibus e táxis. Verifique se não esqueceu nenhum pertence. Todos devem desembarcar.`,
-      en:`This is the last stop, ${X}. Welcome to downtown Belo Horizonte! Thank you for riding the Trem das Gerais. Enjoy the city: Liberdade Square and its cultural circuit, with museums and tourist information points, are right next to the station. Buses and taxis are available at the exit. Please make sure you have all your belongings. All passengers must leave the train.`,
-      es:`Estación terminal, ${X}. ¡Bienvenido al centro de Belo Horizonte! Muchas gracias por viajar en el Trem das Gerais. Disfrute la ciudad: aquí al lado están la Plaza de la Libertad y el Circuito Cultural, con museos y puntos de información turística. A la salida hay autobuses y taxis. Verifique que no olvida ninguna pertenencia. Todos deben descender.`};
+    if(isM)return{sound:'open',pt:`Estação terminal, ${X}. Você chegou ao centro de Belo Horizonte! Muito obrigado por viajar no Trem das Gerais. Aproveite a cidade: aqui ao lado ficam a Praça da Liberdade e o Circuito Cultural, com museus e pontos de informação turística. Na saída da estação há ônibus e táxis. Verifique se não esqueceu nenhum pertence. Este trem retornará ao aeroporto em instantes.`,
+      en:`This is the last stop, ${X}. Welcome to downtown Belo Horizonte! Thank you for riding the Trem das Gerais. Enjoy the city: Liberdade Square and its cultural circuit, with museums and tourist information points, are right next to the station. Buses and taxis are available at the exit. Please make sure you have all your belongings. This train will return to the airport shortly.`,
+      es:`Estación terminal, ${X}. ¡Bienvenido al centro de Belo Horizonte! Muchas gracias por viajar en el Trem das Gerais. Disfrute la ciudad: aquí al lado están la Plaza de la Libertad y el Circuito Cultural, con museos y puntos de información turística. A la salida hay autobuses y taxis. Verifique que no olvida ninguna pertenencia. Este tren regresará al aeropuerto en instantes.`};
     return{sound:'open',pt:`Ponto final, ${X}. Muito obrigado por viajar conosco. Aproveite a cidade e, se precisar, procure os pontos de informação turística. Verifique se não esqueceu nenhum pertence.`,
       en:`This is the last stop, ${X}. Thank you for riding with us. Enjoy the city, and look for the tourist information points if you need help. Please make sure you have all your belongings.`,
       es:`Parada final, ${X}. Muchas gracias por viajar con nosotros. Disfrute la ciudad y, si lo necesita, busque los puntos de información turística. Verifique que no olvida ninguna pertenencia.`};}
@@ -3519,9 +3533,9 @@ function _tvEvents(ln,R,now){const k=_tvEvKey(ln,R,now);if(!k||k===TV.lastEv)ret
   TV.led=m.pt;const el=document.getElementById('tv-led');if(el){el.textContent=m.pt;const b=el.parentNode;b.classList.remove('flash');void b.offsetWidth;b.classList.add('flash');}
   if(TV.vox)voxSay(['pt','en','es'].map(x=>({k:x,text:m[x]})),{chime:!!m.sound,chimeKind:m.sound,ttl:/^at\|0|end2|at0b/.test(k)||k==='at|'+(ln.stops.length-1)?150:60});}
 function _tvEnter(ln,dir,ti,board){try{const c=_ctx();if(c&&c.state==='suspended')c.resume();}catch(e){}
-  TV.ride={key:ln.key,dir,ti,board:board||0,n0:_tvNow(),e0:Date.now()};TV.alight=null;TV.view='ride';TV.lastPhase=null;TV.lastEv=null;TV.led=null;TV.followBus=true;_tvShell();window.scrollTo({top:0,behavior:'smooth'});}
+  TV.ride={key:ln.key,dir,ti,board:board||0,n0:_tvNow(),e0:_simNow()};TV.alight=null;TV.view='ride';TV.lastPhase=null;TV.lastEv=null;TV.led=null;TV.followBus=true;_tvShell();window.scrollTo({top:0,behavior:'smooth'});}
 // relógio da viagem contínuo (não "pula" na virada do dia de operação, às 03h)
-function _tvRNow(R){return R&&R.n0!=null?R.n0+(Date.now()-R.e0)/1000:_tvNow();}
+function _tvRNow(R){return R&&R.n0!=null?R.n0+(_simNow()-R.e0)/1000:_tvNow();}
 
 // ── ambiente a bordo: ruído do trem/ônibus (acompanha a velocidade) e música de fundo ──
 const AMB={noiseOn:true,musicOn:false,n:null,m:null};
@@ -3546,7 +3560,7 @@ function _ambMusicStart(){const c=_ctx();if(!c||AMB.m)return;const g=c.createGai
 function _ambMusicStop(){const m=AMB.m;if(!m)return;AMB.m=null;clearInterval(m.timer);try{m.g.gain.setTargetAtTime(0,_audioCtx.currentTime,.3);}catch(e){}}
 function _ambUpdate(){const tab=document.getElementById('tab-transit'),ln=_tvCur(),R=TV.ride;
   const active=tab&&tab.style.display!=='none'&&TV.view==='ride'&&R&&R.key===ln.key;const st=active?_tvState(ln,R.dir,R.ti,_tvRNow(R)):null;
-  const onboard=!!st&&st.phase!=='pre'&&st.phase!=='done'&&st.p>=(R.board||0);
+  const onboard=!!st&&(st.phase!=='pre'||R.cont)&&st.phase!=='done'&&st.p>=(R.board||0);
   if(onboard&&AMB.noiseOn){_ambNoiseStart();const n=AMB.n;if(n){const c=_audioCtx,t=c.currentTime,isM=ln.kind==='metro',sp=st.phase==='run'?Math.sqrt(Math.max(0,Math.sin(Math.PI*st.f))):0,duck=VOX.busy||VOX.hold?.5:1;
     n.g.gain.setTargetAtTime((.05+.22*sp)*duck,t,.4);n.lp.frequency.setTargetAtTime(160+520*sp,t,.4);
     n.o.frequency.setTargetAtTime((isM?55:36)+(isM?130:55)*sp,t,.4);n.og.gain.setTargetAtTime(((isM?.03:.045)*sp+(isM?0:.012))*duck,t,.4);
@@ -3556,7 +3570,92 @@ function _ambUpdate(){const tab=document.getElementById('tab-transit'),ln=_tvCur
   if(AMB.m)AMB.m.g.gain.setTargetAtTime(VOX.busy||VOX.hold?.012:.06,_audioCtx.currentTime,.3);}
 setInterval(_ambUpdate,200);
 
+// ════════════════════════════════════════════════════════════════════════════
+// ════════ v6 · portas (mesmo som ao abrir e fechar, ~5 s), companhias por
+// ════════ terminal, despedida nas estações do aeroporto, dicas de viagem,
+// ════════ e o trem inverte o sentido no fim da linha (dá pra continuar a bordo)
+// ════════════════════════════════════════════════════════════════════════════
+VOX_HOLD.open=5300;VOX_HOLD.door=5300;
+function _sfxDoors(c,t){for(let i=0;i<8;i++)_sfxTone(c,t+i*.3,1046.5,.17,'square',.055);          // bipe-bipe-bipe (2,4 s)
+  _sfxNoise(c,c.destination,t+2.55,1.5,3200,700,.24);                                               // "pssshhhh" pneumático
+  _sfxNoise(c,c.destination,t+2.6,1.2,500,180,.18,'lowpass');                                       // corpo do ar
+  _sfxTone(c,t+4.15,62,.35,'sine',.45);_sfxTone(c,t+4.2,95,.2,'sine',.2);}                           // "tum" das folhas encostando
+function _voxChime(kind){if(kind==='open'||kind==='door'){try{const c=_ctx();if(!c)return;if(c.state==='suspended')c.resume();_sfxDoors(c,c.currentTime+.02);}catch(e){}return;}_voxChime3(kind);}
+
+// companhias de cada terminal, a partir dos voos do painel
+function _tvAirlines(intl){const out=[];FD.forEach(f=>{const a=AL[f[6]];if(a&&(f[2]!=='DOM')===intl&&!out.includes(a.name))out.push(a.name);});return out;}
+function _tvAccess(intl){const a=_tvAirlines(intl),more=a.length>10,l=a.slice(0,10);
+  const j=(x,and)=>x.length>1?x.slice(0,-1).join(', ')+' '+and+' '+x[x.length-1]:(x[0]||'');
+  return{pt:` Acesso a: ${more?l.join(', ')+', entre outras':j(l,'e')}.`,en:` Access to: ${more?l.join(', ')+', among others':j(l,'and')}.`,es:` Acceso a: ${more?l.join(', ')+', entre otras':j(l,'y')}.`};}
+const TV_BYE=[
+ {pt:` Obrigado pela visita! Foi muito bom ter você em Minas Gerais. Volte sempre!`,en:` Thank you for visiting! It was great having you in Minas Gerais. Come back soon!`,es:` ¡Gracias por la visita! Fue muy bueno tenerle en Minas Gerais. ¡Vuelva pronto!`},
+ {pt:` Foi um prazer receber você. Boa viagem e volte sempre a Minas!`,en:` It was a pleasure having you here. Have a safe trip and come back to Minas soon!`,es:` Fue un placer recibirle. ¡Buen viaje y vuelva pronto a Minas!`},
+ {pt:` Minas Gerais agradece a sua visita. Até a próxima, uai!`,en:` Minas Gerais thanks you for your visit. See you next time!`,es:` Minas Gerais le agradece su visita. ¡Hasta la próxima!`}];
+const TV_AIRTIPS=[
+ {pt:`Viaje vacinado: confira as vacinas exigidas pelo seu destino.`,en:`Travel vaccinated: check the vaccines required at your destination.`,es:`Viaje vacunado: consulte las vacunas exigidas en su destino.`},
+ {pt:`Viaje com seus documentos e vistos em dia.`,en:`Travel with your documents and visas up to date.`,es:`Viaje con sus documentos y visas al día.`},
+ {pt:`Viajar com seguro-viagem é mais tranquilo. Em muitos países, ele é obrigatório.`,en:`Travel insurance gives you peace of mind. Many countries require it.`,es:`Viajar con seguro de viaje da más tranquilidad. En muchos países es obligatorio.`},
+ {pt:`Chegue com antecedência: 2 horas para voos nacionais e 3 para internacionais.`,en:`Arrive early: 2 hours for domestic flights and 3 for international flights.`,es:`Llegue con antelación: 2 horas para vuelos nacionales y 3 para internacionales.`},
+ {pt:`Fique atento aos painéis de voos e às chamadas de embarque.`,en:`Keep an eye on the flight boards and boarding calls.`,es:`Esté atento a los paneles de vuelos y a las llamadas de embarque.`},
+ {pt:`Na bagagem de mão, líquidos só em frascos de até 100 mililitros.`,en:`In hand luggage, liquids only in containers of up to 100 millilitres.`,es:`En el equipaje de mano, líquidos solo en envases de hasta 100 mililitros.`}];
+let _tvTipI=0,_tvByeI=0;
+function _tvEvKey(ln,R,now){const st=_tvState(ln,R.dir,R.ti,now);if(!st||st.phase==='pre'||st.phase==='done')return null;if(st.p<(R.board||0))return null;const n=ln.stops.length;
+  if(st.phase==='dwell'){
+    if(st.at===0){if(st.left<=14)return'close|0';if(st.left<=100)return'at0b|0';return'at|0';}
+    if(st.at===n-1)return st.left>110?'at|'+st.at:'end2|'+st.at;
+    if(st.left<=14)return'close|'+st.at;return'at|'+st.at;}
+  const o=_tvOff(ln,R.dir),seg=o.arr[st.to]-o.dep[st.from],el=seg-st.left,z=p=>ln.zones?ln.zones[_tvFs(ln,R.dir,p)]:null;
+  if(st.left<=30)return'appr|'+st.to;if(seg>=400&&el>=seg*.62)return'info2|'+st.from;
+  if(seg>=110&&el>=20)return'info|'+st.from;
+  if(z(st.from)==='air'&&z(st.to)==='air'&&el>=16)return'tip|'+st.from;
+  return'dep|'+st.from;}
+function _tvEvMsg(ln,R,now,k){const[type,ix]=k.split('|'),i=+ix,n=ln.stops.length,isM=ln.kind==='metro',dir=R.dir;
+  const raw=p=>ln.stops[_tvFs(ln,dir,p)],zone=p=>ln.zones?ln.zones[_tvFs(ln,dir,p)]:null;
+  const toAirport=isM&&zone(n-1)==='air';
+  if(type==='tip')return Object.assign({sound:'train'},TV_AIRTIPS[_tvTipI++%TV_AIRTIPS.length]);
+  if(type==='end2'){const back=_voxClean(isM?raw(0).replace(/^T\d\s*·\s*/,''):raw(0)),U=isM?['trem','train','tren']:['ônibus','bus','autobús'];
+    return{sound:'train',pt:`Fim da linha. Este ${U[0]} vai inverter o sentido e seguir para ${back}. Se este é o seu destino, desembarque e verifique se não esqueceu nenhum pertence. Para continuar, permaneça a bordo.`,
+      en:`End of the line. This ${U[1]} will now reverse and run to ${back}. If this is your stop, please leave and take all your belongings. To continue, stay on board.`,
+      es:`Fin de la línea. Este ${U[2]} invertirá el sentido y seguirá hacia ${back}. Si este es su destino, descienda y verifique sus pertenencias. Para continuar, permanezca a bordo.`};}
+  const m=_tvEvMsg3(ln,R,now,k);if(!m)return null;
+  if(type==='at'&&isM&&i>0){const T=(raw(i).match(/^T(\d)/)||[])[1];
+    if(T){const acc=_tvAccess(('T'+T)===TRM_INT);
+      m.pt=m.pt.replace(/(Terminal \d, voos [a-z]+\.)/,'$1'+acc.pt);m.en=m.en.replace(/(Terminal \d, [a-z]+ flights\.)/,'$1'+acc.en);m.es=m.es.replace(/(Terminal \d, vuelos [a-z]+\.)/,'$1'+acc.es);
+      if(toAirport&&i<n-1){const b=TV_BYE[_tvByeI++%TV_BYE.length];m.pt+=b.pt;m.en+=b.en;m.es+=b.es;}}}
+  return m;}
+
+// ── fim da linha: o trem inverte o sentido e a viagem continua ──
+function _tvContinue(ln,R,now){const st=_tvState(ln,R.dir,R.ti,now);if(!st)return false;const n=ln.stops.length;
+  if(!(st.phase==='done'||(st.phase==='dwell'&&st.at===n-1)))return false;
+  const od=ln.od||ln.dwell,arr=_tvTrips(ln,R.dir)[R.ti]+_tvOff(ln,R.dir).end;
+  if(!R.nx){const nd=1-R.dir,tr=_tvTrips(ln,nd);let off=0,j=tr.findIndex(t=>t-od>=arr+125);if(j<0){off=86400;j=tr.findIndex(t=>t+off-od>=arr+125);}if(j<0)return false;R.nx={dir:nd,ti:j,off};}
+  const t0n=_tvTrips(ln,R.nx.dir)[R.nx.ti]+R.nx.off;
+  if(st.phase!=='done'&&now<t0n-od)return false;
+  TV.ride={key:ln.key,dir:R.nx.dir,ti:R.nx.ti,board:0,n0:(R.n0!=null?R.n0:now)-R.nx.off,e0:R.e0!=null?R.e0:_simNow(),cont:true};TV.alight=null;TV.lastEv=null;TV.keys={};
+  const stp=document.getElementById('tv-strip');if(stp)stp.innerHTML=_tvStripBuild(ln,null,'🏁');
+  const to=_voxClean(ln.kind==='metro'?ln.stops[R.nx.dir===0?n-1:0].replace(/^T\d\s*·\s*/,''):ln.stops[R.nx.dir===0?n-1:0]),hh=_tvHM(t0n),U=ln.kind==='metro'?['trem','train','tren']:['ônibus','bus','autobús'];
+  const m={pt:`Atenção: este ${U[0]} agora segue para ${to}, com partida às ${hh}. Você pode permanecer a bordo.`,en:`Attention: this ${U[1]} now runs to ${to}, departing at ${hh}. You may stay on board.`,es:`Atención: este ${U[2]} ahora sigue hacia ${to}, con salida a las ${hh}. Puede permanecer a bordo.`};
+  TV.led=m.pt;if(TV.vox)voxSay(['pt','en','es'].map(x=>({k:x,text:m[x]})),{chime:true,chimeKind:ln.kind==='metro'?'train':'bell',ttl:120});
+  return true;}
+
+// ── música de fundo v2: bossa/lounge suave (piano elétrico, baixo e escovinha) ──
+const _BOSSA=[{c:[174.61,220,261.63,329.63],b:87.31},{c:[164.81,196,246.94,293.66],b:82.41},{c:[146.83,174.61,220,261.63],b:73.42},{c:[130.81,196,233.08,293.66],b:98}];
+function _ambEP(c,dest,t,f,vol){const o=c.createOscillator(),o2=c.createOscillator(),g=c.createGain(),g2=c.createGain();o.type='sine';o2.type='sine';o.frequency.value=f;o2.frequency.value=f*2.005;
+  o.connect(g);o2.connect(g2);g.connect(dest);g2.connect(dest);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.012);g.gain.exponentialRampToValueAtTime(.001,t+1.6);
+  g2.gain.setValueAtTime(0,t);g2.gain.linearRampToValueAtTime(vol*.18,t+.008);g2.gain.exponentialRampToValueAtTime(.001,t+.5);o.start(t);o2.start(t);o.stop(t+1.7);o2.stop(t+.6);}
+function _ambMusicStart(){const c=_ctx();if(!c||AMB.m)return;const g=c.createGain();g.gain.value=0;const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3200;
+  const dl=c.createDelay();dl.delayTime.value=.34;const fb=c.createGain();fb.gain.value=.22;const wet=c.createGain();wet.gain.value=.35;
+  g.connect(lp);g.connect(dl);dl.connect(fb);fb.connect(dl);dl.connect(wet);wet.connect(lp);lp.connect(c.destination);
+  const m={g,step:0,next:c.currentTime+.15};AMB.m=m;const E=60/86/2;
+  m.timer=setInterval(()=>{if(AMB.m!==m)return;while(m.next<c.currentTime+.7){const t=m.next,bar=Math.floor(m.step/8)%_BOSSA.length,pos=m.step%8,ch=_BOSSA[bar];
+      if([0,3,6].includes(pos))ch.c.forEach((f,i)=>_ambEP(c,g,t+i*.012,f,pos===0?.16:.11));                                   // acordes sincopados
+      if(pos===0||pos===5){const o=c.createOscillator(),e=c.createGain(),f2=c.createBiquadFilter();o.type='triangle';o.frequency.value=pos===0?ch.b:ch.b*1.5;f2.type='lowpass';f2.frequency.value=300;
+        o.connect(f2);f2.connect(e);e.connect(g);e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(.5,t+.02);e.gain.exponentialRampToValueAtTime(.001,t+.9);o.start(t);o.stop(t+1);}   // baixo
+      _sfxNoise(c,g,t,.07,7000,5000,pos%2?.05:.025,'bandpass');                                                                 // escovinha
+      if((pos===2||pos===7)&&Math.random()<.35){const nf=ch.c[1+Math.floor(Math.random()*3)]*2;_ambEP(c,g,t,nf,.09);}           // notinhas soltas
+      m.next+=E;m.step++;}},120);}
+
 </script>
-<div class="wrap" id="tab-transit" style="display:none"><div class="tv-modes" id="tv-modes"></div><div id="tv-body"></div></div>
+<div class="wrap" id="tab-transit" style="display:none"><div class="tv-modes" id="tv-modes"></div><div class="tv-speed gv-row" id="tv-speed" style="margin-bottom:12px"></div><div id="tv-body"></div></div>
 </body>
 </html>
