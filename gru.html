@@ -753,6 +753,59 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
 .net-tgl{display:flex;gap:6px;margin-bottom:8px}.net-tgl button{flex:1;border:1px solid #2b3d52;background:#0f1a26;color:#b0bec5;border-radius:10px;padding:7px;font-size:.85rem;cursor:pointer}.net-tgl button.on{background:#e0e0e0;color:#0b1118;font-weight:700}
 .leaflet-tooltip.net-gl{background:rgba(7,11,16,.82);border:none;box-shadow:none;color:#cfd8dc;font-size:11px;padding:1px 5px}.leaflet-tooltip.net-gl:before{display:none}.leaflet-tooltip.net-gl.x{color:#fff;font-weight:700;font-size:12px}
 .net-wrap .net-btns{z-index:500}
+.brd{background:#05080c}.brd .tv-card-t{color:#ffd740}
+.brd-h,.brd-r{display:grid;grid-template-columns:62px 52px 1fr 40px 118px;gap:6px;align-items:center;font-size:.82rem;padding:5px 8px}
+.brd-h{color:#78909c;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid #1d2733}
+.brd-r{border-bottom:1px dashed #1d2733;font-family:'Barlow Condensed',system-ui;font-size:.95rem;color:#ffe082}
+.brd-r .b-t{font-family:monospace;color:#ffd740}.brd-r .b-t s{display:block;color:#ef5350;font-size:.7rem}
+.b-ln{font-style:normal;color:#fff;border-radius:6px;padding:1px 6px;font-weight:700;font-size:.8rem}
+.b-d{color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.b-p{text-align:center;font-weight:700;color:#fff;background:#1d2733;border-radius:6px}
+.b-go{color:#69f0ae;font-size:.85em;line-height:1.1;animation:bgo 1s steps(2) infinite}.b-late{color:#ff5252}.b-near{color:#40c4ff}@keyframes bgo{50%{opacity:.35}}
+@media(max-width:520px){.brd-h,.brd-r{grid-template-columns:48px 44px 1fr 30px 92px;font-size:.74rem}}
+.pane-ban{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:linear-gradient(90deg,#ff525233,transparent);border-left:4px solid #ff5252;padding:8px 10px;margin:6px 0;border-radius:8px;font-size:.85rem}
+.pane-ban span{display:flex;gap:4px;align-items:center;color:#ffcdd2}.pane-ban i{font-style:normal;color:#fff;border-radius:5px;padding:0 5px;font-size:.75rem;font-weight:700}
+.fare .fr-r{display:flex;gap:8px;align-items:center;padding:6px 8px;border-bottom:1px solid #1d2733;font-size:.88rem}.fare .fr-r span{flex:1}.fare .fr-r em{color:#90a4ae;font-style:normal;font-size:.8rem}.fare .fr-r b{color:#69f0ae;font-family:monospace}
+.cls-t{display:flex;gap:6px;padding:6px 8px}.cls-t button{flex:1;border:1px solid #2b3d52;background:#0f1a26;color:#cfd8dc;border-radius:10px;padding:7px;cursor:pointer}.cls-t button.on{background:#ffd740;color:#111;font-weight:700}
+.cls-i{font-size:.8rem;color:#90a4ae;padding:2px 8px 8px}
+.cls-badge{background:#0f1a26;border:1px solid #2b3d52;border-radius:12px;padding:8px 12px;margin:8px 0;font-size:.88rem}.cls-badge button{margin-left:8px;border:1px solid #ffd740;background:transparent;color:#ffd740;border-radius:8px;padding:2px 8px;cursor:pointer}
+.sl-menu .mn-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:8px 26px;margin-top:10px}.mn-r{display:flex;gap:10px;align-items:baseline;font-size:1.15rem;border-bottom:1px dotted #2b3d52;padding-bottom:4px}.mn-r em{white-space:nowrap}.mn-r b{flex:1;font-weight:600}.mn-r em{font-style:normal;color:#ffd740;font-family:monospace}
+.mn-f{margin-top:12px;color:#b0bec5;font-size:1rem}
+.ad-city{background:linear-gradient(135deg,var(--ac),#0b1118 75%)!important}
+.net-pbtn{display:flex;gap:6px;margin:6px 0}.net-pbtn button{border:1px solid #ff5252;background:transparent;color:#ff8a80;border-radius:10px;padding:5px 10px;cursor:pointer;font-size:.82rem}.net-pbtn button.ok{border-color:#69f0ae;color:#69f0ae}
+.fly-pick{display:grid;grid-template-columns:52px auto 1fr auto;gap:8px;align-items:center;padding:8px 10px;border-top:1px solid #1d2733;font-size:.9rem}
+.fly-pick b{font-family:monospace;color:#ffd740}.fly-pick i{font-style:normal;color:#fff;border-radius:6px;padding:2px 6px;font-size:.72rem;font-weight:700}
+.fly-pick span{display:flex;flex-direction:column}.fly-pick small{color:#78909c;font-size:.72rem}
+.fly-b{border:1px solid #2b3d52;background:#13202e;color:#e0e0e0;border-radius:10px;padding:6px 12px;cursor:pointer;font-size:.85rem;white-space:nowrap}.fly-b:hover{border-color:#90caf9}.fly-b.sm{padding:4px 8px;font-size:.8rem}
+.fly-scr{background:#05080d;border:1px solid #1d2733;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-height:min(86vh,820px)}
+.fly-scr:fullscreen{border-radius:0;min-height:100vh}
+.fly-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 12px;background:linear-gradient(90deg,var(--ac),#05080d 80%)}
+.fly-al{font-weight:800;letter-spacing:.04em;color:#fff}.fly-rt{color:#fff;flex:1;min-width:150px}.fly-rt small{display:block;color:#cfd8dc;font-size:.72rem}
+.fly-belt{border:1px solid #455a64;color:#455a64;border-radius:8px;padding:3px 8px;font-size:.78rem;font-weight:700}.fly-belt.on{color:#111;background:#ffb300;border-color:#ffb300;box-shadow:0 0 12px #ffb30088}
+.fly-ph{color:#90caf9;font-size:.82rem;font-weight:700}
+.fly-sub{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px 12px;font-size:.8rem;color:#90a4ae;border-bottom:1px solid #1d2733}.fly-sub>span:first-child{flex:1;min-width:180px}
+.fly-spd{display:flex;gap:3px}.fly-spd button{border:1px solid #2b3d52;background:transparent;color:#90a4ae;border-radius:6px;padding:2px 6px;cursor:pointer;font-size:.75rem}.fly-spd button.on{background:#90caf9;color:#05080d}
+.fly-tabs{display:flex;gap:4px;overflow-x:auto;padding:6px 8px;border-bottom:1px solid #1d2733}.fly-tabs button{flex:none;border:none;background:#0f1822;color:#b0bec5;border-radius:10px;padding:8px 11px;cursor:pointer;font-size:.85rem}.fly-tabs button.on{background:#e3f2fd;color:#05080d;font-weight:700}
+.fly-body{flex:1;position:relative;padding:10px;min-height:340px}
+#fly-map{position:absolute;inset:0;background:#0b1220}
+.fly-mapov{position:absolute;left:10px;bottom:10px;z-index:500;display:flex;flex-wrap:wrap;gap:6px;max-width:calc(100% - 20px)}.fly-mapov div{background:rgba(5,8,13,.85);border:1px solid #1d2733;border-radius:10px;padding:5px 9px}
+.fly-mapov span,.fly-stats span{display:block;color:#78909c;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em}.fly-mapov b{color:#fff;font-size:.95rem}
+.fly-pl div{font-size:26px;color:#ffd740;text-shadow:0 0 6px #000;transition:transform .5s}
+.fly-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.fly-stats div{background:#0f1822;border-radius:14px;padding:12px}.fly-stats b{display:block;font-size:1.5rem;color:#fff;font-family:'Barlow Condensed',system-ui}.fly-stats em{color:#78909c;font-size:.75rem;font-style:normal}
+.fly-prog{position:relative;height:22px;background:#0f1822;border-top:1px solid #1d2733}.fly-prog b{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#1565c0,#90caf9);transition:width .5s}.fly-prog span{position:relative;font-size:.75rem;color:#fff;padding:0 10px;line-height:22px}
+.fly-cap{padding:8px 12px;font-size:.82rem;color:#cfd8dc;background:#080c12;min-height:2.4em}
+.fly-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.fly-mv{border:none;border-radius:14px;padding:14px 10px;background:linear-gradient(160deg,var(--mc),#0b1118);color:#fff;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;min-height:150px}.fly-mv span{font-size:2.4rem}.fly-mv em{font-style:normal;font-size:.72rem;color:#cfd8dc}
+.fly-player{display:flex;flex-direction:column;align-items:center;gap:10px}.fp-scene{position:relative;width:100%;height:220px;border-radius:14px;overflow:hidden;background:radial-gradient(circle at 30% 40%,var(--mc),#05080d 75%);display:flex;align-items:center;justify-content:center}
+.fp-scene span{font-size:5rem;animation:fpb 3s ease-in-out infinite}.fp-scene i{position:absolute;width:6px;height:6px;border-radius:50%;background:#fff8;animation:fpd 4s linear infinite}.fp-scene i:nth-child(2){left:20%;top:30%}.fp-scene i:nth-child(3){left:70%;top:60%;animation-delay:1.3s}.fp-scene i:nth-child(4){left:45%;top:20%;animation-delay:2.4s}
+@keyframes fpb{50%{transform:scale(1.12) rotate(-4deg)}}@keyframes fpd{from{transform:translateX(-40px);opacity:0}50%{opacity:1}to{transform:translateX(60px);opacity:0}}
+.fp-t{font-size:1.2rem;font-weight:700}.fp-bar{width:100%;height:6px;background:#1d2733;border-radius:3px;overflow:hidden}.fp-bar b{display:block;height:100%;background:#ff5252}.fp-tm{color:#90a4ae;font-size:.8rem}
+.fly-list{display:flex;flex-direction:column}.fly-row{display:flex;gap:10px;align-items:center;padding:9px 6px;border-bottom:1px solid #1d2733;font-size:.9rem}.fly-row span{flex:1}.fly-row em{font-style:normal;color:#ffd740;font-family:monospace;font-size:.8rem}
+.fly-cart{border:none;background:#0f1822;border-radius:12px;margin-top:8px}
+.fly-h{font-weight:700;color:#ffd740;margin-bottom:6px}.fly-note{color:#90a4ae;font-size:.8rem;margin:8px 0}
+.fly-dest .fd-h{font-size:1.6rem;font-weight:800}.fly-dest .fd-h small{display:block;font-size:.9rem;color:#90caf9;font-weight:600}
+.fd-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:10px 0}.fd-g div{background:#0f1822;border-radius:12px;padding:10px}.fd-g span{display:block;color:#78909c;font-size:.68rem;text-transform:uppercase}.fd-g b{display:block;font-size:1.4rem}.fd-g em{color:#90a4ae;font-size:.72rem;font-style:normal}
+.fly-seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:10px}.fly-seg div{background:#0f1822;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:3px}.fly-seg span{font-size:1.8rem}.fly-seg em{font-style:normal;color:#90a4ae;font-size:.78rem}
+.fly-end{text-align:center;padding:30px 10px}.fe-ic{font-size:4rem}.fe-t{font-size:1.5rem;font-weight:800;margin:8px 0}
 </style>
 </head>
 <body><div class="imm-toast" id="imm-toast"></div>
@@ -791,6 +844,7 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
   <button class="vbtn" onclick="showV('gate')">🚪 Portão</button>
   <button class="vbtn" onclick="showV('mgr')">⚙ Status</button>
   <button class="vbtn" onclick="showV('transit')">🚇 Transporte</button>
+  <button class="vbtn" onclick="showV('bordo')">✈ A Bordo</button>
   <button class="vbtn" onclick="showV('patio')">⊞ Pátio</button>
   <button class="vbtn" onclick="showV('stats')">📊 Estatísticas</button>
   <button class="vbtn" onclick="showV('meteo')">🌦️ Meteorologia</button>
@@ -1497,11 +1551,11 @@ function rInfo(){
 }
 
 // ── VIEW SWITCHER ─────────────────────────────────────────────────────────────
-function showV(name){
-  ["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","patio","stats","meteo","atc","emg","imm","priv","info"].forEach(t=>
+function showV(name){if(name==='bordo')setTimeout(flyRender,0);
+  ["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","bordo","patio","stats","meteo","atc","emg","imm","priv","info"].forEach(t=>
     document.getElementById("tab-"+t).style.display=t===name?"block":"none");
   document.querySelectorAll(".vbtn").forEach((b,i)=>
-    b.classList.toggle("active",["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","patio","stats","meteo","atc","emg","imm","priv","info"][i]===name));
+    b.classList.toggle("active",["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","bordo","patio","stats","meteo","atc","emg","imm","priv","info"][i]===name));
   if(name==="transit"){buildTransitCards();}
   if(name==="patio"){buildPatio();}
   if(name==="stats"){buildStats();}
@@ -3131,7 +3185,7 @@ function _tvOff(ln,dir){const ck=ln.key+'|o'+dir;if(_tvC[ck])return _tvC[ck];con
 function _tvTrips(ln,dir){const ck=ln.key+'|t'+dir;if(_tvC[ck])return _tvC[ck];const out=[];const st0=Math.min(ln.start,180-Math.ceil(_tvOff(ln,dir).total/60)-10);let m=st0+(dir?Math.round(ln.hw(st0)/2):0);
   while(m<=ln.end){out.push(m*60);m+=ln.hw(m);}return _tvC[ck]=out;}
 function _tvTripId(ln,dir,ti){return ln.kind==='metro'?`${ln.code} ${1001+ti*2+dir}`:`${ln.code}·${dir?'V':'I'}${String(ti+1).padStart(2,'0')}`;}
-function _tvState(ln,dir,ti,now){const t0=_tvTrips(ln,dir)[ti];if(t0==null)return null;const o=_tvOff(ln,dir),n=ln.stops.length,e=now-t0;
+function _tvStateRaw(ln,dir,ti,now){const t0=_tvTrips(ln,dir)[ti];if(t0==null)return null;const o=_tvOff(ln,dir),n=ln.stops.length,e=now-t0;
   if(e<0){if(e>=-(ln.od||ln.dwell))return{phase:'dwell',at:0,p:0,left:-e};return{phase:'pre',p:0};}
   if(e>=o.total)return{phase:'done',p:n-1};
   for(let k=1;k<n;k++){
@@ -3139,7 +3193,7 @@ function _tvState(ln,dir,ti,now){const t0=_tvTrips(ln,dir)[ti];if(t0==null)retur
     if(e<o.dep[k])return{phase:'dwell',at:k,p:k,left:o.dep[k]-e};}
   return{phase:'done',p:n-1};}
 function _tvActive(ln,now){const out=[];[0,1].forEach(dir=>{const o=_tvOff(ln,dir);_tvTrips(ln,dir).forEach((t0,ti)=>{if(now>=t0-(ln.od||ln.dwell)&&now<t0+o.total)out.push({dir,ti,st:_tvState(ln,dir,ti,now)});});});return out;}
-function _tvNextAt(ln,s,dir,now,count){const n=ln.stops.length,p=_tvFs(ln,dir,s);if(p===n-1)return[];const o=_tvOff(ln,dir),trips=_tvTrips(ln,dir),out=[];
+function _tvNextAtRaw(ln,s,dir,now,count){const n=ln.stops.length,p=_tvFs(ln,dir,s);if(p===n-1)return[];const o=_tvOff(ln,dir),trips=_tvTrips(ln,dir),out=[];
   for(let ti=0;ti<trips.length&&out.length<count;ti++){const arr=trips[ti]+(p===0?-(ln.od||ln.dwell):o.arr[p]),dep=trips[ti]+o.dep[p];if(dep<now)continue;
     out.push({ti,dir,arr,dep,status:now>=arr?'plat':(arr-now<=90?'near':'way')});}
   return out;}
@@ -3880,10 +3934,7 @@ function _tvEvMsg4(ln,R,now,k){const[type,ix]=k.split('|'),i=+ix,n=ln.stops.leng
       if(xf.length){const j=(a,and)=>a.length>1?a.slice(0,-1).join(', ')+' '+and+' '+a[a.length-1]:a[0];acc.pt+=` Baldeação com a ${j(xf.map(o=>o.short),'e')}.`;acc.en+=` Transfer to the ${j(xf.map(o=>o.en||o.short),'and')}.`;acc.es+=` Conexión con la ${j(xf.map(o=>o.es||o.short),'y')}.`;}
       m.pt=m.pt.replace(/(Terminal \d, voos [a-z ]+\.)/,'$1'+acc.pt);m.en=m.en.replace(/(Terminal \d, [a-z ]+ flights\.)/,'$1'+acc.en);m.es=m.es.replace(/(Terminal \d, vuelos [a-z ]+\.)/,'$1'+acc.es);
       if(toAirport&&i<n-1){const b=TV_BYE[_tvByeI++%TV_BYE.length];m.pt+=b.pt;m.en+=b.en;m.es+=b.es;}}
-    else{const xf=TV_METROS.filter(o=>o!==ln&&o.stops.includes(raw(i)));
-      if(xf.length){const j=(a,and)=>a.length>1?a.slice(0,-1).join(', ')+' '+and+' '+a[a.length-1]:a[0],pl=xf.length>1;
-        const add={pt:` Baldeação com ${pl?'as linhas':'a linha'} ${j(xf.map(o=>o.short.replace('Linha ','')),'e')}.`,en:` Transfer to the ${j(xf.map(o=>o.en||o.short),'and')}.`,es:` Conexión con ${pl?'las líneas':'la línea'} ${j(xf.map(o=>(o.es||o.short).replace('Línea ','')),'y')}.`};
-        const cut=k=>{const r=k==='pt'?/ Este trem segue/:k==='en'?/ This train /:/ Este tren sigue/;const x=m[k].search(r);m[k]=x>0?m[k].slice(0,x)+add[k]+m[k].slice(x):m[k]+add[k];};['pt','en','es'].forEach(cut);}}}
+    }
   return m;}
 
 // ── fim da linha: o trem inverte o sentido e a viagem continua ──
@@ -3987,7 +4038,8 @@ function trainIncidentClear(){if(!TV.incident)return;TV.incident=null;TV.keys={}
 setInterval(()=>{if(TV.incident&&_tvNow()>TV.incident.until)trainIncidentClear();},1000);
 function buildEmergencyControls(){_buildEmg0();const el=document.getElementById('emg-controls');if(!el)return;
   el.innerHTML+=`<div class="emg-sec">🚆 VLT Tietê${_tvInc()?` · <span style="color:#ffd740">ativo: ${TV_INC.find(x=>x.id===TV.incident.id).title}</span> <button class="gv-chip" onclick="trainIncidentClear();buildEmergencyControls()">✓ Normalizar</button>`:''}</div>`
-    +TV_INC.map(x=>`<button class="emg-btn" style="border-color:${x.color}" onclick="trainIncident('${x.id}');buildEmergencyControls()"><span>${x.icon}</span>${x.title}</button>`).join('');}
+    +TV_INC.map(x=>`<button class="emg-btn" style="border-color:${x.color}" onclick="trainIncident('${x.id}');buildEmergencyControls()"><span>${x.icon}</span>${x.title}</button>`).join('')
+    +(NET_PANE?`<button class="emg-btn" style="border-color:#69f0ae" onclick="paneClear()"><span>✅</span>Normalizar a rede (pane ativa)</button>`:`<button class="emg-btn" style="border-color:#ff1744" onclick="paneStart()"><span>🔧</span>Pane na via (atrasa as linhas que dividem o trilho)</button>`);}
 function _tvStripTick(ln,now,focus){_tvStripTick0(ln,now,focus);const x=_tvInc();if(!x||ln.kind!=='metro')return;
   if(x.st!=null){const el=document.getElementById('tvsub'+x.st);if(el)el.textContent='⛔ estação fechada';}
   else{const el=document.getElementById('tvsub0');if(el&&!/⚠/.test(el.textContent))el.textContent='⚠ '+TV_INC.find(i=>i.id===x.id).title.toLowerCase()+' · '+el.textContent;}}
@@ -4120,10 +4172,10 @@ function _sMap(x){if(!x.riding||!x.st)return null;const{ln,R,st,n,c}=x,nm=p=>_tv
   for(let p=0;p<n;p++){const ps=p<pos-.01;s+=`<circle cx="${X(p)}" cy="${Y}" r="${p===0||p===n-1?14:11}" fill="${ps?c:'#000'}" stroke="${c}" stroke-width="4"/><text x="${X(p)}" y="${p%2?Y+46:Y-28}" text-anchor="middle" fill="${ps?'#556':'#e8eaf6'}" font-size="19" font-weight="700" font-family="Barlow Condensed">${_tvEsc(nm(p))}</text>`;}
   s+=`<g transform="translate(${X(pos)},${Y})"><rect x="-22" y="-14" width="44" height="28" rx="9" fill="#fff" stroke="${c}" stroke-width="3"/><text y="7" text-anchor="middle" font-size="17">${x.isM?'🚆':'🚌'}</text></g></svg>`;
   return`<div class="sl sl-map"><div class="sl-k">🗺 Seu trajeto<small>Your route · Su trayecto</small></div>${s}</div>`;}
-function _tvmPlaylist(x){const L=[];const add=(id,dur,live)=>L.push({id,dur,live});
+function _tvmPlaylist0(x){const L=[];const add=(id,dur,live)=>L.push({id,dur,live});
   const base=[['geo',15],['minas',14],['ad0',9],['curio',12],['wx',9],['geo',15],['fl',10],['ad1',9],['tip',10],['takeoff',12],['ad2',9],['map',10]];
   base.forEach((b,i)=>{if(i%3===0)add(x.riding?'next':'plat',8,true);add(b[0],b[1],b[0]==='fl'||b[0]==='map'||b[0]==='geo');});return L;}
-function _tvmSlideHTML(id,x){switch(id){case'next':return _sNext(x)||_sPlat(x);case'plat':return _sPlat(x);case'minas':return _vidMinas(x.c);case'takeoff':return _vidTakeoff();
+function _tvmSlideHTML0(id,x){switch(id){case'next':return _sNext(x)||_sPlat(x);case'plat':return _sPlat(x);case'minas':return _vidMinas(x.c);case'takeoff':return _vidTakeoff();
   case'ad0':return TVM_ADS[0]();case'ad1':return TVM_ADS[1]();case'ad2':return TVM_ADS[2]();case'curio':return _sCurio(x);case'wx':return _sWeather();case'fl':return _sFlights();case'tip':return _sTip();case'map':return _sMap(x)||_sWeather();case'geo':return`<div class="sl sl-geo"><div class="geo-cap">🗺 Mapa ao vivo<small>Live map · Mapa en vivo</small></div>${x.riding?`<div class="geo-you">○ = você · you · usted</div>`:''}</div>`;}return'';}
 // ── estrutura ──
 function tvModeOpen(){let old=document.getElementById('tvm');if(old)old.remove();const ov=document.createElement('div');ov.id='tvm';ov.className='tvm tvm2 show';document.body.appendChild(ov);
@@ -4210,7 +4262,7 @@ function _tvEvKey(ln,R,now){const k=_tvEvKey5(ln,R,now);if(!k)return k;const st=
   if(st&&st.phase==='run'){const o=_tvOff(ln,R.dir),seg=o.arr[st.to]-o.dep[st.from],el=seg-st.left;if(seg>=900&&el>=240&&st.left>150)return'infoL'+Math.floor((el-240)/420)+'|'+st.from;}
   return k;}
 let _tvLI=0;
-function _tvEvMsg(ln,R,now,k){const[type,ix]=k.split('|');
+function _tvEvMsgL(ln,R,now,k){const[type,ix]=k.split('|');
   if(/^infoL/.test(type)){const i=+ix,n=ln.stops.length,isM=ln.kind==='metro',dir=R.dir,sI=p=>_tvFs(ln,dir,p),st=_tvState(ln,dir,R.ti,now);
     const nx=_voxClean(ln.stops[sI(i+1)].replace(/^T\d[^·]*·\s*/,'')),mn=st?Math.max(1,Math.round(st.left/60)):0,at=_tvHM(now+(st?st.left:0)),j=_tvLI++%5;
     if(j===0)return{sound:isM?'train':'bell',pt:`Próxima parada: ${nx}, em cerca de ${_tvDurT(mn).pt}. Chegada prevista às ${at}.`,en:`Next stop: ${nx}, in about ${_tvDurT(mn).en}. Expected arrival at ${at}.`,es:`Próxima parada: ${nx}, en unos ${_tvDurT(mn).es}. Llegada prevista a las ${at}.`};
@@ -4219,6 +4271,377 @@ function _tvEvMsg(ln,R,now,k){const[type,ix]=k.split('|');
     if(j===3){const a=isM&&ln.zones[sI(n-1)]==='air'?_tvArrivalNews():null;if(a)return Object.assign({sound:'train'},a);return Object.assign({sound:isM?'train':'bell'},TV_MG[_tvMgI++%TV_MG.length]);}
     return Object.assign({sound:isM?'train':'bell'},TV_COURT[_tvCoI++%TV_COURT.length]);}
   return _tvEvMsg5(ln,R,now,k);}
+
+// ════════ v8 · painel de partidas, conexões a bordo, classes e tarifas, clima por cidade, panes na rede, TV por cidade ════════
+// ── cidades ──
+const CITY_INFO={'São José do Rio Preto':[6,'int'],'Ribeirão Preto':[4,'int'],'São Carlos':[1.5,'int'],'Limeira':[3,'int'],'Campinas':[2,'int'],'Jundiaí':[.5,'int'],
+ 'Santos':[4,'mar'],'Praia Grande':[4,'mar'],'Cubatão':[4,'mar'],'Caraguatatuba':[3,'mar'],'Ubatuba':[2.5,'mar'],'São Sebastião':[3,'mar'],
+ 'Paraibuna':[-1.5,'serra'],'Santa Isabel':[-1,'serra'],'Ribeirão Pires':[-1.5,'serra'],'São José dos Campos':[.5,'vale'],'Jacareí':[.5,'vale'],
+ 'Mogi das Cruzes':[-1,'sp'],'Suzano':[-1,'sp'],'Arujá':[-.5,'sp'],'Itaquaquecetuba':[0,'sp'],'Guarulhos':[0,'sp'],'São Paulo':[0,'sp'],'Osasco':[0,'sp'],
+ 'Diadema':[-.5,'sp'],'São Bernardo do Campo':[-1,'sp'],'Santo André':[-.5,'sp'],'Mauá':[-.5,'sp']};
+function _cityOf(nm){nm=String(nm);if(/^T\d|Aeroporto GRU|Guarulhos/.test(nm))return'Guarulhos';if(/Encontros do Tietê/.test(nm))return'Itaquaquecetuba';if(/Viracopos/.test(nm))return'Campinas';
+  if(/Aeroporto Internacional de São José dos Campos/.test(nm))return'São José dos Campos';
+  for(const c of Object.keys(CITY_INFO))if(nm.includes(c))return c;return'São Paulo';}
+const _WXK={sp:[['⛅','Parcialmente nublado','partly cloudy','parcialmente nublado'],['🌫','Garoa fina','light drizzle','llovizna'],['☁️','Nublado','cloudy','nublado'],['☀️','Ensolarado','sunny','soleado']],
+ mar:[['☀️','Ensolarado','sunny','soleado'],['⛅','Abafado, com sol entre nuvens','muggy with sunny spells','bochornoso, con sol entre nubes'],['🌧','Pancadas de chuva','showers','chubascos'],['☀️','Céu limpo','clear skies','cielo despejado']],
+ int:[['☀️','Ensolarado','sunny','soleado'],['☀️','Céu limpo','clear skies','cielo despejado'],['⛅','Poucas nuvens','a few clouds','pocas nubes'],['⛈','Pancadas de chuva à tarde','afternoon thunderstorms','tormentas por la tarde']],
+ serra:[['🌫','Neblina','fog','niebla'],['⛅','Parcialmente nublado','partly cloudy','parcialmente nublado'],['🌧','Chuva fraca','light rain','lluvia débil'],['☁️','Nublado','cloudy','nublado']],
+ vale:[['⛅','Parcialmente nublado','partly cloudy','parcialmente nublado'],['☀️','Ensolarado','sunny','soleado'],['☁️','Nublado','cloudy','nublado'],['🌧','Pancadas isoladas','isolated showers','chubascos aislados']]};
+function _hashS(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function _cityWx(city){const ci=CITY_INFO[city]||[0,'sp'];let base=24;try{base=parseFloat(_metarData().temp)||24;}catch(e){}
+  const d=new Date(_simNow()),hr=d.getHours()+d.getMinutes()/60,diurnal=4.5*Math.sin((hr-9)/24*2*Math.PI),k=_WXK[ci[1]],w=k[_hashS(city+d.toDateString()+Math.floor(hr/4))%k.length];
+  return{city,t:Math.round(base*0.4+14+ci[0]+diurnal+(_hashS(city)%3-1)),ic:w[0],pt:w[1],en:w[2],es:w[3]};}
+function _wxSay(city){const w=_cityWx(city);return{pt:` Em ${city}, faz ${w.t} graus, ${w.pt.toLowerCase()}.`,en:` In ${city} it is ${w.t} degrees, ${w.en}.`,es:` En ${city} hace ${w.t} grados, ${w.es}.`};}
+// ── plataformas e panes ──
+function _netLinesSet(L){return L.kind==='bus'?TV_BUS:TV_METROS;}
+function _tvPlat(nm,L,dir){const ls=_netLinesSet(L).filter(o=>o.stops.includes(nm)),k=ls.indexOf(L);return Math.max(0,k)*2+dir+1;}
+let NET_PANE=null;
+function _paneDelay(L){const P=NET_PANE;if(!P||!L||!P.lines.includes(L.key))return 0;const el=(_simNow()-P.t0)/1000,b=P.D*1.25;return el<0?0:el<b?P.D*el/b:Math.max(0,P.D-(el-b)*.5);}
+function _tvState(ln,dir,ti,now){return _tvStateRaw(ln,dir,ti,now-_paneDelay(ln));}
+function _tvNextAt(ln,s,dir,now,count){const d=_paneDelay(ln);return _tvNextAtRaw(ln,s,dir,now-d,count).map(r=>{r.arr+=d;r.dep+=d;r.dly=d;return r;});}
+function _paneShared(){const seen={};TV_METROS.forEach(L=>{for(let i=0;i<L.stops.length-1;i++){const a=L.stops[i],b=L.stops[i+1],k=a<b?a+'|'+b:b+'|'+a;(seen[k]=seen[k]||{a,b,ls:[]}).ls.push(L.key);}});
+  return Object.values(seen).filter(s=>new Set(s.ls).size>1);}
+function _paneNames(P){return P.lines.map(k=>TV_METROS.find(L=>L.key===k)).filter(Boolean);}
+function paneStart(){const sh=_paneShared(),s=sh[Math.floor(Math.random()*sh.length)],D=300+Math.round(Math.random()*420);
+  NET_PANE={a:s.a,b:s.b,lines:[...new Set(s.ls)],t0:_simNow(),D,cause:['um trem com falha mecânica','um problema na sinalização','uma falha na rede elétrica','um objeto na via'][Math.floor(Math.random()*4)]};
+  const ls=_paneNames(NET_PANE),A=_voxClean(s.a.replace(/^T\d[^·]*·\s*/,'')),B=_voxClean(s.b.replace(/^T\d[^·]*·\s*/,'')),mn=Math.round(D/60),j=(a,and)=>a.length>1?a.slice(0,-1).join(', ')+' '+and+' '+a[a.length-1]:a[0];
+  const m={pt:`Atenção: devido a ${NET_PANE.cause} entre ${A} e ${B}, ${ls.length>1?'as linhas':'a linha'} ${j(ls.map(L=>L.short.replace('Linha ','')),'e')} circulam com velocidade reduzida. Previsão de atraso de até ${mn} minutos. Pedimos desculpas pelo transtorno.`,
+    en:`Attention: due to ${({'um trem com falha mecânica':'a train breakdown','um problema na sinalização':'a signalling problem','uma falha na rede elétrica':'a power failure','um objeto na via':'an object on the track'})[NET_PANE.cause]} between ${A} and ${B}, the ${j(ls.map(L=>L.en||L.short),'and')} ${ls.length>1?'are':'is'} running at reduced speed. Expect delays of up to ${mn} minutes. We apologise for the inconvenience.`,
+    es:`Atención: debido a ${({'um trem com falha mecânica':'una avería en un tren','um problema na sinalização':'un problema de señalización','uma falha na rede elétrica':'una falla eléctrica','um objeto na via':'un objeto en la vía'})[NET_PANE.cause]} entre ${A} y ${B}, ${ls.length>1?'las líneas':'la línea'} ${j(ls.map(L=>(L.es||L.short).replace('Línea ','')),'y')} circulan a velocidad reducida. Se prevén atrasos de hasta ${mn} minutos. Disculpe las molestias.`};
+  NET_PANE.msg=m;TV.led=m.pt;TV.ledMsg=m;TV.ledKey='inc';TV.ledAt=Date.now();voxSay(['pt','en','es'].map(k=>({k,text:m[k]})),{chime:true,chimeKind:'airport',interrupt:true});_v8Refresh();}
+function paneClear(silent){if(!NET_PANE)return;NET_PANE=null;if(!silent){const m={pt:'Informamos que a circulação na rede está normalizada. Obrigado pela compreensão.',en:'Service across the network is now back to normal. Thank you for your patience.',es:'Informamos que la circulación en la red se ha normalizado. Gracias por su comprensión.'};
+  TV.led=m.pt;TV.ledMsg=m;TV.ledKey='info';TV.ledAt=Date.now();voxSay(['pt','en','es'].map(k=>({k,text:m[k]})),{chime:true,chimeKind:'airport'});}_v8Refresh();}
+setInterval(()=>{if(NET_PANE&&(_simNow()-NET_PANE.t0)/1000>NET_PANE.D*3.3)paneClear();},1000);
+function _paneBanner(){if(!NET_PANE)return'';const ls=_paneNames(NET_PANE),d=Math.round(Math.max(...ls.map(_paneDelay))/60);
+  return`<div class="pane-ban">⚠️ <b>Pane entre ${_tvEsc(NET_PANE.a.replace(/^T\d[^·]*·\s*/,''))} e ${_tvEsc(NET_PANE.b.replace(/^T\d[^·]*·\s*/,''))}</b><span>${ls.map(L=>`<i style="background:${L.color}">${L.code}</i>`).join('')} atraso atual ~${d} min</span></div>`;}
+function _v8Refresh(){try{if(TV.view==='net'){_tvShell();}else{_v8Inject();}}catch(e){}try{buildEmergencyControls();}catch(e){}}
+// ── conexões e clima a bordo ──
+function _tvAtExtras(ln,R,now,i){const n=ln.stops.length,nm=ln.stops[_tvFs(ln,R.dir,i)],isM=ln.kind==='metro',air=isM&&/^T\d/.test(nm),out={pt:'',en:'',es:''};
+  const prev=i>0?ln.stops[_tvFs(ln,R.dir,i-1)]:null,c=_cityOf(nm);if(!air&&c!==(prev&&_cityOf(prev))){const w=_wxSay(c);out.pt+=w.pt;out.en+=w.en;out.es+=w.es;}
+  if(air)return out;
+  const set=_netLinesSet(ln),xs=set.filter(o=>o!==ln&&o.stops.includes(nm)).slice(0,4),parts={pt:[],en:[],es:[]};
+  xs.forEach(o=>{const s=o.stops.indexOf(nm),N=o.stops.length;let d=0;if(_tvFs(o,0,s)===N-1)d=1;const x=_tvNextAt(o,s,d,now+60,1)[0];if(!x)return;
+    const mn=Math.max(1,Math.ceil((x.dep-now)/60)),to=_voxClean(_tvmNm(o.stops[d===0?N-1:0])),pl=_tvPlat(nm,o,d),dl=Math.round((x.dly||0)/60),nmL=isM?o.short.replace('Linha ',''):o.code;
+    parts.pt.push(`${isM?'Linha '+nmL:'linha '+nmL}, sentido ${to}, em ${mn} minuto${mn>1?'s':''}, ${isM?'plataforma':'box'} ${pl}${dl>0?`, com atraso de ${dl} minuto${dl>1?'s':''}`:''}`);
+    parts.en.push(`the ${isM?(o.en||o.short):'route '+o.code} to ${to} in ${mn} minute${mn>1?'s':''}, ${isM?'platform':'bay'} ${pl}${dl>0?`, running ${dl} minute${dl>1?'s':''} late`:''}`);
+    parts.es.push(`${isM?'la '+(o.es||o.short):'la línea '+o.code}, sentido ${to}, en ${mn} minuto${mn>1?'s':''}, ${isM?'andén':'box'} ${pl}${dl>0?`, con atraso de ${dl} minuto${dl>1?'s':''}`:''}`);});
+  if(parts.pt.length){out.pt+=` Conexões: ${parts.pt.join('; ')}.`;out.en+=` Connections: ${parts.en.join('; ')}.`;out.es+=` Conexiones: ${parts.es.join('; ')}.`;}
+  return out;}
+function _tvEvMsgV8(ln,R,now,k){const r=_tvEvMsgL(ln,R,now,k);const[type,ix]=k.split('|'),i=+ix;
+  if(r&&type==='at'&&i>0){const add=_tvAtExtras(ln,R,now,i);if(add.pt){['pt','en','es'].forEach(q=>{const re=q==='pt'?/ Este (trem|ônibus) segue/:q==='en'?/ This (train|bus) /:/ Este (tren|autobús) sigue/,x=r[q].search(re);r[q]=x>0?r[q].slice(0,x)+add[q]+r[q].slice(x):r[q]+add[q];});}}
+  return r;}
+// ── classes e tarifas ──
+function _tvLD(L){return!!(L&&L.reg&&L.vmax>=250);}
+function _tvKm(L,a,b){if(!L.coords)return 0;let km=0;const[i,j]=a<b?[a,b]:[b,a];for(let k=i;k<j;k++){const p=L.coords[k],q=L.coords[k+1];const R=6371,la1=p[0]*Math.PI/180,la2=q[0]*Math.PI/180,dl=(q[1]-p[1])*Math.PI/180,dp=la2-la1;
+  km+=2*R*Math.asin(Math.sqrt(Math.sin(dp/2)**2+Math.cos(la1)*Math.cos(la2)*Math.sin(dl/2)**2));}return km*1.12;}
+function _tvFare(L,a,b){const R$=v=>'R$ '+v.toFixed(2).replace('.',',');if(L.kind==='bus'){const km=_tvKm(L,a,b);return{eco:R$(Math.max(5.6,Math.round((4.5+km*.24)*10)/10))};}
+  if(!L.reg)return{eco:R$(5.4)};if(!_tvLD(L))return{eco:R$(9.9)};const km=_tvKm(L,a,b),e=Math.round((6+km*.3)*10)/10;return{eco:R$(e),exe:R$(Math.round(e*1.85*10)/10),km:Math.round(km)};}
+function tvSetCls(c){TV.cls=c;_v8Inject();}
+// ── injeção nas telas (Na estação / Dentro) ──
+function _v8Board(){const ln=_tvCur(),s=TV.stop[ln.key]??0,nm=ln.stops[s],set=_netLinesSet(ln),ls=set.filter(o=>o.stops.includes(nm)),isM=ln.kind==='metro',now=_tvNow();if(ls.length<2)return'';
+  const rows=[];ls.forEach(o=>{const k=o.stops.indexOf(nm);[0,1].forEach(d=>_tvNextAt(o,k,d,now,3).forEach(x=>rows.push({o,d,x})));});rows.sort((a,b)=>a.x.dep-b.x.dep);
+  return`<div class="tv-card brd"><div class="tv-card-h"><span class="tv-card-t">🪧 Painel de partidas · ${_tvEsc(_tvmNm(nm))}</span><span class="tv-hw">${ls.length} linhas</span></div>${_paneBanner()}
+   <div class="brd-h"><span>Hora</span><span>Linha</span><span>Destino</span><span>${isM?'Plat.':'Box'}</span><span>Situação</span></div>
+   ${rows.slice(0,10).map(({o,d,x})=>{const N=o.stops.length,left=x.dep-now,dl=Math.round((x.dly||0)/60),st=x.status==='plat'||left<=120?'<b class="b-go">Embarque imediato</b>':dl>0?`<b class="b-late">Atraso +${dl}′</b>`:x.status==='near'?'<b class="b-near">Chegando</b>':'No horário';
+     return`<div class="brd-r"><span class="b-t">${_tvHM(x.dep)}${dl>0?`<s>${_tvHM(x.dep-x.dly)}</s>`:''}</span><span><i class="b-ln" style="background:${o.color}">${o.code}</i></span><span class="b-d">${_tvEsc(_tvmNm(o.stops[d===0?N-1:0]))}</span><span class="b-p">${_tvPlat(nm,o,d)}</span><span>${st}</span></div>`;}).join('')}</div>`;}
+function _v8Fares(){const ln=_tvCur(),s=TV.stop[ln.key]??0,n=ln.stops.length,ld=_tvLD(ln),d=_tvFs(ln,0,s)===n-1?1:0,o0=_tvOff(ln,d),p0=_tvFs(ln,d,s);if(p0>=n-1)return'';
+  const dest=[];for(let p=p0+1;p<n;p++){const k=_tvFs(ln,d,p);dest.push({k,min:Math.round((o0.arr[p]-o0.dep[p0])/60),f:_tvFare(ln,s,k)});}
+  const cls=TV.cls||'eco';
+  return`<div class="tv-card fare"><div class="tv-card-h"><span class="tv-card-t">🎫 Passagens · ${ld?'trem de alta velocidade':ln.kind==='bus'?'ônibus':'tarifa única'}</span><span class="tv-hw">sentido ${_tvEsc(_tvmNm(ln.stops[d===0?n-1:0]))}</span></div>
+   ${ld?`<div class="cls-t"><button class="${cls==='eco'?'on':''}" onclick="tvSetCls('eco')">💺 Econômica</button><button class="${cls==='exe'?'on':''}" onclick="tvSetCls('exe')">🛋 Executiva</button></div>
+     <div class="cls-i">${cls==='exe'?'Executiva: poltrona reclinável larga, tomada, refeição e bebidas inclusas, embarque prioritário. Carros 1 e 2.':'Econômica: poltrona confortável, tomada USB e Wi-Fi. Carro-lanchonete no carro 5. Carros 3 a 8.'}</div>`:''}
+   ${dest.slice(0,ld?12:6).map(x=>`<div class="fr-r"><span>${_tvEsc(_tvmNm(ln.stops[x.k]))}</span><em>${_tvDurT(x.min).pt.replace(' minutos',' min').replace(' horas','h').replace(' hora','h').replace(' e ',' ')}</em><b>${ld?(cls==='exe'?x.f.exe:x.f.eco):x.f.eco}</b></div>`).join('')}
+   ${ld?'':'<div class="cls-i">Valor por viagem, com integração gratuita nas baldeações por 2 horas.</div>'}</div>`;}
+function _v8Inject(){const body=document.getElementById('tv-body');if(!body)return;body.querySelectorAll('.v8x').forEach(e=>e.remove());const ln=_tvCur();
+  if(TV.view==='stop'){const first=body.querySelector('.tv-card');if(!first)return;const h=`<div class="v8x" id="v8-brd">${_v8Board()}</div><div class="v8x">${_v8Fares()}</div>`;first.insertAdjacentHTML('afterend',h);}
+  else if(TV.view==='ride'&&_tvLD(ln)){const r=document.getElementById('tv-ride');if(r)r.insertAdjacentHTML('beforebegin',`<div class="v8x cls-badge">${TV.cls==='exe'?'🛋 Você está na <b>Executiva</b> · carro 2 · refeição inclusa':'💺 Você está na <b>Econômica</b> · carro 5 · carro-lanchonete ao lado'} <button onclick="tvSetCls('${TV.cls==='exe'?'eco':'exe'}')">trocar</button></div>`);}
+  if(NET_PANE&&TV.view!=='stop'){const sb=body.querySelector('.tv-sub');if(sb)sb.insertAdjacentHTML('afterend',`<div class="v8x">${_paneBanner()}</div>`);}}
+let _v8T=0;function _v8Tick(){if(Date.now()-_v8T<1000)return;_v8T=Date.now();if(TV.view==='stop'){const b=document.getElementById('v8-brd');if(b)b.innerHTML=_v8Board();}}
+// ── TV: conteúdo por cidade ──
+const CITY_ADS={
+ 'São Paulo':[['🥟','Pastel da Feira','Pastel de carne e caldo de cana geladinho.','Feiras livres todos os dias na cidade','Pastel + caldo: <b>R$ 16</b>','#ff8f00'],['🥪','Sanduba do Mercadão','Mortadela de respeito, no pão francês.','Mercado Municipal · Centro','Meio sanduíche: <b>R$ 29</b>','#c62828'],['🎭','Noite no Centro','Theatro Municipal, Pinacoteca e Sala São Paulo.','Programação cultural toda semana','Ingressos a partir de <b>R$ 20</b>','#6a1b9a']],
+ 'Guarulhos':[['🌳','Bosque Maia','Área verde no meio de Guarulhos, com lagos e trilhas.','Aberto todos os dias','Entrada <b>gratuita</b>','#2e7d32']],
+ 'Itaquaquecetuba':[['🥾','Alto Tietê Ecoturismo','Trilhas, cachoeiras e as nascentes do Tietê em Salesópolis.','Saídas de Encontros do Tietê','Bate-volta: <b>R$ 89</b>','#2e7d32']],
+ 'Mogi das Cruzes':[['🟠','Caqui de Mogi','O caqui mais doce do Alto Tietê, direto do produtor.','Feira do Produtor · sábados','Caixa: <b>R$ 25</b>','#ef6c00'],['🎉','Festa do Divino','Tradição centenária de Mogi das Cruzes, com cortejo e quermesse.','Todo ano no Centro Histórico','Programação no app da cidade','#c62828']],
+ 'São José dos Campos':[['🛩','Memorial Aeroespacial','Aviões históricos e a história da aviação brasileira.','Dentro do complexo aeroespacial de SJC','Visita guiada: <b>grátis</b>','#1565c0'],['🌿','Parque Vicentina Aranha','Antigo sanatório que virou parque, com feira e café.','Centro de São José dos Campos','Domingo tem feira de artesanato','#2e7d32']],
+ 'Jacareí':[['🚣','Rota do Paraíba','Passeio de caiaque no Rio Paraíba do Sul.','Saídas aos fins de semana','A partir de <b>R$ 60</b>','#00838f']],
+ 'Caraguatatuba':[['🦐','Camarão na Moranga do Litoral','Prato típico do Litoral Norte, para dividir.','Orla de Caraguatatuba','Serve 2: <b>R$ 129</b>','#ef6c00']],
+ 'Ubatuba':[['🐢','Projeto Tamar Ubatuba','Conheça as tartarugas marinhas do litoral paulista.','Centro de visitantes · Ubatuba','Meia-entrada para estudantes','#00838f'],['⛵','Escuna das Ilhas','Passeio de barco pelas ilhas de Ubatuba.','Saídas diárias às 10h','Adulto: <b>R$ 110</b>','#1565c0']],
+ 'São Sebastião':[['⛴','Balsa para Ilhabela','Travessia rápida, a poucos passos da estação.','Saídas o dia todo','Pedestre: <b>grátis</b>','#1565c0']],
+ 'Santos':[['☕','Museu do Café','A antiga Bolsa Oficial de Café, no centro histórico de Santos.','Cafeteria com cafés especiais','Combo visita + café: <b>R$ 30</b>','#6d4c41'],['🚋','Bonde Turístico de Santos','Volta pelo centro histórico num bonde antigo.','Saídas do Valongo','Passeio: <b>R$ 10</b>','#2e7d32'],['🍤','Pastel de Camarão da Orla','Crocante, recheado e quentinho, pé na areia.','Orla de Santos','Porção: <b>R$ 38</b>','#ef6c00']],
+ 'Praia Grande':[['⛱','Kit Praia Boqueirão','Cadeira, guarda-sol e cooler o dia inteiro.','Na areia, em frente à estação','Kit: <b>R$ 45</b>','#f9a825']],
+ 'Cubatão':[['🌳','Trilhas da Serra do Mar','Calçada do Lorena e mirantes da Mata Atlântica.','Com guia credenciado','Agende: <b>R$ 50</b>','#2e7d32']],
+ 'Campinas':[['🦆','Lagoa do Taquaral','Pedalinho, ciclovia e pôr do sol em Campinas.','Parque Portugal','Pedalinho: <b>R$ 20</b>','#00838f'],['🎼','Noite de Ópera','Homenagem a Carlos Gomes, o maestro campineiro.','Centro de Campinas','Ingressos limitados','#6a1b9a']],
+ 'Jundiaí':[['🍇','Vinícolas de Jundiaí','Vinho, suco de uva e a tradicional Festa da Uva.','Rota da Uva · Serra do Japi','Degustação: <b>R$ 35</b>','#6a1b9a']],
+ 'Limeira':[['💍','Semijoias de Limeira','Direto da capital da joia folheada.','Outlet ao lado da estação','Até <b>40% OFF</b>','#f9a825']],
+ 'São Carlos':[['🔭','Noite no Observatório','Observação do céu com telescópios em São Carlos.','Sessões aos sábados','Entrada <b>gratuita</b>','#283593']],
+ 'Ribeirão Preto':[['🍺','Choperia da Califórnia','O chope mais gelado da Califórnia Brasileira.','Centro de Ribeirão Preto','Happy hour: <b>2 por 1</b>','#f9a825'],['🚜','Feira do Agro','A maior vitrine de tecnologia agrícola do interior.','Ribeirão Preto · todo ano','Ingressos no app','#2e7d32']],
+ 'São José do Rio Preto':[['🍦','Sorveteria Rio Preto','Pra encarar o calor do noroeste paulista.','Represa Municipal','Casquinha dupla: <b>R$ 12</b>','#d81b60']],
+ 'Santo André':[['🚂','Festival de Inverno de Paranapiacaba','Música e frio na vila ferroviária inglesa de Santo André.','Todo inverno · Paranapiacaba','Programação gratuita','#283593']],
+ 'São Bernardo do Campo':[['🍗','Rota do Frango com Polenta','O prato símbolo de São Bernardo do Campo.','Restaurantes da Estrada dos Casa','Porção: <b>R$ 79</b>','#ef6c00']],
+ 'Ribeirão Pires':[['🍫','Festival do Chocolate','Chocolate artesanal na Pérola da Serra.','Centro de Ribeirão Pires','Entrada <b>gratuita</b>','#6d4c41']]};
+function _cityAd(c,k){const p=CITY_ADS[c]||CITY_ADS['São Paulo'],a=p[k%p.length];
+  return`<div class="ad ad-tour ad-city" style="--ac:${a[5]}"><div class="ad-mtn">${a[0]}</div><div class="ad-tx"><div class="ad-brand">${_tvEsc(a[1])}</div><div class="ad-sl">${_tvEsc(a[2])}</div><div class="ad-sub">📍 ${_tvEsc(c)} · ${_tvEsc(a[3])}</div><div class="ad-cp">${a[4]}</div></div><span class="ad-tag">publicidade fictícia</span></div>`;}
+function _tvmCities(x){const{ln,R,st,riding}=x,n=ln.stops.length;const nm=riding&&st?ln.stops[_tvFs(ln,R.dir,st.phase==='run'?st.to:Math.min(n-1,(st.at||0)+1))]:ln.stops[TV.stop[ln.key]??0];
+  const dest=riding?ln.stops[R.dir===0?n-1:0]:ln.stops[n-1];return[...new Set([_cityOf(nm),_cityOf(dest),'São Paulo'])];}
+const MENU_BASE=[['☕','Café expresso','7,00'],['🧀','Pão de queijo (3 un.)','9,00'],['🥪','Sanduíche de mortadela','24,00'],['🥗','Salada da estação','28,00'],['🍫','Brigadeiro gourmet','8,00'],['🥤','Água / refrigerante','6,00']];
+const MENU_LINE={campinas:[['🍇','Suco de uva de Jundiaí','12,00'],['🍝','Nhoque da vovó campineira','36,00']],vale:[['🌽','Pamonha do Vale','14,00'],['🧆','Bolinho caipira','16,00']],
+ santos:[['🍤','Pastel de camarão','18,00'],['🐟','Isca de peixe com limão','34,00']],litoral:[['🦐','Camarão na moranga (individual)','58,00'],['🥥','Água de coco','10,00']],
+ interior:[['🥩','Sanduíche de pernil','29,00'],['🍊','Suco de laranja do interior','11,00'],['🍺','Chope sem álcool','13,00']]};
+function _sMenu(x){const ln=x.ln,items=[...(MENU_LINE[ln.snd]||[]),...MENU_BASE].slice(0,7);
+  return`<div class="sl sl-menu"><div class="sl-k">🍽 Carro-restaurante · carro 5<small>Dining car · Coche restaurante</small></div><div class="mn-g">${items.map(i=>`<div class="mn-r"><span>${i[0]}</span><b>${_tvEsc(i[1])}</b><em>R$ ${i[2]}</em></div>`).join('')}</div><div class="mn-f">🛋 Na Executiva, a refeição e as bebidas estão incluídas · Executive class: meal included</div></div>`;}
+function _sCls(x){const ex=TV.cls==='exe';return`<div class="sl sl-tip"><div class="cu-ic">${ex?'🛋':'💺'}</div><div><div class="sl-k">${ex?'Bem-vindo à Executiva':'Bem-vindo à Econômica'}<small>${ex?'Welcome to Executive class':'Welcome to Economy class'}</small></div><div class="cu-tx">${ex?'Poltrona reclinável, tomada, cobertor e refeição inclusa. Peça ao comissário pelo botão 🔔 da sua poltrona.':'Tomada USB e Wi-Fi gratuito em todas as poltronas. O carro-lanchonete fica no carro 5.'}</div><div class="cu-en">${ex?'Reclining seat, power outlet, blanket and meal included.':'USB power and free Wi-Fi at every seat. Café car in car 5.'}</div></div></div>`;}
+function _sCityWx(x){const cs=_tvmCities(x).slice(0,3);return`<div class="sl sl-wx"><div class="wx-ic">${_cityWx(cs[0]).ic}</div><div><div class="sl-k">Tempo nas cidades<small>Weather · Clima</small></div><div class="wx-ds" style="margin-top:6px">${cs.map(c=>{const w=_cityWx(c);return`<div class="wx-d"><span>${w.ic} ${_tvEsc(c)}</span><b>${w.t}°C</b><small style="display:block;opacity:.75">${_tvEsc(w.pt)}</small></div>`;}).join('')}</div></div></div>`;}
+let _tvmAdK=0;
+function _tvmPlaylist(x){const L=_tvmPlaylist0(x);const out=[];L.forEach(s=>{if(s.id==='wx')out.push({id:'cwx',dur:10,live:true});else out.push(s);});
+  if(x.riding&&_tvLD(x.ln)){out.splice(4,0,{id:'menu',dur:12});out.splice(9,0,{id:'cls',dur:9});}
+  out.splice(7,0,{id:'ad3',dur:9});return out;}
+function _tvmSlideHTML(id,x){if(/^ad\d$/.test(id)){const cs=_tvmCities(x),k=+id.slice(2)+(_tvmAdK++);const c=cs[k%cs.length];return _cityAd(c,Math.floor(k/cs.length));}
+  if(id==='menu')return _sMenu(x);if(id==='cls')return _sCls(x);if(id==='cwx')return _sCityWx(x);return _tvmSlideHTML0(id,x);}
+
+function _tvEvMsg(ln,R,now,k){return _tvEvMsgV8(ln,R,now,k);}
+
+
+// ════════ v9 · A BORDO DO AVIÃO ════════
+const FLY_TZ={MAO:-4,PVH:-4,BVB:-4,CGB:-4,CGR:-4,OPS:-4,ROO:-4,DOU:-4,CMG:-4,TJL:-4,AFL:-4,CCX:-4,TGQ:-4,JPR:-4,TFF:-4,TBT:-4,CIZ:-4,TF2:-4,SJL:-4,CLN2:-4,PIN:-4,RBR:-5,CZS:-5,FEN:-2};
+const FLY_C={ // país: [nome, idioma, moeda, olá, obrigado, utc (nov), curiosidade]
+ PT:['Portugal','português','euro (€)','Olá','Obrigado',0,'O pastel de nata nasceu no Mosteiro dos Jerónimos, em Belém, Lisboa.'],
+ ES:['Espanha','espanhol','euro (€)','Hola','Gracias',1,'A Espanha tem uma das maiores redes de trens de alta velocidade do mundo.'],
+ GB:['Reino Unido','inglês','libra esterlina (£)','Hello','Thank you',0,'O metrô de Londres, inaugurado em 1863, foi o primeiro do mundo.'],
+ FR:['França','francês','euro (€)','Bonjour','Merci',1,'A França é um dos países mais visitados do mundo.'],
+ NL:['Países Baixos','holandês','euro (€)','Hallo','Dank je',1,'Os Países Baixos têm mais bicicletas do que habitantes.'],
+ DE:['Alemanha','alemão','euro (€)','Hallo','Danke',1,'A Alemanha tem milhares de variedades de pão.'],
+ CH:['Suíça','alemão, francês e italiano','franco suíço (CHF)','Grüezi','Merci',1,'A Suíça tem quatro idiomas oficiais.'],
+ IT:['Itália','italiano','euro (€)','Ciao','Grazie',1,'A Itália é o país com mais sítios do Patrimônio Mundial da UNESCO.'],
+ IE:['Irlanda','inglês e irlandês','euro (€)','Hello','Go raibh maith agat',0,'O trevo é um dos símbolos da Irlanda.'],
+ AT:['Áustria','alemão','euro (€)','Servus','Danke',1,'Viena é famosa pelos cafés e pela música clássica de Mozart e Strauss.'],
+ SE:['Suécia','sueco','coroa sueca (SEK)','Hej','Tack',1,'A Suécia é a terra do prêmio Nobel.'],
+ NO:['Noruega','norueguês','coroa norueguesa (NOK)','Hei','Takk',1,'Na Noruega dá para ver a aurora boreal no inverno.'],
+ DK:['Dinamarca','dinamarquês','coroa dinamarquesa (DKK)','Hej','Tak',1,'O brinquedo LEGO foi criado na Dinamarca.'],
+ BE:['Bélgica','holandês, francês e alemão','euro (€)','Hallo','Merci',1,'A Bélgica é famosa pelos chocolates e waffles.'],
+ CZ:['Tchéquia','tcheco','coroa tcheca (CZK)','Ahoj','Děkuji',1,'O relógio astronômico de Praga funciona desde o século 15.'],
+ PL:['Polônia','polonês','zloty (PLN)','Cześć','Dziękuję',1,'Marie Curie nasceu em Varsóvia.'],
+ GR:['Grécia','grego','euro (€)','Γεια σας','Ευχαριστώ',2,'Atenas é uma das cidades mais antigas do mundo.'],
+ IS:['Islândia','islandês','coroa islandesa (ISK)','Halló','Takk',0,'A Islândia tem vulcões ativos e gêiseres.'],
+ TR:['Turquia','turco','lira turca (TRY)','Merhaba','Teşekkürler',3,'Istambul fica entre dois continentes, Europa e Ásia.'],
+ RU:['Rússia','russo','rublo (RUB)','Привет','Спасибо',3,'A Rússia é o maior país do mundo em área.'],
+ GE:['Geórgia','georgiano','lari (GEL)','გამარჯობა','მადლობა',4,'A Geórgia é uma das regiões mais antigas de produção de vinho do mundo.'],
+ AL:['Albânia','albanês','lek (ALL)','Përshëndetje','Faleminderit',1,'A Albânia tem praias no mar Adriático e no mar Jônico.'],
+ US:['Estados Unidos','inglês','dólar (US$)','Hello','Thank you',-5,'Os Estados Unidos têm mais de 60 parques nacionais.'],
+ CA:['Canadá','inglês e francês','dólar canadense (C$)','Hello / Bonjour','Thank you / Merci',-5,'O Canadá tem o litoral mais extenso do mundo.'],
+ MX:['México','espanhol','peso mexicano (MXN)','Hola','Gracias',-6,'O chocolate tem origem nos povos da Mesoamérica.'],
+ AR:['Argentina','espanhol','peso argentino (ARS)','Hola','Gracias',-3,'O tango nasceu na região do Rio da Prata.'],
+ CL:['Chile','espanhol','peso chileno (CLP)','Hola','Gracias',-3,'O deserto do Atacama, no Chile, é um dos lugares mais secos do planeta.'],
+ UY:['Uruguai','espanhol','peso uruguaio (UYU)','Hola','Gracias',-3,'O Uruguai sediou e venceu a primeira Copa do Mundo, em 1930.'],
+ PY:['Paraguai','espanhol e guarani','guarani (PYG)','Hola / Mba’éichapa','Gracias',-3,'O guarani é língua oficial do Paraguai.'],
+ PE:['Peru','espanhol','sol (PEN)','Hola','Gracias',-5,'Machu Picchu, no Peru, é uma das novas sete maravilhas do mundo.'],
+ CO:['Colômbia','espanhol','peso colombiano (COP)','Hola','Gracias',-5,'A Colômbia é um dos maiores produtores de café do mundo.'],
+ EC:['Equador','espanhol','dólar (US$)','Hola','Gracias',-5,'A linha do Equador dá nome ao país.'],
+ BO:['Bolívia','espanhol','boliviano (BOB)','Hola','Gracias',-4,'La Paz é uma das capitais mais altas do mundo.'],
+ VE:['Venezuela','espanhol','bolívar (VES)','Hola','Gracias',-4,'O Salto Ángel, na Venezuela, é a cachoeira mais alta do mundo.'],
+ PA:['Panamá','espanhol','balboa e dólar (US$)','Hola','Gracias',-5,'O Canal do Panamá liga os oceanos Atlântico e Pacífico.'],
+ CR:['Costa Rica','espanhol','colón (CRC)','Hola','Gracias',-6,'A Costa Rica é famosa pela biodiversidade e pelo lema pura vida.'],
+ CU:['Cuba','espanhol','peso cubano (CUP)','Hola','Gracias',-5,'Havana Velha é Patrimônio Mundial da UNESCO.'],
+ CARIB:['Caribe','espanhol, inglês e outros','moeda local ou dólar (US$)','Hola / Hello','Gracias / Thank you',-4,'O Caribe tem milhares de ilhas.'],
+ GUI:['Guianas','inglês, holandês ou francês','moeda local','Hello','Thank you',-3,'As Guianas ficam ao norte do Brasil, cobertas pela floresta amazônica.'],
+ AE:['Emirados Árabes Unidos','árabe','dirham (AED)','مرحبا','شكرا',4,'O Burj Khalifa, em Dubai, é o prédio mais alto do mundo.'],
+ QA:['Catar','árabe','rial catariano (QAR)','مرحبا','شكرا',3,'O Catar sediou a Copa do Mundo de 2022.'],
+ EG:['Egito','árabe','libra egípcia (EGP)','مرحبا','شكرا',2,'As pirâmides de Gizé ficam perto do Cairo.'],
+ ZA:['África do Sul','inglês e outros 11 idiomas','rand (ZAR)','Hello / Sawubona','Thank you',2,'A África do Sul tem três capitais.'],
+ CV:['Cabo Verde','português','escudo cabo-verdiano (CVE)','Olá','Obrigado',-1,'A morna, gênero musical de Cabo Verde, é Patrimônio Imaterial da UNESCO.'],
+ AO:['Angola','português','kwanza (AOA)','Olá','Obrigado',1,'Angola é um dos países lusófonos mais populosos.'],
+ AFR:['África Ocidental','francês, inglês e idiomas locais','moeda local','Bonjour / Hello','Merci / Thank you',0,'A África Ocidental tem uma enorme diversidade de povos e idiomas.'],
+ TN:['Tunísia','árabe','dinar tunisiano (TND)','مرحبا','شكرا',1,'Na Tunísia ficam as ruínas da antiga Cartago.'],
+ IN:['Índia','hindi e inglês','rúpia (INR)','नमस्ते','धन्यवाद',5.5,'A Índia é o país mais populoso do mundo.'],
+ JP:['Japão','japonês','iene (JPY)','こんにちは','ありがとう',9,'Os trens-bala japoneses são famosos pela pontualidade.'],
+ KR:['Coreia do Sul','coreano','won (KRW)','안녕하세요','감사합니다',9,'O alfabeto coreano, o hangul, foi criado no século 15.'],
+ TH:['Tailândia','tailandês','baht (THB)','สวัสดี','ขอบคุณ',7,'Bangkok é uma das cidades mais visitadas do mundo.'],
+ UZ:['Uzbequistão','uzbeque','som (UZS)','Salom','Rahmat',5,'O Uzbequistão fica na antiga Rota da Seda.'],
+ CN:['China','mandarim','yuan (CNY)','你好','谢谢',8,'A Grande Muralha da China tem milhares de quilômetros.'],
+ SEA:['Sudeste Asiático','idiomas locais e inglês','moeda local','Hello','Thank you',8,'O Sudeste Asiático tem milhares de ilhas.'],
+ AU:['Austrália','inglês','dólar australiano (A$)','G’day','Thanks',11,'A Austrália é o único país que ocupa um continente inteiro.'],
+ NZ:['Nova Zelândia','inglês e maori','dólar neozelandês (NZ$)','Kia ora','Thank you',13,'A Nova Zelândia foi um dos primeiros países a dar o voto às mulheres.']};
+const FLY_CC={LIS:'PT',OPO:'PT',FNC:'PT',MAD:'ES',BCN:'ES',LPA:['ES',0],LHR:'GB',LGW:'GB',CDG:'FR',MRS:'FR',AMS:'NL',FRA:'DE',BER:'DE',ZRH:'CH',MXP:'IT',FCO:'IT',DUB:'IE',VIE:'AT',ARN:'SE',OSL:'NO',CPH:'DK',BRU:'BE',PRG:'CZ',WAW:'PL',ATH:'GR',KEF:'IS',IST:'TR',SVO:'RU',OVB:['RU',7],TBS:'GE',TIA:'AL',
+ MIA:'US',FLL:'US',MCO:'US',ATL:'US',JFK:'US',BOS:'US',IAD:'US',ORD:['US',-6],DFW:['US',-6],DEN:['US',-7],LAX:['US',-8],SEA:['US',-8],ANC:['US',-9],HNL:['US',-10],YYZ:'CA',YVR:['CA',-8],MEX:'MX',GDL:'MX',CUN:['MX',-5],
+ EZE:'AR',COR:'AR',MDZ:'AR',USH:'AR',BRC:'AR',SCL:'CL',PMC:'CL',PUQ:'CL',IQQ:'CL',MVD:'UY',ASU:'PY',LIM:'PE',CUZ:'PE',AQP:'PE',BOG:'CO',MDE:'CO',UIO:'EC',GYE:'EC',LPB:'BO',VVI:'BO',CCS:'VE',PTY:'PA',SJO:'CR',HAV:'CU',
+ CUR:'CARIB',SJU:'CARIB',SDQ:'CARIB',KIN:['CARIB',-5],GUA:['CARIB',-6],SAL:['CARIB',-6],TGU:['CARIB',-6],MGA:['CARIB',-6],GEO:['GUI',-4],CAY:'GUI',PBM:'GUI',
+ DXB:'AE',DOH:'QA',CAI:'EG',JNB:'ZA',CPT:'ZA',SID:'CV',LAD:'AO',ABJ:'AFR',FNA:'AFR',TUN:'TN',DEL:'IN',BOM:'IN',NRT:'JP',ICN:'KR',BKK:'TH',TAS:'UZ',PEK:'CN',PVG:'CN',SIN:'SEA',DPS:'SEA',MNL:'SEA',CEB:'SEA',KUL:'SEA',BKI:'SEA',
+ SYD:'AU',MEL:'AU',BNE:['AU',10],PER:['AU',8],AKL:'NZ',WLG:'NZ',CHC:'NZ',ZQN:'NZ'};
+function _flyCountry(iata,tipo){if(tipo==='DOM')return{nm:'Brasil',l:'português',cur:'real (R$)',hi:'Olá',ty:'Obrigado',utc:FLY_TZ[iata]??-3,cu:null,dom:true};
+  const x=FLY_CC[iata],k=Array.isArray(x)?x[0]:x,c=FLY_C[k]||FLY_C.CARIB;return{nm:c[0],l:c[1],cur:c[2],hi:c[3],ty:c[4],utc:Array.isArray(x)?x[1]:c[5],cu:c[6],dom:false};}
+const FLY_CAPS=['Ricardo Almeida','Fernanda Souza','Marcos Oliveira','Juliana Castro','Paulo Henrique Lima','Camila Rocha','André Nogueira','Beatriz Mendes'];
+const FLY={on:false};
+function _flyHM(ms,utc){const d=new Date(ms+((utc??-3)+3)*3600e3);return d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
+function _flyArt(dn){return/^(Rio de Janeiro|Cairo|Porto$|Recife)/.test(dn)?['ao','no']:/^Cidade/.test(dn)?['à','na']:['a','em'];}
+function _flyDiff(u){const d=Math.abs(u+3),h=Math.floor(d),m=d-h;return(h?`${h} hora${h>1?'s':''}`:'')+(m?(h?' e meia':'meia hora'):'');}
+function _flyDurT(min){return _tvDurT(Math.round(min));}
+function _flyPlan(F){const B=1200,TO=B+900,air=Math.max(1500,F.dur*60-900),LD=TO+air,P={B,doors:B,safety:B+60,push:B+240,cap:B+330,crewTO:B+840,TO,air,LD,
+  climbEnd:TO+Math.min(1500,air*.3),descStart:LD-Math.min(2100,air*.3),beltOff:TO+Math.min(720,air*.25),open:LD+480,end:LD+780};
+  P.alt=air<3600?31000:air<10800?35000:38000;const ev=[];const rnd=(()=>{let s=_hashS(F.fnum+F.t0);return()=>((s=Math.imul(s^s>>>15,2246822507)>>>0)%10000)/10000;})();
+  const add=(t,k)=>ev.push({t,k});
+  [0,300,600,900,1080].forEach((t,i)=>add(t,'brd'+i));add(B,'doors');add(B+60,'safety');add(B+330,'cap');add(B+840,'crewTO');add(TO,'takeoff');add(P.beltOff,'beltOff');
+  if(air>2400)add(P.beltOff+300,'service');if(air>5400)add(TO+air*.5,'capMid');if(!F.dom&&air>7200)add(TO+air*.45,'duty');if(!F.dom)add(TO+air*.7,'dest');if(air>25200)add(LD-5400,'breakfast');
+  const nT=air>14400?3:air>5400?2:air>2400?1:0;for(let i=0;i<nT;i++){const a=P.beltOff+600,b=P.descStart-900;if(b>a){const t=a+(b-a)*(i+rnd())/nT;add(t,'turbOn');add(t+420+rnd()*480,'turbOff');}}
+  if(air>10800&&rnd()<.35)add(P.beltOff+(P.descStart-P.beltOff)*(.3+rnd()*.4),'medical');
+  add(P.descStart,'descent');add(Math.max(P.descStart+60,LD-1200),'beltOn');add(LD-300,'crewLD');add(LD,'touch');add(LD+60,'welcome');add(P.open,'open');add(P.end,'end');
+  P.ev=ev.sort((a,b)=>a.t-b.t);return P;}
+function flyStart(fi){const f=FD[fi];if(!f)return;const cls=FLY.cls||'eco',dom=f[2]==='DOM';
+  Object.assign(FLY,{on:true,done:false,fi,f,fnum:flightNum(f[6],fi),dest:f[0],iata:f[1],tipo:f[2],dist:f[3],dur:f[4],ac:f[5],al:f[6],dom,cls,
+    seat:cls==='exe'?(1+Math.floor(Math.random()*4))+'ABCD'[Math.floor(Math.random()*4)]:(12+Math.floor(Math.random()*20))+'ABCDEF'[Math.floor(Math.random()*6)],
+    grp:cls==='exe'?1:2+Math.floor(Math.random()*3),gate:gate(f[2],fi),term:terminal(f[2],fi),t0:_simNow(),i:0,belt:true,tab:'map',cart:[],movie:null,
+    cap:FLY_CAPS[Math.floor(Math.random()*FLY_CAPS.length)],country:_flyCountry(f[1],f[2])});
+  FLY.P=_flyPlan(FLY);FLY.i=0;try{const c=_ctx();if(c&&c.state==='suspended')c.resume();}catch(e){}if(FLY.snd!==false){FLY.snd=true;_flyEng(true);}flyRender();_flyTick(true);}
+function flyExit(){FLY.on=false;_flyEng(false);try{if(FLY.map){FLY.map.remove();FLY.map=null;}}catch(e){}voxStop&&voxStop();flyRender();}
+function _flyEl(){return FLY.on?(_simNow()-FLY.t0)/1000:0;}
+// perfil do voo
+function _flyState(){const P=FLY.P,t=_flyEl(),ease=x=>x<0?0:x>1?1:x*x*(3-2*x);let ph,alt=0,spd=0,frac=0;
+  if(t<P.B){ph='Embarque';}else if(t<P.push){ph='Portas fechadas · segurança';}else if(t<P.TO){ph='Taxiando para a pista';spd=t<P.push+60?5:25;}
+  else if(t<P.LD){const a=(t-P.TO)/P.air;frac=Math.min(1,a);
+    if(t<P.TO+50){ph='Decolagem';spd=280*(t-P.TO)/50;alt=0;}
+    else if(t<P.climbEnd){ph='Subida';const x=(t-P.TO-50)/(P.climbEnd-P.TO-50);alt=P.alt*ease(x);spd=280+590*Math.min(1,x*1.4);}
+    else if(t<P.descStart){ph='Cruzeiro';alt=P.alt;spd=860+20*Math.sin(t/900);}
+    else{const x=(t-P.descStart)/(P.LD-P.descStart);ph=x>.85?'Aproximação final':'Descida';alt=P.alt*(1-ease(x));spd=860-600*x;}}
+  else if(t<P.open){ph=t<P.LD+40?'Pouso':'Taxiando para o portão';frac=1;spd=t<P.LD+40?260*(1-(t-P.LD)/40):20;}
+  else if(t<P.end){ph='Desembarque';frac=1;}else{ph='Voo encerrado';frac=1;}
+  return{t,ph,alt:Math.round(alt/100)*100,spd:Math.round(spd),frac,P};}
+// rota (círculo máximo)
+function _flyGC(a,b,f){const r=Math.PI/180,[la1,lo1,la2,lo2]=[a[0]*r,a[1]*r,b[0]*r,b[1]*r],d=2*Math.asin(Math.sqrt(Math.sin((la2-la1)/2)**2+Math.cos(la1)*Math.cos(la2)*Math.sin((lo2-lo1)/2)**2));if(!d)return a;
+  const A=Math.sin((1-f)*d)/Math.sin(d),B=Math.sin(f*d)/Math.sin(d),x=A*Math.cos(la1)*Math.cos(lo1)+B*Math.cos(la2)*Math.cos(lo2),y=A*Math.cos(la1)*Math.sin(lo1)+B*Math.cos(la2)*Math.sin(lo2),z=A*Math.sin(la1)+B*Math.sin(la2);
+  return[Math.atan2(z,Math.sqrt(x*x+y*y))/r,Math.atan2(y,x)/r];}
+function _flyWx(){const w=(WEATHER[FLY.iata]||[]);const t=w[0]||(FLY.dom?'27°C':'18°C'),d=w[1]||'Parcialmente nublado';return{t,d,tn:parseInt(t)||20};}
+// ── anúncios ──
+function _flySay(m,kind,opt){voxSay(['pt','en','es'].map(k=>({k,text:m[k]})),Object.assign({chime:true,chimeKind:kind||'cabin'},opt||{}));FLY.cap_=m.pt;const c=document.getElementById('fly-cap');if(c)c.textContent='🔊 '+m.pt;}
+function _flyMsg(k){const F=FLY,P=F.P,alN=(AL[F.al]||{}).name||F.al,dn=F.dest.replace(/\s*\(via.*\)/,'').split(' – ')[0],fnS=String(F.fnum).replace(/^[A-Z0-9]{2}/,'').split('').join(' '),hrs=_flyDurT(P.air/60),w=_flyWx(),C=F.country,
+  hr=new Date(_simNow()).getHours(),bd=hr<12?['Bom dia','Good morning','Buenos días']:hr<18?['Boa tarde','Good afternoon','Buenas tardes']:['Boa noite','Good evening','Buenas noches'],
+  ldT=_flyHM(F.t0+P.LD*1000,C.utc),altK=Math.round(P.alt/1000),vest=!F.dom||/FEN|NAT|REC|SSA|FOR|JPA|MCZ|AJU|FLN|VIX/.test(F.iata);
+  const M={
+   brd0:{pt:`Atenção, passageiros do voo ${fnS}, da ${alN}, com destino ${_flyArt(dn)[0]} ${dn}: iniciamos o embarque pelo portão ${F.gate}. Neste momento, embarcam os passageiros com atendimento prioritário e da classe executiva.`,en:`${alN} flight ${fnS} to ${dn} is now boarding at gate ${F.gate}. We invite passengers needing assistance and business class passengers to board first.`,es:`Pasajeros del vuelo ${fnS} de ${alN} con destino a ${dn}: iniciamos el embarque por la puerta ${F.gate}. Embarcan primero los pasajeros con atención prioritaria y de clase ejecutiva.`},
+   brd1:{pt:`Voo ${fnS} para ${dn}: embarque dos grupos 1 e 2.`,en:`Flight ${fnS} to ${dn}: now boarding groups 1 and 2.`,es:`Vuelo ${fnS} a ${dn}: embarque de los grupos 1 y 2.`},
+   brd2:{pt:`Voo ${fnS} para ${dn}: embarque dos grupos 3 e 4.`,en:`Flight ${fnS} to ${dn}: now boarding groups 3 and 4.`,es:`Vuelo ${fnS} a ${dn}: embarque de los grupos 3 y 4.`},
+   brd3:{pt:`Voo ${fnS}: embarque liberado para todos os passageiros. Tenha em mãos o seu cartão de embarque e um documento com foto.`,en:`Flight ${fnS}: boarding for all passengers. Please have your boarding pass and photo ID ready.`,es:`Vuelo ${fnS}: embarque para todos los pasajeros. Tenga a mano su tarjeta de embarque y un documento con foto.`},
+   brd4:{pt:`Última chamada para o voo ${fnS} com destino ${_flyArt(dn)[0]} ${dn}. As portas da aeronave serão fechadas em instantes.`,en:`Final call for flight ${fnS} to ${dn}. The aircraft doors will close shortly.`,es:`Última llamada para el vuelo ${fnS} con destino a ${dn}. Las puertas de la aeronave se cerrarán en instantes.`},
+   doors:{pt:`Tripulação, portas em automático e verificação cruzada. Senhoras e senhores, bem-vindos a bordo do voo ${fnS} da ${alN}, com destino ${_flyArt(dn)[0]} ${dn}. Por favor, mantenham os cintos afivelados e os aparelhos eletrônicos em modo avião.`,en:`Cabin crew, doors to automatic and cross-check. Ladies and gentlemen, welcome aboard ${alN} flight ${fnS} to ${dn}. Please keep your seatbelts fastened and your electronic devices in airplane mode.`,es:`Tripulación, puertas en automático y verificación cruzada. Señoras y señores, bienvenidos a bordo del vuelo ${fnS} de ${alN} con destino a ${dn}. Mantengan los cinturones abrochados y los dispositivos en modo avión.`},
+   safety:{pt:`Instruções de segurança. Para afivelar o cinto, encaixe a ponta metálica na fivela e ajuste. Esta aeronave possui saídas de emergência na frente, no meio e atrás, sinalizadas no piso por luzes. Em caso de despressurização, máscaras de oxigênio cairão automaticamente: puxe uma delas, coloque sobre o nariz e a boca e respire normalmente. Coloque a sua máscara antes de ajudar outras pessoas.${vest?' O colete salva-vidas está embaixo do seu assento; infle-o somente ao sair da aeronave.':''} É proibido fumar a bordo, inclusive cigarros eletrônicos. Obrigado pela atenção.`,
+     en:`Safety instructions. To fasten your seatbelt, insert the metal tip into the buckle and tighten. This aircraft has emergency exits at the front, middle and rear, marked by floor lighting. If cabin pressure drops, oxygen masks will drop automatically: pull one down, place it over your nose and mouth and breathe normally. Secure your own mask before helping others.${vest?' Your life vest is under your seat; inflate it only when leaving the aircraft.':''} Smoking, including electronic cigarettes, is not permitted on board. Thank you for your attention.`,
+     es:`Instrucciones de seguridad. Para abrochar el cinturón, inserte la punta metálica en la hebilla y ajústelo. Esta aeronave tiene salidas de emergencia adelante, en el medio y atrás, señalizadas con luces en el piso. En caso de despresurización, caerán máscaras de oxígeno: tire de una, colóquela sobre la nariz y la boca y respire normalmente. Colóquese su máscara antes de ayudar a otros.${vest?' El chaleco salvavidas está debajo de su asiento; ínflelo solo al salir de la aeronave.':''} Está prohibido fumar a bordo, incluso cigarrillos electrónicos. Gracias por su atención.`},
+   cap:{pt:`${bd[0]}, senhoras e senhores, aqui é o comandante ${F.cap}. Em nome da ${alN}, bem-vindos a bordo. Nosso tempo de voo até ${dn} está previsto em ${hrs.pt}, a ${altK} mil pés de altitude, e o pouso deve acontecer às ${ldT}, hora local. ${_flyArt(dn)[1].replace(/^./,c=>c.toUpperCase())} ${dn}, a previsão é de ${w.d.toLowerCase()}, com ${w.tn} graus. Desejamos a todos uma excelente viagem.`,
+     en:`${bd[1]}, ladies and gentlemen, this is Captain ${F.cap}. On behalf of ${alN}, welcome aboard. Our flight time to ${dn} is ${hrs.en}, cruising at ${altK} thousand feet, and we expect to land at ${ldT} local time. The weather in ${dn} is ${w.tn} degrees. We wish you a pleasant flight.`,
+     es:`${bd[2]}, señoras y señores, les habla el comandante ${F.cap}. En nombre de ${alN}, bienvenidos a bordo. Nuestro tiempo de vuelo a ${dn} será de ${hrs.es}, a ${altK} mil pies de altitud, y el aterrizaje está previsto a las ${ldT}, hora local. En ${dn} hace ${w.tn} grados. Les deseamos un excelente vuelo.`},
+   crewTO:{pt:`Tripulação, preparar para a decolagem.`,en:`Cabin crew, prepare for take-off.`,es:`Tripulación, prepararse para el despegue.`},
+   takeoff:{pt:`Decolando de São Paulo, Guarulhos.`,en:`Taking off from São Paulo, Guarulhos.`,es:`Despegando de São Paulo, Guarulhos.`},
+   beltOff:{pt:`Senhoras e senhores, o aviso de atar cintos foi desligado. Vocês já podem circular pela cabine, mas recomendamos manter o cinto afivelado enquanto estiverem sentados. Os aparelhos eletrônicos podem ser usados em modo avião.`,en:`Ladies and gentlemen, the seatbelt sign is now off. You may move about the cabin, but we recommend keeping your seatbelt fastened while seated. Electronic devices may be used in airplane mode.`,es:`Señoras y señores, la señal de cinturones se ha apagado. Pueden circular por la cabina, pero recomendamos mantener el cinturón abrochado mientras estén sentados.`},
+   service:{pt:F.dur<=120?`Em instantes, iniciaremos o nosso serviço de bordo, com lanche e bebidas. Confira o cardápio na tela do seu assento.`:`Em instantes, iniciaremos o serviço de bordo com ${F.cls==='exe'?'a nossa refeição da classe executiva':'a refeição e as bebidas'}. Confira as opções do cardápio na tela do seu assento.`,en:`Shortly we will begin our in-flight service. Please check the menu on your seatback screen.`,es:`En instantes iniciaremos nuestro servicio a bordo. Consulte el menú en la pantalla de su asiento.`},
+   capMid:{pt:`Aqui é o comandante novamente. Já percorremos metade da viagem até ${dn}, voando a ${altK} mil pés e cerca de ${Math.round(860/10)*10} quilômetros por hora. Faltam aproximadamente ${_flyDurT((P.LD-_flyEl())/60).pt}. Bom voo a todos.`,en:`This is the Captain again. We are halfway to ${dn}, flying at ${altK} thousand feet and about 860 kilometres per hour. About ${_flyDurT((P.LD-_flyEl())/60).en} to go. Enjoy the flight.`,es:`Les habla nuevamente el comandante. Ya recorrimos la mitad del viaje a ${dn}, a ${altK} mil pies y unos 860 kilómetros por hora. Faltan aproximadamente ${_flyDurT((P.LD-_flyEl())/60).es}.`},
+   duty:{pt:`Nosso serviço de vendas a bordo está aberto. Confira perfumes, chocolates e produtos exclusivos na aba Compras da tela do seu assento.`,en:`Our in-flight duty-free service is now open. Check perfumes, chocolates and exclusive items in the Shopping tab of your seatback screen.`,es:`Nuestro servicio de ventas a bordo está abierto. Consulte perfumes, chocolates y productos exclusivos en la pestaña Compras de su pantalla.`},
+   dest:{pt:`Informações sobre o destino, ${C.nm}: o idioma é ${C.l} e a moeda é ${C.cur}. A hora local é ${_flyHM(_simNow(),C.utc)}${C.utc!==-3?`, ${_flyDiff(C.utc)} ${C.utc>-3?'a mais':'a menos'} que em Brasília`:''}. Para cumprimentar, diga: ${C.hi}. ${C.cu?'Você sabia? '+C.cu:''}`,en:`About your destination: in ${C.nm}, the currency is ${C.cur}. Local time is ${_flyHM(_simNow(),C.utc)}. ${C.hi} means hello!`,es:`Sobre su destino: en ${C.nm} la moneda es ${C.cur}. La hora local es ${_flyHM(_simNow(),C.utc)}. ¡${C.hi} significa hola!`},
+   breakfast:{pt:`Bom dia! Em instantes serviremos o café da manhã antes do pouso.`,en:`Good morning! We will shortly be serving breakfast before landing.`,es:`¡Buenos días! En instantes serviremos el desayuno antes del aterrizaje.`},
+   turbOn:{pt:`Senhoras e senhores, estamos atravessando uma área de turbulência. Por favor, retornem aos seus assentos e mantenham os cintos afivelados. O serviço de bordo está temporariamente suspenso.`,en:`Ladies and gentlemen, we are experiencing some turbulence. Please return to your seats and keep your seatbelts fastened. In-flight service is temporarily suspended.`,es:`Señoras y señores, estamos atravesando una zona de turbulencia. Por favor, regresen a sus asientos y mantengan los cinturones abrochados.`},
+   turbOff:{pt:`O aviso de atar cintos foi desligado novamente. Obrigado pela compreensão.`,en:`The seatbelt sign has been switched off again. Thank you for your patience.`,es:`La señal de cinturones se ha apagado nuevamente. Gracias por su comprensión.`},
+   medical:{pt:`Atenção: se houver algum médico ou profissional de saúde a bordo, por favor, identifique-se a um de nossos comissários.`,en:`Attention please: if there is a doctor or medical professional on board, please identify yourself to a member of the cabin crew.`,es:`Atención: si hay algún médico o profesional de la salud a bordo, por favor identifíquese con uno de nuestros tripulantes.`},
+   descent:{pt:`Senhoras e senhores, aqui é o comandante. Iniciamos a nossa descida para ${dn}, com pouso previsto às ${ldT}, hora local. A temperatura é de ${w.tn} graus, com ${w.d.toLowerCase()}. Obrigado por voar com a ${alN}.`,en:`Ladies and gentlemen, this is the Captain. We have begun our descent into ${dn} and expect to land at ${ldT} local time. The temperature is ${w.tn} degrees. Thank you for flying with ${alN}.`,es:`Señoras y señores, les habla el comandante. Iniciamos nuestro descenso hacia ${dn}, con aterrizaje previsto a las ${ldT}, hora local. La temperatura es de ${w.tn} grados. Gracias por volar con ${alN}.`},
+   beltOn:{pt:`O aviso de atar cintos foi aceso. Por favor, retornem aos seus assentos, coloquem o encosto na posição vertical, fechem as mesinhas e mantenham os cintos afivelados.`,en:`The seatbelt sign is now on. Please return to your seats, bring your seatbacks upright, stow your tray tables and fasten your seatbelts.`,es:`La señal de cinturones se ha encendido. Por favor, regresen a sus asientos, coloquen el respaldo en posición vertical, cierren las mesitas y abróchense los cinturones.`},
+   crewLD:{pt:`Tripulação, preparar para o pouso.`,en:`Cabin crew, prepare for landing.`,es:`Tripulación, prepararse para el aterrizaje.`},
+   welcome:{pt:`Senhoras e senhores, bem-vindos ${_flyArt(dn)[0]} ${dn}. A hora local é ${_flyHM(_simNow(),C.utc)} e a temperatura é de ${w.tn} graus. Por favor, permaneçam sentados, com os cintos afivelados, até o desligamento completo do aviso de atar cintos.${C.dom?'':' Tenham em mãos o passaporte para a imigração.'}`,en:`Ladies and gentlemen, welcome to ${dn}. Local time is ${_flyHM(_simNow(),C.utc)} and the temperature is ${w.tn} degrees. Please remain seated with your seatbelt fastened until the seatbelt sign is switched off.`,es:`Señoras y señores, bienvenidos a ${dn}. La hora local es ${_flyHM(_simNow(),C.utc)} y la temperatura es de ${w.tn} grados. Permanezcan sentados con los cinturones abrochados hasta que se apague la señal.`},
+   open:{pt:`O desembarque será feito pela porta dianteira. Verifique os compartimentos superiores e o bolsão do assento à sua frente para não esquecer nenhum pertence. Em nome do comandante ${F.cap} e de toda a tripulação, obrigado por voar com a ${alN}. ${C.hi}!`,en:`Disembarkation will be through the front door. Please check the overhead bins and seat pocket for your belongings. On behalf of Captain ${F.cap} and the whole crew, thank you for flying with ${alN}.`,es:`El desembarque se hará por la puerta delantera. Revise los compartimientos superiores y el bolsillo del asiento para no olvidar ninguna pertenencia. En nombre del comandante ${F.cap} y de toda la tripulación, gracias por volar con ${alN}.`}};
+  return M[k];}
+function _flyEvent(k){const F=FLY;
+  if(k==='doors'||k==='turbOn'||k==='beltOn')F.belt=true;if(k==='beltOff'||k==='turbOff'||k==='open')F.belt=false;
+  if(k==='doors')_flyDoor();if(k==='touch'){_flyTouch();return;}if(k==='takeoff'){_flySay(_flyMsg(k),'belt');return;}
+  if(k==='end'){F.done=true;flyRender();return;}
+  const m=_flyMsg(k);if(!m)return;const kind=/^brd/.test(k)?'airport':/beltOn|beltOff|turbOn|turbOff/.test(k)?'belt':k==='crewTO'||k==='crewLD'?'call':'cabin';
+  _flySay(m,kind,{ttl:/^brd|crew/.test(k)?120:600});}
+function _flyTick(force){if(!FLY.on)return;const P=FLY.P,t=_flyEl();while(FLY.i<P.ev.length&&P.ev[FLY.i].t<=t){const e=P.ev[FLY.i++];if(t-e.t<Math.max(90,30*SIM.speed)||/end|beltOff|beltOn|doors|open/.test(e.k))_flyEvent(e.k);else if(/belt|turb|open|doors/.test(e.k))_flyEvent(e.k);}
+  _flyEngUpd();const tab=document.getElementById('tab-bordo');if(tab&&tab.style.display!=='none')_flyUpd(force);}
+setInterval(()=>_flyTick(false),500);
+// ── sons: motores, chimes, porta, toque no solo ──
+function _flyEng(on){const c=_ctx();if(!c)return;if(!on){if(FLY.e){try{FLY.e.g.gain.setTargetAtTime(0,c.currentTime,.4);const e=FLY.e;setTimeout(()=>{try{e.s.stop();}catch(x){}},1500);}catch(x){}FLY.e=null;}return;}
+  if(FLY.e)return;const len=c.sampleRate*3,b=c.createBuffer(1,len,c.sampleRate),d=b.getChannelData(0);let l=0;for(let i=0;i<len;i++){l=(l+.02*(Math.random()*2-1))/1.02;d[i]=l*3.5;}
+  const s=c.createBufferSource();s.buffer=b;s.loop=true;const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=200;const g=c.createGain();g.gain.value=0;
+  const o=c.createOscillator();o.type='sawtooth';o.frequency.value=90;const og=c.createGain();og.gain.value=0;const olp=c.createBiquadFilter();olp.type='lowpass';olp.frequency.value=300;
+  s.connect(lp);lp.connect(g);o.connect(olp);olp.connect(og);og.connect(g);g.connect(c.destination);s.start();o.start();FLY.e={s,lp,g,o,og};}
+function _flyEngUpd(){const e=FLY.e,c=_audioCtx;if(!e||!c)return;const st=_flyState(),t=st.t,P=FLY.P;let g=.02,f=180,w=0,hz=80;
+  if(st.ph==='Taxiando para a pista'){g=.05;f=320;w=.01;hz=110;}
+  else if(st.ph==='Decolagem'){g=.16;f=1300;w=.035;hz=170;}else if(st.ph==='Subida'){g=.11;f=900;w=.025;hz=150;}
+  else if(st.ph==='Cruzeiro'){g=.075;f=620;w=.012;hz=125;}else if(st.ph==='Descida'||st.ph==='Aproximação final'){g=.06;f=520;w=.012;hz=115;}
+  else if(st.ph==='Pouso'){g=t<P.LD+25?.17:.07;f=t<P.LD+25?1500:400;w=.03;hz=160;}else if(st.ph==='Taxiando para o portão'){g=.045;f=300;w=.008;hz=105;}else if(st.ph==='Voo encerrado'){g=0;}
+  try{const n=c.currentTime,tc=SIM.speed>5?.3:1.5;e.g.gain.setTargetAtTime(g,n,tc);e.lp.frequency.setTargetAtTime(f,n,tc);e.og.gain.setTargetAtTime(w,n,tc);e.o.frequency.setTargetAtTime(hz,n,tc);}catch(x){}}
+function _flyDoor(){try{const c=_ctx();const t=c.currentTime+.05;_sfxNoise(c,c.destination,t,.6,1800,300,.12);_sfxTone(c,t+.5,70,.3,'sine',.35);}catch(e){}}
+function _flyTouch(){try{const c=_ctx();const t=c.currentTime+.05;_sfxTone(c,t,55,.5,'sine',.55);_sfxNoise(c,c.destination,t,.4,600,120,.25,'lowpass');_sfxTone(c,t+.6,50,.4,'sine',.35);}catch(e){}
+  const m={pt:'Pouso! ✈',en:'',es:''};const c2=document.getElementById('fly-cap');if(c2)c2.textContent='🛬 Pouso em '+FLY.dest;}
+function flyCall(){const st=_flyState();try{const c=_ctx();_sfxTone(c,c.currentTime+.02,1760,.6,'sine',.18);}catch(e){}
+  const busy=FLY.belt&&/Decolagem|Subida|Descida|Aproximação|Pouso|Taxiando/.test(st.ph);
+  const m=busy?{pt:'Por favor, permaneça sentado com o cinto afivelado. Um comissário irá atendê-lo assim que for seguro.',en:'Please remain seated with your seatbelt fastened. A flight attendant will assist you as soon as it is safe.',es:'Por favor, permanezca sentado con el cinturón abrochado. Un tripulante lo atenderá cuando sea seguro.'}
+    :{pt:`Olá! Um comissário já está a caminho da poltrona ${FLY.seat}.`,en:`Hello! A flight attendant is on the way to seat ${FLY.seat}.`,es:`¡Hola! Un tripulante va en camino al asiento ${FLY.seat}.`};
+  setTimeout(()=>voxSay(['pt','en','es'].map(k=>({k,text:m[k]})),{}),700);const c2=document.getElementById('fly-cap');if(c2)c2.textContent='🔔 '+m.pt;}
+// ── conteúdo da tela ──
+const FLY_MOVIES=[['🦖','Era dos Gigantes','Aventura · 2h04','#2e7d32'],['🚀','Órbita Silenciosa','Ficção científica · 1h58','#283593'],['🏖','Verão em Ubatuba','Comédia romântica · 1h41','#00838f'],['🕵️','O Caso da Rua Augusta','Suspense · 1h52','#37474f'],
+ ['⚽','Várzea','Drama esportivo · 1h47','#f9a825'],['🐉','O Último Dragão','Animação · 1h35','#6a1b9a'],['🎻','Concerto para Dois','Drama · 2h10','#6d4c41'],['🌋','Ilha do Fogo','Documentário · 1h20','#d84315']];
+const FLY_DUTY=[['🌸','Perfume Garoa Floral 100 ml',389],['🍫','Caixa de chocolates finos (24 un.)',129],['🕶','Óculos de sol aviador',459],['🧸','Avião de pelúcia da tripulação',89],['🎧','Fone com cancelamento de ruído',899],['💼','Kit de viagem (máscara, almofada e meias)',119],['⌚','Relógio de pulso Piloto',1290],['🧴','Kit de cuidados para a pele',219]];
+function _flyMenu(){const F=FLY,exe=F.cls==='exe',short=F.dur<=120,long=F.dur>=420,reg={EUR:['Bacalhau à portuguesa','Risoto de cogumelos'],EUA:['Hambúrguer artesanal','Salmão grelhado'],ASIA:['Frango teriyaki com arroz','Yakisoba de legumes'],MID:['Cordeiro com cuscuz','Homus com pão sírio'],LAT:['Bife de chorizo com batatas','Empanadas'],CAR:['Peixe com arroz de coco','Frango ao curry']}[F.tipo]||['Frango grelhado com legumes','Massa ao sugo'];
+  if(short)return exe?[['🥪','Sanduíche natural de peito de peru'],['🧀','Pão de queijo quentinho'],['🍷','Vinho, cerveja ou refrigerante'],['☕','Café expresso']]:[['🥨','Snack salgado ou biscoito doce'],['🥤','Água, suco ou refrigerante'],['☕','Café ou chá']];
+  const main=exe?[['🥗','Entrada: salada de folhas com queijo de cabra'],['🍽','Prato principal: filé ao molho de vinho ou '+reg[0].toLowerCase()],['🍰','Sobremesa: petit gâteau com sorvete'],['🍷','Carta de vinhos, espumante e destilados'],['☕','Café expresso e chocolates']]
+    :[['🍽',`${reg[0]} ou ${reg[1].toLowerCase()}`],['🥗','Salada da estação'],['🍮','Sobremesa: pudim de leite'],['🥤','Água, suco, refrigerante, cerveja ou vinho'],['☕','Café ou chá']];
+  if(long)main.push(['🥐',exe?'Antes do pouso: café da manhã completo à la carte':'Antes do pouso: café da manhã com pão, frutas e iogurte']);return main;}
+function _flyTabs(){const F=FLY,t=[['map','🗺 Mapa'],['voo','📊 Voo'],['film','🎬 Filmes'],['mus','🎵 Música'],['menu','🍽 Cardápio']];if(!F.dom)t.push(['shop','🛍 Compras']);t.push(['dest','🌍 Destino'],['seg','🛟 Segurança']);return t;}
+function flyTab(k){FLY.tab=k;flyRender();}
+function _flyBody(){const F=FLY,st=_flyState(),C=F.country,w=_flyWx();
+  switch(F.tab){
+   case'map':return`<div id="fly-map"></div><div class="fly-mapov" id="fly-mapov"></div>`;
+   case'voo':return`<div class="fly-stats" id="fly-stats"></div>`;
+   case'film':if(F.movie!=null){const m=FLY_MOVIES[F.movie],len=parseInt(m[2].match(/(\d)h(\d+)/)[1])*60+ +m[2].match(/h(\d+)/)[1],el=Math.min(len,(_simNow()-F.mt0)/60000);
+       return`<div class="fly-player" style="--mc:${m[3]}"><div class="fp-scene"><span>${m[0]}</span><i></i><i></i><i></i></div><div class="fp-t">${_tvEsc(m[1])}</div><div class="fp-bar"><b style="width:${el/len*100}%"></b></div><div class="fp-tm" id="fp-tm">${Math.floor(el)} / ${len} min</div><button class="fly-b" onclick="FLY.movie=null;flyRender()">⏹ Parar</button></div>`;}
+     return`<div class="fly-grid">${FLY_MOVIES.map((m,i)=>`<button class="fly-mv" style="--mc:${m[3]}" onclick="FLY.movie=${i};FLY.mt0=_simNow();flyRender()"><span>${m[0]}</span><b>${_tvEsc(m[1])}</b><em>${m[2]}</em></button>`).join('')}</div><div class="fly-note">Filmes fictícios. O tempo do filme acompanha a velocidade do simulador.</div>`;
+   case'mus':return`<div class="fly-list"><div class="fly-row"><span>📻 Rádio Bordo · Bossa</span><button class="fly-b" onclick="AMB.m?_ambMusicStop():_ambMusicStart();setTimeout(flyRender,50)">${AMB.m?'⏹ Parar':'▶ Ouvir'}</button></div>
+     <div class="fly-row"><span>✈ Sons da cabine (motores)</span><button class="fly-b" onclick="FLY.snd=!FLY.snd;_flyEng(FLY.snd);flyRender()">${FLY.snd!==false?'🔊 Ligado':'🔈 Desligado'}</button></div></div><div class="fly-note">A música toca por cima do som da cabine. Use fones para uma experiência mais real.</div>`;
+   case'menu':return`<div class="fly-h">${F.cls==='exe'?'🛋 Classe Executiva':'💺 Classe Econômica'} · ${F.dur<=120?'serviço de lanche':'serviço de refeição'}</div><div class="fly-list">${_flyMenu().map(i=>`<div class="fly-row"><span>${i[0]} ${_tvEsc(i[1])}</span><button class="fly-b" onclick="flyOrder('${_tvEsc(i[1]).replace(/'/g,'')}')">Pedir</button></div>`).join('')}</div>`;
+   case'shop':return`<div class="fly-list">${FLY_DUTY.map((d,i)=>`<div class="fly-row"><span>${d[0]} ${_tvEsc(d[1])}</span><em>R$ ${d[2]} · US$ ${Math.round(d[2]/5.4)}</em><button class="fly-b" onclick="FLY.cart.push(${i});flyRender()">+</button></div>`).join('')}</div>
+     <div class="fly-row fly-cart"><span>🛒 ${F.cart.length} ${F.cart.length===1?'item':'itens'} · R$ ${F.cart.reduce((s,i)=>s+FLY_DUTY[i][2],0)}</span>${F.cart.length?'<button class="fly-b" onclick="flyBuy()">Finalizar compra</button>':''}</div>`;
+   case'dest':return`<div class="fly-dest"><div class="fd-h">${_tvEsc(F.dest)}<small>${_tvEsc(C.nm)}</small></div><div class="fd-g">
+     <div><span>Hora local</span><b id="fd-tm">${_flyHM(_simNow(),C.utc)}</b><em>${C.utc===-3?'mesmo horário de Brasília':_flyDiff(C.utc)+(C.utc>-3?' a mais':' a menos')+' que Brasília'}</em></div>
+     <div><span>Tempo</span><b>${w.t}</b><em>${_tvEsc(w.d)}</em></div><div><span>Idioma</span><b style="font-size:1rem">${_tvEsc(C.l)}</b></div><div><span>Moeda</span><b style="font-size:1rem">${_tvEsc(C.cur)}</b></div>
+     <div><span>Olá</span><b style="font-size:1.1rem">${_tvEsc(C.hi)}</b></div><div><span>Obrigado</span><b style="font-size:1.1rem">${_tvEsc(C.ty)}</b></div></div>
+     ${C.cu?`<div class="fly-note">💡 Você sabia? ${_tvEsc(C.cu)}</div>`:''}${C.dom?'':'<div class="fly-note">🛂 Tenha o passaporte em mãos para a imigração e verifique as regras de visto e vacinas do destino.</div>'}</div>`;
+   case'seg':return`<div class="fly-seg">${[['🔒','Cinto','Encaixe e ajuste. Mantenha afivelado sempre que estiver sentado.'],['🚪','Saídas','Frente, meio e trás. Siga as luzes no piso.'],['😷','Oxigênio','Puxe a máscara, cubra nariz e boca. Coloque a sua antes de ajudar.'],['🦺','Colete','Embaixo do assento. Infle só ao sair do avião.'],['📵','Eletrônicos','Modo avião durante todo o voo.'],['🚭','Não fume','Proibido a bordo, inclusive cigarro eletrônico.']].map(x=>`<div><span>${x[0]}</span><b>${x[1]}</b><em>${x[2]}</em></div>`).join('')}</div>
+     <button class="fly-b" onclick="_flySay(_flyMsg('safety'),'cabin',{interrupt:true})">🔊 Ouvir as instruções</button>`;}return'';}
+function flyOrder(it){const m={pt:`Pedido anotado: ${it}. Um comissário levará até a poltrona ${FLY.seat}.`,en:`Order noted. A flight attendant will bring it to seat ${FLY.seat}.`,es:`Pedido anotado. Un tripulante lo llevará al asiento ${FLY.seat}.`};
+  if(FLY.belt&&!/Cruzeiro/.test(_flyState().ph)){m.pt='O serviço de bordo está suspenso no momento. Assim que o aviso de cintos for desligado, levaremos o seu pedido.';m.en='In-flight service is suspended right now. We will bring your order once the seatbelt sign is off.';m.es='El servicio a bordo está suspendido. Llevaremos su pedido cuando se apague la señal de cinturones.';}
+  try{const c=_ctx();_sfxTone(c,c.currentTime+.02,1760,.5,'sine',.15);}catch(e){}voxSay(['pt','en','es'].map(k=>({k,text:m[k]})),{});const c2=document.getElementById('fly-cap');if(c2)c2.textContent='🍽 '+m.pt;}
+function flyBuy(){const tot=FLY.cart.reduce((s,i)=>s+FLY_DUTY[i][2],0),n=FLY.cart.length;FLY.cart=[];flyRender();const c2=document.getElementById('fly-cap');if(c2)c2.textContent=`🛍 Compra confirmada: ${n} itens, R$ ${tot}. Entrega na sua poltrona.`;}
+function _flyPicker(){const rows=_gvRows().slice(0,40),cls=FLY.cls||'eco';
+  return`<div class="tv-card"><div class="tv-card-h"><span class="tv-card-t">✈ A bordo · escolha o seu voo</span><span class="tv-hw">${rows.length} próximas partidas</span></div>
+   <div class="cls-t" style="padding:8px"><button class="${cls==='eco'?'on':''}" onclick="FLY.cls='eco';flyRender()">💺 Econômica</button><button class="${cls==='exe'?'on':''}" onclick="FLY.cls='exe';flyRender()">🛋 Executiva</button></div>
+   <div class="fly-note" style="padding:0 10px">Você embarca pelo portão, ouve as instruções de segurança, decola, acompanha o voo na tela da poltrona e pousa no destino. Use 30x ou 60x para voos longos.</div>
+   ${rows.map(r=>{const f=FD[r.fi],a=AL[r.al]||{name:r.al,color:'#546e7a'};return`<div class="fly-pick"><b>${r.time}</b><i style="background:${a.color}">${_tvEsc(a.name)}</i><span>${_tvEsc(r.dest)}<small>${r.fnum} · ${_tvEsc(f[5])} · ${_flyDurT(f[4]).pt}</small></span><button class="fly-b" onclick="flyStart(${r.fi})">Embarcar</button></div>`;}).join('')||'<div class="fly-note">Nenhum voo no momento.</div>'}</div>`;}
+function _flySpd(){return`<span class="fly-spd">${[1,10,30,60].map(x=>`<button class="${SIM.speed===x?'on':''}" onclick="simSpeed(${x});flyRender()">${x}x</button>`).join('')}</span>`;}
+function flyRender(){const root=document.getElementById('fly-root');if(!root)return;try{if(FLY.map){FLY.map.remove();FLY.map=null;}}catch(e){}
+  if(!FLY.on){root.innerHTML=_flyPicker();return;}const F=FLY,a=AL[F.al]||{name:F.al,color:'#546e7a'};
+  if(F.done){root.innerHTML=`<div class="tv-card fly-end"><div class="fe-ic">🛬</div><div class="fe-t">Bem-vindo a ${_tvEsc(F.dest)}!</div><div class="fly-note">Voo ${F.fnum} concluído · ${_flyDurT(F.P.air/60).pt} no ar · ${F.dist.toLocaleString('pt-BR')} km</div><button class="fly-b" onclick="flyExit()">Escolher outro voo</button></div>`;return;}
+  root.innerHTML=`<div class="fly-scr" id="fly-scr" style="--ac:${a.color}">
+   <div class="fly-top"><span class="fly-al">${_tvEsc(a.name)}</span><span class="fly-rt"><b>${F.fnum}</b> GRU → ${F.iata} <small>${_tvEsc(F.dest)}</small></span><span class="fly-belt" id="fly-belt">🔒 Atar cintos</span><span class="fly-ph" id="fly-ph"></span></div>
+   <div class="fly-sub"><span>💺 ${F.seat} · ${F.cls==='exe'?'Executiva':'Econômica'} · grupo ${F.grp} · portão ${F.gate}</span>${_flySpd()}<button class="fly-b sm" onclick="flyCall()">🔔 Comissário</button><button class="fly-b sm" onclick="(document.getElementById('fly-scr').requestFullscreen||function(){}).call(document.getElementById('fly-scr'))">⛶</button><button class="fly-b sm" onclick="if(confirm('Sair do voo?'))flyExit()">✕</button></div>
+   <div class="fly-tabs">${_flyTabs().map(t=>`<button class="${F.tab===t[0]?'on':''}" onclick="flyTab('${t[0]}')">${t[1]}</button>`).join('')}</div>
+   <div class="fly-body">${_flyBody()}</div><div class="fly-prog"><b id="fly-pb"></b><span id="fly-pt"></span></div><div class="fly-cap" id="fly-cap">${F.cap_?'🔊 '+_tvEsc(F.cap_):'Bem-vindo a bordo!'}</div></div>`;
+  if(F.tab==='map')_flyMapInit();_flyUpd(true);}
+function _flyMapInit(){const el=document.getElementById('fly-map');if(!el)return;try{const m=L.map(el,{zoomControl:false,worldCopyJump:true});FLY.map=m;_mkTiles(m);
+  const o=COORDS.GRU||HOME,d=COORDS[FLY.iata]||o,pts=[];for(let i=0;i<=64;i++)pts.push(_flyGC(o,d,i/64));
+  L.polyline(pts,{color:'#90caf9',weight:2,dashArray:'6 6',opacity:.8}).addTo(m);FLY.mDone=L.polyline([],{color:'#ffd740',weight:3}).addTo(m);
+  L.circleMarker(o,{radius:5,color:'#fff',fillColor:'#4caf50',fillOpacity:1}).bindTooltip('GRU',{permanent:true,direction:'left',className:'net-gl x'}).addTo(m);
+  L.circleMarker(d,{radius:5,color:'#fff',fillColor:'#ff5252',fillOpacity:1}).bindTooltip(FLY.iata,{permanent:true,direction:'right',className:'net-gl x'}).addTo(m);
+  FLY.mk=L.marker(o,{icon:L.divIcon({className:'fly-pl',html:'<div id="fly-pl">✈</div>',iconSize:[30,30]})}).addTo(m);m.fitBounds(L.polyline(pts).getBounds(),{padding:[30,30]});FLY.pts=pts;setTimeout(()=>{try{m.invalidateSize();}catch(e){}},200);}catch(e){console.log('fly map',e);}}
+function _flyUpd(force){const F=FLY;if(!F.on||F.done)return;const st=_flyState(),P=F.P,q=id=>document.getElementById(id),C=F.country;
+  if(q('fly-ph'))q('fly-ph').textContent=st.ph;if(q('fly-belt'))q('fly-belt').classList.toggle('on',!!F.belt);
+  const rem=Math.max(0,P.LD-st.t),pct=Math.min(100,Math.max(0,st.t<P.TO?0:(st.t-P.TO)/P.air*100));
+  if(q('fly-pb'))q('fly-pb').style.width=pct+'%';if(q('fly-pt'))q('fly-pt').textContent=st.t<P.TO?`Decolagem prevista em ${_flyDurT(Math.max(1,(P.TO-st.t)/60)).pt}`:st.t<P.LD?`Pouso às ${_flyHM(F.t0+P.LD*1000,C.utc)} (hora local) · faltam ${_flyDurT(Math.max(1,rem/60)).pt}`:'Em solo';
+  const o=COORDS.GRU||HOME,d=COORDS[F.iata]||o,pos=_flyGC(o,d,st.frac),nx=_flyGC(o,d,Math.min(1,st.frac+.01)),brg=Math.atan2(nx[1]-pos[1],nx[0]-pos[0])*180/Math.PI;
+  if(F.map&&F.mk){try{F.mk.setLatLng(pos);const pl=document.getElementById('fly-pl');if(pl)pl.style.transform=`rotate(${brg-45}deg)`;if(F.mDone)F.mDone.setLatLngs(F.pts.slice(0,Math.max(1,Math.round(st.frac*64))).concat([pos]));}catch(e){}}
+  const tmp=st.alt>0?Math.max(-56,Math.round(15-st.alt*.00198)):_cityWx('Guarulhos').t;
+  const S=[['Altitude',st.alt.toLocaleString('pt-BR')+' pés',Math.round(st.alt*.3048).toLocaleString('pt-BR')+' m'],['Velocidade',st.spd+' km/h',Math.round(st.spd/1.852)+' nós'],['Temp. externa',tmp+'°C',''],
+    ['Distância restante',Math.round(F.dist*(1-st.frac)).toLocaleString('pt-BR')+' km','de '+F.dist.toLocaleString('pt-BR')+' km'],['Tempo até o pouso',st.t<P.LD?_tvCD(Math.round(rem)):'—',''],['Hora no destino',_flyHM(_simNow(),C.utc),_tvEsc(F.dest.split(' –')[0])],['Hora em São Paulo',_flyHM(_simNow(),-3),''],['Aeronave',_tvEsc(F.ac),_tvEsc((AL[F.al]||{}).name||'')]];
+  if(q('fly-mapov'))q('fly-mapov').innerHTML=S.slice(0,5).map(s=>`<div><span>${s[0]}</span><b>${s[1]}</b></div>`).join('');
+  if(q('fly-stats'))q('fly-stats').innerHTML=S.map(s=>`<div><span>${s[0]}</span><b>${s[1]}</b><em>${s[2]}</em></div>`).join('');
+  if(F.tab==='film'&&F.movie!=null&&q('fp-tm')){const m=FLY_MOVIES[F.movie],len=parseInt(m[2].match(/(\d)h/)[1])*60+ +m[2].match(/h(\d+)/)[1],el=Math.min(len,(_simNow()-F.mt0)/60000);q('fp-tm').textContent=`${Math.floor(el)} / ${len} min`;const b=document.querySelector('.fp-bar b');if(b)b.style.width=(el/len*100)+'%';}
+  if(q('fd-tm'))q('fd-tm').textContent=_flyHM(_simNow(),C.utc);}
+
 // ════════ SONS DOS AVISOS · GRU (diferentes de Confins e de São José; um por linha) ════════
 function _sfxEP(c,t,f,vol,len){len=len||1.1;_sfxTone(c,t,f,len,'sine',vol);_sfxTone(c,t,f*2,len*.5,'triangle',vol*.22);_sfxTone(c,t,f*3,len*.18,'sine',vol*.07);}   // piano elétrico
 function _sfxGlide(c,t,f1,f2,len,type,vol){const o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+len*.6);
@@ -4238,6 +4661,9 @@ function _sfxLine(c,t,snd){
   else if(snd==='congonhas'){[1318.5,1318.5,987.77].forEach((f,i)=>_sfxTone(c,t+i*.18,f,i<2?.18:.6,'sine',.18));}                                                   // Congonhas: "plim-plim-plom"
   else{_sfxTone(c,t,880,.34,'square',.06);_sfxTone(c,t,880,.34,'sine',.16);_sfxTone(c,t+.36,659.25,.6,'square',.06);_sfxTone(c,t+.36,659.25,.6,'sine',.16);}}      // Leste: "pi-pom"
 function _voxChime3(kind){try{const c=_ctx();if(!c)return;if(c.state==='suspended')c.resume();const t=c.currentTime+.02;if(kind==='train'&&typeof TV!=='undefined'&&TV.mode==='bus')kind='bell';
+  if(kind==='cabin'){_sfxTone(c,t,1318.5,1.1,'sine',.2);_sfxTone(c,t,2637,.25,'sine',.03);_sfxTone(c,t+.55,1046.5,1.4,'sine',.2);_sfxTone(c,t+.55,2093,.25,'sine',.03);return;}   // avião: 'bing-bong'
+  if(kind==='belt'){_sfxTone(c,t,1174.66,1.3,'sine',.2);_sfxTone(c,t,2349,.3,'sine',.04);return;}   // aviso de cintos: 'ding'
+  if(kind==='call'){_sfxTone(c,t,1318.5,.5,'sine',.17);_sfxTone(c,t+.35,1318.5,.5,'sine',.17);return;}
   if(kind==='train'){_sfxLine(c,t,(typeof TV_METRO!=='undefined'&&TV_METRO)?TV_METRO.snd:'leste');}
   else if(kind==='train0'){const L=(typeof TV_METRO!=='undefined'&&TV_METRO)?TV_METRO.snd:'leste';
     if(L==='centro'){[987.77,1318.5,1174.66,1567.98].forEach((f,i)=>{_sfxTone(c,t+i*.13,f,.32,'triangle',.17);_sfxTone(c,t+i*.13,f*2,.1,'sine',.04);});}   // Linha Centro: "ti-ri-ti-rim" de glockenspiel
@@ -4247,7 +4673,7 @@ function _voxChime3(kind){try{const c=_ctx();if(!c)return;if(c.state==='suspende
 }catch(e){}}
 function _sfxDoors(c,t){for(let i=0;i<14;i++){_sfxTone(c,t+i*.2,1318.5,.1,'square',.05);_sfxTone(c,t+i*.2,1318.5,.1,'sine',.09);}   // bipes rápidos das portas
   _sfxNoise(c,c.destination,t+2.9,1.2,3200,800,.18);_sfxNoise(c,c.destination,t+3.0,1.0,500,180,.16,'lowpass');_sfxTone(c,t+4.2,62,.34,'sine',.42);_sfxTone(c,t+4.3,95,.2,'triangle',.1);}
-VOX_HOLD.train=1300;VOX_HOLD.bell=900;VOX_HOLD.airport=2300;
+VOX_HOLD.train=1300;VOX_HOLD.bell=900;VOX_HOLD.airport=2300;VOX_HOLD.cabin=1900;VOX_HOLD.belt=1200;VOX_HOLD.call=1000;
 
 
 // ════════ MAPA DA REDE (esquemático, estilo mapa de metrô) ════════
@@ -4284,7 +4710,8 @@ function _netSVG(){const g=_netGeo(),parts=[],seen={};
     <line x1="1450" y1="320" x2="1450" y2="545" class="net-div"/><line x1="1150" y1="320" x2="1150" y2="545" class="net-div"/>
     <text x="1650" y="552" class="net-term">TERMINAL 3</text><text x="1300" y="552" class="net-term">TERMINAL 2</text><text x="1060" y="552" class="net-term">TERMINAL 1</text>`;
   const zones=`<text x="140" y="-230" class="net-zone">INTERIOR</text><text x="650" y="1150" class="net-zone">BAIXADA SANTISTA</text><text x="2100" y="350" class="net-zone">VALE DO PARAÍBA</text><text x="2480" y="960" class="net-zone">LITORAL NORTE</text><text x="830" y="640" class="net-zone">CAPITAL</text><text x="980" y="860" class="net-zone">ABC</text>`;
-  return `<svg id="net-svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">${zones}${box}<g id="net-lines">${parts.join('')}</g>${links.join('')}<g id="net-trains"></g>${st.join('')}</svg>`;}
+  const pane=NET_PANE&&NET_POS[NET_PANE.a]&&NET_POS[NET_PANE.b]?`<line x1="${NET_POS[NET_PANE.a][0]}" y1="${NET_POS[NET_PANE.a][1]}" x2="${NET_POS[NET_PANE.b][0]}" y2="${NET_POS[NET_PANE.b][1]}" stroke="#ff1744" stroke-width="16" stroke-dasharray="8 8" opacity=".6"/>`:'';
+  return `<svg id="net-svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">${zones}${box}<g id="net-lines">${parts.join('')}</g>${pane}${links.join('')}<g id="net-trains"></g>${st.join('')}</svg>`;}
 function _netFit(which){const pts=which==='air'?[[955,250],[1850,570]]:Object.values(NET_POS).concat([[100,-250],[2720,1160]]);
   const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);NET.vb={x:Math.min(...xs)-30,y:Math.min(...ys)-30,w:Math.max(...xs)-Math.min(...xs)+60,h:Math.max(...ys)-Math.min(...ys)+60};_netVB();}
 function _netVB(){const s=document.getElementById('net-svg');if(!s||!NET.vb)return;s.setAttribute('viewBox',`${NET.vb.x} ${NET.vb.y} ${NET.vb.w} ${NET.vb.h}`);
@@ -4346,6 +4773,7 @@ function _netGeoDraw(){if(!NET.map||!NET.lyr)return;const m=NET.map,z=m.getZoom?
   const cities={};Object.keys(seen).join('|').split('|').filter((v,i,a)=>a.indexOf(v)===i).forEach(n=>{const c=_netCity(n);if(c)(cities[c]=cities[c]||[]).push(n);});
   Object.values(cities).forEach(a=>{if(a.length>1)for(let i=1;i<a.length;i++){const p=_netLL(a[0]),q=_netLL(a[i]);if(p&&q)L.polyline([p,q],{color:'#cfd8dc',weight:2.5,dashArray:'2 7',interactive:false}).addTo(NET.lyr);}});
   const names=[];set.forEach(Ln=>Ln.stops.forEach(n=>{if(!names.includes(n))names.push(n);}));
+  if(NET_PANE&&TV.mode==='metro'){const A=_netLL(NET_PANE.a),B=_netLL(NET_PANE.b);if(A&&B)L.polyline([A,B],{color:'#ff1744',weight:w+6,opacity:.55,dashArray:'6 8',interactive:false}).addTo(NET.lyr);}
   names.forEach(n=>{const ll=_netLL(n);if(!ll)return;const ls=_netLinesAt(n),c=_netCity(n),xchg=ls.length>1||(c&&cities[c]&&cities[c].length>1),dim=NET.hl&&!ls.some(x=>x.key===NET.hl),sel=NET.sel===n;
     const mk=L.circleMarker(ll,{radius:xchg?(z>=11?8:6):(z>=11?5:3.5),color:sel?'#ffd740':xchg?'#0b1118':ls[0].color,weight:sel?4:xchg?2.5:2.5,fillColor:xchg?'#ffffff':'#0b1118',fillOpacity:dim?.15:1,opacity:dim?.15:1});
     const perm=!dim&&((xchg&&z>=8)||z>=11);mk.bindTooltip(_tvEsc(n),{permanent:perm,direction:'right',offset:[8,0],className:'net-gl'+(xchg?' x':'')});
@@ -4364,18 +4792,19 @@ function _netHTML(){const bus=TV.mode==='bus',sch=!bus&&NET.view==='sch',set=_ne
   return `<div class="tv-card"><div class="tv-card-h"><span class="tv-card-t">🗺 Mapa da rede · ${bus?'Ônibus':'VLT Tietê'}</span><span class="tv-hw" id="net-count"></span></div>
   <div class="tv-card-b" style="padding:8px">${bus?'':`<div class="net-tgl"><button class="${sch?'':'on'}" onclick="_netMode('geo')">🌎 Mapa físico</button><button class="${sch?'on':''}" onclick="_netMode('sch')">🧭 Esquema</button></div>`}
   <div class="net-chips">${set.map(Ln=>`<button class="net-chip${NET.hl===Ln.key?' on':''}" data-k="${Ln.key}" style="--lc:${Ln.color}" onclick="_netHL2('${Ln.key}')"><b>${Ln.code}</b>${_tvEsc(bus?Ln.name.replace(/^GRU\s*→\s*/,''):Ln.short.replace('Linha ',''))}</button>`).join('')}</div>
-  <div class="net-wrap">${sch?_netSVG():'<div id="net-geo"></div>'}<div class="net-btns"><button onclick="_netZ('in')">＋</button><button onclick="_netZ('out')">－</button><button onclick="_netZ('all')" title="Ver tudo">⤢</button><button onclick="_netZ('air')" title="Aeroporto">✈</button></div></div>
+  ${_paneBanner()}<div class="net-pbtn">${bus?'':(NET_PANE?'<button class="ok" onclick="paneClear()">✓ Normalizar a rede</button>':'<button onclick="paneStart()">⚠️ Simular pane na via</button>')}</div><div class="net-wrap">${sch?_netSVG():'<div id="net-geo"></div>'}<div class="net-btns"><button onclick="_netZ('in')">＋</button><button onclick="_netZ('out')">－</button><button onclick="_netZ('all')" title="Ver tudo">⤢</button><button onclick="_netZ('air')" title="Aeroporto">✈</button></div></div>
   <div class="net-leg"><span><i class="lg-x"></i>${bus?'conexão entre linhas':'baldeação'}</span><span><i class="lg-w"></i>integração a pé (mesma cidade)</span><span><i class="lg-t"></i>${bus?'ônibus':'trem'} circulando</span></div></div></div>
   <div class="tv-card"><div class="tv-card-b" id="net-info"></div></div>`;}
 function _tvShell(){
-  if(TV.view!=='net'){try{if(NET.map){NET.map.remove();NET.map=null;}}catch(e){}_tvShell0();const sb=document.querySelector('#tv-body .tv-sub');if(sb&&!sb.querySelector('[data-tv="view:net"]'))sb.insertAdjacentHTML('beforeend','<button class="tv-subb" data-tv="view:net">🗺 Mapa da rede</button>');return;}
+  if(TV.view!=='net'){try{if(NET.map){NET.map.remove();NET.map=null;}}catch(e){}_tvShell0();const sb=document.querySelector('#tv-body .tv-sub');if(sb&&!sb.querySelector('[data-tv="view:net"]'))sb.insertAdjacentHTML('beforeend','<button class="tv-subb" data-tv="view:net">🗺 Mapa da rede</button>');_v8Inject();return;}
   TV.view='stop';_tvShell0();TV.view='net';const bus=TV.mode==='bus',c=_tvCur().color;
   document.getElementById('tv-body').innerHTML=`<div class="tv-sub" style="--lc:${c}"><button class="tv-subb" data-tv="view:stop">📍 ${bus?'No ponto':'Na estação'}</button><button class="tv-subb" data-tv="view:ride">${bus?'🚌 Dentro do ônibus':'🚆 Dentro do trem'}</button><button class="tv-subb on" data-tv="view:net">🗺 Mapa da rede</button></div>`+_netHTML();
   TV.keys={};NET.ik=null;if(NET.sel&&!_netLinesAt(NET.sel).length)NET.sel=null;
   if(!bus&&NET.view==='sch'){if(!NET.vb)_netStart();_netVB();_netBind();if(NET.hl){const h=NET.hl;NET.hl=null;_netHL(h);}if(NET.sel)_netSelect(NET.sel);else _netInfo(true);_netTrains();}
   else{if(NET.hl&&!_netSet().some(x=>x.key===NET.hl))NET.hl=null;_netGeoInit();_netInfo(true);_netGT=0;_netGeoTrains();}}
-function _tvTick(force){if(TV.view==='net'){const tab=document.getElementById('tab-transit');if(!tab||tab.style.display==='none')return;if(TV.mode==='metro'&&NET.view==='sch')_netTrains();else _netGeoTrains();_netInfo(force);return;}return _tvTick0(force);}
+function _tvTick(force){if(TV.view==='net'){const tab=document.getElementById('tab-transit');if(!tab||tab.style.display==='none')return;if(TV.mode==='metro'&&NET.view==='sch')_netTrains();else _netGeoTrains();_netInfo(force);return;}const r=_tvTick0(force);_v8Tick();return r;}
 </script>
+<div class="wrap" id="tab-bordo" style="display:none"><div id="fly-root"></div></div>
 <div class="wrap" id="tab-transit" style="display:none"><div class="tv-modes" id="tv-modes"></div><div class="tv-speed gv-row" id="tv-speed" style="margin-bottom:12px"></div><div id="tv-body"></div></div>
 </body>
 </html>
