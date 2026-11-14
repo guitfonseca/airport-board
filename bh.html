@@ -2873,8 +2873,8 @@ function _tvHav(a,b){const R=6371,r=x=>x*Math.PI/180;const dA=r(b[0]-a[0]),dO=r(
 const _TV_MST=[...(TRANSIT_DATA.terminals||[]),...(TRANSIT_DATA.city_trunk||[])];
 const TV_METRO={key:'metro',kind:'metro',code:'TG',name:TRANSIT_DATA.line_name||'Metrô',color:TRANSIT_DATA.metro_color||'#007dc5',
   stops:_TV_MST.map(s=>s.name),zones:_TV_MST.map(s=>s.zone),
-  run:_TV_MST.slice(1).map((s,i)=>[55,55,60,55,80,90,90,90][i]||75),
-  dwell:30,start:60,end:27*60-1,vmax:90,h24:true,
+  run:_TV_MST.slice(1).map((s,i)=>[75,80,85,75,120,140,155,150][i]||90),
+  dwell:45,od:120,start:60,end:27*60-1,vmax:90,h24:true,
   hw:m=>{const h=(m/60)%24;if(h<5)return 15;if(h<6)return 8;if(h<9)return 4;if(h<17)return 6;if(h<20)return 4;if(h<23)return 8;return 12;}};
 const TV_BUS_STOPS=[
   ["Aeroporto CNF · T1","Confins · Centro","Lagoa Santa · Rodoviária","Vespasiano","Cidade Administrativa","Venda Nova · Estação","São Gabriel","Floresta","Rodoviária de BH","Praça Sete · Centro"],
@@ -2886,7 +2886,7 @@ const TV_BUS=BUS_ROUTES_DATA.map((r,i)=>{const nm=TV_BUS_STOPS[i]||[];
   return {key:'bus'+i,kind:'bus',code:'CN'+String(i+1).padStart(2,'0'),name:r.name,color:r.color,coords:r.coords,
     stops:r.coords.map((c,k)=>nm[k]||('Parada '+(k+1))),
     run:r.coords.slice(1).map((c,k)=>Math.max(150,Math.round(_tvHav(r.coords[k],c)/32*3600))),
-    dwell:25,start:60+(i*4)%12,end:27*60-1,vmax:60,h24:true,
+    dwell:30,od:120,start:60+(i*4)%12,end:27*60-1,vmax:60,h24:true,
     hw:m=>{const h=(m/60)%24;if(h<5)return Math.max(30,Math.round(r.freq*3/5)*5);if(h<6||h>=21)return Math.round(r.freq*1.5);return r.freq;}};});
 const TV_CROWD_L=['Vazio','Tranquilo','Moderado','Cheio','Lotado'];
 const TV_CROWD_C=['#69f0ae','#69f0ae','#ffd740','#ff9800','#ff5252'];
@@ -2906,15 +2906,15 @@ function _tvTrips(ln,dir){const ck=ln.key+'|t'+dir;if(_tvC[ck])return _tvC[ck];c
   while(m<=ln.end){out.push(m*60);m+=ln.hw(m);}return _tvC[ck]=out;}
 function _tvTripId(ln,dir,ti){return ln.kind==='metro'?`${ln.code} ${1001+ti*2+dir}`:`${ln.code}·${dir?'V':'I'}${String(ti+1).padStart(2,'0')}`;}
 function _tvState(ln,dir,ti,now){const t0=_tvTrips(ln,dir)[ti];if(t0==null)return null;const o=_tvOff(ln,dir),n=ln.stops.length,e=now-t0;
-  if(e<0){if(e>=-ln.dwell)return{phase:'dwell',at:0,p:0,left:-e};return{phase:'pre',p:0};}
+  if(e<0){if(e>=-(ln.od||ln.dwell))return{phase:'dwell',at:0,p:0,left:-e};return{phase:'pre',p:0};}
   if(e>=o.total)return{phase:'done',p:n-1};
   for(let k=1;k<n;k++){
     if(e<o.arr[k]){const seg=o.arr[k]-o.dep[k-1];const f=(e-o.dep[k-1])/seg;return{phase:'run',from:k-1,to:k,f,p:k-1+f,left:o.arr[k]-e};}
     if(e<o.dep[k])return{phase:'dwell',at:k,p:k,left:o.dep[k]-e};}
   return{phase:'done',p:n-1};}
-function _tvActive(ln,now){const out=[];[0,1].forEach(dir=>{const o=_tvOff(ln,dir);_tvTrips(ln,dir).forEach((t0,ti)=>{if(now>=t0-ln.dwell&&now<t0+o.total)out.push({dir,ti,st:_tvState(ln,dir,ti,now)});});});return out;}
+function _tvActive(ln,now){const out=[];[0,1].forEach(dir=>{const o=_tvOff(ln,dir);_tvTrips(ln,dir).forEach((t0,ti)=>{if(now>=t0-(ln.od||ln.dwell)&&now<t0+o.total)out.push({dir,ti,st:_tvState(ln,dir,ti,now)});});});return out;}
 function _tvNextAt(ln,s,dir,now,count){const n=ln.stops.length,p=_tvFs(ln,dir,s);if(p===n-1)return[];const o=_tvOff(ln,dir),trips=_tvTrips(ln,dir),out=[];
-  for(let ti=0;ti<trips.length&&out.length<count;ti++){const arr=trips[ti]+(p===0?-ln.dwell:o.arr[p]),dep=trips[ti]+o.dep[p];if(dep<now)continue;
+  for(let ti=0;ti<trips.length&&out.length<count;ti++){const arr=trips[ti]+(p===0?-(ln.od||ln.dwell):o.arr[p]),dep=trips[ti]+o.dep[p];if(dep<now)continue;
     out.push({ti,dir,arr,dep,status:now>=arr?'plat':(arr-now<=90?'near':'way')});}
   return out;}
 function _tvCrowd(ln,dir,ti,car){const t0=_tvTrips(ln,dir)[ti]||0;const h=Math.floor(t0/3600)%24;let b=((h>=6&&h<9)||(h>=17&&h<20))?3:(h>=22||h<6)?1:2;
@@ -3007,7 +3007,7 @@ function _tvRideHTML(ln,R,now){const U=_tvU(ln),isM=ln.kind==='metro',o=_tvOff(l
   if(st.phase==='done')return`<div class="tv-card" style="--lc:${ln.color}"><div class="tv-ride-h"><div class="tv-ride-id">${U.ic} ${id}</div><div class="tv-msg">🏁 Fim da linha — chegou a <b>${_tvEsc(last)}</b> às ${_tvHM(t0+o.total)}.</div><div class="gv-row" style="margin-top:12px"><button class="gv-btn" data-tv="arrive">📍 Ver horários desta ${U.st}</button><button class="gv-btn ghost" data-tv="exit">Escolher outro ${U.v}</button></div></div></div>`;
   const hasDest=TV.alight!=null&&_tvFs(ln,R.dir,TV.alight)===aP;const arrived=!waiting&&st.phase==='dwell'&&st.at===aP&&hasDest;
   let msg;
-  if(waiting)msg=pre&&board===0?`⏳ Você está na plataforma de <b>${_tvEsc(nm(0))}</b>. O ${U.v} abre as portas em <b data-until="${t0-ln.dwell}"></b>`:`⏳ Aguardando na plataforma de <b>${_tvEsc(nm(board))}</b> — o ${U.v} chega em <b data-until="${board===0?t0-ln.dwell:arrAt(board)}"></b>`;
+  if(waiting)msg=pre&&board===0?`⏳ Você está na plataforma de <b>${_tvEsc(nm(0))}</b>. O ${U.v} abre as portas em <b data-until="${t0-(ln.od||ln.dwell)}"></b>`:`⏳ Aguardando na plataforma de <b>${_tvEsc(nm(board))}</b> — o ${U.v} chega em <b data-until="${board===0?t0-(ln.od||ln.dwell):arrAt(board)}"></b>`;
   else if(arrived)msg=`🎉 Você chegou a <b>${_tvEsc(nm(aP))}</b>. Desembarque agora${isM?` — portas do lado <b>${_tvDoor(ln,R.dir,aP)}</b>`:''}!`;
   else if(st.phase==='dwell')msg=`🚉 Parado em <b>${_tvEsc(nm(st.at))}</b> · portas abertas · parte em <b data-until="${t0+o.dep[st.at]}"></b>`;
   else msg=`➡ Próxima ${U.st}: <b>${_tvEsc(nm(st.to))}</b> · chega em <b data-until="${arrAt(st.to)}"></b>${isM?` · portas à ${_tvDoor(ln,R.dir,st.to)}`:''}`;
@@ -3156,9 +3156,10 @@ function _voxChime(){try{const c=_ctx();if(!c)return;if(c.state==='suspended')c.
 function voxSay(items,opts){opts=opts||{};
   if(!voxOK()){_voxCap({k:'pt',text:'⚠ Este navegador não tem voz sintetizada. Tente o Chrome, Edge ou Safari.'});return;}
   if(opts.interrupt)voxStop();
-  items.filter(it=>opts.force||VOX.langs[it.k]).forEach(it=>VOX.q.push(it));
+  items.filter(it=>opts.force||VOX.langs[it.k]).forEach(it=>VOX.q.push(opts.ttl?Object.assign({exp:Date.now()+opts.ttl*1000},it):it));
   if(opts.chime&&!VOX.busy&&!VOX.hold){VOX.hold=true;_voxChime();setTimeout(()=>{VOX.hold=false;_voxPump();},1250);}else _voxPump();}
 function _voxPump(){if(VOX.busy||VOX.hold)return;if(!VOX.q.length){VOX.cur=null;_voxCap(null);return;}
+  while(VOX.q.length&&VOX.q[0].exp&&VOX.q[0].exp<Date.now())VOX.q.shift();if(!VOX.q.length){VOX.cur=null;_voxCap(null);return;}
   const it=VOX.q.shift(),tok=++_voxTok;VOX.busy=true;VOX.cur=it;
   const u=new SpeechSynthesisUtterance(it.text);u.lang=VOX_LANG[it.k];const v=voxVoiceFor(it.k);if(v)u.voice=v;u.rate=VOX.rate;u.pitch=1;u.volume=1;
   const done=()=>{if(tok!==_voxTok||!VOX.busy)return;VOX.busy=false;clearTimeout(VOX.safety);setTimeout(_voxPump,320);};
@@ -3299,7 +3300,7 @@ function _voxChime(kind){try{const c=_ctx();if(!c)return;if(c.state==='suspended
 function voxSay(items,opts){opts=opts||{};
   if(!voxOK()){_voxCap({k:'pt',text:'⚠ Este navegador não tem voz sintetizada. Tente o Chrome, Edge ou Safari.'});return;}
   if(opts.interrupt)voxStop();else if(opts.flush)VOX.q=[];
-  items.filter(it=>opts.force||VOX.langs[it.k]).forEach(it=>VOX.q.push(it));
+  items.filter(it=>opts.force||VOX.langs[it.k]).forEach(it=>VOX.q.push(opts.ttl?Object.assign({exp:Date.now()+opts.ttl*1000},it):it));
   if(opts.chime&&!VOX.busy&&!VOX.hold){VOX.hold=true;_voxChime(opts.chimeKind);setTimeout(()=>{VOX.hold=false;_voxPump();},opts.chimeKind==='door'?1650:opts.chimeKind==='open'?1500:1250);}
   else{if(opts.chime&&opts.chimeKind==='door')_voxChime('door');_voxPump();}}
 
@@ -3335,9 +3336,9 @@ let _tvMgI=0,_tvCoI=0;
 function _tvCurio(name){const h=TV_CURIO.find(c=>name.includes(c[0]));return h?h[1]:null;}
 TV.led=null;TV.lastEv=null;
 function _tvEvKey(ln,R,now){const st=_tvState(ln,R.dir,R.ti,now);if(!st||st.phase==='pre'||st.phase==='done')return null;if(st.p<(R.board||0))return null;
-  if(st.phase==='dwell'){if(st.at<ln.stops.length-1&&st.left<=8)return'close|'+st.at;return'at|'+st.at;}
+  if(st.phase==='dwell'){if(st.at<ln.stops.length-1&&st.left<=10)return'close|'+st.at;return'at|'+st.at;}
   const o=_tvOff(ln,R.dir),seg=o.arr[st.to]-o.dep[st.from],el=seg-st.left;
-  if(st.left<=20)return'appr|'+st.to;if(seg>=400&&el>=seg*.62)return'info2|'+st.from;if(seg>=75&&el>=seg*.3)return'info|'+st.from;return'dep|'+st.from;}
+  if(st.left<=30)return'appr|'+st.to;if(seg>=400&&el>=seg*.62)return'info2|'+st.from;if(seg>=110&&el>=seg*.4)return'info|'+st.from;return'dep|'+st.from;}
 function _tvEvMsg(ln,R,now,k){const[type,ix]=k.split('|'),i=+ix,n=ln.stops.length,isM=ln.kind==='metro',dir=R.dir,o=_tvOff(ln,dir);
   const raw=p=>ln.stops[_tvFs(ln,dir,p)],nm=p=>_voxClean(isM?raw(p).replace(/^T\d\s*·\s*/,''):raw(p)),zone=p=>ln.zones?ln.zones[_tvFs(ln,dir,p)]:null;
   const term=p=>{const m=isM&&raw(p).match(/^T(\d)/);if(!m)return{pt:'',en:'',es:''};const intl=('T'+m[1])===TRM_INT;
@@ -3366,7 +3367,7 @@ function _tvEvMsg(ln,R,now,k){const[type,ix]=k.split('|'),i=+ix,n=ln.stops.lengt
     return m;}
   if(type==='close')return isM?{sound:'door',pt:`Atenção: portas se fechando.`,en:`Please stand clear of the closing doors.`,es:`Atención: cierre de puertas.`}
     :{sound:'door',pt:`Atenção, o ônibus vai partir. Segure-se.`,en:`The bus is departing. Please hold on.`,es:`Atención, el autobús va a salir. Sujétese.`};
-  if(type==='dep'||type==='appr'){const nx=type==='dep'?i+1:i,t=term(nx),last=nx===n-1;
+  if(type==='dep'||type==='appr'){const nx=type==='dep'?i+1:i,t={pt:'',en:'',es:''},last=nx===n-1;
     const m={sound:type==='dep'?(isM?'train':'bell'):(isM?null:'bell'),pt:`Próxima ${isM?'estação':'parada'}: ${nm(nx)}.${t.pt}`,en:`Next ${isM?'station':'stop'}: ${nm(nx)}.${t.en}`,es:`Próxima ${isM?'estación':'parada'}: ${nm(nx)}.${t.es}`};
     if(type==='dep'&&isM&&zone(i)==='air'&&zone(nx)==='city'){m.pt=`Estamos deixando o aeroporto. Seja bem-vindo a Minas Gerais! `+m.pt;m.en=`We are leaving the airport. Welcome to Minas Gerais! `+m.en;m.es=`Estamos saliendo del aeropuerto. ¡Bienvenido a Minas Gerais! `+m.es;}
     if(type==='dep'&&isM&&zone(i)==='city'&&zone(nx)==='air'){m.pt=`Estamos chegando ao aeroporto. `+m.pt;m.en=`We are approaching the airport. `+m.en;m.es=`Estamos llegando al aeropuerto. `+m.es;}
@@ -3384,7 +3385,7 @@ function _tvEvents(ln,R,now){const k=_tvEvKey(ln,R,now);if(!k||k===TV.lastEv)ret
   let items=['pt','en','es'].map(x=>({k:x,text:m[x]}));
   if(/^info/.test(k)){const st=_tvState(ln,R.dir,R.ti,now),o=_tvOff(ln,R.dir),seg=st&&st.phase==='run'?o.arr[st.to]-o.dep[st.from]:999;
     if(seg<180){const on=['pt','en','es'].filter(x=>VOX.langs[x]);const lg=on[(TV.infoRot=(TV.infoRot||0)+1)%on.length]||'pt';items=items.filter(x=>x.k===lg);if(el)el.textContent=m[lg];TV.led=m[lg];}}
-  if(TV.vox)voxSay(items,{chime:!!m.sound,chimeKind:m.sound,flush:true});}
+  if(TV.vox)voxSay(items,{chime:!!m.sound,chimeKind:m.sound,ttl:45});}
 function _tvEnter(ln,dir,ti,board){TV.ride={key:ln.key,dir,ti,board:board||0};TV.alight=null;TV.view='ride';TV.lastPhase=null;TV.lastEv=null;TV.led=null;TV.followBus=true;_tvShell();window.scrollTo({top:0,behavior:'smooth'});}
 
 // ════════ PORTÃO · menu de avisos + eventos aleatórios ════════
