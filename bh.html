@@ -599,6 +599,116 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
 .tvm-prow .m{font-family:'Share Tech Mono',monospace;color:#ffb300;font-weight:700}
 .tvm-prow .t{font-family:'Share Tech Mono',monospace;color:#78909c}
 .tvm-ar{display:inline-flex;align-items:center;justify-content:center;width:1.6em;height:1.3em;border-radius:8px;font-weight:900}
+/* ═══ MODO TV v2 ═══ */
+.tvm2{padding:0!important;gap:0!important;display:none;flex-direction:column;background:#04070a}
+.tvm2.show{display:flex}
+.t2-top{display:flex;align-items:center;gap:1.6vw;padding:1.4vh 2vw;background:#0b1118;border-bottom:4px solid var(--lc);font-size:clamp(13px,2vw,26px);flex-wrap:wrap}
+.t2-dir{flex:1;min-width:0}.t2-wx{font-family:'Share Tech Mono',monospace}
+.t2-top .tvm-x{position:static;width:36px;height:36px}
+.t2-body{flex:1;display:grid;grid-template-columns:1fr minmax(220px,27%);min-height:0}
+@media(orientation:portrait){.t2-body{grid-template-columns:1fr;grid-template-rows:1fr auto}}
+.t2-stage{position:relative;overflow:hidden;min-height:0}
+.t2-slide{position:absolute;inset:0;display:flex}
+.t2-slide.in{animation:t2in .7s ease}
+@keyframes t2in{from{opacity:0;transform:translateX(4%)}to{opacity:1;transform:none}}
+.t2-dots{position:absolute;bottom:10px;left:0;right:0;display:flex;gap:6px;justify-content:center;z-index:3}
+.t2-dots i{width:7px;height:7px;border-radius:50%;background:#ffffff33}.t2-dots i.on{background:var(--lc);width:18px;border-radius:4px}
+.t2-side{background:#0b1118;border-left:1px solid #1d2630;padding:2.4vh 1.6vw;display:flex;flex-direction:column;gap:1vh;overflow:hidden}
+@media(orientation:portrait){.t2-side{border-left:none;border-top:1px solid #1d2630}}
+.sd-k{font-size:clamp(11px,1.4vw,18px);color:#78909c;text-transform:uppercase;letter-spacing:.14em}
+.sd-nx{font-size:clamp(22px,3.4vw,46px);font-weight:900;line-height:1.05;color:#fff}
+.sd-cd{font-family:'Share Tech Mono',monospace;color:#ffb300;font-size:clamp(18px,2.6vw,36px)}
+.sd-pg{height:6px;background:#1a2632;border-radius:3px;overflow:hidden}.sd-pg i{display:block;height:100%;background:var(--lc)}
+.sd-list{display:flex;flex-direction:column;gap:.6vh;margin-top:.6vh}
+.sd-row{display:grid;grid-template-columns:12px 1fr auto;gap:8px;align-items:center;font-size:clamp(13px,1.7vw,24px)}
+.sd-row i{width:10px;height:10px;border-radius:50%;border:2px solid var(--lc)}.sd-row b{font-family:'Share Tech Mono',monospace;color:#ffb300}
+.sd-to{margin-top:auto;font-size:clamp(11px,1.4vw,18px);color:#78909c}
+.t2-tk{display:flex;align-items:center;background:#ffb300;color:#000;font-family:'Share Tech Mono',monospace;font-size:clamp(13px,1.8vw,24px);height:clamp(30px,5vh,52px);overflow:hidden}
+.t2-tk-lbl{background:#000;color:#ffb300;padding:0 14px;height:100%;display:flex;align-items:center;font-weight:900;letter-spacing:.1em;z-index:1}
+.t2-tk-win{flex:1;overflow:hidden;white-space:nowrap}.t2-tk-in{display:inline-block;padding-left:100%;animation:tk 60s linear infinite}
+.t2-ctl{position:absolute;right:28%;bottom:calc(clamp(30px,5vh,52px) + 10px);display:flex;gap:6px;z-index:6;opacity:.35;transition:opacity .2s}
+.t2-ctl:hover{opacity:1}@media(orientation:portrait){.t2-ctl{right:10px;bottom:auto;top:60px}}
+.t2-ctl button{background:#000a;border:1px solid #333;color:#fff;border-radius:8px;width:38px;height:34px;cursor:pointer;font-size:.9rem}
+/* slides */
+.sl{flex:1;display:flex;flex-direction:column;justify-content:center;padding:4vh 4vw;gap:1.2vh;color:#e8eaf6}
+.sl-k{font-size:clamp(14px,2.2vw,30px);color:#78909c;text-transform:uppercase;letter-spacing:.14em}.sl-k small{display:block;font-size:.6em;letter-spacing:.08em;text-transform:none;color:#546e7a}
+.sl-next{background:radial-gradient(ellipse at 20% 30%,color-mix(in srgb,var(--lc) 30%,transparent),transparent 70%)}
+.sl-big{font-size:clamp(38px,8.5vw,128px);font-weight:900;line-height:1}
+.sl-term{font-size:clamp(14px,2.2vw,30px)}.sl-term span{background:var(--lc);color:#fff;padding:.1em .5em;border-radius:6px;font-weight:900;margin-right:6px}
+.sl-cd{font-family:'Share Tech Mono',monospace;font-size:clamp(18px,3.2vw,46px);color:#ffb300}
+.sl-acc{font-size:clamp(13px,1.9vw,26px);color:#b0bec5}
+.sl-plat .pl-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:2vw;align-items:center;font-size:clamp(17px,3vw,42px);padding:.8vh 0;border-bottom:1px solid #1d2630}
+.pl-row b{font-family:'Share Tech Mono',monospace;color:#ffb300}.pl-row em{font-style:normal;font-family:'Share Tech Mono',monospace;color:#78909c}
+.pl-ar{display:inline-flex;align-items:center;justify-content:center;width:1.6em;height:1.3em;border-radius:8px;font-weight:900}
+.sl-curio,.sl-tip,.sl-wx{flex-direction:row;align-items:center;gap:4vw;background:linear-gradient(135deg,#0d2033,#04070a)}
+.sl-tip{background:linear-gradient(135deg,#1c1530,#04070a)}
+.cu-ic,.wx-ic{font-size:clamp(60px,13vw,200px);animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6%) rotate(-4deg)}}
+.cu-tx{font-size:clamp(18px,3vw,44px);font-weight:700;line-height:1.2}.cu-en{font-size:clamp(13px,1.8vw,24px);color:#7eb8ff;margin-top:1vh}
+.sl-wx{background:linear-gradient(160deg,#10324f,#04070a)}.wx-ic{animation:spin 18s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.wx-t{font-family:'Share Tech Mono',monospace;font-size:clamp(50px,10vw,150px);color:#ffd54f;line-height:1}.wx-dsc{font-size:clamp(16px,2.6vw,36px)}
+.wx-ds{display:flex;gap:2vw;margin-top:1.6vh;flex-wrap:wrap}.wx-d{background:#ffffff0d;border-radius:8px;padding:.6vh 1vw;font-size:clamp(12px,1.7vw,22px)}.wx-d b{margin-left:8px;color:#ffd54f}
+.sl-fl .fl-row{display:grid;grid-template-columns:auto auto 1fr auto auto;gap:1.6vw;align-items:center;font-size:clamp(14px,2.2vw,30px);padding:.7vh 0;border-bottom:1px solid #1d2630}
+.fl-row b{font-family:'Share Tech Mono',monospace;color:#ffb300}.fl-d{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sl-map{background:linear-gradient(180deg,#0b1118,#04070a)}
+/* vídeos */
+.vd{flex:1;position:relative;overflow:hidden}
+.vd-minas{background:linear-gradient(#5aa0d8,#f4c27a 70%,#e09a56)}
+.vd-sun{position:absolute;right:14%;top:12%;width:9vmin;height:9vmin;border-radius:50%;background:#ffe082;box-shadow:0 0 60px #ffd54f}
+.vd-cloud{position:absolute;left:-30%;width:22vmin;height:7vmin;background:#ffffffcc;border-radius:50px;animation:cloud 40s linear infinite}
+.vd-cloud::before{content:'';position:absolute;left:25%;top:-50%;width:50%;height:120%;background:inherit;border-radius:50%}
+@keyframes cloud{to{left:110%}}
+.vd-layer{position:absolute;left:0;right:0;bottom:0;overflow:hidden;animation:pvx 30s linear infinite}
+.vd-strip{display:flex;width:200%;height:100%}.vd-strip svg{width:50%;height:100%}
+.vd-layer{animation:none}.vd-layer .vd-strip{animation:pvx linear infinite;animation-duration:inherit}
+.vd-layer[style*="animation-duration"] .vd-strip{animation-duration:inherit}
+@keyframes pvx{to{transform:translateX(-50%)}}
+.vd-rail{position:absolute;left:0;right:0;bottom:9%;height:6px;background:repeating-linear-gradient(90deg,#5d4037 0 14px,transparent 14px 26px);animation:rail .5s linear infinite}
+@keyframes rail{to{background-position:-26px 0}}
+.vd-train{position:absolute;left:50%;bottom:9.5%;width:44%;transform:translateX(-50%);animation:trbob .35s ease-in-out infinite alternate}
+@keyframes trbob{to{transform:translateX(-50%) translateY(2px)}}
+.vd-cap{position:absolute;left:3vw;top:3vh;background:#000a;padding:1vh 1.4vw;border-radius:8px;font-size:clamp(14px,2.2vw,30px);font-weight:700}.vd-cap small{display:block;font-size:.6em;color:#b0bec5;font-weight:400}
+.vd-night{background:linear-gradient(#020611,#0d1b2f 70%,#1b2836)}
+.vd-star{position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;animation:tw 2.4s ease-in-out infinite alternate}@keyframes tw{to{opacity:.2}}
+.vd-runway{position:absolute;left:0;right:0;bottom:12%;height:8px;display:flex;justify-content:space-around}
+.vd-runway i{width:10px;height:10px;border-radius:50%;background:#ffb300;box-shadow:0 0 10px #ffb300;animation:rl 1.4s linear infinite}@keyframes rl{50%{opacity:.15}}
+.vd-plane{position:absolute;width:14vmin;left:-15%;bottom:12%;transform:rotate(60deg);animation:to 7s ease-in infinite;filter:drop-shadow(0 0 8px #fff8)}
+@keyframes to{0%{left:-15%;bottom:12%;transform:rotate(90deg)}45%{left:45%;bottom:13%;transform:rotate(90deg)}100%{left:110%;bottom:80%;transform:rotate(60deg)}}
+/* anúncios */
+.ad{flex:1;display:flex;align-items:center;gap:4vw;padding:4vh 5vw;position:relative}
+.ad-cafe{background:linear-gradient(135deg,#3e2723,#6d4c41)}.ad-pao{background:linear-gradient(135deg,#f9a825,#ff7043)}.ad-tour{background:linear-gradient(135deg,#1b5e20,#00695c)}
+.ad-tx{color:#fff}.ad-brand{font-size:clamp(30px,6vw,92px);font-weight:900;line-height:1;animation:t2in .8s ease}
+.ad-sl{font-size:clamp(16px,2.8vw,40px);margin-top:1vh}.ad-sub{font-size:clamp(12px,1.7vw,22px);opacity:.8;margin-top:.6vh}
+.ad-cp{display:inline-block;margin-top:2vh;background:#fff;color:#000;padding:.6vh 1.4vw;border-radius:30px;font-size:clamp(14px,2.2vw,30px);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.06)}}
+.ad-tag{position:absolute;right:12px;bottom:28px;font-size:11px;color:#ffffff99}
+.ad-cup{position:relative;font-size:clamp(70px,14vw,210px)}
+.ad-cup i{position:absolute;left:38%;top:-10%;width:10%;height:30%;border-radius:50%;background:#ffffff55;filter:blur(6px);animation:steam 2.4s ease-in infinite}
+.ad-cup i:nth-child(2){left:52%;animation-delay:.8s}.ad-cup i:nth-child(3){left:45%;animation-delay:1.6s}
+@keyframes steam{from{transform:translateY(20%);opacity:0}40%{opacity:1}to{transform:translateY(-120%);opacity:0}}
+.ad-balls{display:flex;gap:1.4vw}.ad-balls i{width:9vmin;height:9vmin;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3c4,#f0b54a 60%,#c77d1f);animation:bounce .9s ease-in-out infinite alternate}
+@keyframes bounce{to{transform:translateY(-35%)}}
+.ad-mtn{font-size:clamp(70px,14vw,210px);animation:bob 4s ease-in-out infinite}
+/* tomada de tela */
+.t2-take{position:absolute;inset:0;z-index:5;display:none}
+.t2-take.show{display:flex;animation:t2in .4s ease}
+.tk{flex:1;position:relative;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#0d2033 0%,#020407 75%);overflow:hidden}
+.tk-alert{background:radial-gradient(ellipse at center,#3a0d0d,#0a0202 75%)}
+.tk-in{position:relative;z-index:2;text-align:center;padding:4vh 5vw;max-width:92%}
+.tk-ic{font-size:clamp(46px,8vw,120px);animation:bob 2s ease-in-out infinite}
+.tk-lbl{font-size:clamp(22px,4vw,60px);font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--lc)}.tk-alert .tk-lbl{color:#ff5252}
+.tk-lbl small{display:block;font-size:.4em;color:#78909c;letter-spacing:.12em}
+.tk-txt{font-size:clamp(18px,3.1vw,46px);font-weight:700;line-height:1.25;margin-top:2vh;color:#fff;min-height:2.5em}
+.tk-lg{display:flex;gap:8px;justify-content:center;margin-top:2vh}.tk-lg b{font-family:'Share Tech Mono',monospace;padding:3px 10px;border-radius:4px;background:#ffffff14;color:#78909c}
+.tk-lg b.on{background:#ffb300;color:#000;animation:bl .6s ease-in-out infinite alternate}
+.tk-doors{position:absolute;inset:0;display:flex;z-index:1;pointer-events:none}
+.tk-doors i{flex:1;background:linear-gradient(90deg,#263238,#37474f 40%,#263238);border:2px solid #455a64;opacity:.55}
+.tk-doors i::after{content:'';display:block;margin:30% auto 0;width:50%;height:30%;background:#90a4ae33;border-radius:6px}
+.tk-close .tk-doors i:first-child{animation:dcL 4.5s ease-in forwards}.tk-close .tk-doors i:last-child{animation:dcR 4.5s ease-in forwards}
+.tk-open .tk-doors i:first-child{animation:doL 3s ease-out forwards}.tk-open .tk-doors i:last-child{animation:doR 3s ease-out forwards}
+@keyframes dcL{0%,55%{transform:translateX(-100%)}100%{transform:none}}@keyframes dcR{0%,55%{transform:translateX(100%)}100%{transform:none}}
+@keyframes doL{0%,35%{transform:none}100%{transform:translateX(-100%)}}@keyframes doR{0%,35%{transform:none}100%{transform:translateX(100%)}}
+.tk-close{box-shadow:inset 0 0 0 6px #ff6d00;animation:ccb .6s ease-in-out infinite alternate}@keyframes ccb{to{box-shadow:inset 0 0 0 6px #ff6d0022}}
 </style>
 </head>
 <body><div class="imm-toast" id="imm-toast"></div>
@@ -3420,7 +3530,7 @@ function _tvEvMsgBase(ln,R,now,k){const[type,ix]=k.split('|'),i=+ix,n=ln.stops.l
   if(type==='info2'){const j=_tvCoI++;if(j%3===1){const g=GV_INFO[0].f();return{sound:'train',pt:g.pt.replace('Atenção, senhores passageiros: a','A'),en:g.en,es:g.es};}return Object.assign({sound:'train'},TV_COURT[j%TV_COURT.length]);}
   return null;}
 function _tvEvents(ln,R,now){const k=_tvEvKey(ln,R,now);if(!k||k===TV.lastEv)return;TV.lastEv=k;const m=_tvEvMsg(ln,R,now,k);if(!m)return;
-  TV.led=m.pt;const el=document.getElementById('tv-led');if(el){el.textContent=m.pt;const b=el.parentNode;b.classList.remove('flash');void b.offsetWidth;b.classList.add('flash');}
+  TV.led=m.pt;TV.ledMsg=m;TV.ledKey=k;TV.ledAt=Date.now();const el=document.getElementById('tv-led');if(el){el.textContent=m.pt;const b=el.parentNode;b.classList.remove('flash');void b.offsetWidth;b.classList.add('flash');}
   let items=['pt','en','es'].map(x=>({k:x,text:m[x]}));
   if(/^info/.test(k)){const st=_tvState(ln,R.dir,R.ti,now),o=_tvOff(ln,R.dir),seg=st&&st.phase==='run'?o.arr[st.to]-o.dep[st.from]:999;
     if(seg<180){const on=['pt','en','es'].filter(x=>VOX.langs[x]);const lg=on[(TV.infoRot=(TV.infoRot||0)+1)%on.length]||'pt';items=items.filter(x=>x.k===lg);if(el)el.textContent=m[lg];TV.led=m[lg];}}
@@ -3553,7 +3663,7 @@ function _tvEvMsg3(ln,R,now,k){const[type,ix]=k.split('|'),i=+ix,n=ln.stops.leng
   if(type==='appr'||type==='dep')m.sound=isM?'train':'bell';
   return m;}
 function _tvEvents(ln,R,now){const k=_tvEvKey(ln,R,now);if(!k||k===TV.lastEv)return;TV.lastEv=k;const m=_tvEvMsg(ln,R,now,k);if(!m)return;
-  TV.led=m.pt;const el=document.getElementById('tv-led');if(el){el.textContent=m.pt;const b=el.parentNode;b.classList.remove('flash');void b.offsetWidth;b.classList.add('flash');}
+  TV.led=m.pt;TV.ledMsg=m;TV.ledKey=k;TV.ledAt=Date.now();const el=document.getElementById('tv-led');if(el){el.textContent=m.pt;const b=el.parentNode;b.classList.remove('flash');void b.offsetWidth;b.classList.add('flash');}
   if(TV.vox)voxSay(['pt','en','es'].map(x=>({k:x,text:m[x]})),{chime:!!m.sound,chimeKind:m.sound,ttl:/^at\|0|end2|at0b/.test(k)||k==='at|'+(ln.stops.length-1)?150:60});}
 function _tvEnter(ln,dir,ti,board){try{const c=_ctx();if(c&&c.state==='suspended')c.resume();}catch(e){}
   TV.ride={key:ln.key,dir,ti,board:board||0,n0:_tvNow(),e0:_simNow()};TV.alight=null;TV.view='ride';TV.lastPhase=null;TV.lastEv=null;TV.led=null;TV.followBus=true;_tvShell();window.scrollTo({top:0,behavior:'smooth'});}
@@ -3658,7 +3768,7 @@ function _tvContinue(ln,R,now){const st=_tvState(ln,R.dir,R.ti,now);if(!st)retur
   const stp=document.getElementById('tv-strip');if(stp)stp.innerHTML=_tvStripBuild(ln,null,'🏁');
   const to=_voxClean(ln.kind==='metro'?ln.stops[R.nx.dir===0?n-1:0].replace(/^T\d\s*·\s*/,''):ln.stops[R.nx.dir===0?n-1:0]),hh=_tvHM(t0n),U=ln.kind==='metro'?['trem','train','tren']:['ônibus','bus','autobús'];
   const m={pt:`Atenção: este ${U[0]} agora segue para ${to}, com partida às ${hh}. Você pode permanecer a bordo.`,en:`Attention: this ${U[1]} now runs to ${to}, departing at ${hh}. You may stay on board.`,es:`Atención: este ${U[2]} ahora sigue hacia ${to}, con salida a las ${hh}. Puede permanecer a bordo.`};
-  TV.led=m.pt;if(TV.vox)voxSay(['pt','en','es'].map(x=>({k:x,text:m[x]})),{chime:true,chimeKind:ln.kind==='metro'?'train':'bell',ttl:120});
+  TV.led=m.pt;TV.ledMsg=m;TV.ledKey='dep|rev';TV.ledAt=Date.now();if(TV.vox)voxSay(['pt','en','es'].map(x=>({k:x,text:m[x]})),{chime:true,chimeKind:ln.kind==='metro'?'train':'bell',ttl:120});
   return true;}
 
 // ── música de fundo v2: bossa/lounge suave (piano elétrico, baixo e escovinha) ──
@@ -3729,7 +3839,7 @@ function _tvIncMsg(x){const X=x.st!=null?_voxClean(TV_METRO.stops[x.st].replace(
 function trainIncident(id){const d=TV_INC.find(x=>x.id===id)||TV_INC[0];let st=null;
   if(id==='closed'){const c=[1,2,3,5,6,7].filter(i=>i<TV_METRO.stops.length-1);st=c[Math.floor(Math.random()*c.length)];}
   TV.incident={id,st,until:_tvNow()+d.dur};TV.keys={};
-  const m=_tvIncMsg(TV.incident);TV.led=m.pt;const led=document.getElementById('tv-led');if(led)led.textContent=m.pt;
+  const m=_tvIncMsg(TV.incident);TV.led=m.pt;TV.ledMsg=m;TV.ledKey='inc';TV.ledAt=Date.now();const led=document.getElementById('tv-led');if(led)led.textContent=m.pt;
   const b=document.getElementById('emg-banner');if(b){b.style.borderColor=d.color;b.style.background=`linear-gradient(90deg,${d.color}22,transparent)`;
     b.innerHTML=`<span class="emg-ic">${d.icon}</span><div class="emg-txt"><div class="emg-title" style="color:${d.color}">🚆 ${d.title}</div><div class="emg-sub">${_tvEsc(m.pt)}</div><div class="emg-detail">Trem das Gerais · duração simulada ${Math.round(d.dur/60)} min</div></div><button class="emg-x" onclick="clearEmergency()">×</button>`;
     b.classList.add('show');document.body.classList.add('emg-mode');if(_emgTimer)clearTimeout(_emgTimer);_emgTimer=setTimeout(clearEmergency,20000);}
@@ -3737,7 +3847,7 @@ function trainIncident(id){const d=TV_INC.find(x=>x.id===id)||TV_INC[0];let st=n
   const st2=document.getElementById('tv-strip');if(st2&&TV.ride&&TV.ride.key==='metro'){st2.innerHTML=_tvStripBuild(TV_METRO,TV.alight,'🏁');}}
 function trainIncidentClear(){if(!TV.incident)return;TV.incident=null;TV.keys={};
   const m={pt:'Informamos que a circulação dos trens está normalizada. Obrigado pela compreensão.',en:'Train service is now back to normal. Thank you for your patience.',es:'Informamos que la circulación de los trenes se ha normalizado. Gracias por su comprensión.'};
-  TV.led=m.pt;voxSay(['pt','en','es'].map(k=>({k,text:m[k]})),{chime:true,chimeKind:'train'});}
+  TV.led=m.pt;TV.ledMsg=m;TV.ledKey='info';TV.ledAt=Date.now();voxSay(['pt','en','es'].map(k=>({k,text:m[k]})),{chime:true,chimeKind:'train'});}
 setInterval(()=>{if(TV.incident&&_tvNow()>TV.incident.until)trainIncidentClear();},1000);
 function buildEmergencyControls(){_buildEmg0();const el=document.getElementById('emg-controls');if(!el)return;
   el.innerHTML+=`<div class="emg-sec">🚆 Trem das Gerais${_tvInc()?` · <span style="color:#ffd740">ativo: ${TV_INC.find(x=>x.id===TV.incident.id).title}</span> <button class="gv-chip" onclick="trainIncidentClear();buildEmergencyControls()">✓ Normalizar</button>`:''}</div>`
@@ -3822,6 +3932,115 @@ function _cfgLoad(){let c=null;try{c=JSON.parse(localStorage.getItem(CFG_KEY)||'
   document.querySelectorAll('.gv-chip[data-lang]').forEach(b=>b.classList.toggle('on',!!VOX.langs[b.getAttribute('data-lang')]));
   const a=document.getElementById('gv-auto');if(a)a.value=String(GV.auto);const n=document.getElementById('gv-count');if(n)n.value=String(GV.count);}
 _cfgLoad();setInterval(_cfgSave,2000);window.addEventListener('beforeunload',_cfgSave);
+
+// ════════════════════════════════════════════════════════════════════════════
+// ════════ MODO TV v2 · tela de bordo interativa: programação em carrossel
+// ════════ (anúncios, vídeos animados, curiosidades, clima, voos, dicas),
+// ════════ tomada de tela nos avisos com portas animadas e próxima estação fixa
+// ════════════════════════════════════════════════════════════════════════════
+const TVM2={i:0,t0:0,paused:false,cur:null,take:null,lastLedAt:0,tk:0,lg:0};
+function _tvmCtx(){const ln=_tvCur(),R=TV.ride,riding=TV.view==='ride'&&R&&R.key===ln.key,now=riding?_tvRNow(R):_tvNow(),st=riding?_tvState(ln,R.dir,R.ti,now):null;return{ln,R,riding,now,st,isM:ln.kind==='metro',n:ln.stops.length,c:ln.color};}
+function _tvmNm(s){return String(s).replace(/^T\d\s*·\s*/,'');}
+function _tvmWx(){try{const m=_metarData(),d=(m.desc||'').toLowerCase();return{t:m.temp,d:m.desc,ic:/chuv|tempest/.test(d)?'🌧':/nublado/.test(d)&&!/parcial/.test(d)?'☁️':/parcial/.test(d)?'⛅':'☀️'};}catch(e){return{t:24,d:'',ic:'⛅'};}}
+// ── cenas animadas ("vídeos") ──
+function _svgRep(svg){return`<div class="vd-strip">${svg}${svg}</div>`;}
+const _MTN=`<svg viewBox="0 0 1000 300" preserveAspectRatio="none"><path d="M0 300V185L70 130 150 175 230 95 320 160 410 105 500 170 600 90 690 150 790 100 890 165 1000 185V300Z" fill="#23384f"/></svg>`;
+const _HIL=`<svg viewBox="0 0 1000 300" preserveAspectRatio="none"><path d="M0 300V220Q120 170 250 210T500 205T750 200T1000 220V300Z" fill="#1d4d3a"/></svg>`;
+const _TRE=`<svg viewBox="0 0 1000 300" preserveAspectRatio="none">${Array.from({length:14},(_,i)=>{const x=i*72+20,h=40+(i*37)%45;return`<path d="M${x} 300V${270-h}L${x-18} 270H${x+18}Z" fill="#163b2c"/><rect x="${x-3}" y="265" width="6" height="35" fill="#2a1d14"/>`;}).join('')}</svg>`;
+const _TRAIN=c=>`<svg viewBox="0 0 260 60" class="vd-train"><rect x="4" y="8" width="250" height="40" rx="14" fill="#e8eaf6"/><rect x="4" y="32" width="250" height="7" fill="${c}"/>${[30,75,120,165,210].map(x=>`<rect x="${x}" y="15" width="30" height="13" rx="3" fill="#263238"/>`).join('')}<circle cx="45" cy="52" r="7" fill="#111"/><circle cx="215" cy="52" r="7" fill="#111"/></svg>`;
+function _vidMinas(c){return`<div class="vd vd-minas"><div class="vd-sun"></div><div class="vd-cloud" style="top:12%;animation-duration:40s"></div><div class="vd-cloud" style="top:26%;left:40%;animation-duration:55s;transform:scale(.7)"></div>
+  <div class="vd-layer" style="height:62%;animation-duration:60s">${_svgRep(_MTN)}</div><div class="vd-layer" style="height:45%;animation-duration:26s">${_svgRep(_HIL)}</div>
+  <div class="vd-layer" style="height:38%;animation-duration:7s">${_svgRep(_TRE)}</div><div class="vd-rail"></div>${_TRAIN(c)}
+  <div class="vd-cap">🎬 Paisagens de Minas · Serra do Curral<small>Minas landscapes · Paisajes de Minas</small></div></div>`;}
+function _vidTakeoff(){return`<div class="vd vd-night">${Array.from({length:40},(_,i)=>`<i class="vd-star" style="left:${(i*37)%100}%;top:${(i*53)%60}%;animation-delay:${(i%7)*.4}s"></i>`).join('')}
+  <div class="vd-runway">${Array.from({length:12},(_,i)=>`<i style="animation-delay:${i*.12}s"></i>`).join('')}</div>
+  <svg class="vd-plane" viewBox="0 0 24 24"><path fill="#e8eaf6" d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0 0 11.5 2 1.5 1.5 0 0 0 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>
+  <div class="vd-cap">🎬 CNF · conectando Minas ao mundo<small>Connecting Minas to the world · Conectando Minas con el mundo</small></div></div>`;}
+// ── anúncios (marcas fictícias) ──
+const TVM_ADS=[
+ ()=>`<div class="ad ad-cafe"><div class="ad-cup">☕<i></i><i></i><i></i></div><div class="ad-tx"><div class="ad-brand">Café Uai</div><div class="ad-sl">Cafezinho mineiro de verdade, passado na hora.</div><div class="ad-sub">Terminal ${TRM_DOM.replace('T','')} · saguão</div><div class="ad-cp">Mostre esta tela: <b>10% OFF</b></div></div><span class="ad-tag">publicidade fictícia</span></div>`,
+ ()=>`<div class="ad ad-pao"><div class="ad-balls">${[0,1,2,3,4].map(i=>`<i style="animation-delay:${i*.18}s"></i>`).join('')}</div><div class="ad-tx"><div class="ad-brand">Pão de Queijo da Serra</div><div class="ad-sl">Quentinho, saindo do forno a cada 10 minutos.</div><div class="ad-sub">Freshly baked · Recién horneado</div><div class="ad-cp">Combo com café: <b>R$ 12</b></div></div><span class="ad-tag">publicidade fictícia</span></div>`,
+ ()=>`<div class="ad ad-tour"><div class="ad-mtn">🏔️</div><div class="ad-tx"><div class="ad-brand">Minas Tour</div><div class="ad-sl">Passeios para Ouro Preto, Inhotim e Serra do Cipó.</div><div class="ad-sub">Saídas diárias da Praça da Liberdade</div><div class="ad-cp">Reserve pelo app · <b>Uai, bora?</b></div></div><span class="ad-tag">publicidade fictícia</span></div>`];
+// ── slides ──
+function _sNext(x){if(!x.riding||!x.st)return null;const{ln,R,st,n,c,isM}=x,o=_tvOff(ln,R.dir),t0=_tvTrips(ln,R.dir)[R.ti],nm=p=>ln.stops[_tvFs(ln,R.dir,p)];
+  let lbl,p,cd;if(st.phase==='pre'){lbl='Aguardando partida';p=0;cd=t0-x.now;}else if(st.phase==='dwell'){lbl=st.at===n-1?'Fim da linha':'Estação';p=st.at;cd=st.left;}else if(st.phase==='run'){lbl='Próxima estação';p=st.to;cd=st.left;}else{lbl='Fim da linha';p=n-1;cd=0;}
+  const name=nm(p),T=(name.match(/^T(\d)/)||[])[1],acc=T&&isM?_tvAccessAt(name).pt.replace(/^ Nesta estação, acesso a: /,'').replace(/\.$/,''):'';
+  return`<div class="sl sl-next" style="--lc:${c}"><div class="sl-k">${lbl}<small>${lbl==='Próxima estação'?'Next station · Próxima estación':lbl==='Estação'?'Station · Estación':''}</small></div>
+    <div class="sl-big">${_tvEsc(_tvmNm(name))}</div>${T?`<div class="sl-term"><span>Terminal ${T}</span> ${('T'+T)===TRM_INT?'Voos internacionais · International':'Voos nacionais · Domestic'}</div>`:''}
+    <div class="sl-cd">⏱ ${_tvCD(Math.max(0,Math.round(cd)))}${isM&&st.phase!=='pre'&&p<n-1?` · 🚪 portas à ${_tvDoor(ln,R.dir,p)}`:''}</div>${acc?`<div class="sl-acc">✈ ${_tvEsc(acc)}</div>`:''}</div>`;}
+function _sPlat(x){const{ln,n,c,now}=x,s=TV.stop[ln.key]??0;const rows=[0,1].flatMap(d=>_tvNextAt(ln,s,d,now,3).map(r=>({d,r}))).sort((a,b)=>a.r.arr-b.r.arr).slice(0,5);
+  return`<div class="sl sl-plat"><div class="sl-k">📍 ${_tvEsc(ln.stops[s])}<small>Próximos ${x.isM?'trens':'ônibus'} · Next departures · Próximas salidas</small></div>${rows.map(({d,r})=>`<div class="pl-row"><span class="pl-ar" style="${d===0?`background:${c};color:#fff`:`border:3px solid ${c};color:${c}`}">${d?'▲':'▼'}</span><span>${_tvEsc(_tvmNm(ln.stops[d===0?n-1:0]))}</span><b>${r.status==='plat'?'agora':Math.max(1,Math.ceil((r.arr-now)/60))+' min'}</b><em>${_tvHM(r.dep)}</em></div>`).join('')}</div>`;}
+function _sCurio(x){const{ln,R,st}=x;let c=null;if(x.riding&&st&&st.phase==='run')c=_tvCurio(ln.stops[_tvFs(ln,R.dir,st.to)]);if(!c){const all=TV_CURIO.map(z=>z[1]).concat(TV_MG);c=all[(TVM2.tk++)%all.length];}
+  const ic=['🏔️','⛪','🦴','🧀','🎨','⚽','🌿','🏛️'][TVM2.tk%8];
+  return`<div class="sl sl-curio"><div class="cu-ic">${ic}</div><div><div class="sl-k">Você sabia?<small>Did you know? · ¿Sabía que…?</small></div><div class="cu-tx">${_tvEsc(c.pt.replace(/^Você sabia\?\s*/,''))}</div><div class="cu-en">${_tvEsc(c.en.replace(/^Did you know\?\s*/,''))}</div></div></div>`;}
+function _sWeather(){const w=_tvmWx(),ds=[['LIS','Lisboa'],['MIA','Miami'],['GRU','São Paulo'],['SSA','Salvador']].map(([k,nm])=>`<div class="wx-d"><span>${nm}</span><b>${(WEATHER[k]||['--'])[0]}</b></div>`).join('');
+  return`<div class="sl sl-wx"><div class="wx-ic">${w.ic}</div><div><div class="sl-k">Belo Horizonte · Confins agora<small>Weather now · Clima ahora</small></div><div class="wx-t">${w.t}°C</div><div class="wx-dsc">${_tvEsc(w.d)}</div><div class="wx-ds">${ds}</div></div></div>`;}
+function _sFlights(){const rows=_gvRows().slice(0,5);
+  return`<div class="sl sl-fl"><div class="sl-k">✈ Próximas partidas<small>Departures · Salidas</small></div>${rows.map(r=>`<div class="fl-row"><b>${r.time}</b><span class="tia">${r.fnum}</span><span class="fl-d">${_tvEsc(r.dest)}</span><span class="tgt">${r.gate}</span>${stH(r.st)}</div>`).join('')||'<div class="sl-k">—</div>'}</div>`;}
+function _sTip(){const all=TV_AIRTIPS.concat(TV_COURT),t=all[(TVM2.tk++)%all.length],ic=['💉','🛂','🛡️','⏰','🖥️','💧','💺','🚪','🎒','🎧','📞'][TVM2.tk%11];
+  return`<div class="sl sl-tip"><div class="cu-ic">${ic}</div><div><div class="sl-k">Dica de viagem<small>Travel tip · Consejo de viaje</small></div><div class="cu-tx">${_tvEsc(t.pt)}</div><div class="cu-en">${_tvEsc(t.en)}</div></div></div>`;}
+function _sMap(x){if(!x.riding||!x.st)return null;const{ln,R,st,n,c}=x,nm=p=>_tvmNm(ln.stops[_tvFs(ln,R.dir,p)]),pos=st.phase==='pre'?0:st.p,W=1000,pad=95,Y=80,X=p=>pad+(n>1?p/(n-1):0)*(W-pad*2);
+  let s=`<svg viewBox="0 0 ${W} 170" style="width:100%"><line x1="${X(0)}" y1="${Y}" x2="${X(n-1)}" y2="${Y}" stroke="${c}" stroke-width="12" opacity=".3" stroke-linecap="round"/><line x1="${X(0)}" y1="${Y}" x2="${X(pos)}" y2="${Y}" stroke="${c}" stroke-width="12" stroke-linecap="round"/>`;
+  for(let p=0;p<n;p++){const ps=p<pos-.01;s+=`<circle cx="${X(p)}" cy="${Y}" r="${p===0||p===n-1?14:11}" fill="${ps?c:'#000'}" stroke="${c}" stroke-width="4"/><text x="${X(p)}" y="${p%2?Y+46:Y-28}" text-anchor="middle" fill="${ps?'#556':'#e8eaf6'}" font-size="19" font-weight="700" font-family="Barlow Condensed">${_tvEsc(nm(p))}</text>`;}
+  s+=`<g transform="translate(${X(pos)},${Y})"><rect x="-22" y="-14" width="44" height="28" rx="9" fill="#fff" stroke="${c}" stroke-width="3"/><text y="7" text-anchor="middle" font-size="17">${x.isM?'🚆':'🚌'}</text></g></svg>`;
+  return`<div class="sl sl-map"><div class="sl-k">🗺 Seu trajeto<small>Your route · Su trayecto</small></div>${s}</div>`;}
+function _tvmPlaylist(x){const L=[];const add=(id,dur,live)=>L.push({id,dur,live});
+  const base=[['minas',14],['ad0',9],['curio',12],['wx',9],['fl',10],['ad1',9],['tip',10],['takeoff',12],['ad2',9],['map',10]];
+  base.forEach((b,i)=>{if(i%3===0)add(x.riding?'next':'plat',8,true);add(b[0],b[1],b[0]==='fl'||b[0]==='map');});return L;}
+function _tvmSlideHTML(id,x){switch(id){case'next':return _sNext(x)||_sPlat(x);case'plat':return _sPlat(x);case'minas':return _vidMinas(x.c);case'takeoff':return _vidTakeoff();
+  case'ad0':return TVM_ADS[0]();case'ad1':return TVM_ADS[1]();case'ad2':return TVM_ADS[2]();case'curio':return _sCurio(x);case'wx':return _sWeather();case'fl':return _sFlights();case'tip':return _sTip();case'map':return _sMap(x)||_sWeather();}return'';}
+// ── estrutura ──
+function tvModeOpen(){let old=document.getElementById('tvm');if(old)old.remove();const ov=document.createElement('div');ov.id='tvm';ov.className='tvm tvm2 show';document.body.appendChild(ov);
+  ov.innerHTML=`<div class="t2-top"><span class="tvm-line" id="t2-line"></span><span class="t2-dir" id="t2-dir"></span><span class="t2-wx" id="t2-wx"></span><span class="tvm-clk" id="t2-clk"></span><button class="tvm-x" data-a="close" title="Fechar (Esc)">✕</button></div>
+    <div class="t2-body"><div class="t2-stage"><div id="t2-slide" class="t2-slide"></div><div class="t2-dots" id="t2-dots"></div><div id="t2-take" class="t2-take"></div></div><div class="t2-side" id="t2-side"></div></div>
+    <div class="t2-tk"><span class="t2-tk-lbl">INFO</span><div class="t2-tk-win"><div class="t2-tk-in" id="t2-tk"></div></div></div>
+    <div class="t2-ctl"><button data-a="prev" title="Anterior">◀</button><button data-a="pause" id="t2-pause" title="Pausar">⏸</button><button data-a="next" title="Próximo">▶</button><button data-a="vox" id="t2-vox" title="Som dos avisos">🔊</button></div>`;
+  ov.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.getAttribute('data-a');
+    if(a==='close')tvModeClose();else if(a==='next'||a==='prev'){TVM2.i+=a==='next'?1:-1;TVM2.t0=0;TVM2.cur=null;_tvmRender();}
+    else if(a==='pause'){TVM2.paused=!TVM2.paused;b.textContent=TVM2.paused?'▶︎ ':'⏸';b.textContent=TVM2.paused?'⏯':'⏸';}
+    else if(a==='vox'){TV.vox=!TV.vox;if(!TV.vox)voxStop();else{try{const c=_ctx();if(c&&c.state==='suspended')c.resume();}catch(e){}TV.lastEv=null;}TV.keys.ride=null;}});
+  TVM.on=true;TVM2.i=0;TVM2.t0=0;TVM2.cur=null;TVM2.take=null;TVM2.lastLedAt=TV.ledAt||0;
+  try{if(ov.requestFullscreen)ov.requestFullscreen().catch(()=>{});}catch(e){}_tvmTicker();_tvmRender();}
+function _tvmTicker(){const el=document.getElementById('t2-tk');if(!el)return;const w=_tvmWx(),items=[`${w.ic} Belo Horizonte ${w.t}°C · ${w.d}`];
+  const a=_tvArrivalNews();if(a)items.push('🛬 '+a.pt.replace(/^Informação: /,''));const r=_gvRows().slice(0,3).map(r=>`✈ ${r.time} ${r.fnum} → ${r.dest} · portão ${r.gate}`);items.push(...r);
+  items.push('👋 Bem-vindo a Minas Gerais · Welcome to Minas Gerais · Bienvenido a Minas Gerais');const t=TV_AIRTIPS[Math.floor(Math.random()*TV_AIRTIPS.length)];items.push('💡 '+t.pt);
+  const x=_tvInc&&_tvInc();if(x)items.unshift('⚠ '+_tvIncMsg(x).pt);
+  const txt=items.join('     ◆     ');el.textContent=txt;el.style.animationDuration=Math.max(25,txt.length/7)+'s';}
+setInterval(()=>{if(TVM.on)_tvmTicker();},60000);
+function _tvmRender(){if(!TVM.on)return;const ov=document.getElementById('tvm');if(!ov||!ov.classList.contains('tvm2'))return;const x=_tvmCtx(),{ln,R,riding,st,n,c,isM,now}=x;
+  ov.style.setProperty('--lc',c);
+  const q=id=>document.getElementById(id);q('t2-line').textContent=isM?'Ⓜ Trem das Gerais':ln.code+' · Ônibus';q('t2-line').style.background=c;
+  q('t2-dir').innerHTML=riding?`Sentido <b>${_tvEsc(_tvmNm(ln.stops[R.dir===0?n-1:0]))}</b> · ${_tvTripId(ln,R.dir,R.ti)}`:`📍 <b>${_tvEsc(ln.stops[TV.stop[ln.key]??0])}</b>`;
+  const w=_tvmWx();q('t2-wx').textContent=`${w.ic} ${w.t}°C`;q('t2-clk').textContent=new Date(_simNow()).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const vb=q('t2-vox');if(vb)vb.textContent=TV.vox?'🔊':'🔇';
+  // lateral: próximas paradas
+  let side='';if(riding&&st){const o=_tvOff(ln,R.dir),t0=_tvTrips(ln,R.dir)[R.ti],nm=p=>_tvmNm(ln.stops[_tvFs(ln,R.dir,p)]);const from=st.phase==='pre'?0:(st.phase==='dwell'?st.at:(st.phase==='run'?st.to:n-1));
+    const prog=Math.max(0,Math.min(100,(now-t0)/o.end*100));
+    side=`<div class="sd-k">${st.phase==='dwell'?'Estação atual':st.phase==='pre'?'Partida':'Próxima estação'}</div><div class="sd-nx">${_tvEsc(nm(from))}</div><div class="sd-cd">${_tvCD(Math.max(0,Math.round(st.phase==='pre'?t0-now:(st.left||0))))}</div><div class="sd-pg"><i style="width:${prog.toFixed(1)}%"></i></div><div class="sd-list">`;
+    for(let p=from+1;p<Math.min(n,from+5);p++){const t=t0+o.arr[p];side+=`<div class="sd-row"><i></i><span>${_tvEsc(nm(p))}</span><b>${Math.max(1,Math.ceil((t-now)/60))}′</b></div>`;}
+    side+=`</div><div class="sd-to">→ ${_tvEsc(nm(n-1))} · ${_tvHM(t0+o.end)}</div>`;}
+  else{const s=TV.stop[ln.key]??0;side=`<div class="sd-k">Você está em</div><div class="sd-nx">${_tvEsc(_tvmNm(ln.stops[s]))}</div>`+[0,1].map(d=>{const r=_tvNextAt(ln,s,d,now,1)[0];return r?`<div class="sd-row"><i></i><span>${d?'▲':'▼'} ${_tvEsc(_tvmNm(ln.stops[d===0?n-1:0]))}</span><b>${r.status==='plat'?'já':Math.max(1,Math.ceil((r.arr-now)/60))+'′'}</b></div>`:'';}).join('');}
+  q('t2-side').innerHTML=side;
+  // carrossel
+  const L=_tvmPlaylist(x),i=((TVM2.i%L.length)+L.length)%L.length,sl=L[i];
+  if(!TVM2.paused&&TVM2.t0&&Date.now()-TVM2.t0>sl.dur*1000){TVM2.i++;TVM2.t0=0;return _tvmRender();}
+  if(!TVM2.t0)TVM2.t0=Date.now();
+  if(TVM2.cur!==i+'|'+sl.id||sl.live){const h=_tvmSlideHTML(sl.id,x);const el=q('t2-slide');if(TVM2.cur!==i+'|'+sl.id){el.classList.remove('in');void el.offsetWidth;el.classList.add('in');}el.innerHTML=h;TVM2.cur=i+'|'+sl.id;}
+  q('t2-dots').innerHTML=L.map((_,j)=>`<i class="${j===i?'on':''}"></i>`).join('');
+  _tvmTake();}
+// ── tomada de tela nos avisos ──
+function _tvmTake(){const el=document.getElementById('t2-take');if(!el)return;
+  if(TV.ledAt&&TV.ledAt!==TVM2.lastLedAt){TVM2.lastLedAt=TV.ledAt;const k=TV.ledKey||'';const kind=/^close/.test(k)?'close':/^at\|/.test(k)?'open':/^(appr|dep)/.test(k)?'next':k==='inc'?'alert':/^(info|tip)/.test(k)?'info':'next';
+    TVM2.take={kind,msg:TV.ledMsg||{pt:TV.led||'',en:'',es:''},at:Date.now()};
+    const L={close:['🚪','Portas se fechando','Doors closing · Cierre de puertas'],open:['🚉','Chegada','Arrival · Llegada'],next:['➡','Próxima estação','Next station · Próxima estación'],alert:['⚠','Aviso importante','Important notice · Aviso importante'],info:['ℹ','Informação','Information · Información']}[kind];
+    el.innerHTML=`<div class="tk tk-${kind}">${kind==='close'||kind==='open'?`<div class="tk-doors"><i></i><i></i></div>`:''}<div class="tk-in"><div class="tk-ic">${L[0]}</div><div class="tk-lbl">${L[1]}<small>${L[2]}</small></div><div class="tk-txt" id="tk-txt"></div><div class="tk-lg"><b data-l="pt">PT</b><b data-l="en">EN</b><b data-l="es">ES</b></div></div></div>`;
+    el.classList.add('show');}
+  const T=TVM2.take;if(!T)return;const busy=TV.vox&&(VOX.busy||VOX.hold||VOX.q.length>0);const age=Date.now()-T.at;
+  if((!busy&&age>9500)||age>120000){TVM2.take=null;el.classList.remove('show');return;}
+  let lg='pt';const vals=['pt','en','es'].filter(k=>T.msg[k]);
+  if(VOX.cur&&vals.some(k=>T.msg[k]===VOX.cur.text))lg=VOX.cur.k;else if(!TV.vox&&vals.length)lg=vals[Math.floor(age/3200)%vals.length];
+  const tx=document.getElementById('tk-txt');if(tx&&tx.getAttribute('data-l')!==lg){tx.setAttribute('data-l',lg);tx.textContent=T.msg[lg]||T.msg.pt;}
+  el.querySelectorAll('.tk-lg b').forEach(b=>b.classList.toggle('on',b.getAttribute('data-l')===lg));}
 
 </script>
 <div class="wrap" id="tab-transit" style="display:none"><div class="tv-modes" id="tv-modes"></div><div class="tv-speed gv-row" id="tv-speed" style="margin-bottom:12px"></div><div id="tv-body"></div></div>
