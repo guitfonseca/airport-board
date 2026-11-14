@@ -2876,8 +2876,8 @@ const TV_BUS=BUS_ROUTES_DATA.map((r,i)=>{const nm=TV_BUS_STOPS[i]||[];
   return {key:'bus'+i,kind:'bus',code:'CN'+String(i+1).padStart(2,'0'),name:r.name,color:r.color,coords:r.coords,
     stops:r.coords.map((c,k)=>nm[k]||('Parada '+(k+1))),
     run:r.coords.slice(1).map((c,k)=>Math.max(150,Math.round(_tvHav(r.coords[k],c)/32*3600))),
-    dwell:25,start:5*60+(i*4)%12,end:23*60+30,vmax:60,
-    hw:m=>{const h=m/60;return(h>=21||h<6)?Math.round(r.freq*1.5):r.freq;}};});
+    dwell:25,start:60+(i*4)%12,end:27*60-1,vmax:60,h24:true,
+    hw:m=>{const h=(m/60)%24;if(h<5)return Math.max(30,Math.round(r.freq*3/5)*5);if(h<6||h>=21)return Math.round(r.freq*1.5);return r.freq;}};});
 const TV_CROWD_L=['Vazio','Tranquilo','Moderado','Cheio','Lotado'];
 const TV_CROWD_C=['#69f0ae','#69f0ae','#ffd740','#ff9800','#ff5252'];
 const TV={mode:'metro',view:'stop',busLine:0,stop:{},ride:null,car:2,alight:null,gridDir:null,vox:false,lastPhase:null,
@@ -2913,7 +2913,7 @@ function _tvCrowdH(lv){const c=TV_CROWD_C[lv];return`<span class="tv-crowd" styl
 function _tvDoor(ln,dir,p){const s=_tvFs(ln,dir,p);return((s*7+dir*3)%2)?'esquerda':'direita';}
 function _tvCur(){return TV.mode==='metro'?TV_METRO:(TV_BUS[TV.busLine]||TV_BUS[0]);}
 function _tvU(ln){return ln.kind==='metro'?{v:'trem',st:'estação',Sts:'estações',ic:'🚆',art:'o'}:{v:'ônibus',st:'parada',Sts:'paradas',ic:'🚌',art:'o'};}
-function _tvHwTxt(ln,now){const m=Math.floor(now/60);if(m<ln.start-15||m>ln.end+75)return'Fora de operação · volta às '+_tvHM(ln.start*60);return`${_tvU(ln).ic} a cada ${ln.hw(m)} min agora`;}
+function _tvHwTxt(ln,now){const m=Math.floor(now/60);if(ln.h24)return`${_tvU(ln).ic} 24h · a cada ${ln.hw(m)} min agora`;if(m<ln.start-15||m>ln.end+75)return'Fora de operação · volta às '+_tvHM(ln.start*60);return`${_tvU(ln).ic} a cada ${ln.hw(m)} min agora`;}
 function _tvGridDir(ln,s){const n=ln.stops.length,ok=d=>_tvFs(ln,d,s)!==n-1;if(TV.gridDir!=null&&ok(TV.gridDir))return TV.gridDir;return ok(0)?0:1;}
 
 // ── diagrama vertical da linha ──
@@ -2981,10 +2981,10 @@ function _tvPanelHTML(ln,s,data,now){const n=ln.stops.length,U=_tvU(ln);
     const rows=d.list.map(x=>`<div class="tv-row"><span class="tv-t">${_tvHM(x.dep)}</span><span><span class="tv-id">${_tvTripId(ln,x.dir,x.ti)}</span><br><span class="tv-st" style="color:${SL[x.status][1]}">${SL[x.status][0]}</span></span><span class="tv-cd" style="color:${c}" data-until="${x.status==='plat'?x.dep:x.arr}"></span><button class="tv-go" style="--lc:${c}" data-enter="${x.dir}_${x.ti}_${_tvFs(ln,x.dir,s)}">Entrar</button></div>`).join('');
     return`<div class="tv-dir">${head}${big}<div>${rows}</div></div>`;}).join('')+`</div>`;}
 function _tvGridHTML(ln,s,dir,now){const n=ln.stops.length,p=_tvFs(ln,dir,s);if(p===n-1)return'<div class="tv-empty">Sem embarque neste sentido.</div>';
-  const o=_tvOff(ln,dir),deps=_tvTrips(ln,dir).map(t=>t+o.dep[p]),by={};deps.forEach(d=>{const h=Math.floor(d/3600);(by[h]=by[h]||[]).push(d);});
+  const o=_tvOff(ln,dir),deps=_tvTrips(ln,dir).map(t=>t+o.dep[p]).filter(d=>!ln.h24||(d>=10800&&d<97200)),by={};deps.forEach(d=>{const h=Math.floor(d/3600);(by[h]=by[h]||[]).push(d);});
   const nx=deps.find(d=>d>=now),hn=Math.floor(now/3600);
   return`<div class="tv-hgrid" style="--lc:${ln.color}">`+Object.keys(by).map(Number).sort((a,b)=>a-b).map(h=>`<div class="tv-hrow${hn===h?' now':''}"><span class="tv-hh">${String(h%24).padStart(2,'0')}</span><span class="tv-mm">${by[h].map(d=>`<span class="${d===nx?'nx':d<now?'past':''}">${String(Math.floor(d/60)%60).padStart(2,'0')}</span>`).join('')}</span></div>`).join('')
-    +`</div><div class="tv-gridfoot">Primeiro ${_tvHM(deps[0])} · Último ${_tvHM(deps[deps.length-1])} · ${deps.length} partidas por dia · minutos de cada hora</div>`;}
+    +`</div><div class="tv-gridfoot">${ln.h24?'🌙 Funciona 24 horas · intervalo maior de madrugada':`Primeiro ${_tvHM(deps[0])} · Último ${_tvHM(deps[deps.length-1])}`} · ${deps.length} partidas por dia · minutos de cada hora</div>`;}
 
 // ── visão "Dentro do trem / ônibus" ──
 function _tvRideCtx(ln,R,now){const n=ln.stops.length,st=_tvState(ln,R.dir,R.ti,now),board=Math.min(R.board||0,n-1);
@@ -3045,7 +3045,7 @@ function _tvPickActHTML(ln,act){const U=_tvU(ln);if(!act.length)return`<div clas
 // ── shell + tick ──
 function _tvShell(){const ln=_tvCur(),isM=ln.kind==='metro',U=_tvU(ln),n=ln.stops.length,c=ln.color,s=TV.stop[ln.key]??0;
   const tab=document.getElementById('tab-transit');if(!tab)return;
-  document.getElementById('tv-modes').innerHTML=`<button class="tv-mode${TV.mode==='metro'?' on':''}" data-tv="mode:metro"><span style="font-size:1.6rem">🚆</span><span>Trem<small>${_tvEsc(TV_METRO.name)} · ${TV_METRO.stops.length} estações</small></span></button><button class="tv-mode${TV.mode==='bus'?' on':''}" data-tv="mode:bus"><span style="font-size:1.6rem">🚌</span><span>Ônibus<small>${TV_BUS.length} linhas · aeroporto ↔ Grande BH</small></span></button>`;
+  document.getElementById('tv-modes').innerHTML=`<button class="tv-mode${TV.mode==='metro'?' on':''}" data-tv="mode:metro"><span style="font-size:1.6rem">🚆</span><span>Trem<small>${_tvEsc(TV_METRO.name)} · ${TV_METRO.stops.length} estações</small></span></button><button class="tv-mode${TV.mode==='bus'?' on':''}" data-tv="mode:bus"><span style="font-size:1.6rem">🚌</span><span>Ônibus<small>${TV_BUS.length} linhas · 24 horas · aeroporto ↔ Grande BH</small></span></button>`;
   const sub=`<div class="tv-sub" style="--lc:${c}"><button class="tv-subb${TV.view==='stop'?' on':''}" data-tv="view:stop">📍 ${isM?'Na estação':'No ponto'}</button><button class="tv-subb${TV.view==='ride'?' on':''}" data-tv="view:ride">${U.ic} Dentro do ${U.v}</button></div>`;
   const lines=isM?'':`<div class="tv-lines">${TV_BUS.map((b,i)=>`<button class="tv-line${i===TV.busLine?' on':''}" data-tv="line:${i}" style="--lc:${b.color}"><b>${b.code}</b>${_tvEsc(b.name.replace(/^CNF\s*→\s*/,''))}</button>`).join('')}</div>`;
   const stopOpts=ln.stops.map((nm,i)=>`<option value="${i}"${i===s?' selected':''}>${_tvEsc(nm)}</option>`).join('');
