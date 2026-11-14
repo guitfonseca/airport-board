@@ -709,6 +709,13 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
 @keyframes dcL{0%,55%{transform:translateX(-100%)}100%{transform:none}}@keyframes dcR{0%,55%{transform:translateX(100%)}100%{transform:none}}
 @keyframes doL{0%,35%{transform:none}100%{transform:translateX(-100%)}}@keyframes doR{0%,35%{transform:none}100%{transform:translateX(100%)}}
 .tk-close{box-shadow:inset 0 0 0 6px #ff6d00;animation:ccb .6s ease-in-out infinite alternate}@keyframes ccb{to{box-shadow:inset 0 0 0 6px #ff6d0022}}
+.t2-geo{position:absolute;inset:0;z-index:0;visibility:hidden}.t2-geo.on{visibility:visible}
+.t2-slide{z-index:1}.t2-slide.geo{pointer-events:none}
+.sl-geo{justify-content:flex-start;padding:2.4vh 2vw}
+.geo-cap{align-self:flex-start;background:#000c;padding:1vh 1.4vw;border-radius:8px;font-size:clamp(14px,2.2vw,30px);font-weight:700}.geo-cap small{display:block;font-size:.55em;color:#b0bec5;font-weight:400}
+.geo-you{align-self:flex-start;background:#000c;padding:.5vh 1vw;border-radius:6px;font-size:clamp(11px,1.5vw,18px);color:#ffb300}
+.leaflet-tooltip.tvm-tip{font-size:clamp(12px,1.5vw,20px);font-weight:700;background:#000c}
+.leaflet-tooltip.tvm-you{background:#ffb300;color:#000;border:none;font-weight:900}
 </style>
 </head>
 <body><div class="imm-toast" id="imm-toast"></div>
@@ -3985,21 +3992,21 @@ function _sMap(x){if(!x.riding||!x.st)return null;const{ln,R,st,n,c}=x,nm=p=>_tv
   s+=`<g transform="translate(${X(pos)},${Y})"><rect x="-22" y="-14" width="44" height="28" rx="9" fill="#fff" stroke="${c}" stroke-width="3"/><text y="7" text-anchor="middle" font-size="17">${x.isM?'🚆':'🚌'}</text></g></svg>`;
   return`<div class="sl sl-map"><div class="sl-k">🗺 Seu trajeto<small>Your route · Su trayecto</small></div>${s}</div>`;}
 function _tvmPlaylist(x){const L=[];const add=(id,dur,live)=>L.push({id,dur,live});
-  const base=[['minas',14],['ad0',9],['curio',12],['wx',9],['fl',10],['ad1',9],['tip',10],['takeoff',12],['ad2',9],['map',10]];
-  base.forEach((b,i)=>{if(i%3===0)add(x.riding?'next':'plat',8,true);add(b[0],b[1],b[0]==='fl'||b[0]==='map');});return L;}
+  const base=[['geo',15],['minas',14],['ad0',9],['curio',12],['wx',9],['geo',15],['fl',10],['ad1',9],['tip',10],['takeoff',12],['ad2',9],['map',10]];
+  base.forEach((b,i)=>{if(i%3===0)add(x.riding?'next':'plat',8,true);add(b[0],b[1],b[0]==='fl'||b[0]==='map'||b[0]==='geo');});return L;}
 function _tvmSlideHTML(id,x){switch(id){case'next':return _sNext(x)||_sPlat(x);case'plat':return _sPlat(x);case'minas':return _vidMinas(x.c);case'takeoff':return _vidTakeoff();
-  case'ad0':return TVM_ADS[0]();case'ad1':return TVM_ADS[1]();case'ad2':return TVM_ADS[2]();case'curio':return _sCurio(x);case'wx':return _sWeather();case'fl':return _sFlights();case'tip':return _sTip();case'map':return _sMap(x)||_sWeather();}return'';}
+  case'ad0':return TVM_ADS[0]();case'ad1':return TVM_ADS[1]();case'ad2':return TVM_ADS[2]();case'curio':return _sCurio(x);case'wx':return _sWeather();case'fl':return _sFlights();case'tip':return _sTip();case'map':return _sMap(x)||_sWeather();case'geo':return`<div class="sl sl-geo"><div class="geo-cap">🗺 Mapa ao vivo<small>Live map · Mapa en vivo</small></div>${x.riding?`<div class="geo-you">○ = você · you · usted</div>`:''}</div>`;}return'';}
 // ── estrutura ──
 function tvModeOpen(){let old=document.getElementById('tvm');if(old)old.remove();const ov=document.createElement('div');ov.id='tvm';ov.className='tvm tvm2 show';document.body.appendChild(ov);
   ov.innerHTML=`<div class="t2-top"><span class="tvm-line" id="t2-line"></span><span class="t2-dir" id="t2-dir"></span><span class="t2-wx" id="t2-wx"></span><span class="tvm-clk" id="t2-clk"></span><button class="tvm-x" data-a="close" title="Fechar (Esc)">✕</button></div>
-    <div class="t2-body"><div class="t2-stage"><div id="t2-slide" class="t2-slide"></div><div class="t2-dots" id="t2-dots"></div><div id="t2-take" class="t2-take"></div></div><div class="t2-side" id="t2-side"></div></div>
+    <div class="t2-body"><div class="t2-stage"><div id="t2-geo" class="t2-geo"></div><div id="t2-slide" class="t2-slide"></div><div class="t2-dots" id="t2-dots"></div><div id="t2-take" class="t2-take"></div></div><div class="t2-side" id="t2-side"></div></div>
     <div class="t2-tk"><span class="t2-tk-lbl">INFO</span><div class="t2-tk-win"><div class="t2-tk-in" id="t2-tk"></div></div></div>
     <div class="t2-ctl"><button data-a="prev" title="Anterior">◀</button><button data-a="pause" id="t2-pause" title="Pausar">⏸</button><button data-a="next" title="Próximo">▶</button><button data-a="vox" id="t2-vox" title="Som dos avisos">🔊</button></div>`;
   ov.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.getAttribute('data-a');
     if(a==='close')tvModeClose();else if(a==='next'||a==='prev'){TVM2.i+=a==='next'?1:-1;TVM2.t0=0;TVM2.cur=null;_tvmRender();}
     else if(a==='pause'){TVM2.paused=!TVM2.paused;b.textContent=TVM2.paused?'▶︎ ':'⏸';b.textContent=TVM2.paused?'⏯':'⏸';}
     else if(a==='vox'){TV.vox=!TV.vox;if(!TV.vox)voxStop();else{try{const c=_ctx();if(c&&c.state==='suspended')c.resume();}catch(e){}TV.lastEv=null;}TV.keys.ride=null;}});
-  TVM.on=true;TVM2.i=0;TVM2.t0=0;TVM2.cur=null;TVM2.take=null;TVM2.lastLedAt=TV.ledAt||0;
+  TVM.on=true;TVM2.i=0;TVM2.t0=0;TVM2.cur=null;TVM2.take=null;TVM2.map=null;TVM2.mapKey=null;TVM2.veh={};TVM2.lastLedAt=TV.ledAt||0;
   try{if(ov.requestFullscreen)ov.requestFullscreen().catch(()=>{});}catch(e){}_tvmTicker();_tvmRender();}
 function _tvmTicker(){const el=document.getElementById('t2-tk');if(!el)return;const w=_tvmWx(),items=[`${w.ic} Belo Horizonte ${w.t}°C · ${w.d}`];
   const a=_tvArrivalNews();if(a)items.push('🛬 '+a.pt.replace(/^Informação: /,''));const r=_gvRows().slice(0,3).map(r=>`✈ ${r.time} ${r.fnum} → ${r.dest} · portão ${r.gate}`);items.push(...r);
@@ -4026,6 +4033,7 @@ function _tvmRender(){if(!TVM.on)return;const ov=document.getElementById('tvm');
   if(!TVM2.paused&&TVM2.t0&&Date.now()-TVM2.t0>sl.dur*1000){TVM2.i++;TVM2.t0=0;return _tvmRender();}
   if(!TVM2.t0)TVM2.t0=Date.now();
   if(TVM2.cur!==i+'|'+sl.id||sl.live){const h=_tvmSlideHTML(sl.id,x);const el=q('t2-slide');if(TVM2.cur!==i+'|'+sl.id){el.classList.remove('in');void el.offsetWidth;el.classList.add('in');}el.innerHTML=h;TVM2.cur=i+'|'+sl.id;}
+  const isGeo=sl.id==='geo',ge=q('t2-geo');if(ge){ge.classList.toggle('on',isGeo);q('t2-slide').classList.toggle('geo',isGeo);if(isGeo){_tvmGeoInit(x);_tvmGeoTick(x);}}
   q('t2-dots').innerHTML=L.map((_,j)=>`<i class="${j===i?'on':''}"></i>`).join('');
   _tvmTake();}
 // ── tomada de tela nos avisos ──
@@ -4041,6 +4049,29 @@ function _tvmTake(){const el=document.getElementById('t2-take');if(!el)return;
   if(VOX.cur&&vals.some(k=>T.msg[k]===VOX.cur.text))lg=VOX.cur.k;else if(!TV.vox&&vals.length)lg=vals[Math.floor(age/3200)%vals.length];
   const tx=document.getElementById('tk-txt');if(tx&&tx.getAttribute('data-l')!==lg){tx.setAttribute('data-l',lg);tx.textContent=T.msg[lg]||T.msg.pt;}
   el.querySelectorAll('.tk-lg b').forEach(b=>b.classList.toggle('on',b.getAttribute('data-l')===lg));}
+
+// ── mapa ao vivo na TV ──
+function _tvmGeoInit(x){if(typeof L==='undefined')return;const el=document.getElementById('t2-geo');if(!el)return;const ln=x.ln;
+  if(TVM2.map&&TVM2.mapKey===ln.key){try{TVM2.map.invalidateSize();}catch(e){}return;}
+  if(TVM2.map){try{TVM2.map.remove();}catch(e){}}TVM2.veh={};TVM2.mapFollow=false;
+  const m=L.map(el,{zoomControl:false,attributionControl:true});_mkTiles(m);
+  if(ln.kind==='bus')TV_BUS.forEach(b=>{if(b.key!==ln.key)L.polyline(b.coords,{color:b.color,weight:3,opacity:.35,dashArray:'6,5'}).addTo(m);});
+  L.polyline(ln.coords,{color:ln.color,weight:8,opacity:.9}).addTo(m);
+  ln.coords.forEach((c,i)=>{const nm=ln.stops[i],air=ln.zones&&ln.zones[i]==='air',first=air&&(i===0||ln.zones[i-1]!=='air');
+    const mk=L.circleMarker(c,{radius:air?5:8,fillColor:'#080e0d',fillOpacity:1,color:ln.color,weight:3}).addTo(m);
+    if(!air)mk.bindTooltip(_tvmNm(nm),{permanent:true,direction:i%2?'left':'right',className:'tv-tip tvm-tip'});
+    else if(first)mk.bindTooltip('✈ Aeroporto CNF · T1 · T2',{permanent:true,direction:'top',className:'tv-tip tvm-tip'});});
+  if(ln.kind==='metro')L.circleMarker(HOME,{radius:22,color:'#ffb300',weight:2,fillOpacity:.07,dashArray:'4,4'}).addTo(m);
+  m.fitBounds(L.polyline(ln.coords).getBounds().pad(.15));TVM2.map=m;TVM2.mapKey=ln.key;setTimeout(()=>{try{m.invalidateSize();}catch(e){}},200);}
+function _tvmGeoTick(x){const m=TVM2.map;if(!m)return;const ln=x.ln,focus=x.riding?x.R:null,lines=ln.kind==='bus'?TV_BUS:[ln],seen={};
+  lines.forEach(Ln=>{const main=Ln.key===ln.key,n=Ln.coords.length;
+    _tvActive(Ln,x.now).forEach(a=>{const k=Ln.key+'|'+a.dir+'_'+a.ti;seen[k]=1;const fp=_tvFs(Ln,a.dir,a.st.p),i=Math.max(0,Math.min(Math.floor(fp),n-2)),pt=_lp(Ln.coords[i],Ln.coords[i+1],fp-i);
+      const isF=main&&!!focus&&focus.dir===a.dir&&focus.ti===a.ti;let mk=TVM2.veh[k];
+      if(!mk||mk._f!==isF){if(mk)m.removeLayer(mk);const col=isF?'#ffffff':Ln.color;
+        mk=L.marker(pt,{icon:L.divIcon({html:`<div class="tv-busic${isF?' f':''}" style="opacity:${main?1:.6};transform:scale(${isF?1.6:1.15})">${Ln.kind==='metro'?_tvTrainSvg(col):_bsv(col,a.dir===1)}</div>`,className:'',iconSize:[26,16],iconAnchor:[13,8]}),zIndexOffset:isF?1000:main?500:200}).addTo(m);
+        if(isF)mk.bindTooltip('VOCÊ · YOU',{permanent:true,direction:'top',className:'tv-tip tvm-you'});mk._f=isF;TVM2.veh[k]=mk;}else mk.setLatLng(pt);
+      if(isF){if(!TVM2.mapFollow){m.setView(pt,12);TVM2.mapFollow=true;}else m.panTo(pt,{animate:true,duration:.6});}});});
+  Object.keys(TVM2.veh).forEach(k=>{if(!seen[k]){m.removeLayer(TVM2.veh[k]);delete TVM2.veh[k];}});}
 
 </script>
 <div class="wrap" id="tab-transit" style="display:none"><div class="tv-modes" id="tv-modes"></div><div class="tv-speed gv-row" id="tv-speed" style="margin-bottom:12px"></div><div id="tv-body"></div></div>
