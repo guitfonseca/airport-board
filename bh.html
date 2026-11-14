@@ -431,6 +431,146 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
 .pv-filters{display:flex;gap:8px;margin-bottom:14px}
 .pv-pill{background:var(--panel);border:1px solid var(--border);color:var(--white);border-radius:20px;padding:7px 16px;cursor:pointer;font-family:inherit;font-size:.8rem}
 .pv-pill.on{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700}
+/* ═══════ TRANSPORTE v3 ═══════ */
+.tv-modes{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.tv-mode{flex:1;min-width:150px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--white);font-family:inherit;font-size:1rem;font-weight:700;letter-spacing:.04em;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px;transition:all .2s}
+.tv-mode small{display:block;font-size:.66rem;color:var(--dim);font-weight:400;letter-spacing:.05em;margin-top:2px}
+.tv-mode.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 9%,var(--panel));color:var(--acc)}
+.tv-sub{display:flex;background:var(--panel);border:1px solid var(--border);border-radius:30px;padding:3px;margin-bottom:12px;max-width:100%;width:max-content}
+.tv-subb{background:none;border:none;color:var(--dim);font-family:inherit;font-size:.84rem;font-weight:700;padding:8px 16px;border-radius:24px;cursor:pointer;letter-spacing:.04em;white-space:nowrap}
+.tv-subb.on{background:var(--lc);color:#fff}
+.tv-lines{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tv-line{border:1px solid var(--lc);color:var(--lc);border-radius:20px;padding:5px 12px;font-size:.78rem;font-weight:600;background:transparent;cursor:pointer;font-family:inherit}
+.tv-line b{font-family:'Share Tech Mono',monospace;margin-right:3px}
+.tv-line.on{background:var(--lc);color:#fff}
+.tv-grid2{display:grid;grid-template-columns:1fr minmax(280px,380px);gap:14px;align-items:start}
+@media(max-width:860px){.tv-grid2{grid-template-columns:1fr}}
+.tv-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.tv-card-h{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.tv-card-t{font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;font-weight:700}
+.tv-card-b{padding:12px 14px}
+.tv-hw{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--dim)}
+.tv-hint{font-size:.68rem;color:var(--dim);text-align:center;margin-top:8px}
+.tv-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.72rem;color:var(--dim);margin-bottom:6px}
+.tv-legend b{display:inline-flex;align-items:center;justify-content:center;width:20px;height:16px;border-radius:4px;font-size:.62rem;margin-right:4px}
+.tv-stn{fill:var(--white);font-size:14px;font-weight:600;font-family:'Barlow Condensed',sans-serif}
+.tv-stn.on{fill:var(--acc);font-weight:800}
+.tv-sts{fill:#78909c;font-size:10.5px;font-family:'Share Tech Mono',monospace}
+.tv-trn.dwelling{animation:mldwell .8s ease-in-out infinite alternate}
+.tv-dirs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.tv-dirs{grid-template-columns:1fr}}
+.tv-dir-h{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tv-dir-ar{display:inline-flex;align-items:center;justify-content:center;width:28px;height:24px;border-radius:6px;font-size:.8rem;font-weight:900;flex-shrink:0}
+.tv-dir-l{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:.12em}
+.tv-dir-n{font-size:.98rem;font-weight:700;line-height:1.1}
+.tv-next{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.tv-next-cd{font-family:'Share Tech Mono',monospace;font-size:2.3rem;font-weight:700;line-height:1}
+.tv-next-cd.plat{font-size:1.35rem;letter-spacing:.06em}
+.tv-next-u{font-size:.72rem;color:var(--dim)}
+.tv-next-s{font-size:.76rem;color:var(--dim);margin:6px 0 8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tv-next-s b{color:var(--white);font-family:'Share Tech Mono',monospace}
+.tv-row{display:grid;grid-template-columns:52px 1fr auto auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid rgba(30,45,74,.45);font-size:.84rem}
+.tv-t{font-family:'Share Tech Mono',monospace;font-weight:700;font-size:1rem}
+.tv-id{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:#90a4ae}
+.tv-st{font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.tv-cd{font-family:'Share Tech Mono',monospace;font-weight:700;text-align:right;min-width:46px}
+.tv-go{background:none;border:1px solid var(--lc);color:var(--lc);border-radius:14px;padding:4px 10px;font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.tv-go:hover{background:var(--lc);color:#fff}
+.tv-crowd{display:inline-flex;gap:2px;vertical-align:middle}
+.tv-crowd i{width:4px;height:10px;border-radius:1px;background:#263238}
+.tv-crowd i.f{background:currentColor}
+.tv-empty{color:var(--dim);font-size:.84rem;text-align:center;padding:16px;line-height:1.5}
+.tv-hgrid{font-family:'Share Tech Mono',monospace;font-size:.8rem;max-height:360px;overflow-y:auto}
+.tv-hrow{display:grid;grid-template-columns:30px 1fr;gap:8px;padding:5px 0;border-bottom:1px dashed rgba(30,45,74,.55)}
+.tv-hh{color:var(--acc);font-weight:700}
+.tv-hrow.now{background:rgba(255,255,255,.03)}
+.tv-mm{display:flex;flex-wrap:wrap;gap:3px 9px;color:var(--white)}
+.tv-mm .past{color:#37474f}
+.tv-mm .nx{color:#fff;background:var(--lc);border-radius:3px;padding:0 4px}
+.tv-gridfoot{font-size:.68rem;color:var(--dim);margin-top:8px}
+.tv-ride-h{padding:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--lc) 24%,transparent),transparent 70%)}
+.tv-ride-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.tv-ride-id{font-family:'Share Tech Mono',monospace;font-size:1.5rem;font-weight:700;color:var(--white)}
+.tv-ride-dir{font-size:.86rem;color:var(--white);margin-top:2px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tv-msg{font-size:1.08rem;margin-top:14px;line-height:1.35}
+.tv-msg b{color:var(--white)}
+.tv-msg [data-until]{font-family:'Share Tech Mono',monospace;color:var(--lc)}
+.tv-prog{height:8px;background:#1a2632;border-radius:4px;overflow:hidden;margin-top:12px}
+.tv-prog>div{height:100%;background:var(--lc);transition:width 1s linear;width:0}
+.tv-prog-l{display:flex;justify-content:space-between;font-size:.64rem;color:var(--dim);margin-top:4px;gap:8px}
+.tv-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:12px}
+.tv-kpi{background:rgba(0,0,0,.28);border:1px solid var(--border);border-radius:8px;padding:8px 11px}
+.tv-kpi-l{font-size:.58rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+.tv-kpi-v{font-family:'Share Tech Mono',monospace;font-size:1.2rem;font-weight:700;margin-top:2px}
+.tv-kpi-v.sm{font-family:'Barlow Condensed',sans-serif;font-size:1rem;line-height:1.15}
+.tv-kpi-s{font-size:.68rem;color:var(--dim);margin-top:2px;font-family:'Share Tech Mono',monospace}
+.tv-cars{display:flex;gap:4px;margin-top:12px}
+.tv-car{flex:1;border:1.5px solid var(--border);border-radius:10px 10px 4px 4px;padding:6px 4px;text-align:center;cursor:pointer;background:rgba(0,0,0,.25);font-size:.62rem;color:var(--dim);font-family:inherit}
+.tv-car b{display:block;font-family:'Share Tech Mono',monospace;font-size:.95rem;color:var(--white)}
+.tv-car.on{border-color:var(--lc);box-shadow:0 0 0 2px color-mix(in srgb,var(--lc) 30%,transparent)}
+.tv-car .occ{height:4px;border-radius:2px;margin:4px 3px;background:#1a2632;overflow:hidden}
+.tv-car .occ>div{height:100%}
+.tv-tl{position:relative;padding:6px 14px 6px 46px}
+.tv-tl::before{content:'';position:absolute;left:25px;top:24px;bottom:24px;width:4px;background:var(--lc);opacity:.4;border-radius:2px}
+.tv-stop{position:relative;padding:9px 0;display:flex;justify-content:space-between;gap:10px;align-items:center;cursor:pointer;border-bottom:1px solid rgba(30,45,74,.3)}
+.tv-stop:last-child{border:none}
+.tv-stop .dot{position:absolute;left:-28px;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;border:3px solid var(--lc);background:var(--bg)}
+.tv-stop.past{opacity:.42}.tv-stop.past .dot{background:var(--lc)}
+.tv-stop.pre{opacity:.32}
+.tv-stop.cur .dot{background:#fff;box-shadow:0 0 0 5px color-mix(in srgb,var(--lc) 35%,transparent)}
+.tv-stop.next .dot{animation:tvpulse .7s ease-in-out infinite alternate}
+@keyframes tvpulse{from{box-shadow:0 0 0 0 var(--lc)}to{box-shadow:0 0 0 6px color-mix(in srgb,var(--lc) 25%,transparent)}}
+.tv-stop.dest .tv-sn{color:var(--acc)}
+.tv-stop .veh{position:absolute;left:-44px;top:50%;transform:translateY(-50%);font-size:1rem}
+.tv-sn{font-weight:700;font-size:.94rem}
+.tv-ss{font-size:.68rem;color:var(--dim);display:flex;gap:8px;flex-wrap:wrap}
+.tv-se{text-align:right;font-family:'Share Tech Mono',monospace;font-size:.84rem;white-space:nowrap}
+.tv-se .c{font-size:.7rem;color:var(--lc)}
+.tv-se .ok{color:var(--dim)}
+.tv-tag{font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px;background:rgba(255,255,255,.07);color:var(--white)}
+.tv-run{position:relative;display:flex;align-items:center;gap:8px;padding:6px 0;font-size:.7rem;color:var(--lc);font-weight:700}
+.tv-run .veh{position:absolute;left:-44px;font-size:1rem}
+.tv-run .bar{flex:1;height:5px;background:#1a2632;border-radius:3px;overflow:hidden}
+.tv-run .bar>div{height:100%;background:var(--lc);transition:width 1s linear}
+.tv-pick{display:grid;gap:8px}
+.tv-pickrow{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;cursor:pointer;background:rgba(0,0,0,.18);color:var(--white);font-family:inherit;text-align:left;width:100%}
+.tv-pickrow:hover{border-color:var(--lc)}
+.tv-busmap{height:300px;border-radius:10px;overflow:hidden}
+.tv-busic.f{filter:drop-shadow(0 0 6px #fff)}
+.leaflet-tooltip.tv-tip{background:var(--panel);color:var(--white);border:1px solid var(--border);box-shadow:none;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:600}
+.leaflet-tooltip.tv-tip::before{display:none}
+/* ═══════ PORTÃO · VOZ ═══════ */
+.gv-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;max-width:720px;margin:0 auto 14px}
+.gv-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.gv-title{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--acc)}
+.gv-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gv-opt{display:flex;align-items:center;gap:6px}
+.gv-btn{background:var(--acc);color:#000;border:1px solid var(--acc);padding:9px 15px;border-radius:7px;font-family:inherit;font-weight:700;font-size:.86rem;letter-spacing:.05em;cursor:pointer}
+.gv-btn.ghost{background:transparent;color:var(--white);border-color:var(--border)}
+.gv-btn.ghost:hover{border-color:var(--acc)}
+.gv-btn.sm{padding:5px 10px;font-size:.74rem}
+.gv-chip{border:1px solid var(--border);border-radius:16px;padding:5px 12px;font-size:.74rem;font-weight:700;background:none;color:var(--dim);cursor:pointer;font-family:inherit}
+.gv-chip.on{color:#000;background:var(--white);border-color:var(--white)}
+.gv-chip[data-lang=pt].on{background:var(--acc);border-color:var(--acc)}
+.gv-chip[data-lang=en].on{background:#7eb8ff;border-color:#7eb8ff}
+.gv-chip[data-lang=es].on{background:#ff8a65;border-color:#ff8a65}
+.gv-voices{display:none;margin-top:10px;gap:8px;flex-direction:column;background:#070d0c;border:1px solid var(--border);border-radius:8px;padding:10px}
+.gv-voices.show{display:flex}
+.gv-vrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.gv-vrow select{flex:1;min-width:160px;max-width:100%}
+.lg{font-family:'Share Tech Mono',monospace;font-size:.66rem;font-weight:700;padding:2px 6px;border-radius:3px;color:#000;flex-shrink:0}
+.vox-cap{margin-top:12px;background:#050a12;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.9rem;min-height:44px;display:flex;gap:10px;align-items:center;line-height:1.35}
+.vox-cap.speaking{border-color:var(--acc)}
+.vox-cap.speaking .lg{animation:bl .6s ease-in-out infinite alternate}
+.vx-idle{color:var(--dim);font-size:.8rem}
+.gv-hint{font-size:.68rem;color:var(--dim);margin-top:8px}
+.gv-next{max-width:720px;margin:14px auto 0}
+.gv-li{display:grid;grid-template-columns:58px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(30,45,74,.4)}
+.gv-li:last-child{border:none}
+.gv-li.hot{background:linear-gradient(90deg,rgba(0,229,255,.07),transparent)}
+.gv-li-s{font-size:.72rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:3px}
+.gv-say{background:none;border:1px solid var(--border);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;color:var(--white)}
+.gv-say:hover{border-color:var(--acc)}
 </style>
 </head>
 <body><div class="imm-toast" id="imm-toast"></div>
@@ -592,9 +732,27 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
     <select class="fsel" id="gate-sel" onchange="loadGate()" style="min-width:300px"><option value="">Escolha um voo...</option></select>
     <div class="dpills" id="dp-gate"></div>
   </div>
+  <div class="gv-card">
+    <div class="gv-head"><span class="gv-title">🗣 Anúncios por voz</span><span class="gv-row">
+      <button class="gv-chip on" data-lang="pt" onclick="gvLang('pt')">PT</button><button class="gv-chip on" data-lang="en" onclick="gvLang('en')">EN</button><button class="gv-chip on" data-lang="es" onclick="gvLang('es')">ES</button></span></div>
+    <div class="gv-row">
+      <button class="gv-btn" onclick="gvAnnounceNext()">🔊 Próximos voos</button>
+      <button class="gv-btn ghost" onclick="gvCallSelected()">📢 Chamar voo selecionado</button>
+      <button class="gv-btn ghost" onclick="voxStop()">⏹ Parar</button>
+    </div>
+    <div class="gv-row" style="margin-top:10px">
+      <label class="gv-opt"><span class="gs-lbl">Automático</span><select class="fsel" id="gv-auto" onchange="gvSetAuto(this.value)"><option value="0">Desligado</option><option value="2">A cada 2 min</option><option value="5">A cada 5 min</option><option value="10">A cada 10 min</option></select></label>
+      <label class="gv-opt"><span class="gs-lbl">Voos</span><select class="fsel" onchange="GV.count=+this.value"><option value="3" selected>3 próximos</option><option value="5">5 próximos</option><option value="8">8 próximos</option></select></label>
+      <button class="gv-chip" onclick="gvToggleVoices()">⚙ Escolher vozes</button>
+    </div>
+    <div class="gv-voices" id="gv-voices"></div>
+    <div class="vox-cap" id="gv-cap"><span class="vx-idle">🔈 Toque em “Próximos voos” para ouvir os anúncios</span></div>
+    <div class="gv-hint">Fala cada aviso em português, inglês e espanhol, com legenda. No automático, também chama sozinho quando um voo entra em embarque ou última chamada.</div>
+  </div>
   <div class="gate-screen" id="gate-screen">
     <div style="padding:60px;text-align:center;color:var(--dim);font-size:.9rem;letter-spacing:.15em">SELECIONE UM VOO PARA VISUALIZAR O PAINEL DO PORTÃO</div>
   </div>
+  <div class="tv-card gv-next"><div class="tv-card-h"><span class="tv-card-t" style="color:var(--acc)">🕐 Próximas partidas</span><span class="now-lbl" id="gv-upd"></span></div><div class="tv-card-b" id="gv-list"></div></div>
 </div>
 <!-- MGR -->
 <div class="wrap" id="tab-mgr" style="display:none">
@@ -1128,7 +1286,7 @@ function showV(name){
   if(name==="map"){setTimeout(()=>{initRouteMap();routeMapInst&&routeMapInst.invalidateSize();},100);}
   if(name==="info")rInfo();if(name==="pax")rPax();if(name==="mgr")rMgr();
   if(name==="hist")rHist();if(name==="conn")initConn();
-  if(name==="gate")populateGate(AD.gate);
+  if(name==="gate"){populateGate(AD.gate);gvRenderList();}
 }
 
 // ── PILLS ─────────────────────────────────────────────────────────────────────
@@ -2580,7 +2738,7 @@ function buildImmersion(){
       <button class="imm-toggle" onclick="announceBoarding()">🔔 Anunciar embarque agora</button>
       <button class="imm-toggle" id="imm-radar" onclick="toggleRadar()">📡 Efeito radar no mapa: desligado</button>
     </div>
-    <div class="imm-note">Os sons usam síntese do navegador (Web Audio + voz). Ative o som do dispositivo. As chamadas são faladas em português, inglês e espanhol em sequência.</div>`;
+    <div class="imm-note">Os sons usam síntese do navegador (Web Audio + voz). Ative o som do dispositivo. As chamadas são faladas em português, inglês e espanhol em sequência — escolha as vozes na aba 🚪 Portão.</div>`;
 }
 // radar sweep no mapa
 let _radarOn=false;
@@ -2682,7 +2840,392 @@ function _airportCoord(iata){
 
 
 
+// ════════════════════════════════════════════════════════════════════════════
+// ════════ TRANSPORTE v3 · "Na estação" + "Dentro do trem/ônibus" ════════
+// Motor de horários único: cada viagem tem horário de saída da origem e
+// tempos fixos entre paradas. Painel, quadro de horários, diagrama, mapa e
+// visão de bordo leem desse mesmo horário — tudo bate entre si.
+// ════════════════════════════════════════════════════════════════════════════
+function _tvEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function _voxClean(s){return String(s).replace(/\s*·\s*/g,', ').replace(/\s*[–—]\s*/g,', ').replace(/\s+/g,' ').trim();}
+function _tvHav(a,b){const R=6371,r=x=>x*Math.PI/180;const dA=r(b[0]-a[0]),dO=r(b[1]-a[1]);const h=Math.sin(dA/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dO/2)**2;return 2*R*Math.asin(Math.sqrt(h));}
+
+const _TV_MST=[...(TRANSIT_DATA.terminals||[]),...(TRANSIT_DATA.city_trunk||[])];
+const TV_METRO={key:'metro',kind:'metro',code:'TG',name:TRANSIT_DATA.line_name||'Metrô',color:TRANSIT_DATA.metro_color||'#007dc5',
+  stops:_TV_MST.map(s=>s.name),zones:_TV_MST.map(s=>s.zone),
+  run:_TV_MST.slice(1).map((s,i)=>[90,90,120,90,240,420,600,720][i]||180),
+  dwell:TRANSIT_DATA.dwell_sec||40,start:5*60,end:24*60+30,vmax:90,
+  hw:m=>{const h=m/60;if(h>=23||h<5)return 12;if(h<6)return 8;if(h<9)return 4;if(h<17)return 6;if(h<20)return 4;return 8;}};
+const TV_BUS_STOPS=[
+  ["Aeroporto CNF · T1","Confins · Centro","Lagoa Santa · Rodoviária","Vespasiano","Cidade Administrativa","Venda Nova · Estação","São Gabriel","Floresta","Rodoviária de BH","Praça Sete · Centro"],
+  ["Aeroporto CNF · T1","Lagoa Santa","Aeroporto da Pampulha","Mineirão","Lagoa da Pampulha · Igrejinha"],
+  ["Aeroporto CNF · T1","Santa Luzia · Trevo","BH Shopping","Nova Lima · Centro"],
+  ["Aeroporto CNF · T1","Pedro Leopoldo · Trevo","Ribeirão das Neves","Eldorado","Contagem · Centro"],
+  ["Aeroporto CNF · T1","Confins · Bairro","São José da Lapa","Vespasiano · Morro Alto","Santa Luzia · Distrito Industrial","Santa Luzia · Frimisa","Santa Luzia · São Benedito","Santa Luzia · Centro"]];
+const TV_BUS=BUS_ROUTES_DATA.map((r,i)=>{const nm=TV_BUS_STOPS[i]||[];
+  return {key:'bus'+i,kind:'bus',code:'CN'+String(i+1).padStart(2,'0'),name:r.name,color:r.color,coords:r.coords,
+    stops:r.coords.map((c,k)=>nm[k]||('Parada '+(k+1))),
+    run:r.coords.slice(1).map((c,k)=>Math.max(150,Math.round(_tvHav(r.coords[k],c)/32*3600))),
+    dwell:25,start:5*60+(i*4)%12,end:23*60+30,vmax:60,
+    hw:m=>{const h=m/60;return(h>=21||h<6)?Math.round(r.freq*1.5):r.freq;}};});
+const TV_CROWD_L=['Vazio','Tranquilo','Moderado','Cheio','Lotado'];
+const TV_CROWD_C=['#69f0ae','#69f0ae','#ffd740','#ff9800','#ff5252'];
+const TV={mode:'metro',view:'stop',busLine:0,stop:{},ride:null,car:2,alight:null,gridDir:null,vox:false,lastPhase:null,
+  keys:{},timer:null,bound:false,busMap:null,busVeh:{},followBus:true};
+
+// ── motor ──
+const _tvC={};
+function _tvNow(){const n=new Date();let s=n.getHours()*3600+n.getMinutes()*60+n.getSeconds();if(s<3*3600)s+=86400;return s;}
+function _tvHM(sec){sec=((Math.round(sec)%86400)+86400)%86400;return String(Math.floor(sec/3600)).padStart(2,'0')+':'+String(Math.floor(sec/60)%60).padStart(2,'0');}
+function _tvCD(sec){if(sec<=0)return'agora';if(sec<600){const m=Math.floor(sec/60),s=sec%60;return m+':'+String(s).padStart(2,'0');}if(sec<3600)return Math.round(sec/60)+' min';return Math.floor(sec/3600)+'h'+String(Math.floor(sec/60)%60).padStart(2,'0');}
+function _tvFs(ln,dir,p){return dir===0?p:ln.stops.length-1-p;}
+function _tvOff(ln,dir){const ck=ln.key+'|o'+dir;if(_tvC[ck])return _tvC[ck];const n=ln.stops.length;const run=dir===0?ln.run:[...ln.run].reverse();
+  const arr=[0],dep=[0];for(let k=1;k<n;k++){arr[k]=dep[k-1]+run[k-1];dep[k]=k===n-1?arr[k]:arr[k]+ln.dwell;}
+  return _tvC[ck]={arr,dep,total:arr[n-1]};}
+function _tvTrips(ln,dir){const ck=ln.key+'|t'+dir;if(_tvC[ck])return _tvC[ck];const out=[];let m=ln.start+(dir?Math.round(ln.hw(ln.start)/2):0);
+  while(m<=ln.end){out.push(m*60);m+=ln.hw(m);}return _tvC[ck]=out;}
+function _tvTripId(ln,dir,ti){return ln.kind==='metro'?`${ln.code} ${1001+ti*2+dir}`:`${ln.code}·${dir?'V':'I'}${String(ti+1).padStart(2,'0')}`;}
+function _tvState(ln,dir,ti,now){const t0=_tvTrips(ln,dir)[ti];if(t0==null)return null;const o=_tvOff(ln,dir),n=ln.stops.length,e=now-t0;
+  if(e<0){if(e>=-ln.dwell)return{phase:'dwell',at:0,p:0,left:-e};return{phase:'pre',p:0};}
+  if(e>=o.total)return{phase:'done',p:n-1};
+  for(let k=1;k<n;k++){
+    if(e<o.arr[k]){const seg=o.arr[k]-o.dep[k-1];const f=(e-o.dep[k-1])/seg;return{phase:'run',from:k-1,to:k,f,p:k-1+f,left:o.arr[k]-e};}
+    if(e<o.dep[k])return{phase:'dwell',at:k,p:k,left:o.dep[k]-e};}
+  return{phase:'done',p:n-1};}
+function _tvActive(ln,now){const out=[];[0,1].forEach(dir=>{const o=_tvOff(ln,dir);_tvTrips(ln,dir).forEach((t0,ti)=>{if(now>=t0-ln.dwell&&now<t0+o.total)out.push({dir,ti,st:_tvState(ln,dir,ti,now)});});});return out;}
+function _tvNextAt(ln,s,dir,now,count){const n=ln.stops.length,p=_tvFs(ln,dir,s);if(p===n-1)return[];const o=_tvOff(ln,dir),trips=_tvTrips(ln,dir),out=[];
+  for(let ti=0;ti<trips.length&&out.length<count;ti++){const arr=trips[ti]+(p===0?-ln.dwell:o.arr[p]),dep=trips[ti]+o.dep[p];if(dep<now)continue;
+    out.push({ti,dir,arr,dep,status:now>=arr?'plat':(arr-now<=90?'near':'way')});}
+  return out;}
+function _tvCrowd(ln,dir,ti,car){const t0=_tvTrips(ln,dir)[ti]||0;const h=Math.floor(t0/3600)%24;let b=((h>=6&&h<9)||(h>=17&&h<20))?3:(h>=22||h<6)?1:2;
+  const r=(ti*73+(car||0)*31+dir*17)%7;b+=r<2?-1:r>4?1:0;return Math.max(0,Math.min(4,b));}
+function _tvCrowdH(lv){const c=TV_CROWD_C[lv];return`<span class="tv-crowd" style="color:${c}">${[0,1,2,3].map(i=>`<i class="${i<lv?'f':''}"></i>`).join('')}</span> <span style="color:${c};font-size:.66rem;font-weight:700">${TV_CROWD_L[lv]}</span>`;}
+function _tvDoor(ln,dir,p){const s=_tvFs(ln,dir,p);return((s*7+dir*3)%2)?'esquerda':'direita';}
+function _tvCur(){return TV.mode==='metro'?TV_METRO:(TV_BUS[TV.busLine]||TV_BUS[0]);}
+function _tvU(ln){return ln.kind==='metro'?{v:'trem',st:'estação',Sts:'estações',ic:'🚆',art:'o'}:{v:'ônibus',st:'parada',Sts:'paradas',ic:'🚌',art:'o'};}
+function _tvHwTxt(ln,now){const m=Math.floor(now/60);if(m<ln.start-15||m>ln.end+75)return'Fora de operação · volta às '+_tvHM(ln.start*60);return`${_tvU(ln).ic} a cada ${ln.hw(m)} min agora`;}
+function _tvGridDir(ln,s){const n=ln.stops.length,ok=d=>_tvFs(ln,d,s)!==n-1;if(TV.gridDir!=null&&ok(TV.gridDir))return TV.gridDir;return ok(0)?0:1;}
+
+// ── diagrama vertical da linha ──
+const _TVG={gap:50,top:22,W:360,lx:46};
+function _tvStripBuild(ln,sel,mark){const n=ln.stops.length,{gap,top,W,lx}=_TVG,H=top*2+(n-1)*gap,Y=i=>top+i*gap;mark=mark||'📍';
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:440px;height:auto;display:block;margin:0 auto">`;
+  if(sel!=null)s+=`<rect x="2" y="${Y(sel)-21}" width="${W-4}" height="42" rx="9" fill="${ln.color}" opacity=".16"/>`;
+  if(ln.zones){const k=ln.zones.findIndex(z=>z==='city');if(k>0){const yy=(Y(k-1)+Y(k))/2;
+    s+=`<line x1="8" x2="${W-8}" y1="${yy}" y2="${yy}" class="ml-divider"/><text x="${W-8}" y="${yy-5}" text-anchor="end" class="ml-zone">✈ AEROPORTO</text><text x="${W-8}" y="${yy+13}" text-anchor="end" class="ml-zone" style="fill:${ln.color}">CIDADE ▼</text>`;}}
+  s+=`<line x1="${lx}" y1="${Y(0)}" x2="${lx}" y2="${Y(n-1)}" stroke="${ln.color}" stroke-width="7" stroke-linecap="round" opacity=".9"/>`;
+  ln.stops.forEach((nm,i)=>{const on=i===sel,big=i===0||i===n-1;
+    s+=`<g class="tv-stg" data-st="${i}" style="cursor:pointer"><rect x="0" y="${Y(i)-gap/2}" width="${W}" height="${gap}" fill="transparent"/>
+      <circle cx="${lx}" cy="${Y(i)}" r="${on?10:big?8.5:7}" fill="${on?'#fff':'#080e0d'}" stroke="${ln.color}" stroke-width="3.5"/>
+      <text x="84" y="${Y(i)-1}" class="tv-stn${on?' on':''}">${on?mark+' ':''}${_tvEsc(nm)}</text>
+      <text x="84" y="${Y(i)+14}" class="tv-sts" id="tvsub${i}"></text></g>`;});
+  return s+`<g id="tvtrains"></g></svg>`;}
+function _tvStripTick(ln,now,focus){const g=document.getElementById('tvtrains');if(!g)return;const n=ln.stops.length,{gap,top,lx}=_TVG;
+  const act=_tvActive(ln,now);const fk=focus?focus.dir+'_'+focus.ti:'';const key=ln.key+'|'+act.map(a=>a.dir+'_'+a.ti).join(',')+'|'+fk;
+  if(g.getAttribute('data-k')!==key){g.setAttribute('data-k',key);
+    g.innerHTML=act.map(a=>{const f=fk===a.dir+'_'+a.ti,c=ln.color,d0=a.dir===0;
+      return`<g class="tv-trn${f?' focus':''}" id="tvtr${a.dir}_${a.ti}" data-dir="${a.dir}" data-ti="${a.ti}" style="cursor:pointer">${f?`<circle r="13" fill="none" stroke="#fff" stroke-width="2.2"/><rect x="-16" y="-31" width="32" height="13" rx="3" fill="#fff"/><text y="-21" text-anchor="middle" font-size="9" font-weight="900" fill="#000" font-family="Share Tech Mono">VOCÊ</text>`:''}
+        <rect x="-9" y="-7" width="18" height="14" rx="4" fill="${d0?c:'#0d1918'}" stroke="${d0?'#fff':c}" stroke-width="1.4"/>
+        <text y="3.5" text-anchor="middle" font-size="9" font-weight="900" fill="${d0?'#fff':c}">${d0?'▼':'▲'}</text></g>`;}).join('');}
+  act.forEach(a=>{const el=document.getElementById(`tvtr${a.dir}_${a.ti}`);if(!el)return;const fp=_tvFs(ln,a.dir,a.st.p);
+    el.setAttribute('transform',`translate(${lx+(a.dir===0?-21:21)},${(top+fp*gap).toFixed(1)})`);el.classList.toggle('dwelling',a.st.phase==='dwell');});
+  const sh=x=>x.status==='plat'?'na plataforma':(x.arr-now<60?'chegando':Math.ceil((x.arr-now)/60)+' min');
+  for(let i=0;i<n;i++){const el=document.getElementById('tvsub'+i);if(!el)continue;const a=_tvNextAt(ln,i,0,now,1)[0],b=_tvNextAt(ln,i,1,now,1)[0];
+    el.textContent=[a?'▼ '+sh(a):'',b?'▲ '+sh(b):''].filter(Boolean).join('   ')||'—';}}
+
+// ── mapa dos ônibus (Leaflet) ──
+function _tvBusMapInit(ln,sel){if(TV.busMap){try{TV.busMap.remove();}catch(e){}TV.busMap=null;}TV.busVeh={};
+  const el=document.getElementById('tv-busmap');if(!el||typeof L==='undefined')return;
+  const m=L.map(el,{zoomControl:true});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',maxZoom:19,subdomains:'abcd'}).addTo(m);
+  TV_BUS.forEach(b=>{if(b.key!==ln.key)L.polyline(b.coords,{color:b.color,weight:2,opacity:.2}).addTo(m);});
+  L.polyline(ln.coords,{color:ln.color,weight:5,opacity:.85}).addTo(m);
+  ln.coords.forEach((c,i)=>{const on=i===sel;L.circleMarker(c,{radius:on?9:5,fillColor:on?'#fff':ln.color,fillOpacity:1,color:ln.color,weight:on?4:1.5}).addTo(m)
+    .bindTooltip(ln.stops[i],{permanent:on,direction:'right',className:'tv-tip'})
+    .on('click',()=>{if(TV.view==='ride'&&TV.ride)_tvSetAlight(ln,i);else{TV.stop[ln.key]=i;TV.view='stop';_tvShell();}});});
+  m.fitBounds(L.polyline(ln.coords).getBounds().pad(.2));
+  m.on('dragstart',()=>{TV.followBus=false;});
+  TV.busMap=m;setTimeout(()=>{try{m.invalidateSize();}catch(e){}},120);}
+function _tvBusMapTick(ln,now,focus){if(!TV.busMap)return;const act=_tvActive(ln,now),seen={},n=ln.coords.length;
+  act.forEach(a=>{const k=a.dir+'_'+a.ti;seen[k]=1;const fp=_tvFs(ln,a.dir,a.st.p);const i=Math.max(0,Math.min(Math.floor(fp),n-2)),f=fp-i;
+    const pt=_lp(ln.coords[i],ln.coords[i+1],f);const isF=!!focus&&focus.dir===a.dir&&focus.ti===a.ti;let mk=TV.busVeh[k];
+    if(!mk||mk._tvF!==isF){if(mk)TV.busMap.removeLayer(mk);
+      mk=L.marker(pt,{icon:L.divIcon({html:`<div class="tv-busic${isF?' f':''}">${_bsv(isF?'#ffffff':ln.color,a.dir===1)}</div>`,className:'',iconSize:[26,16],iconAnchor:[13,8]}),zIndexOffset:isF?1000:500}).addTo(TV.busMap);
+      mk._tvF=isF;mk.bindTooltip(_tvTripId(ln,a.dir,a.ti),{className:'tv-tip',direction:'top'});mk.on('click',()=>_tvEnter(ln,a.dir,a.ti,Math.max(0,Math.floor(_tvState(ln,a.dir,a.ti,_tvNow()).p))));TV.busVeh[k]=mk;}
+    else mk.setLatLng(pt);
+    if(isF&&TV.followBus)TV.busMap.panTo(pt,{animate:true,duration:.8});});
+  Object.keys(TV.busVeh).forEach(k=>{if(!seen[k]){TV.busMap.removeLayer(TV.busVeh[k]);delete TV.busVeh[k];}});}
+
+// ── visão "Na estação / No ponto" ──
+function _tvPanelData(ln,s,now){return[0,1].map(dir=>({dir,list:_tvNextAt(ln,s,dir,now,6),term:_tvFs(ln,dir,s)===ln.stops.length-1}));}
+function _tvPanelHTML(ln,s,data,now){const n=ln.stops.length,U=_tvU(ln);
+  return`<div class="tv-dirs">`+data.map(d=>{const to=ln.stops[d.dir===0?n-1:0],c=ln.color;
+    const head=`<div class="tv-dir-h"><span class="tv-dir-ar" style="${d.dir===0?`background:${c};color:#fff`:`border:1.5px solid ${c};color:${c}`}">${d.dir===0?'▼':'▲'}</span><div><div class="tv-dir-l">Sentido</div><div class="tv-dir-n">${_tvEsc(to)}</div></div></div>`;
+    if(d.term)return`<div class="tv-dir">${head}<div class="tv-empty">🏁 Fim da linha neste sentido.<br>Embarque no sentido oposto.</div></div>`;
+    if(!d.list.length){const o=_tvOff(ln,d.dir),p=_tvFs(ln,d.dir,s),f=_tvTrips(ln,d.dir)[0]+o.dep[p];return`<div class="tv-dir">${head}<div class="tv-empty">Sem mais ${U.v==='trem'?'trens':'ônibus'} hoje.<br>Primeiro amanhã às <b>${_tvHM(f)}</b>.</div></div>`;}
+    const x=d.list[0],id0=_tvTripId(ln,x.dir,x.ti);
+    const big=x.status==='plat'
+      ?`<div class="tv-next"><span class="tv-next-cd plat" style="color:${c}">● NA PLATAFORMA</span></div><div class="tv-next-s">Parte em <b data-until="${x.dep}"></b> · ${id0} · ${_tvCrowdH(_tvCrowd(ln,x.dir,x.ti,0))}</div>`
+      :`<div class="tv-next"><span class="tv-next-cd" style="color:${c}" data-until="${x.arr}"></span><span class="tv-next-u">para o próximo ${U.v}</span></div><div class="tv-next-s">Chega às <b>${_tvHM(x.arr)}</b> · ${id0} · ${_tvCrowdH(_tvCrowd(ln,x.dir,x.ti,0))}</div>`;
+    const SL={plat:['Na plataforma','#69f0ae'],near:['Chegando','#ffd740'],way:['A caminho','#78909c']};
+    const rows=d.list.map(x=>`<div class="tv-row"><span class="tv-t">${_tvHM(x.dep)}</span><span><span class="tv-id">${_tvTripId(ln,x.dir,x.ti)}</span><br><span class="tv-st" style="color:${SL[x.status][1]}">${SL[x.status][0]}</span></span><span class="tv-cd" style="color:${c}" data-until="${x.status==='plat'?x.dep:x.arr}"></span><button class="tv-go" style="--lc:${c}" data-enter="${x.dir}_${x.ti}_${_tvFs(ln,x.dir,s)}">Entrar</button></div>`).join('');
+    return`<div class="tv-dir">${head}${big}<div>${rows}</div></div>`;}).join('')+`</div>`;}
+function _tvGridHTML(ln,s,dir,now){const n=ln.stops.length,p=_tvFs(ln,dir,s);if(p===n-1)return'<div class="tv-empty">Sem embarque neste sentido.</div>';
+  const o=_tvOff(ln,dir),deps=_tvTrips(ln,dir).map(t=>t+o.dep[p]),by={};deps.forEach(d=>{const h=Math.floor(d/3600);(by[h]=by[h]||[]).push(d);});
+  const nx=deps.find(d=>d>=now),hn=Math.floor(now/3600);
+  return`<div class="tv-hgrid" style="--lc:${ln.color}">`+Object.keys(by).map(Number).sort((a,b)=>a-b).map(h=>`<div class="tv-hrow${hn===h?' now':''}"><span class="tv-hh">${String(h%24).padStart(2,'0')}</span><span class="tv-mm">${by[h].map(d=>`<span class="${d===nx?'nx':d<now?'past':''}">${String(Math.floor(d/60)%60).padStart(2,'0')}</span>`).join('')}</span></div>`).join('')
+    +`</div><div class="tv-gridfoot">Primeiro ${_tvHM(deps[0])} · Último ${_tvHM(deps[deps.length-1])} · ${deps.length} partidas por dia · minutos de cada hora</div>`;}
+
+// ── visão "Dentro do trem / ônibus" ──
+function _tvRideCtx(ln,R,now){const n=ln.stops.length,st=_tvState(ln,R.dir,R.ti,now),board=Math.min(R.board||0,n-1);
+  const pre=st.phase==='pre',curP=pre?0:(st.phase==='dwell'?st.at:(st.phase==='run'?st.from:n-1));const waiting=pre||st.p<board;
+  let aP=n-1;if(TV.alight!=null){const x=_tvFs(ln,R.dir,TV.alight);if(x>board&&(x>curP||(x===curP&&st.phase==='dwell'&&!pre)))aP=x;}
+  return{n,st,board,pre,curP,waiting,aP};}
+function _tvRideKey(ln,R,now){const c=_tvRideCtx(ln,R,now);return[c.st.phase,c.st.at,c.st.from,c.waiting,c.aP,TV.car,TV.vox].join('|');}
+function _tvRideHTML(ln,R,now){const U=_tvU(ln),isM=ln.kind==='metro',o=_tvOff(ln,R.dir),t0=_tvTrips(ln,R.dir)[R.ti],id=_tvTripId(ln,R.dir,R.ti);
+  const{n,st,board,pre,curP,waiting,aP}=_tvRideCtx(ln,R,now);const last=ln.stops[R.dir===0?n-1:0],nm=p=>ln.stops[_tvFs(ln,R.dir,p)],arrAt=p=>t0+(p===0?0:o.arr[p]);
+  if(st.phase==='done')return`<div class="tv-card" style="--lc:${ln.color}"><div class="tv-ride-h"><div class="tv-ride-id">${U.ic} ${id}</div><div class="tv-msg">🏁 Fim da linha — chegou a <b>${_tvEsc(last)}</b> às ${_tvHM(t0+o.total)}.</div><div class="gv-row" style="margin-top:12px"><button class="gv-btn" data-tv="arrive">📍 Ver horários desta ${U.st}</button><button class="gv-btn ghost" data-tv="exit">Escolher outro ${U.v}</button></div></div></div>`;
+  const hasDest=TV.alight!=null&&_tvFs(ln,R.dir,TV.alight)===aP;const arrived=!waiting&&st.phase==='dwell'&&st.at===aP&&hasDest;
+  let msg;
+  if(waiting)msg=pre&&board===0?`⏳ Você está na plataforma de <b>${_tvEsc(nm(0))}</b>. O ${U.v} abre as portas em <b data-until="${t0-ln.dwell}"></b>`:`⏳ Aguardando na plataforma de <b>${_tvEsc(nm(board))}</b> — o ${U.v} chega em <b data-until="${board===0?t0-ln.dwell:arrAt(board)}"></b>`;
+  else if(arrived)msg=`🎉 Você chegou a <b>${_tvEsc(nm(aP))}</b>. Desembarque agora${isM?` — portas do lado <b>${_tvDoor(ln,R.dir,aP)}</b>`:''}!`;
+  else if(st.phase==='dwell')msg=`🚉 Parado em <b>${_tvEsc(nm(st.at))}</b> · portas abertas · parte em <b data-until="${t0+o.dep[st.at]}"></b>`;
+  else msg=`➡ Próxima ${U.st}: <b>${_tvEsc(nm(st.to))}</b> · chega em <b data-until="${arrAt(st.to)}"></b>${isM?` · portas à ${_tvDoor(ln,R.dir,st.to)}`:''}`;
+  const nextP=waiting?board:(st.phase==='dwell'?st.at:st.to),from=waiting?board:curP,left=aP-from;
+  const kpis=`<div class="tv-kpis">
+    <div class="tv-kpi"><div class="tv-kpi-l">${!waiting&&st.phase==='dwell'?'Parado em':(waiting?'Embarque em':'Próxima '+U.st)}</div><div class="tv-kpi-v sm">${_tvEsc(nm(nextP))}</div><div class="tv-kpi-s">${_tvHM(arrAt(nextP))}</div></div>
+    <div class="tv-kpi"><div class="tv-kpi-l">Velocidade</div><div class="tv-kpi-v" id="tv-spd">0 km/h</div><div class="tv-kpi-s">${ln.kind==='metro'?'máx. '+ln.vmax+' km/h':'trânsito normal'}</div></div>
+    <div class="tv-kpi"><div class="tv-kpi-l">${hasDest?'Seu destino':'Fim da linha'}</div><div class="tv-kpi-v sm">${_tvEsc(nm(aP))}</div><div class="tv-kpi-s">${_tvHM(arrAt(aP))} · <span data-until="${arrAt(aP)}"></span> · ${left} ${left===1?U.st:U.Sts}</div></div></div>`;
+  const cars=isM?`<div class="tv-cars">${[1,2,3,4].map(c=>{const lv=_tvCrowd(ln,R.dir,R.ti,c);return`<button class="tv-car${c===TV.car?' on':''}" data-tv="car:${c}"><b>${c}</b>carro<div class="occ"><div style="width:${lv*25}%;background:${TV_CROWD_C[lv]}"></div></div><span style="color:${TV_CROWD_C[lv]}">${TV_CROWD_L[lv]}</span></button>`;}).join('')}</div>`:'';
+  let opts='';for(let p=Math.max(board,curP)+1;p<n;p++){const s=_tvFs(ln,R.dir,p);opts+=`<option value="${s}"${p===aP&&hasDest?' selected':''}>${_tvEsc(ln.stops[s])} · ${_tvHM(arrAt(p))}</option>`;}
+  let tl='';
+  for(let p=0;p<n;p++){const cls=[];
+    if(!pre&&(p<curP||(p===curP&&st.phase==='run')))cls.push('past');
+    if(!pre&&st.phase==='dwell'&&p===st.at)cls.push('cur');
+    if(!pre&&st.phase==='run'&&p===st.to)cls.push('next');
+    if(p<board)cls.push('pre');if(p===aP)cls.push('dest');
+    const tags=[];if(p===board&&(board>0||waiting))tags.push(`<span class="tv-tag">🚪 seu embarque</span>`);
+    if(p===aP)tags.push(`<span class="tv-tag">🏁 ${hasDest?'seu destino':'fim da linha'}</span>`);
+    if(isM&&(cls.includes('cur')||cls.includes('next')))tags.push(`portas à ${_tvDoor(ln,R.dir,p)}`);
+    if(p===0)tags.push('origem');
+    const t=arrAt(p),right=cls.includes('past')?`<span class="ok">✓ ${_tvHM(p===0?t0:t0+o.dep[p])}</span>`:cls.includes('cur')?`${_tvHM(t)}<br><span class="c">agora</span>`:`${_tvHM(t)}<br><span class="c" data-until="${p===0?t0:t}"></span>`;
+    tl+=`<div class="tv-stop ${cls.join(' ')}" data-alight="${_tvFs(ln,R.dir,p)}"><span class="dot"></span>${cls.includes('cur')?`<span class="veh">${U.ic}</span>`:''}<div><div class="tv-sn">${_tvEsc(nm(p))}</div><div class="tv-ss">${tags.join('')}</div></div><div class="tv-se">${right}</div></div>`;
+    if(!pre&&st.phase==='run'&&p===st.from)tl+=`<div class="tv-run"><span class="veh">${U.ic}</span><span>em movimento</span><div class="bar"><div id="tv-runbar"></div></div><span id="tv-runpct"></span></div>`;}
+  return`<div class="tv-card" style="--lc:${ln.color}"><div class="tv-ride-h">
+      <div class="tv-ride-top"><div><div class="tv-ride-id">${U.ic} ${id}</div><div class="tv-ride-dir">Sentido <b>${_tvEsc(last)}</b>${isM?` · carro ${TV.car}`:''} · ${_tvCrowdH(_tvCrowd(ln,R.dir,R.ti,isM?TV.car:0))}</div></div><button class="gv-btn ghost sm" data-tv="exit">✕ Sair</button></div>
+      <div class="tv-msg">${msg}</div>
+      <div class="tv-prog"><div id="tv-prog"></div></div><div class="tv-prog-l"><span>${_tvEsc(nm(0))} · ${_tvHM(t0)}</span><span>${_tvEsc(last)} · ${_tvHM(t0+o.total)}</span></div>
+      ${kpis}${cars}
+      <div class="gv-row" style="margin-top:12px">${opts?`<span class="gs-lbl">Descer em</span><select class="fsel" data-tvsel="alight" style="flex:1;min-width:170px"><option value="" disabled${TV.alight==null?' selected':''}>Escolha onde descer…</option>${opts}</select>`:''}<button class="gv-chip${TV.vox?' on':''}" data-tv="vox">${TV.vox?'🔊 Avisos de bordo: ligados':'🔇 Avisos de bordo (PT·EN·ES)'}</button></div>
+      ${TV.vox?`<div class="vox-cap"><span class="vx-idle">🔈 Aguardando o próximo aviso</span></div>`:''}
+    </div></div>
+    <div class="tv-card" style="--lc:${ln.color}"><div class="tv-card-h"><span class="tv-card-t" style="color:${ln.color}">🧭 Trajeto · ${n} ${U.Sts}</span><span class="tv-hw">toque numa ${U.st} para descer nela</span></div><div class="tv-tl">${tl}</div></div>`;}
+function _tvRideDyn(ln,R,now){const st=_tvState(ln,R.dir,R.ti,now);if(!st)return;const o=_tvOff(ln,R.dir),t0=_tvTrips(ln,R.dir)[R.ti];
+  const pg=document.getElementById('tv-prog');if(pg)pg.style.width=Math.max(0,Math.min(100,(now-t0)/o.total*100)).toFixed(1)+'%';
+  const sp=document.getElementById('tv-spd');if(sp)sp.textContent=(st.phase==='run'?Math.round(ln.vmax*Math.sqrt(Math.sin(Math.PI*st.f))):0)+' km/h';
+  if(st.phase==='run'){const b=document.getElementById('tv-runbar');if(b)b.style.width=(st.f*100).toFixed(1)+'%';const pc=document.getElementById('tv-runpct');if(pc)pc.textContent=Math.round(st.f*100)+'%';}}
+function _tvPickNextHTML(ln,s,now){const n=ln.stops.length,U=_tvU(ln);
+  const h=[0,1].map(dir=>{const x=_tvNextAt(ln,s,dir,now,1)[0];if(!x)return'';const to=ln.stops[dir===0?n-1:0],c=ln.color;
+    return`<button class="tv-pickrow" data-enter="${dir}_${x.ti}_${_tvFs(ln,dir,s)}"><span class="tv-dir-ar" style="${dir===0?`background:${c};color:#fff`:`border:1.5px solid ${c};color:${c}`}">${dir?'▲':'▼'}</span><div style="flex:1"><div class="tv-sn">Sentido ${_tvEsc(to)}</div><div class="tv-ss">${_tvTripId(ln,dir,x.ti)} · ${x.status==='plat'?'na plataforma agora':'chega às '+_tvHM(x.arr)}</div></div><span class="tv-cd" style="color:${c}" data-until="${x.status==='plat'?x.dep:x.arr}"></span></button>`;}).join('');
+  return h?`<div class="tv-pick">${h}</div>`:`<div class="tv-empty">Sem ${U.v==='trem'?'trens':'ônibus'} partindo desta ${U.st} agora.</div>`;}
+function _tvPickActHTML(ln,act){const U=_tvU(ln);if(!act.length)return`<div class="tv-empty">Nenhum ${U.v} em circulação agora.</div>`;
+  return`<div class="tv-pick">`+act.slice().sort((a,b)=>a.dir-b.dir||a.ti-b.ti).map(a=>{const to=ln.stops[a.dir===0?ln.stops.length-1:0],c=ln.color;
+    return`<button class="tv-pickrow" data-enter="${a.dir}_${a.ti}_${Math.max(0,Math.floor(a.st.p))}"><span class="tv-dir-ar" style="${a.dir===0?`background:${c};color:#fff`:`border:1.5px solid ${c};color:${c}`}">${a.dir?'▲':'▼'}</span><div style="flex:1"><div class="tv-sn">${_tvTripId(ln,a.dir,a.ti)} <span style="color:var(--dim);font-weight:400">→ ${_tvEsc(to)}</span></div><div class="tv-ss" id="tvw${a.dir}_${a.ti}"></div></div><span class="tv-go" style="--lc:${c}">Entrar</span></button>`;}).join('')+`</div>`;}
+
+// ── shell + tick ──
+function _tvShell(){const ln=_tvCur(),isM=ln.kind==='metro',U=_tvU(ln),n=ln.stops.length,c=ln.color,s=TV.stop[ln.key]??0;
+  const tab=document.getElementById('tab-transit');if(!tab)return;
+  document.getElementById('tv-modes').innerHTML=`<button class="tv-mode${TV.mode==='metro'?' on':''}" data-tv="mode:metro"><span style="font-size:1.6rem">🚆</span><span>Trem<small>${_tvEsc(TV_METRO.name)} · ${TV_METRO.stops.length} estações</small></span></button><button class="tv-mode${TV.mode==='bus'?' on':''}" data-tv="mode:bus"><span style="font-size:1.6rem">🚌</span><span>Ônibus<small>${TV_BUS.length} linhas · aeroporto ↔ Grande BH</small></span></button>`;
+  const sub=`<div class="tv-sub" style="--lc:${c}"><button class="tv-subb${TV.view==='stop'?' on':''}" data-tv="view:stop">📍 ${isM?'Na estação':'No ponto'}</button><button class="tv-subb${TV.view==='ride'?' on':''}" data-tv="view:ride">${U.ic} Dentro do ${U.v}</button></div>`;
+  const lines=isM?'':`<div class="tv-lines">${TV_BUS.map((b,i)=>`<button class="tv-line${i===TV.busLine?' on':''}" data-tv="line:${i}" style="--lc:${b.color}"><b>${b.code}</b>${_tvEsc(b.name.replace(/^CNF\s*→\s*/,''))}</button>`).join('')}</div>`;
+  const stopOpts=ln.stops.map((nm,i)=>`<option value="${i}"${i===s?' selected':''}>${_tvEsc(nm)}</option>`).join('');
+  const legend=`<div class="tv-legend"><span><b style="background:${c};color:#fff">▼</b>sentido ${_tvEsc(ln.stops[n-1])}</span><span><b style="border:1.5px solid ${c};color:${c}">▲</b>sentido ${_tvEsc(ln.stops[0])}</span></div>`;
+  const mapCard=isM?'':`<div class="tv-card"><div class="tv-card-b" style="padding:6px"><div class="tv-busmap" id="tv-busmap"></div></div></div>`;
+  let body;
+  if(TV.view==='stop'){const gd=_tvGridDir(ln,s);
+    const gopts=[0,1].filter(d=>_tvFs(ln,d,s)!==n-1).map(d=>`<option value="${d}"${d===gd?' selected':''}>${d?'▲':'▼'} Sentido ${_tvEsc(ln.stops[d===0?n-1:0])}</option>`).join('');
+    body=sub+lines+`<div class="tv-grid2"><div>
+      <div class="tv-card" style="--lc:${c}"><div class="tv-card-h"><span class="tv-card-t" style="color:${c}">📍 Você está em</span><select class="fsel" data-tvsel="stop" style="flex:1;min-width:180px;max-width:320px">${stopOpts}</select></div><div class="tv-card-b" id="tv-panel"></div></div>
+      <div class="tv-card"><div class="tv-card-h"><span class="tv-card-t" style="color:${c}">🗓 Quadro de horários</span>${gopts?`<select class="fsel" data-tvsel="griddir">${gopts}</select>`:''}</div><div class="tv-card-b" id="tv-grid"></div></div>
+    </div><div>
+      <div class="tv-card"><div class="tv-card-h"><span class="tv-card-t" style="color:${c}">${isM?'Ⓜ':ln.code} · ${_tvEsc(ln.name)}</span><span class="tv-hw" id="tv-hw"></span></div><div class="tv-card-b">${legend}<div id="tv-strip">${_tvStripBuild(ln,s)}</div><div class="tv-hint">Toque numa ${U.st} para ver os horários · toque num ${U.v} para embarcar</div></div></div>
+      ${mapCard}</div></div>`;}
+  else if(TV.ride&&TV.ride.key===ln.key){
+    body=sub+lines+`<div class="tv-grid2"><div id="tv-ride"></div><div>
+      <div class="tv-card"><div class="tv-card-h"><span class="tv-card-t" style="color:${c}">🗺 Linha ao vivo</span><span class="tv-hw">○ = você</span></div><div class="tv-card-b">${legend}<div id="tv-strip">${_tvStripBuild(ln,TV.alight,'🏁')}</div></div></div>
+      ${mapCard}</div></div>`;}
+  else{body=sub+lines+`<div class="tv-grid2"><div>
+      <div class="tv-card" style="--lc:${c}"><div class="tv-card-h"><span class="tv-card-t" style="color:${c}">🚪 Pegar o próximo em</span><select class="fsel" data-tvsel="stop" style="flex:1;min-width:180px;max-width:320px">${stopOpts}</select></div><div class="tv-card-b" id="tv-pickn"></div></div>
+      <div class="tv-card" style="--lc:${c}"><div class="tv-card-h"><span class="tv-card-t" style="color:${c}" id="tv-pickc">${U.ic} Em circulação</span></div><div class="tv-card-b" id="tv-picka"></div></div>
+    </div><div>
+      <div class="tv-card"><div class="tv-card-h"><span class="tv-card-t" style="color:${c}">🗺 Linha ao vivo</span></div><div class="tv-card-b">${legend}<div id="tv-strip">${_tvStripBuild(ln,s)}</div><div class="tv-hint">Toque num ${U.v} para embarcar nele</div></div></div>
+      ${mapCard}</div></div>`;}
+  document.getElementById('tv-body').innerHTML=body;TV.keys={};
+  if(!isM)_tvBusMapInit(ln,TV.view==='ride'&&TV.ride&&TV.ride.key===ln.key?TV.alight:s);
+  if(TV.view==='ride'&&TV.ride&&TV.busMap){const st=_tvState(ln,TV.ride.dir,TV.ride.ti,_tvNow());if(st&&st.phase!=='pre'&&st.phase!=='done'){const fp=_tvFs(ln,TV.ride.dir,st.p),i=Math.max(0,Math.min(Math.floor(fp),n-2));TV.busMap.setView(_lp(ln.coords[i],ln.coords[i+1],fp-i),12);}}
+  _tvTick(true);}
+function _tvTick(force){const tab=document.getElementById('tab-transit');if(!tab||tab.style.display==='none')return;
+  const ln=_tvCur(),now=_tvNow(),isM=ln.kind==='metro',s=TV.stop[ln.key]??0;
+  if(TV.view==='stop'){
+    const hw=document.getElementById('tv-hw');if(hw)hw.textContent=_tvHwTxt(ln,now);
+    const data=_tvPanelData(ln,s,now),pk=data.map(d=>d.dir+':'+d.list.map(x=>x.ti+x.status).join(',')).join('|');
+    if(force||TV.keys.panel!==pk){TV.keys.panel=pk;const el=document.getElementById('tv-panel');if(el)el.innerHTML=_tvPanelHTML(ln,s,data,now);}
+    const gd=_tvGridDir(ln,s),gk=Math.floor(now/60)+'|'+gd+'|'+s;
+    if(force||TV.keys.grid!==gk){TV.keys.grid=gk;const el=document.getElementById('tv-grid');if(el)el.innerHTML=_tvGridHTML(ln,s,gd,now);}
+    _tvStripTick(ln,now,null);if(!isM)_tvBusMapTick(ln,now,null);}
+  else if(TV.ride&&TV.ride.key===ln.key){const R=TV.ride,rk=_tvRideKey(ln,R,now);
+    if(force||TV.keys.ride!==rk){const prev=TV.keys.ride;TV.keys.ride=rk;const el=document.getElementById('tv-ride');if(el)el.innerHTML=_tvRideHTML(ln,R,now);if(prev&&!force)_tvOnboardVox(ln,R,now);
+      if(VOX.cur)_voxCap(VOX.cur);
+      const st=_tvState(ln,R.dir,R.ti,now);if(TV.alight!=null&&st&&st.phase==='run'&&_tvFs(ln,R.dir,TV.alight)<=st.from){TV.alight=null;}}
+    _tvRideDyn(ln,R,now);_tvStripTick(ln,now,R);if(!isM)_tvBusMapTick(ln,now,R);}
+  else{const nk=[0,1].map(d=>{const x=_tvNextAt(ln,s,d,now,1)[0];return x?x.ti+x.status:'-';}).join('|');
+    if(force||TV.keys.pickn!==nk){TV.keys.pickn=nk;const el=document.getElementById('tv-pickn');if(el)el.innerHTML=_tvPickNextHTML(ln,s,now);}
+    const act=_tvActive(ln,now),ak=act.map(a=>a.dir+'_'+a.ti).join(',');
+    if(force||TV.keys.picka!==ak){TV.keys.picka=ak;const el=document.getElementById('tv-picka');if(el)el.innerHTML=_tvPickActHTML(ln,act);const pc=document.getElementById('tv-pickc');if(pc)pc.textContent=`${_tvU(ln).ic} Em circulação agora · ${act.length}`;}
+    act.forEach(a=>{const el=document.getElementById(`tvw${a.dir}_${a.ti}`);if(!el)return;const nm=p=>ln.stops[_tvFs(ln,a.dir,p)];
+      el.textContent=a.st.phase==='dwell'?`parado em ${nm(a.st.at)}`:`entre ${nm(a.st.from)} e ${nm(a.st.to)} · ${Math.round(a.st.f*100)}%`;});
+    _tvStripTick(ln,now,null);if(!isM)_tvBusMapTick(ln,now,null);}
+  tab.querySelectorAll('[data-until]').forEach(e=>{e.textContent=_tvCD(Math.round(+e.getAttribute('data-until')-now));});}
+function _tvEnter(ln,dir,ti,board){TV.ride={key:ln.key,dir,ti,board:board||0};TV.alight=null;TV.view='ride';TV.lastPhase=null;TV.followBus=true;_tvShell();window.scrollTo({top:0,behavior:'smooth'});}
+function _tvSetAlight(ln,s){const R=TV.ride;if(!R)return;const c=_tvRideCtx(ln,R,_tvNow()),p=_tvFs(ln,R.dir,s);if(p<=Math.max(c.board,c.curP))return;
+  TV.alight=s;const st=document.getElementById('tv-strip');if(st)st.innerHTML=_tvStripBuild(ln,s,'🏁');TV.keys.ride=null;_tvTick(true);}
+function _tvOnboardVox(ln,R,now){if(!TV.vox)return;const st=_tvState(ln,R.dir,R.ti,now);if(!st)return;const n=ln.stops.length,isM=ln.kind==='metro',nm=p=>_voxClean(ln.stops[_tvFs(ln,R.dir,p)]);
+  const pk=st.phase+'|'+(st.at!=null?st.at:st.from);if(TV.lastPhase===pk)return;TV.lastPhase=pk;
+  if(st.phase==='run'){const x=nm(st.to),term=st.to===n-1;
+    voxSay([{k:'pt',text:`Próxima ${isM?'estação':'parada'}: ${x}.${term?(isM?' Estação terminal.':' Ponto final.'):''}`},{k:'en',text:`Next ${isM?'station':'stop'}: ${x}.${term?' This is the last stop.':''}`},{k:'es',text:`Próxima ${isM?'estación':'parada'}: ${x}.${term?' Terminal.':''}`}],{chime:true});}
+  else if(st.phase==='dwell'&&st.at>0){const x=nm(st.at),d=_tvDoor(ln,R.dir,st.at);
+    voxSay(isM?[{k:'pt',text:`Estação ${x}. Desembarque pelo lado ${d==='esquerda'?'esquerdo':'direito'}.`},{k:'en',text:`${x} station. Doors open on the ${d==='esquerda'?'left':'right'}.`},{k:'es',text:`Estación ${x}. Desembarque por el lado ${d==='esquerda'?'izquierdo':'derecho'}.`}]
+      :[{k:'pt',text:`Parada ${x}.`},{k:'en',text:`Now at ${x}.`},{k:'es',text:`Parada ${x}.`}]);}}
+function _tvOnClick(ev){const ln=_tvCur(),now=_tvNow();
+  const a=ev.target.closest('[data-tv]');
+  if(a){const[k,v]=a.getAttribute('data-tv').split(':');
+    if(k==='mode')TV.mode=v;else if(k==='view')TV.view=v;else if(k==='line')TV.busLine=+v;
+    else if(k==='car'){TV.car=+v;TV.keys.ride=null;_tvTick(true);return;}
+    else if(k==='exit'){TV.ride=null;TV.alight=null;TV.view='ride';}
+    else if(k==='arrive'){if(TV.ride)TV.stop[ln.key]=TV.ride.dir===0?ln.stops.length-1:0;TV.ride=null;TV.alight=null;TV.view='stop';}
+    else if(k==='vox'){TV.vox=!TV.vox;TV.lastPhase=null;if(TV.vox){voxSay([{k:'pt',text:'Avisos de bordo ativados.'}],{force:true});const R=TV.ride;if(R)setTimeout(()=>{if(TV.vox&&TV.ride===R)_tvOnboardVox(_tvCur(),R,_tvNow());},1500);}else voxStop();TV.keys.ride=null;_tvTick(true);return;}
+    _tvShell();return;}
+  const en=ev.target.closest('[data-enter]');if(en){const[d,ti,b]=en.getAttribute('data-enter').split('_').map(Number);_tvEnter(ln,d,ti,b);return;}
+  const tr=ev.target.closest('.tv-trn');if(tr){const d=+tr.getAttribute('data-dir'),ti=+tr.getAttribute('data-ti');if(TV.ride&&TV.ride.key===ln.key&&TV.ride.dir===d&&TV.ride.ti===ti&&TV.view==='ride')return;const st=_tvState(ln,d,ti,now);_tvEnter(ln,d,ti,Math.max(0,Math.floor(st?st.p:0)));return;}
+  if(TV.view==='ride'&&TV.ride&&TV.ride.key===ln.key){const al=ev.target.closest('[data-alight]')||ev.target.closest('.tv-stg');
+    if(al){_tvSetAlight(ln,+(al.getAttribute('data-alight')??al.getAttribute('data-st')));return;}}
+  const sg=ev.target.closest('.tv-stg');if(sg){TV.stop[ln.key]=+sg.getAttribute('data-st');TV.gridDir=null;if(!(TV.view==='ride'&&!TV.ride))TV.view='stop';_tvShell();}}
+function _tvOnChange(ev){const el=ev.target.closest('[data-tvsel]');if(!el)return;const ln=_tvCur(),k=el.getAttribute('data-tvsel');
+  if(k==='stop'){TV.stop[ln.key]=+el.value;TV.gridDir=null;_tvShell();}
+  else if(k==='griddir'){TV.gridDir=+el.value;TV.keys.grid=null;_tvTick(false);}
+  else if(k==='alight'&&el.value!==''){_tvSetAlight(ln,+el.value);}}
+// substitui a versão antiga da aba Transporte
+function buildTransitCards(){const tab=document.getElementById('tab-transit');if(!tab)return;
+  if(!TV.bound){TV.bound=true;tab.addEventListener('click',_tvOnClick);tab.addEventListener('change',_tvOnChange);}
+  if(!TV.timer)TV.timer=setInterval(()=>_tvTick(false),1000);
+  _tvShell();}
+
+// ════════════════════════════════════════════════════════════════════════════
+// ════════ VOZ · fila de fala trilíngue (Portão, Imersão, avisos de bordo) ════
+// ════════════════════════════════════════════════════════════════════════════
+const VOX={q:[],busy:false,hold:false,cur:null,langs:{pt:true,en:true,es:true},voice:{},rate:.95,safety:null};
+const VOX_LANG={pt:'pt-BR',en:'en-US',es:'es-ES'},VOX_LBL={pt:'PT',en:'EN',es:'ES'},VOX_COL={pt:'#ffb300',en:'#7eb8ff',es:'#ff8a65'};
+let _voxTok=0;
+function voxOK(){return'speechSynthesis' in window&&typeof SpeechSynthesisUtterance!=='undefined';}
+function voxVoices(k){if(!voxOK())return[];return speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.toLowerCase().replace('_','-').startsWith(k));}
+function voxVoiceFor(k){if(!voxOK())return null;const vs=speechSynthesis.getVoices(),uri=VOX.voice[k];if(uri){const v=vs.find(x=>x.voiceURI===uri);if(v)return v;}
+  const v=_pickVoice(VOX_LANG[k]);return v&&v.lang&&v.lang.toLowerCase().startsWith(k)?v:null;}
+function _voxChime(){try{const c=_ctx();if(!c)return;if(c.state==='suspended')c.resume();
+  [[659.25,0],[523.25,.32],[392,.64]].forEach(([f,d])=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;o.connect(g);g.connect(c.destination);
+    const t=c.currentTime+d;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.2,t+.03);g.gain.exponentialRampToValueAtTime(.001,t+.9);o.start(t);o.stop(t+.95);});}catch(e){}}
+function voxSay(items,opts){opts=opts||{};
+  if(!voxOK()){_voxCap({k:'pt',text:'⚠ Este navegador não tem voz sintetizada. Tente o Chrome, Edge ou Safari.'});return;}
+  if(opts.interrupt)voxStop();
+  items.filter(it=>opts.force||VOX.langs[it.k]).forEach(it=>VOX.q.push(it));
+  if(opts.chime&&!VOX.busy&&!VOX.hold){VOX.hold=true;_voxChime();setTimeout(()=>{VOX.hold=false;_voxPump();},1250);}else _voxPump();}
+function _voxPump(){if(VOX.busy||VOX.hold)return;if(!VOX.q.length){VOX.cur=null;_voxCap(null);return;}
+  const it=VOX.q.shift(),tok=++_voxTok;VOX.busy=true;VOX.cur=it;
+  const u=new SpeechSynthesisUtterance(it.text);u.lang=VOX_LANG[it.k];const v=voxVoiceFor(it.k);if(v)u.voice=v;u.rate=VOX.rate;u.pitch=1;u.volume=1;
+  const done=()=>{if(tok!==_voxTok||!VOX.busy)return;VOX.busy=false;clearTimeout(VOX.safety);setTimeout(_voxPump,320);};
+  u.onend=done;u.onerror=done;VOX.safety=setTimeout(done,5000+it.text.length*120);
+  _voxCap(it);try{speechSynthesis.resume();speechSynthesis.speak(u);}catch(e){done();}}
+function voxStop(){VOX.q=[];VOX.hold=false;_voxTok++;VOX.busy=false;VOX.cur=null;clearTimeout(VOX.safety);try{if(voxOK())speechSynthesis.cancel();}catch(e){}_voxCap(null);}
+function _voxCap(it){document.querySelectorAll('.vox-cap').forEach(el=>{
+  if(!it){el.classList.remove('speaking');el.innerHTML='<span class="vx-idle">🔈 Em silêncio · aguardando o próximo anúncio</span>';return;}
+  el.classList.add('speaking');el.innerHTML=`<span class="lg" style="background:${VOX_COL[it.k]}">${VOX_LBL[it.k]}</span><span>${_tvEsc(it.text)}</span>`;});}
+
+// ── Portão: anúncios de próximos voos ──
+const GV={auto:0,count:3,last:0,prev:{}};
+function _gvRows(){const day=todayIdx,nm=nowMins();
+  return FD.map((f,fi)=>({f,fi})).filter(({f})=>f[7][day]!=null&&toMins(f[7][day])>=nm-5)
+    .map(({f,fi})=>{const t=f[7][day];return{fi,day,time:t,dest:f[0],iata:f[1],tipo:f[2],al:f[6],gate:gate(f[2],fi),terminal:terminal(f[2]),fnum:flightNum(f[6],fi),st:getSt('dep',f[1],t,day)};})
+    .filter(r=>r.st!=='dep'&&r.st!=='taxi').sort((a,b)=>a.time.localeCompare(b.time));}
+function _gvFn(fn){const m=String(fn).match(/^([A-Z0-9]{2})(\d+)$/);if(!m)return fn;const a=AL[m[1]];return(a?a.name:m[1].split('').join(' '))+' '+m[2].split('').join(' ');}
+function _gvTime(t,k){const[h,m]=t.split(':').map(Number);
+  if(k==='pt'){if(h===0)return'à meia-noite'+(m?' e '+m:'');if(h===1)return'à 1 hora'+(m?' e '+m:'');return`às ${h} horas`+(m?' e '+m:'');}
+  if(k==='en'){const h12=h%12||12,ap=h<12?'A M':'P M';return`at ${h12}${m?':'+String(m).padStart(2,'0'):" o'clock"} ${ap}`;}
+  if(h===0)return'a la medianoche'+(m?' y '+m:'');if(h===1)return'a la 1'+(m?' y '+m:'');return`a las ${h}`+(m?' y '+m:'');}
+function _gvGate(g){return String(g).replace(/^([A-Z]+)(\d+)$/,'$1 $2');}
+function _gvTerm(t){return String(t).replace(/^T/,'');}
+const GV_ST={pt:{sch:'no horário previsto',ont:'no horário',board:'embarque iniciado',final:'última chamada',del:'atrasado',can:'cancelado'},
+  en:{sch:'scheduled on time',ont:'on time',board:'now boarding',final:'final call',del:'delayed',can:'cancelled'},
+  es:{sch:'en horario previsto',ont:'en horario',board:'embarque iniciado',final:'última llamada',del:'demorado',can:'cancelado'}};
+function _gvIntro(k){const c=_voxClean(AI.city.replace(/\s*\/\s*/,' '));
+  return{pt:`Atenção, senhores passageiros. Estas são as próximas partidas do aeroporto de ${c}.`,
+    en:`Ladies and gentlemen, may I have your attention, please. These are the next departures from ${c} airport.`,
+    es:`Señoras y señores, su atención, por favor. Estas son las próximas salidas del aeropuerto de ${c}.`}[k];}
+function _gvLine(r,k){const fn=_gvFn(r.fnum),d=_voxClean(r.dest),tm=_gvTime(r.time,k),g=_gvGate(r.gate),s=GV_ST[k][r.st]||GV_ST[k].sch;
+  if(k==='pt')return`Voo ${fn}, para ${d}, ${tm}, portão ${g}: ${s}.`;
+  if(k==='en')return`Flight ${fn} to ${d}, departing ${tm}, gate ${g}: ${s}.`;
+  return`Vuelo ${fn} con destino a ${d}, salida ${tm}, puerta ${g}: ${s}.`;}
+function _gvCall(r,k){const fn=_gvFn(r.fnum),d=_voxClean(r.dest),tm=_gvTime(r.time,k),g=_gvGate(r.gate),T=_gvTerm(r.terminal);
+  const P={pt:{board:`Atenção, passageiros do voo ${fn} com destino a ${d}: embarque iniciado no portão ${g}, terminal ${T}.`,
+      final:`Última chamada para os passageiros do voo ${fn} com destino a ${d}. Dirijam-se imediatamente ao portão ${g}.`,
+      del:`Passageiros do voo ${fn} com destino a ${d}: o voo está atrasado. Aguardem novas informações próximo ao portão ${g}.`,
+      can:`Informamos que o voo ${fn} com destino a ${d} foi cancelado. Procurem o balcão da companhia aérea.`,
+      def:`Voo ${fn} com destino a ${d}, partida prevista ${tm}, portão ${g}, terminal ${T}.`},
+    en:{board:`Attention please, passengers on flight ${fn} to ${d}: boarding is now in progress at gate ${g}, terminal ${T}.`,
+      final:`Final call for passengers on flight ${fn} to ${d}. Please proceed immediately to gate ${g}.`,
+      del:`Passengers on flight ${fn} to ${d}: this flight is delayed. Please wait for further information near gate ${g}.`,
+      can:`We regret to inform you that flight ${fn} to ${d} has been cancelled. Please contact the airline counter.`,
+      def:`Flight ${fn} to ${d}, scheduled to depart ${tm}, gate ${g}, terminal ${T}.`},
+    es:{board:`Atención, pasajeros del vuelo ${fn} con destino a ${d}: embarque iniciado en la puerta ${g}, terminal ${T}.`,
+      final:`Última llamada para los pasajeros del vuelo ${fn} con destino a ${d}. Diríjanse inmediatamente a la puerta ${g}.`,
+      del:`Pasajeros del vuelo ${fn} con destino a ${d}: el vuelo está demorado. Aguarden nueva información cerca de la puerta ${g}.`,
+      can:`Informamos que el vuelo ${fn} con destino a ${d} ha sido cancelado. Diríjanse al mostrador de la aerolínea.`,
+      def:`Vuelo ${fn} con destino a ${d}, salida prevista ${tm}, puerta ${g}, terminal ${T}.`}};
+  return P[k][r.st]||P[k].def;}
+function gvAnnounceNext(){GV.last=Date.now();const rows=_gvRows().slice(0,GV.count);
+  if(!rows.length){voxSay([{k:'pt',text:'Não há mais partidas programadas para hoje.'},{k:'en',text:'There are no more departures scheduled for today.'},{k:'es',text:'No hay más salidas programadas para hoy.'}],{chime:true,interrupt:true});return;}
+  const items=[];['pt','en','es'].forEach(k=>{items.push({k,text:_gvIntro(k)});rows.forEach(r=>items.push({k,text:_gvLine(r,k)}));});
+  voxSay(items,{chime:true,interrupt:true});}
+function gvSayOne(fi,queued){let r=_gvRows().find(x=>x.fi===fi);if(!r)return;voxSay(['pt','en','es'].map(k=>({k,text:_gvCall(r,k)})),{chime:true,interrupt:!queued});}
+function gvCallSelected(){const v=(document.getElementById('gate-sel')||{}).value;
+  if(!v){_voxCap({k:'pt',text:'Escolha um voo em “Selecionar voo” para fazer a chamada.'});setTimeout(()=>{if(!VOX.busy)_voxCap(null);},4000);return;}
+  const[fi,day]=v.split('__').map(Number),f=FD[fi],t=f[7][day];
+  const r={fi,day,time:t,dest:f[0],al:f[6],gate:gate(f[2],fi),terminal:terminal(f[2]),fnum:flightNum(f[6],fi),st:getSt('dep',f[1],t,day)};
+  voxSay(['pt','en','es'].map(k=>({k,text:_gvCall(r,k)})),{chime:true,interrupt:true});}
+function gvLang(k){VOX.langs[k]=!VOX.langs[k];if(!VOX.langs.pt&&!VOX.langs.en&&!VOX.langs.es)VOX.langs[k]=true;
+  document.querySelectorAll('.gv-chip[data-lang]').forEach(b=>b.classList.toggle('on',!!VOX.langs[b.getAttribute('data-lang')]));}
+function gvSetAuto(v){GV.auto=+v;if(GV.auto>0)gvAnnounceNext();}
+function gvToggleVoices(){const el=document.getElementById('gv-voices');if(!el)return;el.classList.toggle('show');if(el.classList.contains('show'))gvFillVoices();}
+function gvFillVoices(){const el=document.getElementById('gv-voices');if(!el)return;
+  if(!voxOK()){el.innerHTML='<span class="vx-idle">Este navegador não tem síntese de voz.</span>';return;}
+  el.innerHTML=['pt','en','es'].map(k=>{const vs=voxVoices(k),cur=voxVoiceFor(k);
+    return`<div class="gv-vrow"><span class="lg" style="background:${VOX_COL[k]}">${VOX_LBL[k]}</span><select class="fsel" onchange="VOX.voice['${k}']=this.value">${vs.length?vs.map(v=>`<option value="${_tvEsc(v.voiceURI)}"${cur&&cur.voiceURI===v.voiceURI?' selected':''}>${_tvEsc(v.name)} · ${_tvEsc(v.lang)}</option>`).join(''):'<option value="">Nenhuma voz instalada para este idioma</option>'}</select><button class="gv-chip" onclick="gvTest('${k}')">▶ Testar</button></div>`;}).join('')
+    +`<div class="gv-vrow"><span class="gs-lbl">Velocidade</span><input type="range" min="0.7" max="1.3" step="0.05" value="${VOX.rate}" oninput="VOX.rate=+this.value;this.nextElementSibling.textContent=(+this.value).toFixed(2)+'×'" style="flex:1"><span class="tv-hw">${VOX.rate.toFixed(2)}×</span></div>
+      <div class="gv-hint">As vozes vêm do seu aparelho. No iPhone: Ajustes › Acessibilidade › Conteúdo Falado › Vozes, para baixar vozes melhores (“Aprimorada”/“Premium”).</div>`;}
+function gvTest(k){voxSay([{k,text:{pt:'Este é um teste do sistema de anúncios do aeroporto de Confins.',en:'This is a test of the Confins airport announcement system.',es:'Esta es una prueba del sistema de anuncios del aeropuerto de Confins.'}[k]}],{interrupt:true,force:true});}
+function gvRenderList(){const el=document.getElementById('gv-list');if(!el)return;const rows=_gvRows().slice(0,8);
+  el.innerHTML=rows.length?rows.map(r=>`<div class="gv-li${r.st==='board'||r.st==='final'?' hot':''}"><span class="tc">${r.time}</span><div><div class="tdst">${_tvEsc(r.dest)}</div><div class="gv-li-s"><span class="tia">${r.fnum}</span>${alH(r.al)}<span>Portão <b class="tgt">${r.gate}</b> · ${r.terminal}</span>${stH(r.st)}</div></div><button class="gv-say" onclick="gvSayOne(${r.fi})" title="Anunciar este voo">🔊</button></div>`).join('')
+    :'<div class="tv-empty">Sem mais partidas hoje.</div>';
+  const u=document.getElementById('gv-upd');if(u)u.textContent='atualizado '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
+setInterval(()=>{const tab=document.getElementById('tab-gate');if(tab&&tab.style.display!=='none')gvRenderList();
+  const rows=_gvRows().slice(0,8);rows.forEach(r=>{const p=GV.prev[r.fi];if(GV.auto&&p&&p!==r.st&&(r.st==='board'||r.st==='final'))gvSayOne(r.fi,true);GV.prev[r.fi]=r.st;});
+  if(GV.auto&&Date.now()-GV.last>=GV.auto*60000&&!VOX.busy&&!VOX.q.length)gvAnnounceNext();},15000);
+if(voxOK()&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',()=>{const el=document.getElementById('gv-voices');if(el&&el.classList.contains('show'))gvFillVoices();});
+
+// Imersão: chamada de embarque agora usa a mesma fila de voz (sem sobreposição)
+function announceBoarding(fi){const rows=_gvRows();const r=fi!=null?rows.find(x=>x.fi===fi):rows[Math.floor(Math.random()*Math.min(rows.length,6))];if(!r)return;
+  voxSay(['pt','en','es'].map(k=>({k,text:_gvCall(Object.assign({},r,{st:'board'}),k)})),{chime:true});
+  const toast=document.getElementById('imm-toast');if(toast){toast.innerHTML=`📢 <b>Embarque</b> · Voo ${r.fnum} → ${_tvEsc(r.dest)} · Portão ${r.gate}`;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),9000);}}
+
 </script>
-<div class="wrap" id="tab-transit" style="display:none"><div class="transit-wrap" id="transit-cards"></div></div>
+<div class="wrap" id="tab-transit" style="display:none"><div class="tv-modes" id="tv-modes"></div><div id="tv-body"></div></div>
 </body>
 </html>
