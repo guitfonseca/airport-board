@@ -851,6 +851,35 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
 .cs-row{display:flex;gap:4px;align-items:center}.cs-row span{width:22px;color:#78909c;font-size:.72rem;text-align:right}.cs-row i{width:16px}.cs-row button{width:30px;height:28px;border-radius:6px 6px 3px 3px;border:none;background:#2e7d32;color:#fff;font-size:.7rem;cursor:pointer}.cs-row button[disabled]{background:#37474f;color:#546e7a;cursor:not-allowed}.chk-seats.exe .cs-row button{width:42px;height:34px;background:#6a1b9a}
 .chk-bp{max-width:520px;background:#fff;color:#111;border-radius:14px;overflow:hidden;margin-bottom:10px;animation:tkp .5s ease-out}.bp-h{background:var(--lc);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:.78rem}.bp-h b{font-size:1rem}
 .bp-g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px}.bp-g div:first-child{grid-column:span 4}.bp-g b{font-size:1.05rem}.bp-tag{border-top:2px dashed #ccc;padding:8px 12px;font-size:.8rem;color:#444}
+.ops-slot{margin-bottom:8px}.ops-ban{border-radius:10px;padding:9px 12px;margin-bottom:6px;font-size:.9rem}.ops-ban.fog{background:linear-gradient(90deg,#90a4ae44,transparent);border-left:4px solid #b0bec5}.ops-ban.storm{background:linear-gradient(90deg,#ff174444,transparent);border-left:4px solid #ff5252}.ops-ban.rec{background:linear-gradient(90deg,#69f0ae22,transparent);border-left:4px solid #69f0ae}
+.ops-tools{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.ops-tools button{border:1px solid #2b3d52;background:#0f1a26;color:#cfd8dc;border-radius:999px;padding:5px 12px;cursor:pointer;font-size:.82rem}.ops-tools button.on{background:#ffd740;color:#111;border-color:#ffd740}
+.q-strip{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.8rem;margin:4px 0}.q-t{color:#78909c;margin-left:4px}.q-c{border-radius:999px;padding:2px 9px;background:#0f1a26;border:1px solid #2b3d52}.q-c.ok,.q-row em.ok{color:#69f0ae}.q-c.mid,.q-row em.mid{color:#ffd740}.q-c.bad,.q-row em.bad{color:#ff5252}
+.t-old{display:block;color:#78909c;font-size:.75em}.t-est{color:#ffab40}
+.st-div{color:#ffab40;background:rgba(255,171,64,.12);border:1px solid rgba(255,171,64,.4)}.st-bag{color:#40c4ff;background:rgba(64,196,255,.08);border:1px solid rgba(64,196,255,.3)}.st-bagon{color:#69f0ae;background:rgba(105,240,174,.12);border:1px solid rgba(105,240,174,.45);animation:bl 1s ease-in-out infinite alternate}.st-end{color:#78909c;border:1px solid #37474f}
+.belts{margin:8px 0}.belts-h{font-size:.8rem;letter-spacing:.08em;color:#90a4ae;margin-bottom:6px}.belts-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}
+.belt{position:relative;overflow:hidden;background:#0f1a26;border:1px solid #1d2733;border-radius:10px;padding:6px 8px;font-size:.75rem;display:flex;flex-direction:column;min-height:74px}.belt>b{font-size:1.2rem;color:#90caf9}.belt span{color:#fff;font-weight:700}.belt small{color:#78909c}.belt em{font-style:normal;color:#40c4ff}.belt.bagon{border-color:#69f0ae}.belt.bagon em{color:#69f0ae}.belt i{position:absolute;left:0;bottom:0;height:3px;background:#69f0ae}
+#fids{position:fixed;inset:0;z-index:9999;background:#00060f;color:#fff;display:none;flex-direction:column;font-family:'Barlow Condensed',system-ui,sans-serif}
+.fd-top{display:flex;align-items:center;gap:16px;padding:14px 22px;background:linear-gradient(90deg,#0d47a1,#00060f)}.fd-logo{font-weight:900;font-size:2rem;color:#ffd740;letter-spacing:.06em}.fd-title{flex:1;font-size:1.6rem;letter-spacing:.12em;font-weight:700}.fd-meta{text-align:right}.fd-clk{font-family:monospace;font-size:1.7rem;color:#ffd740}.fd-meta small{display:block;color:#b0bec5}
+.fd-ops{background:#ff6f00;color:#111;font-weight:800;text-align:center;padding:5px;letter-spacing:.08em;animation:bl 1.2s ease-in-out infinite alternate}
+.fd-body{flex:1;overflow:hidden;padding:8px 18px}.fd-th,.fd-row{display:grid;grid-template-columns:110px 150px 1fr 90px 260px;gap:12px;align-items:center}.fd-th{color:#90caf9;font-size:1rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border-bottom:2px solid #1565c0}
+.fd-row{font-size:1.55rem;padding:7px 10px;border-bottom:1px solid #0d1b2a}.fd-row.alt{background:#06101d}.fd-t{color:#ffd740;font-family:monospace}.fd-t em{display:block;font-style:normal;color:#ffab40;font-size:.75em}.fd-fn i{display:inline-block;width:6px;height:22px;margin-right:8px;vertical-align:middle;border-radius:2px}.fd-g{text-align:center;color:#ffd740;font-weight:700}.fd-s.go{color:#69f0ae}.fd-s.bad{color:#ff5252}
+.fd-pg{text-align:right;color:#546e7a;font-size:.9rem;margin-top:6px}
+.fd-ctl{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:8px;background:#000a;opacity:.35;transition:opacity .2s}.fd-ctl:hover{opacity:1}.fd-ctl button{border:1px solid #37474f;background:#0b1622;color:#cfd8dc;border-radius:8px;padding:6px 12px;cursor:pointer}.fd-ctl button.on{background:#ffd740;color:#111}
+.fd-sel{margin:6px 0 12px;font-size:1.1rem}.fd-sel select{font-size:1.1rem;background:#0b1622;color:#fff;border:1px solid #37474f;border-radius:8px;padding:4px 8px}
+.fd-gate{border-left:10px solid var(--ac);padding:16px 24px;background:#06101d;border-radius:12px}.fg-al{font-size:1.6rem;color:#b0bec5}.fg-fn{font-size:4.5rem;font-weight:800;color:#ffd740;line-height:1}.fg-d{font-size:3rem;font-weight:700}.fg-row{display:flex;flex-wrap:wrap;gap:40px;margin-top:16px}.fg-row small{display:block;color:#90caf9;letter-spacing:.1em}.fg-row b{font-size:2.2rem}.fg-row .go{color:#69f0ae}.fg-row .bad{color:#ff5252}.fg-nx{margin-top:18px;color:#90a4ae;font-size:1.3rem}
+.fd-belt{display:flex;gap:30px;align-items:flex-start}.fb-n{font-size:9rem;font-weight:900;color:#ffd740;line-height:1}.fb-f{display:flex;flex-direction:column;border-bottom:1px solid #0d1b2a;padding:10px 0}.fb-f b{font-size:2.6rem;color:#fff}.fb-f span{font-size:1.8rem;color:#b0bec5}.fb-f em{font-style:normal;font-size:1.6rem;color:#40c4ff}.fb-f em.go{color:#69f0ae}.fd-empty{color:#78909c;font-size:1.5rem;padding:20px}
+#fids.flap .fd-th,#fids.flap .fd-row{grid-template-columns:118px 190px minmax(0,1fr) 84px minmax(0,1.05fr)}#fids.flap .fd-row{font-size:1.25rem}#fids.flap .fd-row>span{overflow:hidden;white-space:nowrap}#fids.flap .ff{flex-wrap:nowrap}#fids.flap .ff i{font-size:1em}.ff{display:inline-flex;gap:2px}.ff i{font-style:normal;display:inline-block;min-width:.72em;text-align:center;background:linear-gradient(#1a1a1a 49%,#000 50%,#141414 51%);color:#f5f5f5;border-radius:3px;padding:1px 2px;font-family:'Share Tech Mono',monospace}
+.ff i.fl{animation:flp .45s ease-in backwards}@keyframes flp{0%{transform:rotateX(90deg);color:#555}60%{transform:rotateX(-15deg)}100%{transform:rotateX(0)}}
+#fids.flap .fd-t,#fids.flap .fd-g{color:inherit}
+@media(max-width:820px){.fd-th,.fd-row,#fids.flap .fd-th,#fids.flap .fd-row{grid-template-columns:62px 82px minmax(0,1fr) 44px minmax(0,1fr);gap:6px}.fd-row{font-size:1rem}.fd-th{font-size:.7rem}.fd-title{font-size:1rem}.fd-logo{font-size:1.3rem}.fd-clk{font-size:1.1rem}#fids.flap .fd-row{font-size:.8rem}.fg-fn{font-size:2.6rem}.fg-d{font-size:1.8rem}.fb-n{font-size:5rem}}
+.guia-tools{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.guia-tools input{flex:1;min-width:220px}
+.q-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;padding:10px}.q-term{background:#0f1822;border-radius:12px;padding:8px 10px}.q-term>b{font-size:1.1rem;color:#90caf9}.q-row{display:flex;justify-content:space-between;font-size:.86rem;padding:3px 0;border-bottom:1px dashed #1d2733}.q-row em{font-style:normal;font-family:monospace}
+.guia-ts{display:flex;gap:6px;margin:8px 0}.guia-ts button{flex:1;border:1px solid #2b3d52;background:#0f1a26;color:#cfd8dc;border-radius:10px;padding:8px;font-size:1rem;cursor:pointer}.guia-ts button.on{background:#90caf9;color:#05080d;font-weight:700}
+.guia-floors{display:flex;flex-direction:column;gap:6px;padding:10px}.gf{border:1px solid #1d2733;border-radius:10px;overflow:hidden}.gf-h{background:#13202e;padding:5px 10px;font-size:.78rem;letter-spacing:.06em;color:#90caf9;text-transform:uppercase}.gf-i{display:flex;flex-wrap:wrap;gap:6px;padding:8px}.gf-i span{background:#0f1822;border-radius:999px;padding:3px 10px;font-size:.82rem}
+.guia-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px;padding:0 10px 10px}.guia-it{display:flex;gap:10px;align-items:flex-start;padding:7px;border-bottom:1px solid #1d2733}.guia-it>span{font-size:1.4rem}.guia-it small{display:block;color:#90a4ae;font-size:.76rem}
+.guia-vlt{display:flex;flex-wrap:wrap;gap:6px;padding:0 10px 10px;font-size:.84rem;align-items:center}.guia-vlt span{border:1px solid var(--lc);border-radius:999px;padding:2px 9px}.guia-vlt b{color:var(--lc)}
+.ex-nav{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px;padding:6px 10px;background:#0f1a26;border-radius:12px}.ex-nav>span{color:#ce93d8;font-weight:700;margin-right:4px}.ex-nav button{border:1px solid #2b3d52;background:transparent;color:#cfd8dc;border-radius:999px;padding:5px 12px;cursor:pointer;font-size:.85rem}.ex-nav button.on{background:#ce93d8;color:#111;border-color:#ce93d8}
+.ex-menu{padding:16px}.ex-menu p{color:#90a4ae}.ex-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}.ex-g button{display:flex;flex-direction:column;gap:4px;text-align:left;border:1px solid #2b3d52;background:#0f1822;color:#fff;border-radius:14px;padding:14px;cursor:pointer}.ex-g span{font-size:2rem}.ex-g small{color:#90a4ae}
 </style>
 </head>
 <body><div class="imm-toast" id="imm-toast"></div>
@@ -887,11 +916,9 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
   <button class="vbtn" onclick="showV('map')">🗺 Rotas</button>
   <button class="vbtn" onclick="showV('conn')">🔀 Conexões</button>
   <button class="vbtn" onclick="showV('gate')">🚪 Portão</button>
+  <button class="vbtn" onclick="showV('guia')">🧭 Guia do terminal</button>
   <button class="vbtn" onclick="showV('mgr')">⚙ Status</button>
   <button class="vbtn" onclick="showV('transit')">🚇 Transporte</button>
-  <button class="vbtn" onclick="showV('bordo')">✈ A Bordo</button>
-  <button class="vbtn" onclick="showV('bilhet')">🎫 Bilheteria</button>
-  <button class="vbtn" onclick="showV('checkin')">🧳 Check-in</button>
   <button class="vbtn" onclick="showV('patio')">⊞ Pátio</button>
   <button class="vbtn" onclick="showV('stats')">📊 Estatísticas</button>
   <button class="vbtn" onclick="showV('meteo')">🌦️ Meteorologia</button>
@@ -900,6 +927,7 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
   <button class="vbtn" onclick="showV('imm')">🎧 Imersão</button>
   <button class="vbtn" onclick="showV('priv')">🔑 Modo Privado</button>
   <button class="vbtn" onclick="showV('info')">✦ Info</button>
+  <button class="vbtn" onclick="showV('extras')">🎮 Extras</button>
 </div>
 
 <!-- DEP -->
@@ -1200,7 +1228,7 @@ function terminal(tipo,fi){
 function trmCls(t){return"ttrm ttrm-"+t;}
 function chipH(t){return`<span class="chip c-${CM[t]||"dom"}">${CL[t]||t}</span>`;}
 function alH(c){const a=AL[c];if(!a)return`<span class="al" style="color:#546e7a;border-color:#263238">${c}</span>`;return`<span class="al" style="color:${a.color};border-color:${a.color}55;background:${a.color}14">${a.name}</span>`;}
-function stH(v){const l={sch:"Programado",ont:"No Horário",board:"Embarcando",final:"Emb. Final",taxi:"Na Pista",dep:"Partiu",del:"Atrasado",can:"Cancelado",arr:"Chegando",lnd:"Pousou"};return`<span class="st st-${v}">${l[v]||v}</span>`;}
+function stH(v){const l={sch:"Programado",ont:"No Horário",board:"Embarcando",final:"Emb. Final",taxi:"Na Pista",dep:"Partiu",del:"Atrasado",can:"Cancelado",arr:"Chegando",lnd:"Pousou",div:"Alternado",hold:"Em espera"};return`<span class="st st-${v}">${l[v]||v}</span>`;}
 function wthH(iata){const w=WEATHER[iata];return w?`<span class="twth">${w[0]} ${w[1]}</span>`:"";}
 function randomName(tipo,seed){
   const pool=NAMES[tipo]||NAMES.DOM;
@@ -1214,7 +1242,7 @@ function autoSt(t,mode){
   if(mode==="dep"){if(d>120)return"sch";if(d>60)return"ont";if(d>30)return"board";if(d>5)return"final";if(d>-8)return"taxi";return"dep";}
   else{if(d>60)return"sch";if(d>20)return"arr";if(d>-10)return"taxi";return"lnd";}
 }
-function getSt(mode,iata,t,day){
+function getSt0(mode,iata,t,day){
   const k=stk(mode,iata,t,day);
   return SS[k]||(day===todayIdx?autoSt(t,mode):"sch");
 }
@@ -1252,7 +1280,7 @@ function rDep(){
   const rows=depRows(day,tf,sr);const ni=getNext(rows,day);
   document.getElementById("tb-dep").innerHTML=rows.map((r,i)=>`
     <tr class="${rowCls(r,i===ni)} clickrow" onclick="openFlightDetails(${r.fi},'dep')">
-      <td class="tc${isNight(parseInt(r.time))?" night":""}">${r.time}</td>
+      <td class="tc${isNight(parseInt(r.time))?" night":""}">${_tcell("dep",r)}</td>
       <td class="tdst">${r.dest}</td><td class="tia">${r.iata}</td>
       <td>${alH(r.al)}</td><td>${chipH(r.tipo)}</td><td class="tac">${r.ac}</td>
       <td><span class="${trmCls(r.terminal)}">${r.terminal}</span></td>
@@ -1269,13 +1297,13 @@ function rArr(){
   const rows=arrRows(day,tf,sr);const ni=getNext(rows,day);
   document.getElementById("tb-arr").innerHTML=rows.map((r,i)=>`
     <tr class="${rowCls(r,i===ni)} clickrow" onclick="openFlightDetails(${r.fi},'arr')">
-      <td class="tc arr${isNight(parseInt(r.time))?" night":""}">${r.time}</td>
+      <td class="tc arr${isNight(parseInt(r.time))?" night":""}">${_tcell("arr",r)}</td>
       <td class="tdst">${r.dest}</td><td class="tia">${r.iata}</td>
       <td>${alH(r.al)}</td><td>${chipH(r.tipo)}</td><td class="tac">${r.ac}</td>
       <td><span class="${trmCls(r.terminal)}">${r.terminal}</span></td>
       <td class="tgt">${r.belt}</td>
       <td class="tmeta">${Number(r.dist).toLocaleString("pt-BR")} km</td>
-      <td class="tmeta">${durS(r.dur)}</td><td>${stH(r.st)}</td></tr>`).join("");
+      <td class="tmeta">${durS(r.dur)}</td><td>${_arrStH(r)}</td></tr>`).join("");
   document.getElementById("cnt-arr").textContent=rows.length;
   document.getElementById("em-arr").style.display=rows.length===0?"block":"none";
 }
@@ -1598,11 +1626,13 @@ function rInfo(){
 }
 
 // ── VIEW SWITCHER ─────────────────────────────────────────────────────────────
-function showV(name){if(name==='bordo')setTimeout(flyRender,0);if(name==='bilhet')setTimeout(bilRender,0);if(name==='checkin')setTimeout(chkRender,0);
-  ["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","bordo","bilhet","checkin","patio","stats","meteo","atc","emg","imm","priv","info"].forEach(t=>
-    document.getElementById("tab-"+t).style.display=t===name?"block":"none");
-  document.querySelectorAll(".vbtn").forEach((b,i)=>
-    b.classList.toggle("active",["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","bordo","bilhet","checkin","patio","stats","meteo","atc","emg","imm","priv","info"][i]===name));
+function showV(name){if(name==='bordo')setTimeout(flyRender,0);if(name==='bilhet')setTimeout(bilRender,0);if(name==='checkin')setTimeout(chkRender,0);if(name==='guia')setTimeout(guiaRender,0);if(name==='extras')setTimeout(extrasRender,0);
+  const ALL=["dep","arr","pax","hist","live","map","conn","gate","guia","mgr","transit","bordo","bilhet","checkin","extras","patio","stats","meteo","atc","emg","imm","priv","info"];
+  ALL.forEach(t=>{const e=document.getElementById("tab-"+t);if(e)e.style.display=t===name?"block":"none";});
+  const grp=["bordo","bilhet","checkin"].includes(name)?"extras":name;
+  document.querySelectorAll(".vbtn").forEach(b=>b.classList.toggle("active",(b.getAttribute("onclick")||"").includes("'"+grp+"'")));
+  ["bordo","bilhet","checkin"].forEach(t=>{const e=document.getElementById("tab-"+t);if(!e)return;let n=e.querySelector(".ex-nav");if(!n){e.insertAdjacentHTML("afterbegin",'<div class="ex-slot"></div>');n=e.querySelector(".ex-slot");}else n=n.parentNode;n.innerHTML=_extrasNav(name);});
+  if(["dep","arr","gate","guia","meteo"].includes(name))setTimeout(_opsBanners,0);
   if(name==="transit"){buildTransitCards();}
   if(name==="patio"){buildPatio();}
   if(name==="stats"){buildStats();}
@@ -4087,7 +4117,8 @@ function buildEmergencyControls(){_buildEmg0();const el=document.getElementById(
   el.innerHTML+=`<div class="emg-sec">🚆 VLT Tietê${_tvInc()?` · <span style="color:#ffd740">ativo: ${TV_INC.find(x=>x.id===TV.incident.id).title}</span> <button class="gv-chip" onclick="trainIncidentClear();buildEmergencyControls()">✓ Normalizar</button>`:''}</div>`
     +TV_INC.map(x=>`<button class="emg-btn" style="border-color:${x.color}" onclick="trainIncident('${x.id}');buildEmergencyControls()"><span>${x.icon}</span>${x.title}</button>`).join('')
     +(NET_PANE?`<button class="emg-btn" style="border-color:#69f0ae" onclick="paneClear()"><span>✅</span>Normalizar a rede (pane ativa)</button>`:`<button class="emg-btn" style="border-color:#ff1744" onclick="paneStart()"><span>🔧</span>Pane na via (atrasa as linhas que dividem o trilho)</button>`)
-    +`<button class="emg-btn" style="border-color:#ce93d8" onclick="evtNow();buildEmergencyControls()"><span>🎉</span>Evento na cidade agora (jogo, show, feriado…)</button>`;}
+    +`<button class="emg-btn" style="border-color:#ce93d8" onclick="evtNow();buildEmergencyControls()"><span>🎉</span>Evento na cidade agora (jogo, show, feriado…)</button>`
+    +(OPS.manual?`<button class="emg-btn" style="border-color:#69f0ae" onclick="opsSet(null)"><span>🌤</span>Normalizar o clima no aeroporto</button>`:`<button class="emg-btn" style="border-color:#b0bec5" onclick="opsSet('fog')"><span>🌫</span>Neblina no aeroporto (atrasos e alternados)</button><button class="emg-btn" style="border-color:#ff5252" onclick="opsSet('storm')"><span>⛈</span>Tempestade (pistas fechadas por ~35 min)</button>`);}
 function _tvStripTick(ln,now,focus){_tvStripTick0(ln,now,focus);const x=_tvInc();if(!x||ln.kind!=='metro')return;
   if(x.st!=null){const el=document.getElementById('tvsub'+x.st);if(el)el.textContent='⛔ estação fechada';}
   else{const el=document.getElementById('tvsub0');if(el&&!/⚠/.test(el.textContent))el.textContent='⚠ '+TV_INC.find(i=>i.id===x.id).title.toLowerCase()+' · '+el.textContent;}}
@@ -5021,6 +5052,142 @@ function chkRender(){const root=document.getElementById('chk-root');if(!root)ret
       <div class="fis-act"><button class="fly-b big" onclick="chkNextPax()">➡ Próximo passageiro</button><button class="fly-b" onclick="chkFly()">✈ Voar com este cartão</button></div>`;}
   root.innerHTML=top+pax+msg+`<div class="tv-card bil-term">${body}</div>`;}
 
+
+// ════════ v12 · OPERAÇÃO DO AEROPORTO ════════
+// ── clima que afeta a operação ──
+var OPS={manual:null};
+function _opsAuto(){const d=new Date(),h=_hashS(d.toDateString()+'ops'),mo=d.getMonth()+1,winter=mo>=5&&mo<=8,summer=mo>=11||mo<=3,out=[];
+  if(h%100<(winter?45:12))out.push({type:'fog',a:270+(h>>3)%60,b:480+(h>>7)%90});
+  if(summer&&(h>>11)%100<30){const a=900+(h>>15)%180;out.push({type:'storm',a,b:a+25+(h>>19)%20});}return out;}
+function _opsConds(){const n=nowMins(),M=(OPS&&OPS.manual)||null,m=M&&n<=M.b+120?[M]:[];return m.concat(_opsAuto());}
+function opsDelay(mode,iata,t){const tm=toMins(t);let d=0;_opsConds().forEach(c=>{const k=c.type==='fog'?.35:.3,top=(c.b-c.a)*k+12;
+  if(tm>=c.a-10&&tm<=c.b)d=Math.max(d,c.type==='fog'?Math.min(70,12+(tm-c.a)*k):(c.b-tm)+12+(tm-c.a)*k);else if(tm>c.b)d=Math.max(d,top-(tm-c.b)*.55);});
+  if(d<=0)return 0;d+=(_hashS(iata+t+mode)%9)-3;return d<5?0:Math.round(d);}
+function opsDiv(iata,t){const tm=toMins(t);return _opsConds().some(c=>tm>=c.a+(c.type==='fog'?40:0)&&tm<=c.b&&_hashS(iata+t)%100<(c.type==='fog'?18:28));}
+function opsNow(){const n=nowMins();return _opsConds().find(c=>n>=c.a-10&&n<=c.b+60)||null;}
+function opsSet(type){const n=nowMins();OPS.manual=type?{type,a:n,b:n+(type==='fog'?150:35)}:null;if(!type)OPS.cleared=n;_opsRefresh();
+  if(type)paSay(type==='fog'?{pt:'Atenção: devido à neblina em Guarulhos, as operações de pouso e decolagem estão sendo feitas por instrumentos. Alguns voos podem sofrer atrasos. Acompanhe os painéis.',en:'Attention: due to fog in Guarulhos, take-offs and landings are operating under instrument procedures. Some flights may be delayed. Please check the screens.',es:'Atención: debido a la niebla en Guarulhos, las operaciones se realizan por instrumentos. Algunos vuelos pueden sufrir atrasos.'}
+    :{pt:'Atenção: devido a uma tempestade sobre o aeroporto, as pistas estão temporariamente fechadas. Os voos sofrerão atrasos. Acompanhe os painéis.',en:'Attention: due to a thunderstorm over the airport, the runways are temporarily closed. Flights will be delayed.',es:'Atención: debido a una tormenta sobre el aeropuerto, las pistas están cerradas temporalmente. Los vuelos sufrirán atrasos.'});}
+function _opsRefresh(){try{rDep();rArr();rPax();}catch(e){}try{_gvRefreshBoards();}catch(e){}_opsBanners();try{buildEmergencyControls();}catch(e){}try{if(document.getElementById('tab-meteo').style.display!=='none')buildMeteo();}catch(e){}}
+function _opsBanner(){const c=opsNow();if(!c)return'';const n=nowMins(),avg=Math.round([0,20,40,60].map(x=>opsDelay('dep','AVG',addM(String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0'),x))).reduce((a,b)=>a+b,0)/4);
+  const end=String(Math.floor(c.b/60)%24).padStart(2,'0')+':'+String(c.b%60).padStart(2,'0');
+  return n>c.b?`<div class="ops-ban rec">🌤 Operação se normalizando · atrasos residuais de até ${Math.max(5,avg)} min</div>`
+   :c.type==='fog'?`<div class="ops-ban fog">🌫 <b>Neblina em Guarulhos</b> · pousos e decolagens por instrumentos (CAT III) · atraso médio de ${Math.max(10,avg)} min${avg>30?' · alguns pousos alternados para Viracopos':''}</div>`
+   :`<div class="ops-ban storm">⛈ <b>Tempestade sobre o aeroporto</b> · pistas fechadas até cerca de ${end} · atrasos em cascata</div>`;}
+function _opsBanners(){['dep','arr','gate','guia','meteo'].forEach(t=>{const tab=document.getElementById('tab-'+t);if(!tab)return;let el=tab.querySelector('.ops-slot');if(!el){el=document.createElement('div');el.className='ops-slot';tab.insertBefore(el,tab.firstChild);}
+  el.innerHTML=_opsBanner()+(t==='dep'||t==='arr'?_qStrip():'')+(t==='meteo'?`<div class="ops-tools"><span style="color:#90a4ae;font-size:.82rem">Simular no aeroporto:</span>${OPS.manual?'<button onclick="opsSet(null)">🌤 Normalizar</button>':'<button onclick="opsSet(\'fog\')">🌫 Neblina</button><button onclick="opsSet(\'storm\')">⛈ Tempestade</button>'}</div>`:'')+(t==='dep'||t==='arr'?`<div class="ops-tools"><button onclick="fidsOpen('${t}')">🖥 Telas do aeroporto</button><button class="${PA.on?'on':''}" onclick="paToggle()">🔊 Avisos do terminal: ${PA.on?'ligados':'desligados'}</button></div>`:'');});
+  if(document.getElementById('tab-arr')){let b=document.getElementById('belts');if(!b){b=document.createElement('div');b.id='belts';const tb=document.querySelector('#tab-arr table.bt');if(tb)tb.parentNode.insertBefore(b,tb);}b.innerHTML=_beltsHTML();}}
+setInterval(_opsBanners,15000);
+// status e horário estimado nos painéis
+function getSt(mode,iata,t,day){const k=stk(mode,iata,t,day);if(SS[k]||day!==todayIdx)return getSt0(mode,iata,t,day);if(mode==='arr'&&opsDiv(iata,t))return'div';
+  const d=opsDelay(mode,iata,t);if(d<5)return getSt0(mode,iata,t,day);const s=autoSt(addM(t,d),mode);return(s==='sch'||s==='ont'||s==='arr')&&d>=15?'del':s;}
+function _tcell(mode,r){const d=AD[mode]===todayIdx||mode==='pax'?opsDelay(mode==='pax'?'dep':mode,r.iata,r.time):0;return d>=5?`<s class="t-old">${r.time}</s><b class="t-est">${addM(r.time,d)}</b>`:r.time;}
+// ── 1. chegadas: pouso → desembarque → bagagem ──
+function _arrPhase(r){if(AD.arr!==todayIdx)return null;if(r.st==='div')return{l:'Alternado · Viracopos',c:'div'};if(r.st==='can')return null;
+  const d=opsDelay('arr',r.iata,r.time),est=toMins(r.time)+d,x=nowMins()-est,intl=r.tipo!=='DOM',b1=intl?26:14;
+  if(x<-20)return null;if(x<-2)return{l:`Em aproximação · pouso ${addM(r.time,d)}`,c:'arr'};if(x<4)return{l:'Pousou',c:'lnd'};if(x<(intl?18:10))return{l:intl?'Desembarque · imigração':'Desembarcando',c:'lnd'};
+  if(x<b1)return{l:`Bagagem em ${b1-x} min · esteira ${r.belt}`,c:'bag'};if(x<b1+16)return{l:`Esteira ${r.belt} · malas saindo`,c:'bagon'};if(x<b1+22)return{l:`Esteira ${r.belt} · últimas malas`,c:'bag'};return{l:'Encerrado',c:'end'};}
+function _arrStH(r){const p=_arrPhase(r);return p?`<span class="st st-${p.c}">${p.l}</span>`:stH(r.st);}
+function _beltsHTML(){let rows=[];try{rows=arrRows(todayIdx,'ALL','');}catch(e){}const by={};rows.forEach(r=>{const p=_arrPhase(r);if(p&&/bag|bagon/.test(p.c))(by[r.belt]=by[r.belt]||[]).push({r,p});});
+  return`<div class="belts"><div class="belts-h">🧳 Esteiras de bagagem · agora</div><div class="belts-g">${BELTS.map(b=>{const x=(by[b]||[])[0];const pct=x?(()=>{const d=opsDelay('arr',x.r.iata,x.r.time),intl=x.r.tipo!=='DOM',b1=intl?26:14,e=nowMins()-(toMins(x.r.time)+d)-b1;return Math.max(0,Math.min(100,e/22*100));})():0;
+   return`<div class="belt ${x?x.p.c:''}"><b>${b}</b>${x?`<span>${x.r.fnum}</span><small>${_tvEsc(x.r.dest)}</small><em>${x.p.l.replace(/ · esteira \d+|Esteira \d+ · /,'')}</em><i style="width:${pct}%"></i>`:'<small>livre</small>'}</div>`;}).join('')}</div></div>`;}
+// ── 4. avisos do terminal ──
+var PA={on:false,last:0,said:{},gap:90000};
+function paToggle(){PA.on=!PA.on;PA.last=Date.now()-PA.gap+4000;_opsBanners();const g=document.getElementById('guia-pa');if(g)g.textContent=PA.on?'🔊 Avisos do terminal: ligados':'🔈 Avisos do terminal: desligados';}
+function paSay(m){voxSay(['pt','en','es'].map(k=>({k,text:m[k]})),{chime:true,chimeKind:'airport'});}
+function _paPick(){let dep=[],arr=[];try{dep=depRows(todayIdx,'ALL','');arr=arrRows(todayIdx,'ALL','');}catch(e){}const n=nowMins(),c=[];
+  dep.forEach(r=>{const k=r.fnum+r.time;const nm=_tvEsc(r.dest.split(' – ')[0]),fn=String(r.fnum).replace(/^([A-Z0-9]{2})/,'$1 ');
+    if(r.st==='board'&&!PA.said['b'+k])c.push(['b'+k,{pt:`Iniciamos o embarque do voo ${fn}, da ${(AL[r.al]||{}).name||''}, com destino a ${nm}, pelo portão ${r.gate}.`,en:`${(AL[r.al]||{}).name||''} flight ${fn} to ${nm} is now boarding at gate ${r.gate}.`,es:`Iniciamos el embarque del vuelo ${fn} con destino a ${nm} por la puerta ${r.gate}.`},3]);
+    if(r.st==='final'&&!PA.said['f'+k])c.push(['f'+k,{pt:`Última chamada para os passageiros do voo ${fn} com destino a ${nm}. Embarque imediato pelo portão ${r.gate}.`,en:`Final call for passengers on flight ${fn} to ${nm}. Please proceed immediately to gate ${r.gate}.`,es:`Última llamada para los pasajeros del vuelo ${fn} con destino a ${nm}. Embarque inmediato por la puerta ${r.gate}.`},4]);
+    if(r.st==='del'&&!PA.said['d'+k]){const d=opsDelay('dep',r.iata,r.time);c.push(['d'+k,{pt:`O voo ${fn} para ${nm} está atrasado. Nova previsão de partida: ${addM(r.time,d)}.`,en:`Flight ${fn} to ${nm} is delayed. New departure time: ${addM(r.time,d)}.`,es:`El vuelo ${fn} a ${nm} está atrasado. Nueva hora de salida: ${addM(r.time,d)}.`},2]);}});
+  arr.forEach(r=>{const p=_arrPhase(r),k=r.fnum+r.time,nm=_tvEsc(r.dest.split(' – ')[0]),fn=String(r.fnum).replace(/^([A-Z0-9]{2})/,'$1 ');
+    if(p&&p.c==='bagon'&&!PA.said['g'+k])c.push(['g'+k,{pt:`Passageiros do voo ${fn}, procedente de ${nm}: a bagagem está disponível na esteira ${r.belt}.`,en:`Passengers from flight ${fn} from ${nm}: your baggage is on belt ${r.belt}.`,es:`Pasajeros del vuelo ${fn} procedente de ${nm}: su equipaje está en la cinta ${r.belt}.`},2]);});
+  const fut=dep.filter(r=>{const d=toMins(r.time)-n;return d>70&&d<150&&!GATE_OVR[r.fi];});
+  if(fut.length&&Math.random()<.25){const r=_bilR(fut),g0=r.gate;let g=g0,tries=0;while(g===g0&&tries++<10)g=_gateGRU(r.tipo,(r.fi+7+tries*13));if(g!==g0)c.push(['x'+r.fnum,{pt:`Atenção, passageiros do voo ${r.fnum} com destino a ${r.dest.split(' – ')[0]}: houve alteração de portão. O embarque será pelo portão ${g}.`,en:`Attention passengers on flight ${r.fnum} to ${r.dest.split(' – ')[0]}: there has been a gate change. Boarding will be at gate ${g}.`,es:`Atención pasajeros del vuelo ${r.fnum} a ${r.dest.split(' – ')[0]}: hubo un cambio de puerta. El embarque será por la puerta ${g}.`},2,()=>{GATE_OVR[r.fi]=g;_opsRefresh();}]);}
+  const GEN=[{pt:'Por motivos de segurança, não deixe sua bagagem desacompanhada. Volumes abandonados poderão ser removidos e destruídos.',en:'For security reasons, do not leave your baggage unattended. Unattended items may be removed and destroyed.',es:'Por razones de seguridad, no deje su equipaje desatendido. Los objetos abandonados podrán ser retirados y destruidos.'},
+   {pt:'Na bagagem de mão, líquidos devem estar em frascos de até 100 mililitros, dentro de um saco plástico transparente.',en:'Liquids in hand luggage must be in containers of up to 100 millilitres, inside a clear plastic bag.',es:'En el equipaje de mano, los líquidos deben estar en envases de hasta 100 mililitros, dentro de una bolsa plástica transparente.'},
+   {pt:'É proibido fumar em todas as áreas do aeroporto, inclusive cigarros eletrônicos.',en:'Smoking, including electronic cigarettes, is not allowed anywhere in the airport.',es:'Está prohibido fumar en todas las áreas del aeropuerto, incluidos cigarrillos electrónicos.'},
+   {pt:'Passageiros de voos internacionais: apresentem-se com pelo menos três horas de antecedência e tenham o passaporte em mãos.',en:'International passengers: please arrive at least three hours before departure with your passport ready.',es:'Pasajeros de vuelos internacionales: preséntense con al menos tres horas de anticipación y tengan el pasaporte a mano.'},
+   (()=>{const t=_bilR(['T1','T2','T3']),it=_bilR(['uma bolsa preta','uma mochila azul','um casaco cinza','um notebook','uma necessaire rosa']);return{pt:`Atenção: foi encontrado ${it} no controle de segurança do Terminal ${t.slice(1)}. O proprietário deve procurar o balcão de informações.`,en:`Attention: an item was left at the Terminal ${t.slice(1)} security checkpoint. The owner should go to the information desk.`,es:`Atención: se encontró un objeto en el control de seguridad de la Terminal ${t.slice(1)}. El propietario debe dirigirse al mostrador de información.`};})(),
+   {pt:'Para sua segurança, ao utilizar as escadas rolantes, segure o corrimão e não transporte carrinhos de bagagem.',en:'For your safety, hold the handrail on escalators and do not take baggage trolleys on them.',es:'Por su seguridad, sujete el pasamanos en las escaleras mecánicas y no suba carritos de equipaje.'}];
+  if(opsNow()&&!PA.said['ops'+opsNow().a]){const o=opsNow();c.push(['ops'+o.a,o.type==='fog'?{pt:'Devido à neblina em Guarulhos, alguns voos podem sofrer atrasos. Consulte os painéis e o aplicativo da sua companhia aérea.',en:'Due to fog in Guarulhos, some flights may be delayed. Please check the screens and your airline app.',es:'Debido a la niebla en Guarulhos, algunos vuelos pueden sufrir atrasos. Consulte las pantallas y la aplicación de su aerolínea.'}:{pt:'Devido às condições meteorológicas, as operações estão temporariamente suspensas. Acompanhe os painéis.',en:'Due to weather conditions, operations are temporarily suspended. Please check the screens.',es:'Debido a las condiciones meteorológicas, las operaciones están suspendidas temporalmente.'},5]);}
+  c.push(['gen'+Date.now(),_bilR(GEN),1]);c.sort((a,b)=>b[2]-a[2]);return c[0];}
+setInterval(()=>{if(!PA.on||Date.now()-PA.last<PA.gap)return;const tt=document.getElementById('tab-transit');if((TV.ride&&tt&&tt.style.display!=='none')||(typeof FLY!=='undefined'&&FLY.on)||(VOX.q&&VOX.q.length))return;
+  const p=_paPick();if(!p)return;PA.said[p[0]]=1;if(p[3])p[3]();paSay(p[1]);PA.last=Date.now();PA.gap=70000+Math.random()*60000;},4000);
+// ── 5. filas e tempos de espera ──
+function _qTimes(){let dep=[],arr=[];try{dep=depRows(todayIdx,'ALL','');arr=arrRows(todayIdx,'ALL','');}catch(e){}const n=nowMins(),o=opsNow(),h=Math.floor(n/60),peak=(h>=5&&h<9)||(h>=17&&h<22)?1.35:h<5?.6:1;const R={};
+  ['T1','T2','T3'].forEach(T=>{const d=dep.filter(r=>r.terminal===T&&toMins(r.time)-n>20&&toMins(r.time)-n<110),di=d.filter(r=>r.tipo!=='DOM'),a=arr.filter(r=>r.terminal===T&&n-toMins(r.time)>0&&n-toMins(r.time)<45),ai=a.filter(r=>r.tipo!=='DOM');
+    const cl=x=>Math.max(2,Math.min(75,Math.round(x)));R[T]={sec:cl((3+d.length*1.6)*peak+(o?6:0)),immOut:T==='T1'?null:cl((4+di.length*2.2)*peak),immIn:T==='T1'?null:cl(5+ai.length*5),taxi:cl((2+a.length*2)*(o&&o.type==='storm'?2:1)),app:cl((3+a.length*1.8)*(o&&o.type==='storm'?1.8:1))};});return R;}
+function _qC(v){return v==null?'':v<10?'ok':v<25?'mid':'bad';}
+function _qStrip(){const Q=_qTimes();return`<div class="q-strip"><span class="q-t">⏱ Raio-X agora</span>${['T1','T2','T3'].map(T=>`<span class="q-c ${_qC(Q[T].sec)}">${T} · ${Q[T].sec} min</span>`).join('')}<span class="q-t">🛂 Imigração</span>${['T2','T3'].map(T=>`<span class="q-c ${_qC(Q[T].immOut)}">${T} · ${Q[T].immOut} min</span>`).join('')}</div>`;}
+// ── 6. guia do terminal ──
+var GUIA={T1:{nm:'Terminal 1 · voos nacionais',floors:{2:'Embarque',1:'Check-in',0:'Desembarque'},items:[
+  ['🍔','Praça de alimentação','alimentação',2,'após o raio-X, ao lado do portão A4'],['☕','Cafeteria','alimentação',1,'área pública, em frente ao check-in'],['💊','Farmácia','serviços',1,'área pública, perto da entrada 2'],['🛋','Sala VIP doméstica','salas VIP',2,'após o raio-X, mezanino'],
+  ['🚻','Banheiros','banheiros',null,'em todos os pisos, sinalizados'],['👶','Fraldário','família',2,'ao lado dos banheiros do portão A2'],['🩺','Posto médico','saúde',0,'desembarque, perto da porta 1'],['ℹ️','Informações e achados e perdidos','informações',0,'balcão central do desembarque'],
+  ['🧳','Guarda-volumes','serviços',0,'desembarque, ao lado das esteiras'],['🚕','Táxi','transporte',0,'saída da porta 1'],['📱','Carros de aplicativo','transporte',0,'área demarcada na saída 3'],['🅿️','Estacionamento','transporte',0,'edifício-garagem, em frente ao terminal'],
+  ['🚆','VLT · estações Hall Pauliceia e Portão Tietê','transporte',1,'passarela do piso 1'],['♿','Assistência e cadeiras de rodas','acessibilidade',1,'balcões das companhias aéreas'],['🔌','Tomadas e carregadores','serviços',2,'nas salas de embarque'],['📶','Wi-Fi gratuito','serviços',null,'rede "GRU-Free", em todo o terminal']]},
+ T2:{nm:'Terminal 2 · nacionais e internacionais',floors:{2:'Embarque',1:'Check-in',0:'Desembarque'},items:[
+  ['🍽','Praça de alimentação','alimentação',1,'piso 1, ala central'],['☕','Cafés e padarias','alimentação',2,'salas de embarque B e C'],['🛍','Free shop','compras',2,'área internacional, após a imigração'],['💱','Câmbio','serviços',0,'desembarque internacional e piso 1'],
+  ['🛂','Imigração (Polícia Federal)','imigração',2,'acesso às salas internacionais (C e D)'],['🛋','Salas VIP nacionais e internacionais','salas VIP',2,'após o raio-X, acima dos portões B e D'],['💊','Farmácia','serviços',1,'piso 1, perto da entrada 5'],['🚻','Banheiros','banheiros',null,'em todos os pisos'],
+  ['👶','Fraldário e espaço família','família',2,'sala de embarque B, portão B3'],['🙏','Espaço ecumênico','serviços',1,'piso 1, mezanino'],['🩺','Posto médico','saúde',0,'desembarque doméstico'],['ℹ️','Informações e achados e perdidos','informações',0,'balcão central do desembarque'],
+  ['🚕','Táxi','transporte',0,'saída do desembarque, portas 2 e 3'],['📱','Carros de aplicativo','transporte',0,'área demarcada no estacionamento em frente'],['🚌','Ônibus intermunicipais e executivos','transporte',0,'calçada do desembarque'],['🚆','VLT · estações Praça das Bandeiras, Ala Cambuci, Galeria Bixiga, Largo da Mooca e Ipiranga','transporte',1,'passarelas do piso 1'],
+  ['♿','Assistência e acessibilidade','acessibilidade',1,'balcões das companhias e informações'],['🔌','Tomadas e carregadores','serviços',2,'salas de embarque']]},
+ T3:{nm:'Terminal 3 · voos internacionais',floors:{2:'Embarque',1:'Check-in',0:'Desembarque'},items:[
+  ['🍽','Restaurantes e praça de alimentação','alimentação',2,'após a imigração, ala central'],['🛍','Free shop (embarque e desembarque)','compras',2,'após a imigração e antes da alfândega'],['💱','Câmbio','serviços',1,'piso 1 e desembarque'],['🛂','Imigração (Polícia Federal)','imigração',2,'logo após o raio-X'],
+  ['🛋','Salas VIP internacionais','salas VIP',2,'mezanino, após a imigração'],['🛃','Alfândega (Receita Federal)','imigração',0,'saída do desembarque internacional'],['💊','Farmácia','serviços',2,'área internacional'],['🚻','Banheiros','banheiros',null,'em todos os pisos'],
+  ['👶','Fraldário','família',2,'perto dos portões E e F'],['🧩','Sala multissensorial','acessibilidade',2,'perto do portão F2, para pessoas com autismo'],['🩺','Posto médico','saúde',1,'piso 1, ao lado da entrada'],['ℹ️','Informações e achados e perdidos','informações',0,'desembarque, balcão central'],
+  ['🚕','Táxi','transporte',0,'saída do desembarque internacional'],['📱','Carros de aplicativo','transporte',0,'piso térreo, área demarcada'],['🅿️','Estacionamento','transporte',0,'edifício-garagem do Terminal 3'],['🚆','VLT · estações Portal Garoa, Mirante Cumbica, Viaduto do Café e outras','transporte',1,'passarela do piso 1'],
+  ['♿','Assistência e acessibilidade','acessibilidade',1,'balcões das companhias'],['📶','Wi-Fi gratuito','serviços',null,'em todo o terminal']]}};
+var GUI={T:'T2',q:''};
+function guiaRender(){const root=document.getElementById('guia-root');if(!root)return;const Q=_qTimes(),G=GUIA[GUI.T],q=GUI.q.trim().toLowerCase();
+  const hits=q?Object.entries(GUIA).flatMap(([T,g])=>g.items.filter(i=>(i[1]+' '+i[2]+' '+i[4]).toLowerCase().includes(q)).map(i=>({T,i}))):[];
+  const fl=f=>f==null?'todos os pisos':f===0?'piso térreo · desembarque':f===1?'piso 1 · check-in':'piso 2 · embarque';
+  const st=(TV_METROS||[]).flatMap(L=>L.stops.filter(s=>s.startsWith(GUI.T)).map(s=>({L,s}))),nx=[];const seen={};st.forEach(o=>{if(seen[o.L.key])return;seen[o.L.key]=1;const k=o.L.stops.indexOf(o.s),x=_tvNextAt(o.L,k,0,_tvNow(),1)[0];if(x)nx.push({L:o.L,mn:Math.max(1,Math.ceil((x.dep-_tvNow())/60)),to:o.L.stops[o.L.stops.length-1]});});
+  root.innerHTML=`<div class="guia-tools"><input class="fsrch" id="guia-q" placeholder="Onde fica… (farmácia, câmbio, táxi, fraldário…)" value="${_tvEsc(GUI.q)}" oninput="GUI.q=this.value;guiaRender();setTimeout(()=>{const e=document.getElementById('guia-q');if(e){e.focus();e.setSelectionRange(e.value.length,e.value.length);}},0)"><button class="fly-b" onclick="fidsOpen('dep')">🖥 Telas do aeroporto</button><button class="fly-b" id="guia-pa" onclick="paToggle()">${PA.on?'🔊 Avisos do terminal: ligados':'🔈 Avisos do terminal: desligados'}</button></div>
+  ${q?`<div class="tv-card guia-res"><div class="tv-card-h"><span class="tv-card-t">🔎 ${hits.length} resultado${hits.length!==1?'s':''} para “${_tvEsc(GUI.q)}”</span></div>${hits.map(h=>`<div class="guia-it"><span>${h.i[0]}</span><div><b>${_tvEsc(h.i[1])}</b><small>${h.T} · ${fl(h.i[3])} · ${_tvEsc(h.i[4])}</small></div></div>`).join('')||'<div class="tv-hint">Nada encontrado. Tente outra palavra.</div>'}</div>`:''}
+  <div class="tv-card"><div class="tv-card-h"><span class="tv-card-t">⏱ Tempos de espera agora</span><span class="tv-hw">estimativa · atualiza sozinho</span></div><div class="q-grid">
+   ${['T1','T2','T3'].map(T=>`<div class="q-term"><b>${T}</b>${[['🛡 Raio-X',Q[T].sec],['🛂 Imigração · saída',Q[T].immOut],['🛂 Imigração · chegada',Q[T].immIn],['🚕 Fila do táxi',Q[T].taxi],['📱 Carro de app',Q[T].app]].filter(x=>x[1]!=null).map(x=>`<div class="q-row"><span>${x[0]}</span><em class="${_qC(x[1])}">${x[1]} min</em></div>`).join('')}</div>`).join('')}</div></div>
+  <div class="guia-ts">${Object.keys(GUIA).map(T=>`<button class="${GUI.T===T?'on':''}" onclick="GUI.T='${T}';guiaRender()">${T}</button>`).join('')}</div>
+  <div class="tv-card"><div class="tv-card-h"><span class="tv-card-t">🧭 ${_tvEsc(G.nm)}</span></div><div class="guia-floors">${[2,1,0].map(f=>`<div class="gf"><div class="gf-h">${f===0?'Térreo':'Piso '+f} · ${G.floors[f]}</div><div class="gf-i">${G.items.filter(i=>i[3]===f).map(i=>`<span title="${_tvEsc(i[4])}">${i[0]} ${_tvEsc(i[1])}</span>`).join('')}</div></div>`).join('')}</div>
+   <div class="guia-list">${G.items.map(i=>`<div class="guia-it"><span>${i[0]}</span><div><b>${_tvEsc(i[1])}</b><small>${fl(i[3])} · ${_tvEsc(i[4])}</small></div></div>`).join('')}</div>
+   ${nx.length?`<div class="guia-vlt">🚆 Próximos trens saindo do ${GUI.T}: ${nx.slice(0,5).map(o=>`<span style="--lc:${o.L.color}"><b>${o.L.code}</b> ${_tvEsc(_tvmNm(o.to))} · ${o.mn} min</span>`).join('')}</div>`:''}</div>
+  <div class="tv-hint">Os nomes e as posições dos serviços são ilustrativos.</div>`;}
+// ── 2. telas do aeroporto (FIDS) ──
+var FIDS={type:'dep',style:'modern',page:0,prev:{},belt:'1',gate:null,tm:null,pt:null};
+function fidsOpen(type){FIDS.type=type||'dep';FIDS.page=0;let el=document.getElementById('fids');if(!el){el=document.createElement('div');el.id='fids';document.body.appendChild(el);}el.style.display='flex';try{el.requestFullscreen&&el.requestFullscreen().catch(()=>{});}catch(e){}
+  clearInterval(FIDS.tm);FIDS.tm=setInterval(()=>_fidsRender(false),1000);clearInterval(FIDS.pt);FIDS.pt=setInterval(()=>{FIDS.page++;_fidsRender(true);},9000);_fidsRender(true);}
+function fidsClose(){const el=document.getElementById('fids');if(el)el.style.display='none';clearInterval(FIDS.tm);clearInterval(FIDS.pt);try{document.fullscreenElement&&document.exitFullscreen();}catch(e){}}
+function fidsSet(k,v){FIDS[k]=v;FIDS.page=0;FIDS.prev={};_fidsRender(true);}
+function _ff(txt,len,key){txt=String(txt||'').toUpperCase();if(FIDS.style!=='flap')return _tvEsc(txt);const s=txt.padEnd(len).slice(0,len),old=FIDS.prev[key]||'';FIDS.prev[key]=s;
+  return`<span class="ff">${[...s].map((ch,i)=>`<i class="${old[i]!==ch?'fl':''}" style="animation-delay:${(i*37%300)}ms">${ch===' '?'&nbsp;':_tvEsc(ch)}</i>`).join('')}</span>`;}
+function _fidsRender(full){const el=document.getElementById('fids');if(!el||el.style.display==='none')return;const now=new Date(),clk=now.toLocaleTimeString('pt-BR');
+  if(!full){const c=el.querySelector('.fd-clk');if(c)c.textContent=clk;return;}
+  let dep=[],arr=[];try{dep=depRows(todayIdx,'ALL','');arr=arrRows(todayIdx,'ALL','');}catch(e){}const T=FIDS.type,flap=FIDS.style==='flap';
+  const per=Math.max(6,Math.floor((window.innerHeight-210)/(flap?58:54)));let body='',title='';
+  const stTxt=(r,m)=>{if(m==='arr'){const p=_arrPhase(r);return p?p.l:({sch:'PREVISTO',arr:'EM VOO',del:'ATRASADO',div:'ALTERNADO',lnd:'POUSOU',taxi:'TAXIANDO',can:'CANCELADO'})[r.st]||'';}return({sch:'PREVISTO',ont:'NO HORÁRIO',board:'EMBARQUE',final:'ÚLTIMA CHAMADA',taxi:'PORTÃO FECHADO',dep:'DECOLOU',del:'ATRASADO',can:'CANCELADO'})[r.st]||'';};
+  const stC=(r,m)=>{const s=m==='arr'?((_arrPhase(r)||{}).c||r.st):r.st;return/del|can|div/.test(s)?'bad':/final|board|bagon/.test(s)?'go':'';};
+  if(T==='dep'||T==='arr'){const rows=T==='dep'?dep:arr,pages=Math.max(1,Math.ceil(rows.length/per)),pg=FIDS.page%pages,sl=rows.slice(pg*per,pg*per+per);title=T==='dep'?'PARTIDAS · DEPARTURES':'CHEGADAS · ARRIVALS';
+    body=`<div class="fd-th ${T}"><span>${T==='dep'?'Partida':'Chegada'}</span><span>Voo</span><span>${T==='dep'?'Destino':'Origem'}</span><span>${T==='dep'?'Portão':'Esteira'}</span><span>Observação</span></div>
+     ${sl.map((r,i)=>{const d=opsDelay(T,r.iata,r.time),est=d>=5?addM(r.time,d):'';return`<div class="fd-row ${T} ${i%2?'alt':''}"><span class="fd-t">${_ff(r.time,5,T+i+'t')}${est?`<em>${est}</em>`:''}</span><span class="fd-fn"><i style="background:${(AL[r.al]||{}).color||'#555'}"></i>${_ff(r.fnum,7,T+i+'f')}</span><span class="fd-d">${_ff(r.dest.split(' – ')[0].replace(/\s*\(via.*\)/,''),16,T+i+'d')}</span><span class="fd-g">${_ff(T==='dep'?r.gate:r.belt,3,T+i+'g')}</span><span class="fd-s ${stC(r,T)}">${_ff(stTxt(r,T),16,T+i+'s')}</span></div>`;}).join('')}
+     <div class="fd-pg">página ${pg+1} de ${pages}</div>`;}
+  else if(T==='gate'){const gs=[...new Set(dep.map(r=>r.gate))].sort();if(!FIDS.gate||!gs.includes(FIDS.gate))FIDS.gate=gs[0];const fl=dep.filter(r=>r.gate===FIDS.gate),r=fl[0],nx=fl[1];title='PORTÃO · GATE '+(FIDS.gate||'');
+    body=`<div class="fd-sel">Portão: <select onchange="fidsSet('gate',this.value)">${gs.map(g=>`<option ${g===FIDS.gate?'selected':''}>${g}</option>`).join('')}</select></div>`+(r?`<div class="fd-gate" style="--ac:${(AL[r.al]||{}).color||'#555'}"><div class="fg-al">${_tvEsc((AL[r.al]||{}).name||r.al)}</div><div class="fg-fn">${r.fnum}</div><div class="fg-d">${_tvEsc(r.dest)}</div>
+      <div class="fg-row"><div><small>PARTIDA</small><b>${r.time}${opsDelay('dep',r.iata,r.time)>=5?` → ${addM(r.time,opsDelay('dep',r.iata,r.time))}`:''}</b></div><div><small>EMBARQUE</small><b>${addM(r.time,-40)}</b></div><div><small>SITUAÇÃO</small><b class="${stC(r,'dep')}">${stTxt(r,'dep')}</b></div></div>
+      ${nx?`<div class="fg-nx">Próximo neste portão: ${nx.fnum} · ${_tvEsc(nx.dest.split(' – ')[0])} · ${nx.time}</div>`:''}</div>`:'<div class="fd-empty">Nenhum voo neste portão.</div>');}
+  else{const bs=BELTS;if(!bs.includes(FIDS.belt))FIDS.belt=bs[0];const fl=arr.filter(r=>r.belt===FIDS.belt&&_arrPhase(r)&&_arrPhase(r).c!=='end').slice(0,3);title='ESTEIRA · BAGGAGE CLAIM '+FIDS.belt;
+    body=`<div class="fd-sel">Esteira: <select onchange="fidsSet('belt',this.value)">${bs.map(g=>`<option ${g===FIDS.belt?'selected':''}>${g}</option>`).join('')}</select></div><div class="fd-belt"><div class="fb-n">${FIDS.belt}</div><div>${fl.map(r=>{const p=_arrPhase(r);return`<div class="fb-f"><b>${r.fnum}</b><span>${_tvEsc(r.dest.split(' – ')[0])}</span><em class="${/bagon/.test(p.c)?'go':''}">${_tvEsc(p.l.replace(/ · esteira \d+|Esteira \d+ · /,''))}</em></div>`;}).join('')||'<div class="fd-empty">Nenhum voo nesta esteira agora.</div>'}</div></div>`;}
+  const w=(()=>{try{return _metarData().temp;}catch(e){return'';}})();const o=opsNow();
+  el.className=flap?'flap':'';el.innerHTML=`<div class="fd-top"><div class="fd-logo">GRU</div><div class="fd-title">${title}</div><div class="fd-meta"><span class="fd-clk">${clk}</span><small>${w?w+'°C · ':''}Guarulhos</small></div></div>
+   ${o?`<div class="fd-ops">${o.type==='fog'?'🌫 NEBLINA · OPERAÇÃO POR INSTRUMENTOS · POSSÍVEIS ATRASOS':'⛈ TEMPESTADE · PISTAS FECHADAS · ATRASOS'}</div>`:''}<div class="fd-body">${body}</div>
+   <div class="fd-ctl">${[['dep','Partidas'],['arr','Chegadas'],['gate','Portão'],['belt','Esteira']].map(x=>`<button class="${T===x[0]?'on':''}" onclick="fidsSet('type','${x[0]}')">${x[1]}</button>`).join('')}<button onclick="fidsSet('style','${flap?'modern':'flap'}')">${flap?'🖥 Moderno':'🔤 Letreiro'}</button><button onclick="fidsClose()">✕ Fechar</button></div>`;}
+// ── arrumação: Extras ──
+const EXTRAS=['bordo','bilhet','checkin'];
+function _extrasNav(cur){return`<div class="ex-nav"><span>🎮 Extras</span>${[['bordo','✈ A Bordo'],['bilhet','🎫 Bilheteria e fiscal'],['checkin','🧳 Check-in']].map(x=>`<button class="${cur===x[0]?'on':''}" onclick="showV('${x[0]}')">${x[1]}</button>`).join('')}</div>`;}
+function extrasRender(){const r=document.getElementById('extras-root');if(!r)return;r.innerHTML=`<div class="tv-card ex-menu"><h3>🎮 Extras</h3><p>Experiências e modos de jogo do simulador, fora do painel principal.</p><div class="ex-g">
+  <button onclick="showV('bordo')"><span>✈</span><b>A Bordo</b><small>Escolha um voo e viaje: embarque, decolagem, tela da poltrona e pouso.</small></button>
+  <button onclick="showV('bilhet')"><span>🎫</span><b>Bilheteria e fiscal</b><small>Venda passagens do VLT, use a máquina de bilhetes ou confira bilhetes dentro do trem.</small></button>
+  <button onclick="showV('checkin')"><span>🧳</span><b>Check-in</b><small>Atenda o balcão: documentos, bagagem, assento e cartão de embarque.</small></button></div></div>`;}
+
 // ════════ SONS DOS AVISOS · GRU (diferentes de Confins e de São José; um por linha) ════════
 function _sfxEP(c,t,f,vol,len){len=len||1.1;_sfxTone(c,t,f,len,'sine',vol);_sfxTone(c,t,f*2,len*.5,'triangle',vol*.22);_sfxTone(c,t,f*3,len*.18,'sine',vol*.07);}   // piano elétrico
 function _sfxGlide(c,t,f1,f2,len,type,vol){const o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+len*.6);
@@ -5183,6 +5350,8 @@ function _tvShell(){
   else{if(NET.hl&&!_netSet().some(x=>x.key===NET.hl))NET.hl=null;_netGeoInit();_netInfo(true);_netGT=0;_netGeoTrains();}}
 function _tvTick(force){if(TV.view==='net'){const tab=document.getElementById('tab-transit');if(!tab||tab.style.display==='none')return;if(TV.mode==='metro'&&NET.view==='sch')_netTrains();else _netGeoTrains();_netInfo(force);return;}const r=_tvTick0(force);_v8Tick();return r;}
 </script>
+<div class="wrap" id="tab-guia" style="display:none"><div id="guia-root"></div></div>
+<div class="wrap" id="tab-extras" style="display:none"><div id="extras-root"></div></div>
 <div class="wrap" id="tab-bordo" style="display:none"><div id="fly-root"></div></div>
 <div class="wrap" id="tab-bilhet" style="display:none"><div id="bil-root"></div></div>
 <div class="wrap" id="tab-checkin" style="display:none"><div id="chk-root"></div></div>
