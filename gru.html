@@ -806,6 +806,51 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
 .fd-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:10px 0}.fd-g div{background:#0f1822;border-radius:12px;padding:10px}.fd-g span{display:block;color:#78909c;font-size:.68rem;text-transform:uppercase}.fd-g b{display:block;font-size:1.4rem}.fd-g em{color:#90a4ae;font-size:.72rem;font-style:normal}
 .fly-seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:10px}.fly-seg div{background:#0f1822;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:3px}.fly-seg span{font-size:1.8rem}.fly-seg em{font-style:normal;color:#90a4ae;font-size:.78rem}
 .fly-end{text-align:center;padding:30px 10px}.fe-ic{font-size:4rem}.fe-t{font-size:1.5rem;font-weight:800;margin:8px 0}
+.bil-modes{display:flex;gap:8px;margin-bottom:8px}.bil-modes button{flex:1;border:1px solid #2b3d52;background:#0f1a26;color:#cfd8dc;border-radius:12px;padding:10px;font-size:.95rem;cursor:pointer}.bil-modes button.on{background:#ffd740;color:#111;font-weight:700}
+.bil-st{display:flex;gap:8px;align-items:center;margin-bottom:10px;color:#90a4ae}.bil-st select{flex:1}
+.bil-intro{padding:18px;text-align:center}.bil-intro .bi-ic{font-size:3.5rem}.bil-intro p{color:#b0bec5;max-width:620px;margin:8px auto}.bil-intro label{display:block;margin:6px;color:#cfd8dc}
+.fly-b.big{padding:10px 16px;font-size:.98rem;font-weight:700;background:#1b5e20;border-color:#43a047}.fly-b[disabled]{opacity:.4;cursor:not-allowed}
+.bil-top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:8px 12px;background:#0f1a26;border-radius:12px;margin-bottom:8px;font-size:.88rem}.bil-top i{font-style:normal;letter-spacing:2px}
+.bil-pax{display:flex;gap:12px;align-items:center;padding:12px}.bp-face{font-size:3.2rem;animation:bpf 2.5s ease-in-out infinite}@keyframes bpf{50%{transform:translateY(-3px)}}
+.bp-b{flex:1}.bp-n{font-weight:700}.bp-n small{color:#90a4ae;font-weight:400}.bp-say{font-size:1.05rem;margin:4px 0;color:#fff}.bp-pat{height:7px;background:#1d2733;border-radius:4px;overflow:hidden}.bp-pat b{display:block;height:100%;transition:width .25s}
+.bil-msg{min-height:1.6em;padding:4px 12px;font-size:.92rem;color:#cfd8dc}.bil-msg.bad{color:#ff8a80}.bil-msg.ok{color:#69f0ae}
+.bil-term{padding:10px}.bt-h{font-weight:700;color:#90caf9;margin-bottom:6px}.bil-sec{margin:8px 0}.bil-sec>small,.bil-opts small{display:block;color:#78909c;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.bil-chips{display:flex;flex-wrap:wrap;gap:6px}.bil-chips button{border:2px solid var(--lc);background:transparent;color:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;font-size:.88rem}.bil-chips button.on{background:var(--lc)}.bil-chips.big button{padding:12px 16px;font-size:1rem}
+.bil-dest{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px}.bil-dest button{display:flex;justify-content:space-between;gap:6px;border:1px solid #2b3d52;background:#0f1a26;color:#e0e0e0;border-radius:10px;padding:8px 10px;cursor:pointer;text-align:left;font-size:.85rem}.bil-dest button em{font-style:normal;color:#69f0ae;font-family:monospace;white-space:nowrap}.bil-dest button.on{border-color:#ffd740;background:#3a3000}
+.bil-opts{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}.bil-qty{display:flex;align-items:center;gap:8px}.bil-qty button{width:34px;height:34px;border-radius:10px;border:1px solid #2b3d52;background:#13202e;color:#fff;font-size:1.1rem;cursor:pointer}.bil-qty b{min-width:22px;text-align:center;font-size:1.2rem}
+.bil-tot{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #1d2733;padding-top:10px;margin-top:8px;font-size:1.05rem}.bil-tot b{color:#69f0ae;font-family:monospace;font-size:1.3rem}
+.bil-pay{display:grid;grid-template-columns:minmax(240px,320px) 1fr;gap:10px;align-items:start}@media(max-width:720px){.bil-pay{grid-template-columns:1fr}}
+.bil-tk{background:#fffbea;color:#111;border-radius:14px;overflow:hidden;box-shadow:0 6px 18px #0008;font-family:system-ui;animation:tkp .5s ease-out}@keyframes tkp{from{transform:translateY(-30px);opacity:0}}
+.tk-h{background:var(--lc);color:#fff;display:flex;justify-content:space-between;padding:8px 12px;font-size:.85rem}.tk-r{display:flex;align-items:center;gap:6px;padding:10px 12px}.tk-r div{flex:1}.tk-r small{display:block;color:#777;font-size:.65rem}.tk-ar{flex:none!important;font-size:1.3rem;color:#777}
+.tk-f{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;padding:0 12px 8px;font-size:.82rem;border-bottom:2px dashed #ccc}.tk-f b{font-size:1.1rem}
+.tk-q{display:flex;gap:10px;align-items:center;padding:10px 12px}.tk-q svg{width:64px;height:64px;flex:none}.tk-q small{color:#666;font-size:.7rem}
+.bil-cash,.bil-card{padding:10px}.bil-card{text-align:center}.bc-ic{font-size:3rem}.bk-l{margin:6px 0;font-size:.95rem}.bk-l b{font-family:monospace}.bk-l .ok{color:#69f0ae}.bk-l em{color:#78909c;font-size:.8rem}
+.bk-it{border:1px solid #455a64;background:#13202e;color:#fff;border-radius:8px;padding:2px 6px;margin:2px;cursor:pointer;font-size:.8rem}
+.bil-drawer{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:6px;margin:8px 0}.bil-drawer button{border-radius:10px;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;border:1px solid #2b3d52}
+.bil-drawer .bd-n{background:linear-gradient(135deg,#2e7d32,#1b5e20);color:#fff}.bil-drawer .bd-c{background:radial-gradient(circle,#ffe082,#c49000);color:#3a2a00;border-radius:999px}.bil-drawer b{font-size:1.1rem}.bil-drawer small{font-size:.6rem;opacity:.8}.bil-drawer button[disabled]{opacity:.3}
+.bil-wait{padding:24px;text-align:center;color:#90a4ae}
+.bil-sum{padding:14px}.bs-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin:10px 0}.bs-g div{background:#0f1822;border-radius:12px;padding:10px}.bs-g span{display:block;color:#78909c;font-size:.7rem;text-transform:uppercase}.bs-g b{font-size:1.25rem}.bs-g .ok{color:#69f0ae}.bs-g .bad{color:#ff5252}.bs-nota{font-size:1.3rem;text-align:center;margin:10px}
+.bil-atm{max-width:720px;margin:0 auto;background:linear-gradient(180deg,#263238,#11181d);border-radius:22px;padding:14px;border:3px solid #37474f;box-shadow:inset 0 0 0 2px #0006}
+.atm-top{text-align:center;font-weight:800;letter-spacing:.06em;color:#b0bec5;margin-bottom:10px}.atm-scr{background:#06121f;border:2px solid #0d47a1;border-radius:14px;padding:14px;min-height:360px;display:flex;flex-direction:column;gap:10px}
+.atm-h{font-size:1.2rem;font-weight:700;color:#90caf9}.atm-tot{font-size:1.1rem}.atm-tot b{color:#69f0ae;font-family:monospace}.atm-row{display:flex;flex-wrap:wrap;gap:8px}.atm-big{font-size:4rem;text-align:center}.atm-q span{color:#90a4ae;margin-right:6px}
+.atm-ch{background:#0f1822;border-radius:10px;padding:8px}.atm-ch span{margin-right:6px}
+.evt-ban{display:flex;gap:10px;align-items:center;background:linear-gradient(90deg,#6a1b9a55,transparent);border-left:4px solid #ce93d8;border-radius:10px;padding:8px 12px;margin:6px 0;font-size:.9rem}
+.evt-ic{font-size:1.8rem}.evt-ban i{font-style:normal;background:#ff1744;color:#fff;border-radius:6px;padding:0 6px;font-size:.72rem;margin-left:6px;animation:bgo 1s steps(2) infinite}.evt-ban small{display:block;color:#ce93d8}.evt-ban em{font-style:normal;color:#fff;border-radius:5px;padding:0 5px;margin:0 2px;font-size:.72rem;font-weight:700}
+.lost-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;margin:8px 0}.lost-g button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;border:1px solid #2b3d52;background:#0f1a26;color:#e0e0e0;border-radius:10px;padding:8px;cursor:pointer;text-align:left}.lost-g span{font-size:1.6rem}.lost-g small{color:#78909c;font-size:.72rem}
+.fis-cars{display:flex;gap:6px;overflow-x:auto;margin-bottom:8px}.fis-cars button{flex:none;border:1px solid #2b3d52;background:#0f1a26;color:#cfd8dc;border-radius:10px;padding:6px 12px;cursor:pointer;font-size:.85rem}.fis-cars button small{display:block;color:#78909c;font-size:.7rem}.fis-cars button.exe{border-color:#ffd740}.fis-cars button.on{background:#e3f2fd;color:#05080d}
+.fis-seats{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:6px;margin-bottom:8px}.fis-seats button{border:1px solid #2b3d52;background:#0f1a26;border-radius:12px;padding:6px;cursor:pointer;font-size:1.8rem;display:flex;flex-direction:column;align-items:center;color:#fff}.fis-seats small{font-size:.65rem;color:#90a4ae}.fis-seats button.on{border-color:#ffd740;background:#3a3000}.fis-seats button.done{opacity:.35}
+.fis-det{padding:12px;display:flex;flex-direction:column;gap:10px}.bil-tk.sm{max-width:420px}.fis-noticket{font-size:1.2rem;color:#ff8a80;padding:10px}.fis-card{background:#e3f2fd;color:#0d47a1;border-radius:10px;padding:8px 10px;max-width:420px;font-size:.85rem}
+.fis-act{display:flex;flex-wrap:wrap;gap:6px}.fis-irr{border-color:#ff8a80!important;color:#ffccbc!important}
+.chk-rules{display:flex;flex-direction:column;gap:3px;background:#0f1822;border-radius:12px;padding:10px;margin:10px auto;max-width:520px;text-align:left;font-size:.88rem}
+.chk-steps{display:flex;gap:4px;margin:6px 0}.chk-steps span{flex:1;text-align:center;font-size:.78rem;padding:5px;border-radius:8px;background:#0f1822;color:#78909c}.chk-steps .on{background:#90caf9;color:#05080d;font-weight:700}.chk-steps .done{color:#69f0ae}
+.chk-res{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;border-left:5px solid var(--lc);background:#0f1822;border-radius:10px;padding:8px 10px;margin-bottom:10px}.chk-res small,.chk-doc small,.chk-bp small{display:block;color:#78909c;font-size:.62rem;letter-spacing:.06em}.chk-res em{font-style:normal;color:#90a4ae;font-size:.72rem}
+.chk-doc{max-width:430px;border-radius:14px;overflow:hidden;background:#fdf6e3;color:#222;margin-bottom:10px;box-shadow:0 4px 14px #0007}.chk-doc.PASS{background:#e8eaf6}.chk-doc.CNH{background:#e8f5e9}.cd-h{background:#1a237e;color:#fff;padding:6px 10px;font-size:.78rem;font-weight:700}.chk-doc.RG .cd-h{background:#2e7d32}.chk-doc.CNH .cd-h{background:#00695c}
+.cd-b{display:flex;gap:12px;padding:10px}.cd-ph{font-size:3.4rem;background:#fff;border-radius:8px;padding:4px 8px}.cd-b b{display:block;margin-bottom:4px}.cd-visa{border-top:1px dashed #9fa8da;padding:8px 10px;font-size:.85rem}
+.chk-scale{display:flex;gap:16px;align-items:center;background:#0f1822;border-radius:14px;padding:14px;margin-bottom:10px}.cs-bag{font-size:3.4rem;animation:bpf 1.2s ease-in-out infinite}.cs-d b{display:block;font-size:2.2rem;font-family:monospace;color:#ffd740}.cs-d em{color:#90a4ae;font-style:normal;font-size:.8rem}
+.chk-pref{margin-bottom:6px}.chk-seats{display:flex;flex-direction:column;gap:3px;max-height:420px;overflow-y:auto;background:#0f1822;border-radius:14px;padding:10px;align-items:center}.cs-nose{color:#78909c;font-size:.8rem;margin-bottom:4px}
+.cs-row{display:flex;gap:4px;align-items:center}.cs-row span{width:22px;color:#78909c;font-size:.72rem;text-align:right}.cs-row i{width:16px}.cs-row button{width:30px;height:28px;border-radius:6px 6px 3px 3px;border:none;background:#2e7d32;color:#fff;font-size:.7rem;cursor:pointer}.cs-row button[disabled]{background:#37474f;color:#546e7a;cursor:not-allowed}.chk-seats.exe .cs-row button{width:42px;height:34px;background:#6a1b9a}
+.chk-bp{max-width:520px;background:#fff;color:#111;border-radius:14px;overflow:hidden;margin-bottom:10px;animation:tkp .5s ease-out}.bp-h{background:var(--lc);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:.78rem}.bp-h b{font-size:1rem}
+.bp-g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px}.bp-g div:first-child{grid-column:span 4}.bp-g b{font-size:1.05rem}.bp-tag{border-top:2px dashed #ccc;padding:8px 12px;font-size:.8rem;color:#444}
 </style>
 </head>
 <body><div class="imm-toast" id="imm-toast"></div>
@@ -845,6 +890,8 @@ body.radar-on #live-map,body.radar-on #patio-svg{position:relative}
   <button class="vbtn" onclick="showV('mgr')">⚙ Status</button>
   <button class="vbtn" onclick="showV('transit')">🚇 Transporte</button>
   <button class="vbtn" onclick="showV('bordo')">✈ A Bordo</button>
+  <button class="vbtn" onclick="showV('bilhet')">🎫 Bilheteria</button>
+  <button class="vbtn" onclick="showV('checkin')">🧳 Check-in</button>
   <button class="vbtn" onclick="showV('patio')">⊞ Pátio</button>
   <button class="vbtn" onclick="showV('stats')">📊 Estatísticas</button>
   <button class="vbtn" onclick="showV('meteo')">🌦️ Meteorologia</button>
@@ -1551,11 +1598,11 @@ function rInfo(){
 }
 
 // ── VIEW SWITCHER ─────────────────────────────────────────────────────────────
-function showV(name){if(name==='bordo')setTimeout(flyRender,0);
-  ["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","bordo","patio","stats","meteo","atc","emg","imm","priv","info"].forEach(t=>
+function showV(name){if(name==='bordo')setTimeout(flyRender,0);if(name==='bilhet')setTimeout(bilRender,0);if(name==='checkin')setTimeout(chkRender,0);
+  ["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","bordo","bilhet","checkin","patio","stats","meteo","atc","emg","imm","priv","info"].forEach(t=>
     document.getElementById("tab-"+t).style.display=t===name?"block":"none");
   document.querySelectorAll(".vbtn").forEach((b,i)=>
-    b.classList.toggle("active",["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","bordo","patio","stats","meteo","atc","emg","imm","priv","info"][i]===name));
+    b.classList.toggle("active",["dep","arr","pax","hist","live","map","conn","gate","mgr","transit","bordo","bilhet","checkin","patio","stats","meteo","atc","emg","imm","priv","info"][i]===name));
   if(name==="transit"){buildTransitCards();}
   if(name==="patio"){buildPatio();}
   if(name==="stats"){buildStats();}
@@ -3197,7 +3244,7 @@ function _tvNextAtRaw(ln,s,dir,now,count){const n=ln.stops.length,p=_tvFs(ln,dir
   for(let ti=0;ti<trips.length&&out.length<count;ti++){const arr=trips[ti]+(p===0?-(ln.od||ln.dwell):o.arr[p]),dep=trips[ti]+o.dep[p];if(dep<now)continue;
     out.push({ti,dir,arr,dep,status:now>=arr?'plat':(arr-now<=90?'near':'way')});}
   return out;}
-function _tvCrowd(ln,dir,ti,car){const t0=_tvTrips(ln,dir)[ti]||0;const h=Math.floor(t0/3600)%24;let b=((h>=6&&h<9)||(h>=17&&h<20))?3:(h>=22||h<6)?1:2;
+function _tvCrowd0(ln,dir,ti,car){const t0=_tvTrips(ln,dir)[ti]||0;const h=Math.floor(t0/3600)%24;let b=((h>=6&&h<9)||(h>=17&&h<20))?3:(h>=22||h<6)?1:2;
   const r=(ti*73+(car||0)*31+dir*17)%7;b+=r<2?-1:r>4?1:0;return Math.max(0,Math.min(4,b));}
 function _tvCrowdH(lv){const c=TV_CROWD_C[lv];return`<span class="tv-crowd" style="color:${c}">${[0,1,2,3].map(i=>`<i class="${i<lv?'f':''}"></i>`).join('')}</span> <span style="color:${c};font-size:.66rem;font-weight:700">${TV_CROWD_L[lv]}</span>`;}
 function _tvDoor(ln,dir,p){const s=_tvFs(ln,dir,p);return((s*7+dir*3)%2)?'esquerda':'direita';}
@@ -4039,7 +4086,8 @@ setInterval(()=>{if(TV.incident&&_tvNow()>TV.incident.until)trainIncidentClear()
 function buildEmergencyControls(){_buildEmg0();const el=document.getElementById('emg-controls');if(!el)return;
   el.innerHTML+=`<div class="emg-sec">🚆 VLT Tietê${_tvInc()?` · <span style="color:#ffd740">ativo: ${TV_INC.find(x=>x.id===TV.incident.id).title}</span> <button class="gv-chip" onclick="trainIncidentClear();buildEmergencyControls()">✓ Normalizar</button>`:''}</div>`
     +TV_INC.map(x=>`<button class="emg-btn" style="border-color:${x.color}" onclick="trainIncident('${x.id}');buildEmergencyControls()"><span>${x.icon}</span>${x.title}</button>`).join('')
-    +(NET_PANE?`<button class="emg-btn" style="border-color:#69f0ae" onclick="paneClear()"><span>✅</span>Normalizar a rede (pane ativa)</button>`:`<button class="emg-btn" style="border-color:#ff1744" onclick="paneStart()"><span>🔧</span>Pane na via (atrasa as linhas que dividem o trilho)</button>`);}
+    +(NET_PANE?`<button class="emg-btn" style="border-color:#69f0ae" onclick="paneClear()"><span>✅</span>Normalizar a rede (pane ativa)</button>`:`<button class="emg-btn" style="border-color:#ff1744" onclick="paneStart()"><span>🔧</span>Pane na via (atrasa as linhas que dividem o trilho)</button>`)
+    +`<button class="emg-btn" style="border-color:#ce93d8" onclick="evtNow();buildEmergencyControls()"><span>🎉</span>Evento na cidade agora (jogo, show, feriado…)</button>`;}
 function _tvStripTick(ln,now,focus){_tvStripTick0(ln,now,focus);const x=_tvInc();if(!x||ln.kind!=='metro')return;
   if(x.st!=null){const el=document.getElementById('tvsub'+x.st);if(el)el.textContent='⛔ estação fechada';}
   else{const el=document.getElementById('tvsub0');if(el&&!/⚠/.test(el.textContent))el.textContent='⚠ '+TV_INC.find(i=>i.id===x.id).title.toLowerCase()+' · '+el.textContent;}}
@@ -4318,6 +4366,7 @@ function _v8Refresh(){try{if(TV.view==='net'){_tvShell();}else{_v8Inject();}}cat
 // ── conexões e clima a bordo ──
 function _tvAtExtras(ln,R,now,i){const n=ln.stops.length,nm=ln.stops[_tvFs(ln,R.dir,i)],isM=ln.kind==='metro',air=isM&&/^T\d/.test(nm),out={pt:'',en:'',es:''};
   const prev=i>0?ln.stops[_tvFs(ln,R.dir,i-1)]:null,c=_cityOf(nm);if(!air&&c!==(prev&&_cityOf(prev))){const w=_wxSay(c);out.pt+=w.pt;out.en+=w.en;out.es+=w.es;}
+  const ev=evtActive();if(ev&&nm===ev.e.st){out.pt+=` Esta é a estação para o ${ev.e.pt}. Siga as placas e os funcionários de colete.`;out.en+=` This is the station for the ${ev.e.en}. Please follow the signs and staff.`;out.es+=` Esta es la estación para el ${ev.e.es}. Siga las señales y al personal.`;}
   if(air)return out;
   const set=_netLinesSet(ln),xs=set.filter(o=>o!==ln&&o.stops.includes(nm)).slice(0,4),parts={pt:[],en:[],es:[]};
   xs.forEach(o=>{const s=o.stops.indexOf(nm),N=o.stops.length;let d=0;if(_tvFs(o,0,s)===N-1)d=1;const x=_tvNextAt(o,s,d,now+60,1)[0];if(!x)return;
@@ -4352,7 +4401,7 @@ function _v8Fares(){const ln=_tvCur(),s=TV.stop[ln.key]??0,n=ln.stops.length,ld=
      <div class="cls-i">${cls==='exe'?'Executiva: poltrona reclinável larga, tomada, refeição e bebidas inclusas, embarque prioritário. Carros 1 e 2.':'Econômica: poltrona confortável, tomada USB e Wi-Fi. Carro-lanchonete no carro 5. Carros 3 a 8.'}</div>`:''}
    ${dest.slice(0,ld?12:6).map(x=>`<div class="fr-r"><span>${_tvEsc(_tvmNm(ln.stops[x.k]))}</span><em>${_tvDurT(x.min).pt.replace(' minutos',' min').replace(' horas','h').replace(' hora','h').replace(' e ',' ')}</em><b>${ld?(cls==='exe'?x.f.exe:x.f.eco):x.f.eco}</b></div>`).join('')}
    ${ld?'':'<div class="cls-i">Valor por viagem, com integração gratuita nas baldeações por 2 horas.</div>'}</div>`;}
-function _v8Inject(){const body=document.getElementById('tv-body');if(!body)return;body.querySelectorAll('.v8x').forEach(e=>e.remove());const ln=_tvCur();
+function _v8Inject(){const body=document.getElementById('tv-body');if(!body)return;body.querySelectorAll('.v8x').forEach(e=>e.remove());const ln=_tvCur();{const eb=_evtBanner(),sb=body.querySelector('.tv-sub');if(eb&&sb)sb.insertAdjacentHTML('afterend',`<div class="v8x">${eb}</div>`);}
   if(TV.view==='stop'){const first=body.querySelector('.tv-card');if(!first)return;const h=`<div class="v8x" id="v8-brd">${_v8Board()}</div><div class="v8x">${_v8Fares()}</div>`;first.insertAdjacentHTML('afterend',h);}
   else if(TV.view==='ride'&&_tvLD(ln)){const r0=document.getElementById('tv-ride'),r=r0&&(r0.closest('.tv-grid2')||r0);if(r)r.insertAdjacentHTML('beforebegin',`<div class="v8x cls-badge">${TV.cls==='exe'?'🛋 Você está na <b>Executiva</b> · carro 2 · refeição inclusa':'💺 Você está na <b>Econômica</b> · carro 5 · carro-lanchonete ao lado'} <button onclick="tvSetCls('${TV.cls==='exe'?'eco':'exe'}')">trocar</button></div>`);}
   if(NET_PANE&&TV.view!=='stop'){const sb=body.querySelector('.tv-sub');if(sb)sb.insertAdjacentHTML('afterend',`<div class="v8x">${_paneBanner()}</div>`);}}
@@ -4483,11 +4532,11 @@ function _flyPlan(F){const B=1200,TO=B+900,air=Math.max(1500,F.dur*60-900),LD=TO
   if(air>2400)add(P.beltOff+300,'service');if(air>5400)add(TO+air*.5,'capMid');if(!F.dom&&air>7200)add(TO+air*.45,'duty');if(!F.dom)add(TO+air*.7,'dest');if(air>25200)add(LD-5400,'breakfast');
   const nT=air>14400?3:air>5400?2:air>2400?1:0;for(let i=0;i<nT;i++){const a=P.beltOff+600,b=P.descStart-900;if(b>a){const t=a+(b-a)*(i+rnd())/nT;add(t,'turbOn');add(t+420+rnd()*480,'turbOff');}}
   if(air>10800&&rnd()<.35)add(P.beltOff+(P.descStart-P.beltOff)*(.3+rnd()*.4),'medical');
-  add(P.descStart,'descent');add(Math.max(P.descStart+60,LD-1200),'beltOn');add(LD-300,'crewLD');add(LD,'touch');add(LD+60,'welcome');add(P.open,'open');add(P.end,'end');
+  add(P.descStart,'descent');add(Math.max(P.descStart+60,LD-1200),'beltOn');add(LD-300,'crewLD');add(LD,'touch');add(LD+60,'welcome');add(P.open,'open');if(rnd()<.6)add(P.open+150,'lost');add(P.end,'end');
   P.ev=ev.sort((a,b)=>a.t-b.t);return P;}
 function flyStart(fi){const f=FD[fi];if(!f)return;const cls=FLY.cls||'eco',dom=f[2]==='DOM';
   Object.assign(FLY,{on:true,done:false,fi,f,fnum:flightNum(f[6],fi),dest:f[0],iata:f[1],tipo:f[2],dist:f[3],dur:f[4],ac:f[5],al:f[6],dom,cls,
-    seat:cls==='exe'?(1+Math.floor(Math.random()*4))+'ABCD'[Math.floor(Math.random()*4)]:(12+Math.floor(Math.random()*20))+'ABCDEF'[Math.floor(Math.random()*6)],
+    seat:FLY.seatOv||(cls==='exe'?(1+Math.floor(Math.random()*4))+'ABCD'[Math.floor(Math.random()*4)]:(12+Math.floor(Math.random()*20))+'ABCDEF'[Math.floor(Math.random()*6)]),
     grp:cls==='exe'?1:2+Math.floor(Math.random()*3),gate:gate(f[2],fi),term:terminal(f[2],fi),t0:_simNow(),i:0,belt:true,tab:'map',cart:[],movie:null,
     cap:FLY_CAPS[Math.floor(Math.random()*FLY_CAPS.length)],country:_flyCountry(f[1],f[2])});
   FLY.P=_flyPlan(FLY);FLY.i=0;try{const c=_ctx();if(c&&c.state==='suspended')c.resume();}catch(e){}if(FLY.snd!==false){FLY.snd=true;_flyEng(true);}flyRender();_flyTick(true);}
@@ -4548,6 +4597,7 @@ function _flyEvent(k){const F=FLY;
   if(k==='doors'||k==='turbOn'||k==='beltOn')F.belt=true;if(k==='beltOff'||k==='turbOff'||k==='open')F.belt=false;
   if(k==='doors')_flyDoor();if(k==='touch'){_flyTouch();return;}if(k==='takeoff'){_flySay(_flyMsg(k),'belt');return;}
   if(k==='end'){F.done=true;flyRender();return;}
+  if(k==='lost'){const seat=(5+Math.floor(Math.random()*25))+'ABCDEF'[Math.floor(Math.random()*6)],it=lostAdd(`voo ${F.fnum}, poltrona ${seat}`);_lostSay(it,{pt:`na poltrona ${seat} deste voo`,en:`at seat ${seat} on this flight`,es:`en el asiento ${seat} de este vuelo`,kind:'cabin'});return;}
   const m=_flyMsg(k);if(!m)return;const kind=/^brd/.test(k)?'airport':/beltOn|beltOff|turbOn|turbOff/.test(k)?'belt':k==='crewTO'||k==='crewLD'?'call':'cabin';
   _flySay(m,kind,{ttl:/^brd|crew/.test(k)?120:600});}
 function _flyTick(force){if(!FLY.on)return;const P=FLY.P,t=_flyEl();while(FLY.i<P.ev.length&&P.ev[FLY.i].t<=t){const e=P.ev[FLY.i++];if(t-e.t<Math.max(90,30*SIM.speed)||/end|beltOff|beltOn|doors|open/.test(e.k))_flyEvent(e.k);else if(/belt|turb|open|doors/.test(e.k))_flyEvent(e.k);}
@@ -4641,6 +4691,335 @@ function _flyUpd(force){const F=FLY;if(!F.on||F.done)return;const st=_flyState()
   if(q('fly-stats'))q('fly-stats').innerHTML=S.map(s=>`<div><span>${s[0]}</span><b>${s[1]}</b><em>${s[2]}</em></div>`).join('');
   if(F.tab==='film'&&F.movie!=null&&q('fp-tm')){const m=FLY_MOVIES[F.movie],len=parseInt(m[2].match(/(\d)h/)[1])*60+ +m[2].match(/h(\d+)/)[1],el=Math.min(len,(_simNow()-F.mt0)/60000);q('fp-tm').textContent=`${Math.floor(el)} / ${len} min`;const b=document.querySelector('.fp-bar b');if(b)b.style.width=(el/len*100)+'%';}
   if(q('fd-tm'))q('fd-tm').textContent=_flyHM(_simNow(),C.utc);}
+
+
+// ════════ v10 · BILHETERIA (bilheteiro com caixa + máquina de bilhetes) ════════
+const BIL={mode:'bil',st:'T3 · Portal Garoa',easy:true,voice:true,q:[],cur:null,drawer:null,tray:[],sel:{},stats:null,timer:null,machine:{}};
+const BIL_DEN=[200,100,50,20,10,5,2,1,.5,.25,.1,.05];
+const _brl=v=>'R$ '+(Math.round(v*100)/100).toFixed(2).replace('.',',');
+const _c=v=>Math.round(v*100);
+function _bilNum(s){return parseFloat(String(s).replace('R$','').replace(/\./g,'').replace(',','.').trim())||0;}
+function _bilPrice(L,a,b,cls){const f=_tvFare(L,a,b);return _bilNum(cls==='exe'&&f.exe?f.exe:f.eco);}
+function _bilLines(st){return TV_METROS.filter(L=>L.stops.includes(st));}
+function _bilStations(){const s=[];TV_METROS.forEach(L=>L.stops.forEach(n=>{if(!s.includes(n))s.push(n);}));return s;}
+function _bilShort(n){return /^T\d/.test(n)?n.replace(/^T\d\s*·\s*/,'')+' ('+n.slice(0,2)+')':n;}
+function _bilSay(n){const x=n.replace(/^T\d\s*·\s*/,'');return /^Aeroporto|^Corinthians|^Encontros|^Luz$|^Brás|^Tatuapé|^Eng\./.test(x)?x:x.split(' · ')[0];}
+const BIL_ALIAS=[['Santos · Valongo','pro Museu do Café, em Santos'],['Praia Grande · Boqueirão','pra praia, em Praia Grande'],['São Sebastião · Porto de Ilhabela','pegar a balsa pra Ilhabela'],['Corinthians-Itaquera','ver o jogo do Corinthians'],
+ ['Luz','pro Museu da Língua Portuguesa'],['Campinas · Carlos Gomes','pra Unicamp, em Campinas'],['São José dos Campos · Centro','visitar a Embraer, em São José'],['Jundiaí · Serra do Japi','pra Festa da Uva, em Jundiaí'],['Aeroporto de Congonhas','pegar um voo em Congonhas'],['Ribeirão Preto · Califórnia Brasileira','pra Agrishow, em Ribeirão']];
+const BIL_NAMES={pt:['Dona Cida','Seu Antônio','Larissa','Pedro','Marcos','Tia Neide','Rafaela','Joaquim','Bruna','Carlos'],en:['Emily','John','Sarah','Michael','Olivia','David'],es:['Lucía','Mateo','Valentina','Diego','Camila','Javier']};
+const BIL_FACES=['👩','👨','👵','👴','👩‍🦱','👨‍🦰','🧑','👩‍🦳','🧔','👱‍♀️','🧑‍🎓','👨‍💼','👩‍💼','🧕','🧑‍🦯'];
+const FACE_F=['👩','👵','👩‍🦱','👩‍🦳','👱‍♀️','👩‍💼','🧕','👩‍🦰'],FACE_M=['👨','👴','👨‍🦰','🧔','👨‍💼','👱‍♂️','👨‍🦱','👨‍🦳'];
+function _isFem(n){n=String(n).split(' ')[0];return/^(Dona|Tia|Emily|Sarah|Olivia|Sophie|Lucía|Valentina|Camila|Ana|Larissa|Rafaela|Bruna|Fernanda|Juliana|Carla|Gabriela|Patrícia|Priscila)$/.test(n)||(/a$/.test(n)&&!/^(Luca|Joshua)$/.test(n));}
+function _faceFor(n){const p=_isFem(n)?FACE_F:FACE_M;return p[_hashS(n)%p.length];}
+function _bilR(a){return a[Math.floor(Math.random()*a.length)];}
+function _bilNew0(force){const ls=_bilLines(BIL.st);if(!ls.length)return null;const L=force?force.L:_bilR(ls),k=L.stops.indexOf(BIL.st);let d=force?force.d:-1;if(d<0||d===k){do{d=Math.floor(Math.random()*L.stops.length);}while(d===k);}
+  const dest=L.stops[d],ld=_tvLD(L),lang=Math.random()<.68?'pt':Math.random()<.6?'en':'es',cls=ld&&Math.random()<.28?'exe':'eco',r=Math.random(),qty=r<.62?1:r<.88?2:3,meia=Math.random()<.3?1+Math.floor(Math.random()*Math.min(qty,2)):0;
+  const pay=lang==='pt'?_bilR(['cash','cash','card','pix','pix']):_bilR(['card','card','cash']);const nm=_bilR(BIL_NAMES[lang]),face=_faceFor(nm);
+  const total=(_bilPrice(L,k,d,cls)*(qty-meia))+(_bilPrice(L,k,d,cls)/2*meia);let given=0;
+  if(pay==='cash'){const ups=[2,5,10,20,50,100,200].filter(v=>v>=total);const opts=[Math.ceil(total),Math.ceil(total/5)*5,Math.ceil(total/10)*10,...ups.slice(0,2)].filter(v=>v>=total);given=_bilR(opts);if(Math.random()<.12)given=Math.round(total*100)/100;}
+  const al=lang==='pt'&&Math.random()<.3?BIL_ALIAS.find(a=>a[0]===dest):null,dn=_bilSay(dest);
+  const n={pt:['uma passagem','duas passagens','três passagens'],en:['one ticket','two tickets','three tickets'],es:['un boleto','dos boletos','tres boletos']}[lang][qty-1];
+  const hi={pt:_bilR(['Boa tarde!','Oi, tudo bem?','Olá!','Bom dia!']),en:_bilR(['Hi!','Hello!','Good afternoon!']),es:_bilR(['¡Hola!','¡Buenas tardes!'])}[lang];
+  let txt={pt:`${hi} Queria ${n} ${al?al[1]:'para '+dn}${cls==='exe'?', na executiva':''}.`,en:`${hi} ${n.replace(/^./,c=>c.toUpperCase())} to ${dn}${cls==='exe'?', executive class':''}, please.`,es:`${hi} ${n.replace(/^./,c=>c.toUpperCase())} a ${dn}${cls==='exe'?', clase ejecutiva':''}, por favor.`}[lang];
+  if(meia)txt+={pt:meia===qty?(qty>1?' Somos estudantes, é meia.':' Sou estudante, é meia.'):` ${meia===1?'Uma é meia':'Duas são meia'}, de estudante.`,en:` ${meia===qty?'Student fare, please.':meia+' of them student fare.'}`,es:` ${meia===qty?'Somos estudiantes, media tarifa.':meia+' con media tarifa, de estudiante.'}`}[lang];
+  if(ld&&L.reg&&!_tvLD(L))0;
+  return{L,k,d,dest,cls,qty,meia,pay,given,total:Math.round(total*100)/100,lang,nm,face,txt,line:L.code,pat:1,t0:Date.now(),tries:0};}
+function _bilDrawer(){return{200:2,100:4,50:6,20:10,10:15,5:15,2:20,1:30,.5:30,.25:30,.1:40,.05:40};}
+function bilStart(){BIL.drawer=_bilDrawer();BIL.open0=_bilDrawerTot();BIL.q=[];BIL.cur=null;BIL.tray=[];BIL.sel={};BIL.stats={n:0,rev:0,cash:0,card:0,pix:0,err:0,lost:0,stars:[],t0:Date.now()};
+  for(let i=0;i<3;i++){const p=_bilNew();if(p)BIL.q.push(p);}_bilNext();clearInterval(BIL.timer);BIL.timer=setInterval(_bilTick,250);bilRender();}
+function _bilDrawerTot(){return Object.entries(BIL.drawer).reduce((s,[d,n])=>s+(+d)*n,0);}
+function _bilNext(){BIL.cur=BIL.q.shift()||null;BIL.tray=[];BIL.sel={L:null,d:null,cls:'eco',inteira:1,meia:0};BIL.phase='ask';if(BIL.cur){BIL.cur.t0=Date.now();if(BIL.voice)voxSay([{k:BIL.cur.lang,text:BIL.cur.txt}],{force:true});}}
+function _bilTick(){if(!BIL.stats||BIL.closed)return;const now=Date.now();
+  const _ev=evtActive(),_busy=_ev&&_bilLines(BIL.st).some(L=>evtLines(_ev.e).includes(L));if(BIL.q.length<(_busy?8:6)&&(!BIL.lastArr||now-BIL.lastArr>(_busy?4500+Math.random()*4500:9000+Math.random()*9000))){const p=_bilNew();if(p)BIL.q.push(p);BIL.lastArr=now;}
+  const c=BIL.cur;if(c){c.pat=Math.max(0,1-(now-c.t0)/(BIL.easy?110000:75000));if(c.pat<=0){BIL.stats.lost++;BIL.stats.stars.push(1);_bilMsg(`😤 ${c.nm} cansou de esperar e foi embora.`,'bad');_bilNext();bilRender();return;}}
+  else if(BIL.q.length){_bilNext();bilRender();return;}
+  const pb=document.getElementById('bil-pat');if(pb&&c){pb.style.width=(c.pat*100)+'%';pb.style.background=c.pat>.5?'#69f0ae':c.pat>.25?'#ffd740':'#ff5252';}
+  const qn=document.getElementById('bil-qn');if(qn)qn.textContent=BIL.q.length;const qq=document.getElementById('bil-qq');if(qq)qq.innerHTML=BIL.q.map(p=>`<span title="${_tvEsc(p.nm)}">${p.face}</span>`).join('');}
+function _bilMsg(t,k){BIL.msg={t,k,at:Date.now()};const m=document.getElementById('bil-msg');if(m){m.textContent=t;m.className='bil-msg '+(k||'');}}
+function bilPick(k,v){const s=BIL.sel;if(k==='L'){s.L=v;s.d=null;s.cls='eco';}else if(k==='d')s.d=v;else if(k==='cls')s.cls=v;else if(k==='i')s.inteira=Math.max(0,Math.min(9,s.inteira+v));else if(k==='m')s.meia=Math.max(0,Math.min(9,s.meia+v));bilRender();}
+function _bilTotSel(){const s=BIL.sel;if(s.L==null||s.d==null)return 0;const L=TV_METROS[s.L],k=L.stops.indexOf(BIL.st),p=_bilPrice(L,k,s.d,s.cls);return Math.round((p*s.inteira+p/2*s.meia)*100)/100;}
+function bilIssue(){const c=BIL.cur,s=BIL.sel;if(!c||c.type==='lost'||s.L==null||s.d==null||s.inteira+s.meia<1)return;const L=TV_METROS[s.L],dest=L.stops[s.d];
+  const errs=[];if(dest!==c.dest)errs.push({pt:`Não, eu quero ir para ${_bilSay(c.dest)}!`,en:`No, I asked for ${_bilSay(c.dest)}!`,es:`¡No, pedí para ${_bilSay(c.dest)}!`});
+  else if(L!==c.L&&!c.L.stops.includes(dest))errs.push({pt:'Essa linha não vai pra lá!',en:'That line does not go there!',es:'¡Esa línea no va allá!'});
+  if(!errs.length&&s.cls!==c.cls)errs.push(c.cls==='exe'?{pt:'Eu pedi executiva!',en:'I asked for executive class!',es:'¡Pedí clase ejecutiva!'}:{pt:'Executiva não, pode ser econômica!',en:'Economy is fine, not executive!',es:'¡Económica, no ejecutiva!'});
+  if(!errs.length&&(s.inteira+s.meia!==c.qty||s.meia!==c.meia))errs.push({pt:`Não é isso: são ${c.qty} passagens${c.meia?`, ${c.meia} meia`:''}.`,en:`That's not right: ${c.qty} ticket${c.qty>1?'s':''}${c.meia?`, ${c.meia} student`:''}.`,es:`No es eso: son ${c.qty} boletos${c.meia?`, ${c.meia} con media tarifa`:''}.`});
+  if(errs.length){c.tries++;BIL.stats.err++;c.t0-=12000;const e=errs[0];_bilMsg(`🙅 ${c.nm}: ${e[c.lang]}`,'bad');if(BIL.voice)voxSay([{k:c.lang,text:e[c.lang]}],{force:true,interrupt:true});return;}
+  BIL.phase='pay';BIL.tot=_bilTotSel();BIL.tray=[];
+  const say=c.pay==='cash'?{pt:`Aqui, ${_brl(c.given).replace('R$ ','')} reais.`,en:'Here you go, cash.',es:'Aquí tiene, en efectivo.'}:c.pay==='card'?{pt:'Vou passar no cartão.',en:'Card, please.',es:'Con tarjeta, por favor.'}:{pt:'Pode ser no Pix?',en:'Can I pay with Pix?',es:'¿Puedo pagar con Pix?'};
+  _bilMsg(`💬 ${c.nm}: ${say[c.lang]}`,'');if(BIL.voice)voxSay([{k:c.lang,text:say[c.lang]}],{force:true});try{const ctx=_ctx();_sfxTone(ctx,ctx.currentTime+.02,1800,.12,'square',.05);}catch(e){}bilRender();}
+function bilTray(d,add){const n=BIL.drawer;if(add){if(n[d]>0){n[d]--;BIL.tray.push(+d);}}else{const i=BIL.tray.indexOf(+d);if(i>=0){BIL.tray.splice(i,1);n[d]++;}}try{const c=_ctx();_sfxTone(c,c.currentTime+.01,d>=2?600:2400,.05,'triangle',.06);}catch(e){}bilRender();}
+function bilPay(){const c=BIL.cur;if(!c||BIL.phase!=='pay')return;const S=BIL.stats;
+  if(c.pay==='cash'){const need=_c(c.given)-_c(BIL.tot),give=BIL.tray.reduce((s,v)=>s+_c(v),0);
+    if(give!==need){S.err++;c.t0-=8000;_bilMsg(give<need?`🤨 ${c.nm}: ${({pt:'Falta troco!',en:'I think the change is short.',es:'¡Falta cambio!'})[c.lang]}`:`😅 ${c.nm}: ${({pt:'Você me deu troco a mais!',en:'You gave me too much change!',es:'¡Me dio cambio de más!'})[c.lang]}`,'bad');return;}
+    let g=c.given;BIL_DEN.forEach(d=>{while(g>=d-.001){BIL.drawer[d]++;g=Math.round((g-d)*100)/100;}});S.cash+=BIL.tot;}
+  else if(c.pay==='card')S.card+=BIL.tot;else S.pix+=BIL.tot;
+  S.n++;S.rev+=BIL.tot;const star=Math.max(1,Math.min(5,Math.round(1+c.pat*4.4-c.tries)));S.stars.push(star);
+  const fem=_isFem(c.nm),ob=fem?'Obrigada':'Obrigado';const ty={pt:_bilR([ob+'!','Valeu, boa noite!','Muito '+ob.toLowerCase()+'!',ob+', tenha um bom dia!']),en:_bilR(['Thanks a lot!','Thank you!']),es:_bilR(['¡Muchas gracias!','¡Gracias!'])}[c.lang];
+  BIL.last={c,tot:BIL.tot,star};_bilMsg(`${'⭐'.repeat(star)} ${c.nm}: ${ty}`,'ok');if(BIL.voice)voxSay([{k:c.lang,text:ty}],{force:true});
+  try{const ctx=_ctx();[0,.1].forEach((d,i)=>_sfxTone(ctx,ctx.currentTime+d,i?2093:1568,.25,'sine',.12));}catch(e){}_bilNext();bilRender();}
+function bilClose(){BIL.closed=true;clearInterval(BIL.timer);bilRender();}
+function _bilTicketHTML(L,from,to,cls,qty,meia,tot,id){const seed=_hashS(id),cells=[];for(let i=0;i<81;i++)cells.push(((seed>>(i%30))^(i*7))%3===0);
+  return`<div class="bil-tk" style="--lc:${L.color}"><div class="tk-h"><b>VLT Tietê</b><span>${L.code} · ${_tvEsc(L.short)}</span></div><div class="tk-r"><div><small>DE</small><b>${_tvEsc(_bilShort(from))}</b></div><div class="tk-ar">➜</div><div><small>PARA</small><b>${_tvEsc(_bilShort(to))}</b></div></div>
+   <div class="tk-f"><span>${cls==='exe'?'🛋 Executiva':'💺 Econômica'}</span><span>${qty-meia} inteira${qty-meia!==1?'s':''}${meia?` · ${meia} meia${meia>1?'s':''}`:''}</span><b>${_brl(tot)}</b></div>
+   <div class="tk-q"><svg viewBox="0 0 9 9">${cells.map((v,i)=>v?`<rect x="${i%9}" y="${Math.floor(i/9)}" width="1" height="1"/>`:'').join('')}<rect x="0" y="0" width="3" height="3" fill="none" stroke="#000" stroke-width=".5"/><rect x="6" y="0" width="3" height="3" fill="none" stroke="#000" stroke-width=".5"/><rect x="0" y="6" width="3" height="3" fill="none" stroke="#000" stroke-width=".5"/></svg><small>Nº ${id}<br>Válido por 2 horas, com integração gratuita nas baldeações.</small></div></div>`;}
+// ── telas ──
+function bilMode(m){BIL.mode=m;bilRender();}
+function bilRender(){const root=document.getElementById('bil-root');if(!root)return;const sts=_bilStations();
+  const head=`<div class="bil-modes"><button class="${BIL.mode==='bil'?'on':''}" onclick="bilMode('bil')">👨‍💼 Bilheteiro</button><button class="${BIL.mode==='atm'?'on':''}" onclick="bilMode('atm')">🏧 Máquina</button><button class="${BIL.mode==='fis'?'on':''}" onclick="bilMode('fis')">🕵️ Fiscal no trem</button></div>
+   <div class="bil-st">📍 Estação <select class="fsel" onchange="BIL.st=this.value;BIL.stats&&!BIL.closed?bilStart():bilRender()">${sts.map(s=>`<option ${s===BIL.st?'selected':''} value="${_tvEsc(s)}">${_tvEsc(_bilShort(s))}</option>`).join('')}</select></div>`;
+  root.innerHTML=(BIL.mode==='fis'?head.replace(/<div class="bil-st">[\s\S]*$/,''):head)+(BIL.mode==='atm'?_bilATM():BIL.mode==='fis'?_bilFiscal():_bilDesk());}
+function _bilDesk(){const S=BIL.stats;
+  if(!S)return`<div class="tv-card bil-intro"><div class="bi-ic">🎫</div><h3>Bilheteria do VLT Tietê</h3><p>Você é o bilheteiro. Os passageiros chegam na fila pedindo passagens (em português, inglês ou espanhol). Escolha a linha, o destino, a classe e quantas inteiras e meias. Quem paga em dinheiro precisa de troco: pegue as notas e moedas certas no caixa.</p><p>Quanto mais longe o destino, mais cara a passagem. Seja rápido: a paciência de cada um vai acabando!</p>
+    <label><input type="checkbox" ${BIL.easy?'checked':''} onchange="BIL.easy=this.checked"> Modo fácil (mostra o valor do troco e dá mais paciência)</label><label><input type="checkbox" ${BIL.voice?'checked':''} onchange="BIL.voice=this.checked"> Ouvir os passageiros</label>
+    <button class="fly-b big" onclick="bilStart()">▶ Abrir o caixa</button></div>`;
+  if(BIL.closed)return _bilSummary();
+  const c=BIL.cur,s=BIL.sel,ls=_bilLines(BIL.st),avg=S.stars.length?(S.stars.reduce((a,b)=>a+b,0)/S.stars.length):0;
+  const top=_evtBanner()+`<div class="bil-top"><span>👥 Fila: <b id="bil-qn">${BIL.q.length}</b> <i id="bil-qq">${BIL.q.map(p=>`<span>${p.face}</span>`).join('')}</i></span><span>✅ ${S.n} atendidos</span><span>💰 ${_brl(S.rev)}</span><span>${avg?'⭐ '+avg.toFixed(1):''}</span><button class="fly-b sm" onclick="bilClose()">🔒 Fechar caixa</button></div>`;
+  if(!c)return top+`<div class="tv-card bil-wait">☕ Ninguém na fila… o próximo passageiro já vem.</div><div class="bil-msg ${BIL.msg?BIL.msg.k:''}" id="bil-msg">${BIL.msg?_tvEsc(BIL.msg.t):''}</div>`;
+  const pax=`<div class="tv-card bil-pax"><div class="bp-face">${c.face}</div><div class="bp-b"><div class="bp-n">${_tvEsc(c.nm)} <small>${({pt:'🇧🇷',en:'🇺🇸',es:'🇪🇸'})[c.lang]} · ${({cash:'💵 dinheiro',card:'💳 cartão',pix:'📱 Pix',none:'📦 achados e perdidos'})[c.pay]}</small></div><div class="bp-say">“${_tvEsc(c.txt)}”</div>
+    <div class="bp-pat"><b id="bil-pat" style="width:${c.pat*100}%;background:${c.pat>.5?'#69f0ae':c.pat>.25?'#ffd740':'#ff5252'}"></b></div></div><button class="fly-b sm" onclick="voxSay([{k:BIL.cur.lang,text:BIL.cur.txt}],{force:true,interrupt:true})">🔊</button></div>`;
+  const msg=`<div class="bil-msg ${BIL.msg?BIL.msg.k:''}" id="bil-msg">${BIL.msg?_tvEsc(BIL.msg.t):''}</div>`;
+  if(c.type==='lost')return top+pax+msg+_bilLostHTML(c);
+  if(BIL.phase==='pay'){const L=TV_METROS[s.L],tk=_bilTicketHTML(L,BIL.st,L.stops[s.d],s.cls,s.inteira+s.meia,s.meia,BIL.tot,'B'+(1000+S.n*7+s.d));
+    if(c.pay!=='cash')return top+pax+msg+`<div class="bil-pay">${tk}<div class="tv-card bil-card"><div class="bc-ic">${c.pay==='card'?'💳':'📱'}</div><div>Total <b>${_brl(BIL.tot)}</b></div><button class="fly-b big" onclick="bilPay()">${c.pay==='card'?'Passar o cartão na maquininha':'Gerar QR Code do Pix e confirmar'}</button></div></div>`;
+    const need=Math.round((c.given-BIL.tot)*100)/100,give=BIL.tray.reduce((a,v)=>a+v,0);
+    return top+pax+msg+`<div class="bil-pay">${tk}<div class="tv-card bil-cash"><div class="bk-l">Total <b>${_brl(BIL.tot)}</b> · Recebido <b>${_brl(c.given)}</b>${BIL.easy?` · Troco <b class="ok">${_brl(need)}</b>`:''}</div>
+     <div class="bk-l">Na bandeja: <b>${_brl(give)}</b> ${BIL.tray.length?BIL.tray.slice().sort((a,b)=>b-a).map(v=>`<button class="bk-it" onclick="bilTray(${v},false)">${v>=2?'💵':'🪙'} ${_brl(v).replace('R$ ','')}</button>`).join(''):'<em>toque nas notas e moedas do caixa</em>'}</div>
+     <div class="bil-drawer">${BIL_DEN.map(d=>`<button class="bd-${d>=2?'n':'c'}" ${BIL.drawer[d]?'':'disabled'} onclick="bilTray(${d},true)"><b>${d>=1?d:_brl(d).replace('R$ ','')}</b><small>${BIL.drawer[d]} no caixa</small></button>`).join('')}</div>
+     <button class="fly-b big" onclick="bilPay()">${need<=0?'✔ Confirmar (sem troco)':'🤝 Entregar troco e passagem'}</button></div></div>`;}
+  const L=s.L!=null?TV_METROS[s.L]:null,k=L?L.stops.indexOf(BIL.st):-1,tot=_bilTotSel();
+  const lineBtns=`<div class="bil-sec"><small>1 · Linha</small><div class="bil-chips">${ls.map(o=>{const i=TV_METROS.indexOf(o);return`<button class="${s.L===i?'on':''}" style="--lc:${o.color}" onclick="bilPick('L',${i})"><b>${o.code}</b> ${_tvEsc(o.short.replace('Linha ',''))}</button>`;}).join('')}</div></div>`;
+  const dests=L?`<div class="bil-sec"><small>2 · Destino</small><div class="bil-dest">${L.stops.map((n,i)=>i===k?'':`<button class="${s.d===i?'on':''}" onclick="bilPick('d',${i})"><span>${_tvEsc(_bilShort(n))}</span><em>${_brl(_bilPrice(L,k,i,s.cls))}</em></button>`).join('')}</div></div>`:'';
+  const opts=L?`<div class="bil-sec bil-opts">${_tvLD(L)?`<div><small>3 · Classe</small><div class="cls-t"><button class="${s.cls==='eco'?'on':''}" onclick="bilPick('cls','eco')">💺 Econômica</button><button class="${s.cls==='exe'?'on':''}" onclick="bilPick('cls','exe')">🛋 Executiva</button></div></div>`:''}
+    <div><small>Inteiras</small><div class="bil-qty"><button onclick="bilPick('i',-1)">−</button><b>${s.inteira}</b><button onclick="bilPick('i',1)">+</button></div></div><div><small>Meias (estudante)</small><div class="bil-qty"><button onclick="bilPick('m',-1)">−</button><b>${s.meia}</b><button onclick="bilPick('m',1)">+</button></div></div></div>`:'';
+  return top+pax+msg+`<div class="tv-card bil-term"><div class="bt-h">🖥 Terminal de vendas</div>${lineBtns}${dests}${opts}<div class="bil-tot">Total <b>${_brl(tot)}</b><button class="fly-b big" ${tot>0?'':'disabled'} onclick="bilIssue()">🎫 Emitir passagem</button></div></div>`;}
+function _bilSummary(){const S=BIL.stats,avg=S.stars.length?(S.stars.reduce((a,b)=>a+b,0)/S.stars.length):0,inC=_bilDrawerTot(),mins=Math.max(1,Math.round((Date.now()-S.t0)/60000));
+  const nota=avg>=4.5&&S.err<=2?'🏆 Bilheteiro do mês!':avg>=3.5?'👏 Ótimo turno!':avg>=2.5?'🙂 Turno ok, dá pra melhorar.':'😬 Turno difícil…';
+  return`<div class="tv-card bil-sum"><h3>🔒 Fechamento de caixa</h3><div class="bs-g">
+   <div><span>Passageiros atendidos</span><b>${S.n}</b></div><div><span>Desistiram da fila</span><b>${S.lost}</b></div><div><span>Erros</span><b>${S.err}</b></div><div><span>Avaliação média</span><b>${avg?avg.toFixed(1)+' ⭐':'—'}</b></div>
+   <div><span>Vendas em dinheiro</span><b>${_brl(S.cash)}</b></div><div><span>Cartão</span><b>${_brl(S.card)}</b></div><div><span>Pix</span><b>${_brl(S.pix)}</b></div><div><span>Faturamento total</span><b>${_brl(S.rev)}</b></div>
+   <div><span>Fundo de troco (abertura)</span><b>${_brl(BIL.open0)}</b></div><div><span>Dinheiro no caixa agora</span><b>${_brl(inC)}</b></div><div><span>Conferência</span><b class="${Math.abs(inC-BIL.open0-S.cash)<.01?'ok':'bad'}">${Math.abs(inC-BIL.open0-S.cash)<.01?'✔ Caixa bate':'✖ Diferença de '+_brl(inC-BIL.open0-S.cash)}</b></div><div><span>Tempo de turno</span><b>${mins} min</b></div></div>
+   <div class="bs-nota">${nota}</div><button class="fly-b big" onclick="BIL.closed=false;bilStart()">▶ Novo turno</button></div>`;}
+// ── máquina de bilhetes (você compra) ──
+function bilM(k,v){const M=BIL.machine;if(k==='L'){M.L=v;M.d=null;M.cls='eco';}else if(k==='reset'){BIL.machine={};}else M[k]=v;M.ins=M.ins||[];bilRender();}
+function _bilATM(){const M=BIL.machine,ls=_bilLines(BIL.st);M.qty=M.qty||1;M.ins=M.ins||[];
+  if(M.done)return`<div class="bil-atm"><div class="atm-scr"><div class="atm-h">✅ Retire a sua passagem${M.change>0?' e o troco':''}</div>${M.tk}${M.change>0?`<div class="atm-ch">🪙 Troco: <b>${_brl(M.change)}</b> — ${M.coins.map(v=>`<span>${v>=2?'💵':'🪙'}${_brl(v).replace('R$ ','')}</span>`).join(' ')}</div>`:''}
+   <div class="atm-row"><button class="fly-b big" onclick="bilUse()">🚆 Usar no trem</button><button class="fly-b" onclick="bilM('reset')">Nova compra</button></div></div></div>`;
+  const L=M.L!=null?TV_METROS[M.L]:null,k=L?L.stops.indexOf(BIL.st):-1,price=L&&M.d!=null?_bilPrice(L,k,M.d,M.cls||'eco'):0,tot=Math.round(price*M.qty*100)/100,ins=M.ins.reduce((a,b)=>a+b,0);
+  let body;
+  if(!L)body=`<div class="atm-h">Para onde você vai?</div><div class="bil-chips big">${ls.map(o=>{const i=TV_METROS.indexOf(o);return`<button style="--lc:${o.color}" onclick="bilM('L',${i})"><b>${o.code}</b> ${_tvEsc(o.short)}</button>`;}).join('')}</div>`;
+  else if(M.d==null)body=`<div class="atm-h">${L.code} · escolha o destino</div><div class="bil-dest">${L.stops.map((n,i)=>i===k?'':`<button onclick="bilM('d',${i})"><span>${_tvEsc(_bilShort(n))}</span><em>${_brl(_bilPrice(L,k,i,'eco'))}</em></button>`).join('')}</div><button class="fly-b" onclick="bilM('L',null)">← Voltar</button>`;
+  else if(!M.pay)body=`<div class="atm-h">${_tvEsc(_bilShort(BIL.st))} ➜ ${_tvEsc(_bilShort(L.stops[M.d]))}</div>
+    ${_tvLD(L)?`<div class="cls-t"><button class="${(M.cls||'eco')==='eco'?'on':''}" onclick="bilM('cls','eco')">💺 Econômica</button><button class="${M.cls==='exe'?'on':''}" onclick="bilM('cls','exe')">🛋 Executiva</button></div>`:''}
+    <div class="bil-qty atm-q"><span>Quantidade</span><button onclick="bilM('qty',Math.max(1,BIL.machine.qty-1))">−</button><b>${M.qty}</b><button onclick="bilM('qty',Math.min(9,BIL.machine.qty+1))">+</button></div>
+    <div class="atm-tot">Total: <b>${_brl(tot)}</b></div><div class="atm-row"><button class="fly-b big" onclick="bilM('pay','cash')">💵 Dinheiro</button><button class="fly-b big" onclick="bilM('pay','card')">💳 Cartão</button><button class="fly-b big" onclick="bilM('pay','pix')">📱 Pix</button></div><button class="fly-b" onclick="bilM('d',null)">← Voltar</button>`;
+  else if(M.pay==='cash')body=`<div class="atm-h">Insira as notas · Total ${_brl(tot)}</div><div class="atm-tot">Inserido: <b>${_brl(ins)}</b> · Falta: <b>${_brl(Math.max(0,tot-ins))}</b></div>
+    <div class="bil-drawer">${[2,5,10,20,50,100].map(v=>`<button class="bd-n" onclick="bilInsert(${v})"><b>${v}</b><small>inserir</small></button>`).join('')}</div><button class="fly-b" onclick="BIL.machine.ins=[];bilM('pay',null)">Cancelar (devolve as notas)</button>`;
+  else body=`<div class="atm-h">${M.pay==='card'?'Aproxime o cartão':'Leia o QR Code no app do banco'}</div><div class="atm-big">${M.pay==='card'?'💳 📶':'▣'}</div><div class="atm-tot">Total: <b>${_brl(tot)}</b></div><button class="fly-b big" onclick="bilFinish()">✔ Pagamento aprovado</button>`;
+  return`<div class="bil-atm"><div class="atm-top">🏧 VLT Tietê · Autoatendimento</div><div class="atm-scr">${body}</div></div>`;}
+function bilInsert(v){const M=BIL.machine;M.ins.push(v);try{const c=_ctx();_sfxNoise(c,c.destination,c.currentTime,.25,1500,400,.1);}catch(e){}
+  const L=TV_METROS[M.L],k=L.stops.indexOf(BIL.st),tot=Math.round(_bilPrice(L,k,M.d,M.cls||'eco')*M.qty*100)/100;if(M.ins.reduce((a,b)=>a+b,0)>=tot-.001)bilFinish();else bilRender();}
+function bilFinish(){const M=BIL.machine,L=TV_METROS[M.L],k=L.stops.indexOf(BIL.st),tot=Math.round(_bilPrice(L,k,M.d,M.cls||'eco')*M.qty*100)/100,ins=M.ins.reduce((a,b)=>a+b,0);
+  let ch=M.pay==='cash'?Math.round((ins-tot)*100)/100:0;M.change=ch;M.coins=[];BIL_DEN.forEach(d=>{while(ch>=d-.001){M.coins.push(d);ch=Math.round((ch-d)*100)/100;}});
+  M.tk=_bilTicketHTML(L,BIL.st,L.stops[M.d],M.cls||'eco',M.qty,0,tot,'M'+(Date.now()%100000));M.done=true;
+  try{const c=_ctx();for(let i=0;i<8;i++)_sfxNoise(c,c.destination,c.currentTime+i*.09,.07,3000,1200,.05);if(M.change>0)[0,.12,.24].forEach(d=>_sfxTone(c,c.currentTime+.9+d,2600,.08,'triangle',.08));}catch(e){}bilRender();}
+function bilUse(){const M=BIL.machine;TV.mode='metro';TV.mline=M.L;TV_METRO=TV_METROS[M.L];TV.stop[TV_METRO.key]=TV_METRO.stops.indexOf(BIL.st);TV.view='stop';showV('transit');setTimeout(()=>{_tvShell();window.scrollTo({top:0});},50);}
+
+
+// ════════ v11 · EVENTOS NA CIDADE ════════
+const EVENTS=[
+ {id:'jogo',ic:'⚽',nm:'Jogo do Corinthians',st:'Corinthians-Itaquera',hr:21.5,dur:2,pt:'jogo do Corinthians na Neo Química Arena',en:'Corinthians football match at Neo Química Arena',es:'partido del Corinthians en la Neo Química Arena'},
+ {id:'show',ic:'🎤',nm:'Show gratuito no Anhangabaú',st:'Luz',hr:20,dur:3,pt:'show gratuito no Vale do Anhangabaú, perto da estação Luz',en:'free concert at Vale do Anhangabaú, near Luz station',es:'concierto gratuito en el Valle del Anhangabaú, cerca de la estación Luz'},
+ {id:'praia',ic:'🏖',nm:'Feriado na praia',st:'Santos · Valongo',hr:9,dur:8,pt:'feriado com praias cheias em Santos e Praia Grande',en:'holiday with busy beaches in Santos and Praia Grande',es:'feriado con playas llenas en Santos y Praia Grande'},
+ {id:'uva',ic:'🍇',nm:'Festa da Uva',st:'Jundiaí · Serra do Japi',hr:11,dur:6,pt:'Festa da Uva de Jundiaí',en:'Jundiaí Grape Festival',es:'Fiesta de la Uva de Jundiaí'},
+ {id:'agri',ic:'🚜',nm:'Feira do Agro',st:'Ribeirão Preto · Califórnia Brasileira',hr:10,dur:7,pt:'grande feira de tecnologia agrícola em Ribeirão Preto',en:'large farm technology fair in Ribeirão Preto',es:'gran feria de tecnología agrícola en Ribeirão Preto'},
+ {id:'inverno',ic:'🎻',nm:'Festival de Inverno',st:'Santo André · Praça do Carmo',hr:14,dur:6,pt:'Festival de Inverno de Paranapiacaba, em Santo André',en:'Paranapiacaba Winter Festival, in Santo André',es:'Festival de Invierno de Paranapiacaba, en Santo André'},
+ {id:'litoral',ic:'🐢',nm:'Festival do Litoral Norte',st:'Ubatuba · Iperoig',hr:10,dur:7,pt:'festival de verão em Ubatuba',en:'summer festival in Ubatuba',es:'festival de verano en Ubatuba'}];
+const EVT={manual:null,said:{}};
+function _evtToday(){const d=new Date(_simNow()),k=d.toDateString(),e=EVENTS[_hashS(k+'evt')%EVENTS.length],s=new Date(d);s.setHours(Math.floor(e.hr),Math.round((e.hr%1)*60),0,0);return{e,start:s.getTime()};}
+function evtActive(){const now=_simNow(),c=EVT.manual&&now<EVT.manual.start+EVT.manual.e.dur*3600e3+3600e3?EVT.manual:_evtToday(),a=c.start-2*3600e3,b=c.start+c.e.dur*3600e3+3600e3;return now>=a&&now<=b?c:null;}
+function evtLines(e){return TV_METROS.filter(L=>L.stops.includes(e.st)||(e.id==='praia'&&L.stops.some(s=>/Praia Grande/.test(s))));}
+function evtNow(){const e=EVENTS[Math.floor(Math.random()*EVENTS.length)];EVT.manual={e,start:_simNow()+45*60e3};EVT.said={};_evtAnnounce(true);try{_v8Refresh();}catch(x){}try{bilRender();}catch(x){}}
+function _evtMsg(c){const e=c.e,t=_flyHM(c.start,-3),ls=evtLines(e).map(L=>L.short.replace('Linha ','')),j=(a,and)=>a.length>1?a.slice(0,-1).join(', ')+' '+and+' '+a[a.length-1]:a[0];
+  return{pt:`Atenção: hoje tem ${e.pt}, a partir das ${t}. Os trens ${ls.length>1?'das linhas':'da linha'} ${j(ls,'e')} devem circular lotados. Programe-se, compre a passagem de volta com antecedência e siga as orientações dos funcionários.`,
+   en:`Attention: today there is a ${e.en}, starting at ${t}. Trains on the ${j(ls,'and')} line${ls.length>1?'s':''} will be very crowded. Please plan ahead and buy your return ticket in advance.`,
+   es:`Atención: hoy hay ${e.es}, a partir de las ${t}. Los trenes de ${ls.length>1?'las líneas':'la línea'} ${j(ls,'y')} circularán llenos. Planifique su viaje y compre el boleto de regreso con anticipación.`};}
+function _evtAnnounce(force){const c=evtActive();if(!c)return;const k=c.e.id+c.start;if(EVT.said[k]&&!force)return;EVT.said[k]=1;
+  const tab=document.getElementById('tab-transit');if(!force&&!(tab&&tab.style.display!=='none'))return;const m=_evtMsg(c);voxSay(['pt','en','es'].map(k=>({k,text:m[k]})),{chime:true,chimeKind:'airport'});}
+setInterval(()=>_evtAnnounce(false),5000);
+function _evtBanner(){const c=evtActive();if(!c)return'';const e=c.e,live=_simNow()>=c.start;
+  return`<div class="evt-ban"><span class="evt-ic">${e.ic}</span><div><b>${_tvEsc(e.nm)}</b> ${live?'<i>AGORA</i>':'· começa às '+_flyHM(c.start,-3)}<small>📍 ${_tvEsc(_tvmNm(e.st))} · linhas ${evtLines(e).map(L=>`<em style="background:${L.color}">${L.code}</em>`).join('')} com trens lotados</small></div></div>`;}
+// lotação: trens que vão para o evento ficam lotados
+function _tvCrowd(ln,dir,ti,car){const lv=_tvCrowd0(ln,dir,ti,car),c=evtActive();if(!c||!ln||ln.kind!=='metro'||!evtLines(c.e).includes(ln))return lv;
+  const t0=(_tvTrips(ln,dir)[ti]||0)*1000,d=new Date(_simNow()),mid=new Date(d);mid.setHours(0,0,0,0);const tt=mid.getTime()+t0;return tt>c.start-3*3600e3&&tt<c.start+c.e.dur*3600e3+2*3600e3?4:lv;}
+// ════════ ACHADOS E PERDIDOS ════════
+const LOST_IT=[['🎒','mochila',['azul','preta','vermelha','cinza']],['☂️','guarda-chuva',['preto','xadrez','amarelo']],['👛','carteira',['marrom','preta','rosa']],['📱','celular',['com capinha azul','com capinha transparente','dourado']],
+ ['🧥','casaco',['de moletom cinza','jeans','verde']],['🕶','óculos de sol',['de armação preta','redondos']],['🧸','urso de pelúcia',['marrom','branco']],['🔑','molho de chaves',['com chaveiro do Corinthians','com chaveiro de coração']],['🎧','fone de ouvido',['branco','preto']],['📘','livro',['de capa azul','de receitas']],['🧢','boné',['do Santos','preto']],['💻','notebook',['cinza']]];
+const LOST=[];let _lostN=0;
+function lostAdd(where){const t=_bilR(LOST_IT),cor=_bilR(t[2]);const it={id:++_lostN,ic:t[0],it:t[1],cor,where,when:_flyHM(_simNow(),-3)};LOST.unshift(it);if(LOST.length>12)LOST.pop();return it;}
+for(let i=0;i<5;i++){const L=_bilR(TV_METROS);lostAdd(`trem da ${L.short}`);}
+function _lostSay(it,ctx){const m={pt:`Atenção: foi encontrado um item: ${it.it} ${it.cor}, ${ctx.pt}. ${ctx.kind==='cabin'?'O proprietário pode procurar a tripulação ou o balcão da companhia aérea no desembarque.':'O proprietário pode retirá-lo no setor de achados e perdidos, na bilheteria da estação.'}`,
+  en:`Attention: a ${it.it} has been found ${ctx.en}. ${ctx.kind==='cabin'?'The owner may contact the cabin crew or the airline desk at arrivals.':'The owner may collect it at the lost and found office, at the station ticket office.'}`,es:`Atención: se encontró un objeto: ${it.it} ${it.cor}, ${ctx.es}. ${ctx.kind==='cabin'?'El propietario puede dirigirse a la tripulación o al mostrador de la aerolínea en llegadas.':'El propietario puede retirarlo en objetos perdidos, en la boletería de la estación.'}`};
+  voxSay(['pt','en','es'].map(k=>({k,text:m[k]})),{chime:true,chimeKind:ctx.kind||'train'});}
+let _lostT=0;
+setInterval(()=>{const now=_simNow();if(!_lostT)_lostT=now;if(now-_lostT<35*60e3)return;_lostT=now;   // ~ a cada 35 min simulados
+  if(TV.ride&&TV.view==='ride'){const ln=_tvCur(),car=1+Math.floor(Math.random()*6),id=_tvTripId(ln,TV.ride.dir,TV.ride.ti),it=lostAdd(`trem ${id} da ${ln.short}, carro ${car}`);
+    _lostSay(it,{pt:`no carro ${car} deste trem`,en:`in car ${car} of this train`,es:`en el coche ${car} de este tren`,kind:ln.kind==='bus'?'bell':'train'});}
+  else{const L=_bilR(TV_METROS);lostAdd(`trem da ${L.short}, carro ${1+Math.floor(Math.random()*6)}`);}},3000);
+// ════════ FISCAL (conferir bilhetes dentro do trem) ════════
+const FIS={L:null,stats:null};
+const FIS_RS={none:'Sem bilhete',expired:'Bilhete vencido (mais de 2 h)',passed:'Passou do destino',class:'Classe errada (Econômica na Executiva)',nocard:'Meia sem carteirinha válida',line:'Bilhete de outra linha'};
+function _fisNowMin(){const d=new Date(_simNow());return d.getHours()*60+d.getMinutes();}
+function _fisHM(m){m=((Math.round(m)%1440)+1440)%1440;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
+function _fisPax(b,carIdx,exeCar){const L=FIS.L,n=L.stops.length,pos=FIS.pos,lang=Math.random()<.75?'pt':Math.random()<.6?'en':'es',ld=_tvLD(L);
+  const r=Math.random();let issue=r<.6?null:_bilR(['none','expired','passed','nocard','line',...(ld&&exeCar?['class','class']:[])]);if(issue==='passed'&&pos<b+1)issue=null;
+  let to=pos+1+Math.floor(Math.random()*(n-pos-1));if(issue==='passed')to=b+1+Math.floor(Math.random()*(pos-b));to=Math.min(n-1,Math.max(b+1,to));
+  const cls=ld?(exeCar?(issue==='class'?'eco':'exe'):'eco'):'eco',meia=issue==='nocard'||Math.random()<.18,ride=Math.max(3,Math.round((_tvOff(L,0).dep[pos]-_tvOff(L,0).dep[b])/60));
+  const issued=issue==='expired'?_fisNowMin()-125-Math.floor(Math.random()*120):_fisNowMin()-ride-2-Math.floor(Math.random()*25);
+  let lineL=L;if(issue==='line'){const o=TV_METROS.filter(x=>x!==L&&!x.stops.includes(L.stops[to]));lineL=o.length?_bilR(o):L;if(lineL===L)issue=null;}
+  const tk=issue==='none'?null:{L:lineL,from:lineL===L?L.stops[b]:lineL.stops[0],to:lineL===L?L.stops[to]:lineL.stops[lineL.stops.length-1],cls,meia,issued,id:(lineL.code)+(10000+Math.floor(Math.random()*89999))};
+  const card=meia?(issue==='nocard'?(Math.random()<.5?{none:true}:{val:`0${1+Math.floor(Math.random()*9)}/${2024+Math.floor(Math.random()*2)}`}):{val:`0${1+Math.floor(Math.random()*9)}/${2027+Math.floor(Math.random()*2)}`}):null;
+  const EX={none:{pt:_bilR(['Ih… acho que perdi o bilhete!','Esqueci de comprar, a fila estava enorme…']),en:'Oh no, I think I lost my ticket!',es:'¡Ay, creo que perdí mi boleto!'},
+   expired:{pt:'Comprei hoje cedo, ainda vale, né?',en:'I bought it this morning, it is still valid, right?',es:'Lo compré esta mañana, todavía vale, ¿no?'},
+   passed:{pt:'Ops… acho que cochilei.',en:'Oops… I think I fell asleep.',es:'Uy… creo que me dormí.'},class:{pt:'Esse lugar estava vago, pensei que podia sentar.',en:'This seat was free, I thought it was fine.',es:'Este asiento estaba libre, pensé que podía sentarme.'},
+   nocard:{pt:'A carteirinha… deixei em casa.',en:'My student card… I left it at home.',es:'Mi carnet… lo dejé en casa.'},line:{pt:'Esse trem vai pra lá, não vai?',en:'This train goes there, right?',es:'Este tren va para allá, ¿verdad?'}};
+  const OK={pt:_bilR(['Tá aqui!','Pode conferir.','Aqui, ó.','Bom dia!']),en:'Here you go.',es:'Aquí tiene.'};
+  const say=issue&&Math.random()<.55?EX[issue][lang]:OK[lang];
+  const _fn=_bilR(BIL_NAMES[lang]);return{face:_faceFor(_fn),nm:_fn,lang,b,tk,card,issue,say,checked:false,car:carIdx};}
+function fisStart(i){const L=TV_METROS[i];FIS.L=L;const n=L.stops.length,ld=_tvLD(L);FIS.nCars=ld?6:4;FIS.exe=ld?2:0;FIS.pos=Math.min(n-3,ld?3:2);FIS.car=0;FIS.sel=null;FIS.fb=null;FIS.done=false;
+  FIS.stats={chk:0,ok:0,err:0,fines:0,irr:0,t0:Date.now()};FIS.cars=[];const ev=evtActive(),busy=ev&&evtLines(ev.e).includes(L)?3:0;
+  for(let c=0;c<FIS.nCars;c++){const a=[];const k=4+Math.floor(Math.random()*4)+busy;for(let j=0;j<k;j++)a.push(_fisPax(Math.floor(Math.random()*(FIS.pos+1)),c,c<FIS.exe));FIS.cars.push(a);}
+  FIS.segT0=Date.now();FIS.segDur=(BIL.easy?100:70)*1000;clearInterval(FIS.tm);FIS.tm=setInterval(_fisTick,500);bilRender();}
+function _fisTick(){if(!FIS.L||FIS.done)return;const left=FIS.segDur-(Date.now()-FIS.segT0);const el=document.getElementById('fis-cd');if(el)el.textContent=Math.max(0,Math.ceil(left/1000))+'s';
+  const pb=document.getElementById('fis-pb');if(pb)pb.style.width=(100-left/FIS.segDur*100)+'%';if(left<=0)_fisArrive();}
+function _fisArrive(){const L=FIS.L,n=L.stops.length;FIS.pos++;const st=L.stops[FIS.pos];let off=0;
+  FIS.cars.forEach((a,c)=>{for(let j=a.length-1;j>=0;j--){const p=a[j];const dest=p.tk&&p.tk.L===L?L.stops.indexOf(p.tk.to):-1;if(dest===FIS.pos||(p.checked&&Math.random()<.15)){a.splice(j,1);off++;}}});
+  if(FIS.pos>=n-1){FIS.done=true;clearInterval(FIS.tm);try{const c=_ctx();_sfxDoors(c,c.currentTime);}catch(e){}bilRender();return;}
+  const ev=evtActive(),busy=ev&&evtLines(ev.e).includes(L);FIS.cars.forEach((a,c)=>{const k=Math.floor(Math.random()*3)+(busy?2:0);for(let j=0;j<k;j++)a.push(_fisPax(FIS.pos,c,c<FIS.exe));});
+  FIS.sel=null;FIS.fb={t:`🚉 Estação ${_tvmNm(st)}: ${off} desceram, novos passageiros embarcaram.`,k:''};FIS.segT0=Date.now();try{const c=_ctx();_sfxDoors(c,c.currentTime);}catch(e){}bilRender();}
+function fisSel(i){FIS.sel=i;FIS.fb=null;const p=FIS.cars[FIS.car][i];if(p&&BIL.voice)voxSay([{k:p.lang,text:p.say}],{force:true,interrupt:true});bilRender();}
+function fisCar(c){FIS.car=c;FIS.sel=null;bilRender();}
+function fisVerdict(v){const p=FIS.cars[FIS.car][FIS.sel];if(!p||p.checked)return;const L=FIS.L,S=FIS.stats,right=(v==='ok'&&!p.issue)||(v===p.issue);p.checked=true;S.chk++;
+  const fineBase=_tvLD(L)?150:50;let fine=0;
+  if(p.issue){S.irr++;const k=L.stops.indexOf(L.stops[FIS.pos]);if(p.issue==='class'){const t=L.stops.indexOf(p.tk.to);fine=_bilPrice(L,p.b,t,'exe')-_bilPrice(L,p.b,t,'eco');}else if(p.issue==='nocard'){const t=Math.max(p.b+1,L.stops.indexOf(p.tk.to));fine=_bilPrice(L,p.b,t,p.tk.cls)/2;}else fine=fineBase;fine=Math.round(fine*100)/100;}
+  if(right){S.ok++;if(p.issue)S.fines+=fine;FIS.fb={t:p.issue?`✔ Correto! ${FIS_RS[p.issue]}. ${p.issue==='class'?'Diferença cobrada':p.issue==='nocard'?'Diferença da meia cobrada':'Multa aplicada'}: ${_brl(fine)}.`:'✔ Correto! Bilhete regular. Boa viagem!',k:'ok'};
+    try{const c=_ctx();_sfxTone(c,c.currentTime+.01,1568,.15,'sine',.1);}catch(e){}}
+  else{S.err++;FIS.fb={t:p.issue?`✖ Ops! Esse passageiro estava irregular: ${FIS_RS[p.issue]}.`:`✖ Ops! O bilhete estava regular. O passageiro ficou bravo com a acusação.`,k:'bad'};
+    try{const c=_ctx();_sfxTone(c,c.currentTime+.01,220,.3,'square',.06);}catch(e){}}
+  FIS.sel=null;bilRender();}
+function _fisTicket(p){const tk=p.tk;if(!tk)return`<div class="fis-noticket">🚫 Sem bilhete</div>`;const L=tk.L;
+  return`<div class="bil-tk sm" style="--lc:${L.color}"><div class="tk-h"><b>VLT Tietê</b><span>${L.code} · ${_tvEsc(L.short)}</span></div><div class="tk-r"><div><small>DE</small><b>${_tvEsc(_bilShort(tk.from))}</b></div><div class="tk-ar">➜</div><div><small>PARA</small><b>${_tvEsc(_bilShort(tk.to))}</b></div></div>
+   <div class="tk-f"><span>${tk.cls==='exe'?'🛋 Executiva':'💺 Econômica'}</span><span>${tk.meia?'🎓 Meia':'Inteira'}</span><span>🕒 Emitido ${_fisHM(tk.issued)}</span></div><div class="tk-q" style="padding:6px 12px"><small>Nº ${tk.id} · válido por 2 horas a partir da emissão</small></div></div>
+   ${p.card?`<div class="fis-card">${p.card.none?'🎓 Carteirinha: <b>não apresentou</b>':`🎓 Carteira de estudante · ${_tvEsc(p.nm)} · validade <b>${p.card.val}</b>`}</div>`:''}`;}
+function _bilFiscal(){if(!FIS.L||!FIS.stats)return`<div class="tv-card bil-intro"><div class="bi-ic">🕵️</div><h3>Fiscal do VLT Tietê</h3><p>Você embarca no trem e confere os bilhetes, carro por carro. Veja o destino, a hora de emissão (vale 2 horas), a classe do carro e a carteirinha de quem paga meia. Quem estiver irregular leva multa. A cada estação, uns descem e outros sobem.</p>
+   <div class="bil-chips big">${TV_METROS.map((L,i)=>`<button style="--lc:${L.color}" onclick="fisStart(${i})"><b>${L.code}</b> ${_tvEsc(L.short)}</button>`).join('')}</div></div>`;
+  const L=FIS.L,S=FIS.stats,n=L.stops.length;
+  if(FIS.done){const pct=S.chk?Math.round(S.ok/S.chk*100):0;return`<div class="tv-card bil-sum"><h3>🏁 Fim da linha · ${_tvEsc(_tvmNm(L.stops[n-1]))}</h3><div class="bs-g"><div><span>Bilhetes conferidos</span><b>${S.chk}</b></div><div><span>Acertos</span><b>${S.ok} (${pct}%)</b></div><div><span>Erros</span><b>${S.err}</b></div><div><span>Irregulares encontrados</span><b>${S.irr}</b></div><div><span>Multas e diferenças</span><b>${_brl(S.fines)}</b></div></div>
+    <div class="bs-nota">${pct>=90&&S.chk>=10?'🏆 Fiscal implacável!':pct>=70?'👏 Bom trabalho!':'😅 Precisa de mais atenção.'}</div><button class="fly-b big" onclick="FIS.stats=null;bilRender()">Escolher outra linha</button></div>`;}
+  const nm=FIS.pos+1<n?_tvmNm(L.stops[FIS.pos+1]):'';const car=FIS.cars[FIS.car],p=FIS.sel!=null?car[FIS.sel]:null;
+  const top=`<div class="bil-top"><span style="color:${L.color}"><b>${L.code}</b> ${_tvEsc(L.short)}</span><span>🚆 ${_tvEsc(_tvmNm(L.stops[FIS.pos]))} ➜ <b>${_tvEsc(nm)}</b> em <b id="fis-cd"></b></span><span>🕒 ${_flyHM(_simNow(),-3)}</span><span>✔ ${S.ok}/${S.chk}</span><span>💸 ${_brl(S.fines)}</span></div><div class="fly-prog" style="border-radius:8px;margin-bottom:8px"><b id="fis-pb"></b></div>${_evtBanner()}`;
+  const cars=`<div class="fis-cars">${FIS.cars.map((a,c)=>`<button class="${c===FIS.car?'on':''} ${c<FIS.exe?'exe':''}" onclick="fisCar(${c})">Carro ${c+1}${c<FIS.exe?' · 🛋':''}<small>${a.filter(x=>!x.checked).length} a conferir</small></button>`).join('')}</div>`;
+  const seats=`<div class="fis-seats">${car.map((x,i)=>`<button class="${x.checked?'done':''} ${FIS.sel===i?'on':''}" onclick="fisSel(${i})" ${x.checked?'disabled':''}>${x.face}<small>${x.checked?'✔':_tvEsc(x.nm)}</small></button>`).join('')||'<em>Carro vazio</em>'}</div>`;
+  const fb=FIS.fb?`<div class="bil-msg ${FIS.fb.k}">${_tvEsc(FIS.fb.t)}</div>`:'';
+  const det=p?`<div class="tv-card fis-det"><div class="bil-pax" style="padding:0"><div class="bp-face">${p.face}</div><div class="bp-b"><div class="bp-n">${_tvEsc(p.nm)} <small>carro ${FIS.car+1}${FIS.car<FIS.exe?' (Executiva)':''}</small></div><div class="bp-say">“${_tvEsc(p.say)}”</div></div></div>
+    ${_fisTicket(p)}<div class="fis-act"><button class="fly-b big" onclick="fisVerdict('ok')">✔ Regular</button>${Object.entries(FIS_RS).filter(([k])=>k!=='class'||FIS.exe).map(([k,v])=>`<button class="fly-b fis-irr" onclick="fisVerdict('${k}')">⚠ ${v}</button>`).join('')}</div></div>`:`<div class="tv-card bil-wait">👆 Toque num passageiro para pedir o bilhete.</div>`;
+  return top+cars+seats+fb+det;}
+// ════════ BILHETERIA: achados e perdidos + eventos ════════
+function _bilNewLost(){const lang=Math.random()<.8?'pt':'en',has=LOST.length&&Math.random()<.7,it=has?_bilR(LOST):null,fake=_bilR(LOST_IT),cor=_bilR(fake[2]);
+  const want=it?{it:it.it,cor:it.cor,where:it.where}:{it:fake[1],cor,where:'trem da '+_bilR(TV_METROS).short};
+  const txt=lang==='pt'?`Oi, boa tarde… Perdi ${/a$|eira$|ochila$/.test(want.it)?'uma':'um'} ${want.it} ${want.cor} no ${want.where.replace(/,.*$/,'')}. Vocês acharam?`:`Hi… I lost my ${want.it} (${want.cor}) on the ${want.where.replace(/,.*$/,'')}. Did anyone find it?`;
+  const _ln=_bilR(BIL_NAMES[lang]);return{type:'lost',want,match:it?it.id:null,lang,nm:_ln,face:_faceFor(_ln),txt,pat:1,t0:Date.now(),tries:0,pay:'none'};}
+function bilLost(id){const c=BIL.cur;if(!c||c.type!=='lost')return;const S=BIL.stats,ok=id===c.match;
+  if(ok){S.n++;S.lostOk=(S.lostOk||0)+1;S.stars.push(5);if(id){const i=LOST.findIndex(x=>x.id===id);if(i>=0)LOST.splice(i,1);}
+    _bilMsg(id?`🥹 ${c.nm}: É esse mesmo! Muito obrigado!`:`🙏 ${c.nm}: Tudo bem, obrigado por procurar. Vou deixar meu telefone.`,'ok');}
+  else{S.err++;S.stars.push(2);_bilMsg(id?`😕 ${c.nm}: Não, não é esse…`:`🤔 ${c.nm}: Mas… acho que está aí sim!`,'bad');c.t0-=10000;if(c.tries++<1){bilRender();return;}}
+  _bilNext();bilRender();}
+function _bilLostHTML(c){return`<div class="tv-card bil-term"><div class="bt-h">📦 Achados e perdidos · ${LOST.length} itens guardados</div><div class="lost-g">${LOST.map(x=>`<button onclick="bilLost(${x.id})"><span>${x.ic}</span><b>${_tvEsc(x.it)} ${_tvEsc(x.cor)}</b><small>${_tvEsc(x.where)} · ${x.when}</small></button>`).join('')}</div>
+  <button class="fly-b" onclick="bilLost(null)">🤷 Não está aqui</button></div>`;}
+// liga achados/eventos na fila do bilheteiro
+function _bilNew(){if(Math.random()<.1)return _bilNewLost();const ev=evtActive();
+  if(ev&&Math.random()<.5){const L=_bilLines(BIL.st).find(x=>x.stops.includes(ev.e.st)&&x.stops.indexOf(ev.e.st)!==x.stops.indexOf(BIL.st));if(L){const p=_bilNew0({L,d:L.stops.indexOf(ev.e.st)});if(p){p.txt+=p.lang==='pt'?` Vou pro ${ev.e.nm.toLowerCase()}!`:'';return p;}}}
+  return _bilNew0();}
+// ════════ CHECK-IN NO AEROPORTO ════════
+const CHK={q:[],cur:null,stats:null,easy:true};
+const CHK_VISA=['US','CA','AU','MX','IN','CN'],CHK_MERC=['AR','UY','PY','CL','BO','PE','CO','EC','VE'];
+const CHK_NM=[['Marcos','Márcio'],['Ana Paula','Ana Lúcia'],['Luiz','Luís'],['Fernanda','Fernandes'],['Rafael','Raffael'],['Juliana','Juliane'],['Carlos','Carlo'],['Gabriel','Gabriell'],['Patrícia','Priscila'],['Eduardo','Edson']];
+const CHK_SN=['Silva','Souza','Oliveira','Santos','Pereira','Costa','Almeida','Ferreira','Rodrigues','Lima'];
+const CHK_FOR=[['Emily Johnson','EUA','en'],['James Smith','Reino Unido','en'],['Lucía Fernández','Argentina','es'],['Mateo García','Espanha','es'],['Sophie Martin','França','en'],['Hans Müller','Alemanha','en']];
+function _chkCC(iata,tipo){if(tipo==='DOM')return'BR';const x=FLY_CC[iata];return Array.isArray(x)?x[0]:x;}
+function _chkNew(){const rows=_gvRows().filter(r=>r.st!=='Embarque encerrado').slice(0,14);if(!rows.length)return null;const r=_bilR(rows),f=FD[r.fi],dom=f[2]==='DOM',cc=_chkCC(f[1],f[2]);
+  const foreign=!dom&&Math.random()<.22,nmPair=_bilR(CHK_NM),sn=_bilR(CHK_SN);let name=foreign?_bilR(CHK_FOR):[nmPair[0]+' '+sn,'Brasil','pt'];
+  const cls=Math.random()<.2?'exe':'eco',lang=name[2],now=new Date(_simNow()),Y=now.getFullYear(),M=now.getMonth()+1;
+  let doc={type:dom?_bilR(['RG','CNH','PASS']):(CHK_MERC.includes(cc)&&!foreign&&Math.random()<.5?'RG':'PASS'),name:name[0],nat:name[1],num:(dom?'':'F')+String(10000000+Math.floor(Math.random()*89999999)),exp:null,visa:null};
+  let issue=null;const r2=Math.random();
+  if(doc.type==='PASS')doc.exp=`${String(1+Math.floor(Math.random()*12)).padStart(2,'0')}/${Y+1+Math.floor(Math.random()*8)}`;
+  if(!dom&&!foreign&&CHK_VISA.includes(cc))doc.visa=`${FLY_C[cc]?FLY_C[cc][0]:cc} · válido até ${Y+2+Math.floor(Math.random()*6)}`;
+  if(r2<.12&&doc.type==='PASS'&&!dom){doc.exp=`${String(1+Math.floor(Math.random()*12)).padStart(2,'0')}/${Y-1-Math.floor(Math.random()*2)}`;issue='expired';}
+  else if(r2<.22&&!foreign){doc.name=nmPair[1]+' '+sn;issue='name';}
+  else if(r2<.3&&doc.visa){doc.visa=null;issue='visa';}
+  else if(r2<.36&&!dom&&!CHK_MERC.includes(cc)&&!foreign){doc.type='RG';doc.exp=null;doc.visa=null;issue='rg';}
+  const bags=cls==='exe'&&Math.random()<.4?2:1,w=[];for(let i=0;i<bags;i++){const x=Math.random();w.push(Math.round((x<.65?12+Math.random()*10.5:x<.9?23.4+Math.random()*8:32.5+Math.random()*4)*10)/10);}
+  const pref=_bilR(['janela','corredor','tanto faz']);
+  const txt={pt:`${_bilR(['Boa tarde!','Oi!','Bom dia!'])} Vou no voo ${r.fnum} para ${f[0].split(' – ')[0].replace(/\s*\(via.*\)/,'')}. ${bags>1?'Tenho duas malas.':'Tenho uma mala pra despachar.'} ${pref==='tanto faz'?'Qualquer lugar está ótimo.':'Se puder, '+pref+', por favor.'}`,
+    en:`Hi! I'm on flight ${r.fnum} to ${f[0].split(' – ')[0]}. ${bags>1?'Two bags':'One bag'} to check. ${pref==='janela'?'Window seat, if possible.':pref==='corredor'?'Aisle seat, please.':'Any seat is fine.'}`,
+    es:`¡Hola! Voy en el vuelo ${r.fnum} a ${f[0].split(' – ')[0]}. ${bags>1?'Dos maletas':'Una maleta'} para despachar. ${pref==='janela'?'Ventanilla, por favor.':pref==='corredor'?'Pasillo, por favor.':'Cualquier asiento está bien.'}`}[lang];
+  const book=name[0].replace(nmPair[1],nmPair[0]);
+  return{r,fi:r.fi,f,dom,cc,foreign,book,doc,issue,cls,w,pref,lang,face:_faceFor(book),txt,step:'doc',pat:1,t0:Date.now(),tries:0,seat:null,
+    occ:(()=>{const o=new Set(),rows=cls==='exe'?5:24,cols=cls==='exe'?'ACDF':'ABCDEF';for(let i=1;i<=rows;i++)for(const c of cols)if(Math.random()<.55)o.add(i+c);return o;})()};}
+function chkStart(){CHK.stats={n:0,bags:0,fees:0,ref:0,err:0,lost:0,stars:[],t0:Date.now()};CHK.q=[];for(let i=0;i<3;i++){const p=_chkNew();if(p)CHK.q.push(p);}CHK.closed=false;_chkNext();clearInterval(CHK.tm);CHK.tm=setInterval(_chkTick,300);chkRender();}
+function _chkNext(){CHK.cur=CHK.q.shift()||null;CHK.msg=null;if(CHK.cur){CHK.cur.t0=Date.now();if(BIL.voice)voxSay([{k:CHK.cur.lang,text:CHK.cur.txt}],{force:true});}}
+function _chkTick(){if(!CHK.stats||CHK.closed)return;const now=Date.now();if(CHK.q.length<5&&(!CHK.la||now-CHK.la>14000+Math.random()*10000)){const p=_chkNew();if(p)CHK.q.push(p);CHK.la=now;}
+  const c=CHK.cur;if(c){c.pat=Math.max(0,1-(now-c.t0)/(CHK.easy?150000:100000));if(c.pat<=0){CHK.stats.lost++;CHK.stats.stars.push(1);_chkNext();CHK.msg={t:'😤 O passageiro desistiu e foi reclamar na ouvidoria.',k:'bad'};chkRender();return;}}else if(CHK.q.length){_chkNext();chkRender();return;}
+  const pb=document.getElementById('chk-pat');if(pb&&c){pb.style.width=(c.pat*100)+'%';pb.style.background=c.pat>.5?'#69f0ae':c.pat>.25?'#ffd740':'#ff5252';}const qn=document.getElementById('chk-qn');if(qn)qn.textContent=CHK.q.length;}
+function _chkSay(c,m){CHK.msg={t:`💬 ${c.doc.name.split(' ')[0]}: ${m[c.lang]||m.pt}`,k:m.k||''};if(BIL.voice)voxSay([{k:c.lang,text:m[c.lang]||m.pt}],{force:true,interrupt:true});}
+function chkDoc(ok){const c=CHK.cur,S=CHK.stats;if(!c||c.step!=='doc')return;const bad=!!c.issue;
+  if(ok&&!bad){c.step='bag';c.bi=0;CHK.msg={t:'✔ Documentos conferidos.',k:'ok'};}
+  else if(!ok&&bad){S.ref++;S.n++;S.stars.push(4);const why={expired:'passaporte vencido',name:'nome do documento diferente da reserva',visa:'falta o visto exigido pelo destino',rg:'para esse destino é obrigatório o passaporte'}[c.issue];
+    _chkSay(c,{pt:`Ah não… ${why}? Vou ter que remarcar.`,en:'Oh no… I will have to rebook.',es:'Ay no… tendré que cambiar el vuelo.'});CHK.msg.t=`✔ Embarque recusado corretamente (${why}). `+CHK.msg.t;CHK.msg.k='ok';_chkNext();}
+  else if(ok&&bad){S.err++;S.stars.push(1);const why={expired:'o passaporte estava vencido',name:'o nome no documento não bate com a reserva',visa:'faltava o visto do destino',rg:'esse destino exige passaporte, não RG'}[c.issue];CHK.msg={t:`✖ Erro grave: ${why}. O passageiro foi barrado no portão.`,k:'bad'};_chkNext();}
+  else{S.err++;c.t0-=15000;c.tries++;_chkSay(c,{pt:'Como assim? Meus documentos estão certinhos!',en:'What? My documents are fine!',es:'¿Cómo? ¡Mis documentos están en orden!',k:'bad'});}
+  chkRender();}
+function chkBag(a){const c=CHK.cur,S=CHK.stats;if(!c||c.step!=='bag')return;const w=c.w[c.bi],lim=c.cls==='exe'?32:23,need=w>32?'no':w>lim?'fee':'ok';
+  if(a===need){if(a==='fee'){S.fees+=300;}if(a!=='no')S.bags++;CHK.msg={t:a==='ok'?`✔ Mala de ${w} kg despachada.`:a==='fee'?`✔ Excesso cobrado: R$ 300,00 (mala de ${w} kg).`:`✔ Correto: ${w} kg passa do máximo de 32 kg. O passageiro vai redistribuir.`,k:'ok'};
+    try{const x=_ctx();_sfxTone(x,x.currentTime+.01,1200,.1,'sine',.08);}catch(e){}c.bi++;if(c.bi>=c.w.length)c.step='seat';}
+  else{S.err++;c.t0-=10000;CHK.msg={t:need==='ok'?`✖ A mala tem ${w} kg e está dentro do limite de ${lim} kg.`:need==='fee'?`✖ ${w} kg passa de ${lim} kg: tem que cobrar o excesso.`:`✖ Acima de 32 kg a mala não pode ser despachada.`,k:'bad'};}
+  chkRender();}
+function chkSeat(s){const c=CHK.cur,S=CHK.stats;if(!c||c.step!=='seat'||c.occ.has(s))return;const col=s.slice(-1),win=c.cls==='exe'?'AF':'AF',aisle=c.cls==='exe'?'CD':'CD';
+  const ok=c.pref==='tanto faz'||(c.pref==='janela'&&win.includes(col))||(c.pref==='corredor'&&aisle.includes(col));
+  if(!ok){S.err++;c.t0-=8000;_chkSay(c,{pt:`Hmm, eu tinha pedido ${c.pref}…`,en:`Hmm, I asked for ${c.pref==='janela'?'a window':'an aisle'} seat…`,es:`Mmm, había pedido ${c.pref==='janela'?'ventanilla':'pasillo'}…`,k:'bad'});chkRender();return;}
+  c.seat=s;c.step='done';S.n++;const star=Math.max(1,Math.min(5,Math.round(1+c.pat*4.4-c.tries)));S.stars.push(star);c.star=star;
+  _chkSay(c,{pt:_bilR(['Perfeito, obrigado!','Ótimo, valeu!','Muito obrigada!']),en:'Perfect, thank you!',es:'¡Perfecto, gracias!',k:'ok'});
+  try{const x=_ctx();for(let i=0;i<6;i++)_sfxNoise(x,x.destination,x.currentTime+i*.08,.06,3000,1200,.05);}catch(e){}chkRender();}
+function chkFly(){const c=CHK.cur;if(!c)return;FLY.cls=c.cls;FLY.seatOv=c.seat;showV('bordo');setTimeout(()=>{flyStart(c.fi);FLY.seatOv=null;},80);}
+function chkNextPax(){_chkNext();chkRender();}
+function chkRender(){const root=document.getElementById('chk-root');if(!root)return;const S=CHK.stats;
+  if(!S){root.innerHTML=`<div class="tv-card bil-intro"><div class="bi-ic">🧳</div><h3>Balcão de check-in · GRU</h3><p>Você atende a fila do check-in. Confira o documento (nome igual à reserva, passaporte na validade, visto quando o destino exige; para países do Mercosul, brasileiro pode viajar com RG), pese as malas, escolha a poltrona e imprima o cartão de embarque.</p>
+   <div class="chk-rules"><b>Regras de bagagem</b><span>💺 Econômica: 1 mala de até 23 kg</span><span>🛋 Executiva: até 2 malas de 32 kg</span><span>💸 Entre o limite e 32 kg: excesso de R$ 300 por mala</span><span>⛔ Acima de 32 kg: não pode despachar</span><span>🛂 Visto exigido para brasileiros: EUA, Canadá, Austrália, México, Índia e China</span></div>
+   <label><input type="checkbox" ${CHK.easy?'checked':''} onchange="CHK.easy=this.checked"> Modo fácil (mais paciência)</label><label><input type="checkbox" ${BIL.voice?'checked':''} onchange="BIL.voice=this.checked"> Ouvir os passageiros</label><button class="fly-b big" onclick="chkStart()">▶ Abrir o balcão</button></div>`;return;}
+  if(CHK.closed){const avg=S.stars.length?S.stars.reduce((a,b)=>a+b,0)/S.stars.length:0;root.innerHTML=`<div class="tv-card bil-sum"><h3>🔒 Balcão fechado</h3><div class="bs-g"><div><span>Passageiros atendidos</span><b>${S.n}</b></div><div><span>Malas despachadas</span><b>${S.bags}</b></div><div><span>Excesso cobrado</span><b>${_brl(S.fees)}</b></div><div><span>Embarques recusados</span><b>${S.ref}</b></div><div><span>Erros</span><b>${S.err}</b></div><div><span>Desistências</span><b>${S.lost}</b></div><div><span>Avaliação média</span><b>${avg?avg.toFixed(1)+' ⭐':'—'}</b></div></div>
+    <div class="bs-nota">${avg>=4.5&&S.err<=2?'🏆 Agente de check-in do ano!':avg>=3.5?'👏 Ótimo turno!':'🙂 Dá pra melhorar.'}</div><button class="fly-b big" onclick="chkStart()">▶ Novo turno</button></div>`;return;}
+  const c=CHK.cur,avg=S.stars.length?S.stars.reduce((a,b)=>a+b,0)/S.stars.length:0;
+  const top=`<div class="bil-top"><span>👥 Fila: <b id="chk-qn">${CHK.q.length}</b> ${CHK.q.map(p=>p.face).join('')}</span><span>✅ ${S.n}</span><span>🧳 ${S.bags} malas</span><span>💸 ${_brl(S.fees)}</span><span>${avg?'⭐ '+avg.toFixed(1):''}</span><button class="fly-b sm" onclick="CHK.closed=true;chkRender()">🔒 Fechar balcão</button></div>`;
+  const msg=`<div class="bil-msg ${CHK.msg?CHK.msg.k:''}">${CHK.msg?_tvEsc(CHK.msg.t):''}</div>`;
+  if(!c){root.innerHTML=top+msg+`<div class="tv-card bil-wait">☕ Balcão livre… o próximo passageiro já vem.</div>`;return;}
+  const a=AL[c.f[6]]||{name:c.f[6],color:'#546e7a'},steps=['doc','bag','seat','done'],si=steps.indexOf(c.step);
+  const pax=`<div class="tv-card bil-pax"><div class="bp-face">${c.face}</div><div class="bp-b"><div class="bp-n">${_tvEsc(c.doc.name.split(' ')[0])} <small>${c.foreign?'🌎 '+_tvEsc(c.doc.nat):'🇧🇷'} · ${c.cls==='exe'?'🛋 Executiva':'💺 Econômica'}</small></div><div class="bp-say">“${_tvEsc(c.txt)}”</div><div class="bp-pat"><b id="chk-pat" style="width:${c.pat*100}%;background:#69f0ae"></b></div></div></div>
+   <div class="chk-steps">${['🛂 Documento','⚖️ Bagagem','💺 Assento','🎫 Cartão'].map((t,i)=>`<span class="${i<si?'done':i===si?'on':''}">${t}</span>`).join('')}</div>`;
+  const res=`<div class="chk-res" style="--lc:${a.color}"><div><small>RESERVA</small><b>${_tvEsc(c.book)}</b></div><div><small>VOO</small><b>${c.r.fnum}</b></div><div><small>DESTINO</small><b>${_tvEsc(c.f[0])}</b><em>${c.dom?'nacional':'internacional · '+_tvEsc(_flyCountry(c.f[1],c.f[2]).nm)}</em></div><div><small>PARTIDA</small><b>${c.r.time}</b></div></div>`;
+  let body='';
+  if(c.step==='doc'){const d=c.doc;body=res+`<div class="chk-doc ${d.type}"><div class="cd-h">${d.type==='PASS'?'🛂 PASSAPORTE · '+_tvEsc(d.nat.toUpperCase()):d.type==='RG'?'🪪 CARTEIRA DE IDENTIDADE (RG)':'🚗 CARTEIRA DE MOTORISTA (CNH)'}</div><div class="cd-b"><div class="cd-ph">${c.face}</div><div><small>Nome</small><b>${_tvEsc(d.name)}</b><small>Número</small><b>${d.num}</b>${d.exp?`<small>Validade</small><b>${d.exp}</b>`:''}</div></div>
+     ${d.type==='PASS'&&!c.dom&&!c.foreign&&CHK_VISA.includes(c.cc)?`<div class="cd-visa">${d.visa?'✅ Visto: '+_tvEsc(d.visa):'Página de vistos: <i>nenhum visto</i>'}</div>`:''}</div>
+     <div class="fis-act"><button class="fly-b big" onclick="chkDoc(true)">✔ Documento ok</button><button class="fly-b fis-irr" onclick="chkDoc(false)">⛔ Recusar embarque</button></div>`;}
+  else if(c.step==='bag'){const w=c.w[c.bi],lim=c.cls==='exe'?32:23;body=`<div class="chk-scale"><div class="cs-bag">🧳</div><div class="cs-d"><small>BALANÇA · mala ${c.bi+1} de ${c.w.length}</small><b>${w.toFixed(1).replace('.',',')} kg</b><em>Limite da ${c.cls==='exe'?'Executiva':'Econômica'}: ${lim} kg · máximo 32 kg</em></div></div>
+     <div class="fis-act"><button class="fly-b big" onclick="chkBag('ok')">✔ Despachar</button><button class="fly-b" onclick="chkBag('fee')">💸 Cobrar excesso (R$ 300)</button><button class="fly-b fis-irr" onclick="chkBag('no')">⛔ Não pode despachar</button></div>`;}
+  else if(c.step==='seat'){const rows=c.cls==='exe'?5:24,cols=c.cls==='exe'?['A','C','|','D','F']:['A','B','C','|','D','E','F'];
+     body=`<div class="chk-pref">Preferência: <b>${c.pref}</b> · 🟩 livre · ⬛ ocupado</div><div class="chk-seats ${c.cls}"><div class="cs-nose">✈ frente</div>${Array.from({length:rows},(_,i)=>`<div class="cs-row"><span>${i+1}</span>${cols.map(k=>k==='|'?'<i></i>':`<button ${c.occ.has((i+1)+k)?'disabled':''} onclick="chkSeat('${(i+1)+k}')">${k}</button>`).join('')}</div>`).join('')}</div>`;}
+  else{const dep=c.r.time.split(':').map(Number),bt=_fisHM(dep[0]*60+dep[1]-40);
+     body=`<div class="chk-bp" style="--lc:${a.color}"><div class="bp-h"><b>${_tvEsc(a.name)}</b><span>CARTÃO DE EMBARQUE · BOARDING PASS</span></div><div class="bp-g"><div><small>PASSAGEIRO</small><b>${_tvEsc(c.doc.name.toUpperCase())}</b></div><div><small>VOO</small><b>${c.r.fnum}</b></div>
+      <div><small>DE</small><b>GRU</b></div><div><small>PARA</small><b>${c.f[1]}</b></div><div><small>PORTÃO</small><b>${gate(c.f[2],c.fi)}</b></div><div><small>EMBARQUE</small><b>${bt}</b></div><div><small>ASSENTO</small><b>${c.seat}</b></div><div><small>GRUPO</small><b>${c.cls==='exe'?1:2+Math.floor(Math.random()*3)}</b></div></div>
+      <div class="bp-tag">🏷 ${c.w.filter(x=>x<=32).length} mala(s) · GRU ➜ ${c.f[1]} · ${c.w.filter(x=>x<=32).map(x=>x.toFixed(1).replace('.',',')+' kg').join(' + ')||'sem bagagem despachada'}</div></div>
+      <div class="fis-act"><button class="fly-b big" onclick="chkNextPax()">➡ Próximo passageiro</button><button class="fly-b" onclick="chkFly()">✈ Voar com este cartão</button></div>`;}
+  root.innerHTML=top+pax+msg+`<div class="tv-card bil-term">${body}</div>`;}
 
 // ════════ SONS DOS AVISOS · GRU (diferentes de Confins e de São José; um por linha) ════════
 function _sfxEP(c,t,f,vol,len){len=len||1.1;_sfxTone(c,t,f,len,'sine',vol);_sfxTone(c,t,f*2,len*.5,'triangle',vol*.22);_sfxTone(c,t,f*3,len*.18,'sine',vol*.07);}   // piano elétrico
@@ -4805,6 +5184,8 @@ function _tvShell(){
 function _tvTick(force){if(TV.view==='net'){const tab=document.getElementById('tab-transit');if(!tab||tab.style.display==='none')return;if(TV.mode==='metro'&&NET.view==='sch')_netTrains();else _netGeoTrains();_netInfo(force);return;}const r=_tvTick0(force);_v8Tick();return r;}
 </script>
 <div class="wrap" id="tab-bordo" style="display:none"><div id="fly-root"></div></div>
+<div class="wrap" id="tab-bilhet" style="display:none"><div id="bil-root"></div></div>
+<div class="wrap" id="tab-checkin" style="display:none"><div id="chk-root"></div></div>
 <div class="wrap" id="tab-transit" style="display:none"><div class="tv-modes" id="tv-modes"></div><div class="tv-speed gv-row" id="tv-speed" style="margin-bottom:12px"></div><div id="tv-body"></div></div>
 </body>
 </html>
